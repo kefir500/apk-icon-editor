@@ -7,7 +7,6 @@
 #include <QColorDialog>
 #include <QFileDialog>
 #include <QInputDialog>
-#include <QDialog>
 #include <QDate>
 #include <QDesktopServices>
 #include <QApplication>
