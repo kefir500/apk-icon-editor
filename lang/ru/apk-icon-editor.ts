@@ -48,7 +48,7 @@ APK is invalid.</source>
     <message>
         <location filename="../../src/apk.cpp" line="178"/>
         <source>Packing APK...</source>
-        <translation type="unfinished">Упаковка APK...</translation>
+        <translation>Упаковка APK...</translation>
     </message>
     <message>
         <location filename="../../src/apk.cpp" line="183"/>
@@ -64,12 +64,12 @@ APK is invalid.</source>
         <location filename="../../src/apk.cpp" line="194"/>
         <location filename="../../src/apk.cpp" line="204"/>
         <source>APK packed</source>
-        <translation type="unfinished">APK упакован</translation>
+        <translation>APK упакован</translation>
     </message>
     <message>
         <location filename="../../src/apk.cpp" line="197"/>
         <source>APK packed with following warnings:</source>
-        <translation type="unfinished">APK упакован с предупреждениями:</translation>
+        <translation>APK упакован с предупреждениями:</translation>
     </message>
     <message>
         <location filename="../../src/apk.cpp" line="199"/>
@@ -84,7 +84,7 @@ APK is invalid.</source>
     <message>
         <location filename="../../src/apk.cpp" line="217"/>
         <source>Error saving PNG icon.</source>
-        <translation type="unfinished">Ошибка сохранения значков.</translation>
+        <translation>Ошибка сохранения значков.</translation>
     </message>
     <message>
         <location filename="../../src/apk.cpp" line="326"/>
@@ -95,7 +95,7 @@ APK is invalid.</source>
         <location filename="../../src/apk.cpp" line="191"/>
         <location filename="../../src/apk.cpp" line="194"/>
         <source>APK successfully packed!</source>
-        <translation type="unfinished">APK успешно упакован!</translation>
+        <translation>APK успешно упакован!</translation>
     </message>
     <message>
         <location filename="../../src/apk.cpp" line="24"/>
@@ -105,7 +105,7 @@ APK is invalid.</source>
     <message>
         <location filename="../../src/apk.cpp" line="246"/>
         <source>Java Runtime Environment is not installed on this machine.&lt;br&gt;APK will be packed but won&apos;t be signed.</source>
-        <translation type="unfinished">Java Runtime Environment не установлен на этом компьютере.&lt;br&gt;APK будет упакован, но не будет подписан.</translation>
+        <translation>Java Runtime Environment не установлен на этом компьютере.&lt;br&gt;APK будет упакован, но не будет подписан.</translation>
     </message>
     <message>
         <location filename="../../src/apk.cpp" line="248"/>
@@ -141,309 +141,309 @@ APK is invalid.</source>
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="287"/>
+        <location filename="../../src/mainwindow.cpp" line="286"/>
         <source>Size Profile:</source>
         <translation>Профиль:</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="289"/>
+        <location filename="../../src/mainwindow.cpp" line="288"/>
         <source>&amp;File</source>
         <translation>&amp;Файл</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="290"/>
+        <location filename="../../src/mainwindow.cpp" line="289"/>
         <source>&amp;Icon</source>
-        <translation type="unfinished">&amp;Значок</translation>
+        <translation>&amp;Значок</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="291"/>
+        <location filename="../../src/mainwindow.cpp" line="290"/>
         <source>&amp;Settings</source>
         <translation>&amp;Настройки</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="292"/>
+        <location filename="../../src/mainwindow.cpp" line="291"/>
         <source>&amp;Help</source>
         <translation>&amp;Справка</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="293"/>
+        <location filename="../../src/mainwindow.cpp" line="292"/>
         <source>&amp;Open APK</source>
         <translation>&amp;Открыть APK</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="294"/>
+        <location filename="../../src/mainwindow.cpp" line="293"/>
         <source>&amp;Export (Pack) APK</source>
-        <translation type="unfinished">&amp;Упаковать APK</translation>
+        <translation>&amp;Упаковать APK</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="295"/>
+        <location filename="../../src/mainwindow.cpp" line="294"/>
         <source>&amp;Recent APKs</source>
         <translation>&amp;Недавние APK</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="296"/>
+        <location filename="../../src/mainwindow.cpp" line="295"/>
         <source>E&amp;xit</source>
         <translation>В&amp;ыход</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="297"/>
+        <location filename="../../src/mainwindow.cpp" line="296"/>
         <source>&amp;Clear List</source>
         <translation>&amp;Очистить список</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="298"/>
+        <location filename="../../src/mainwindow.cpp" line="297"/>
         <source>No Recent Files</source>
         <translation>Нет недавних файлов</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="299"/>
+        <location filename="../../src/mainwindow.cpp" line="298"/>
         <source>Replace &amp;Icon</source>
-        <translation type="unfinished">&amp;Заменить значок</translation>
+        <translation>&amp;Заменить значок</translation>
+    </message>
+    <message>
+        <location filename="../../src/mainwindow.cpp" line="299"/>
+        <source>&amp;Save Icon</source>
+        <translation>&amp;Сохранить значок</translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="300"/>
-        <source>&amp;Save Icon</source>
-        <translation type="unfinished">&amp;Сохранить значок</translation>
+        <source>Scale to &amp;Fit</source>
+        <translation>Подогнать &amp;размер</translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="301"/>
-        <source>Scale to &amp;Fit</source>
-        <translation type="unfinished">Подогнать &amp;размер</translation>
-    </message>
-    <message>
-        <location filename="../../src/mainwindow.cpp" line="302"/>
         <source>&amp;Resize Icon</source>
         <translation>&amp;Изменить размер</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="303"/>
+        <location filename="../../src/mainwindow.cpp" line="302"/>
         <source>Revert &amp;Original</source>
         <translation>Вернуть &amp;оригинал</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="304"/>
+        <location filename="../../src/mainwindow.cpp" line="303"/>
         <source>Preview Background &amp;Color</source>
         <translation>&amp;Фоновый цвет (предпросмотр)</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="305"/>
+        <location filename="../../src/mainwindow.cpp" line="304"/>
         <source>&amp;Language</source>
         <translation>&amp;Язык</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="311"/>
+        <location filename="../../src/mainwindow.cpp" line="310"/>
         <source>About Qt</source>
-        <translation type="unfinished">Об инструментарии Qt</translation>
+        <translation>Об инструментарии Qt</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="312"/>
+        <location filename="../../src/mainwindow.cpp" line="311"/>
         <source>About %1</source>
-        <translation type="unfinished">Об %1</translation>
+        <translation>Об %1</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="472"/>
+        <location filename="../../src/mainwindow.cpp" line="471"/>
         <source>Can&apos;t Load Icon</source>
-        <translation type="unfinished">Невозможно загрузить значок</translation>
+        <translation>Невозможно загрузить значок</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="619"/>
+        <location filename="../../src/mainwindow.cpp" line="618"/>
         <source>&lt;b&gt;Usage:&lt;/b&gt;&lt;br&gt;Open the APK file in which you would like to replace icon(s).&lt;br&gt;Select profile (according to the final device) and the needed DPI.&lt;br&gt;If you are in doubt about the DPI, you may replace all of them.&lt;br&gt;APK Icon Editor will ask to scale icons with the wrong size, but&lt;br&gt;note that Android devices are usually able to do it automatically.</source>
-        <translation type="unfinished">&lt;b&gt;Использование:&lt;/b&gt;&lt;br&gt;Откройте файл APK, иконку которого Вы хотите заменить.&lt;br&gt;Выберите профиль (в соответствии с целевым устройством)&lt;br&gt;и нужный размер значка. Если Вы сомневаетесь насчёт размера,&lt;br&gt;можно заменить все значки. APK Icon Editor предложит подогнать&lt;br&gt;размер неподходящих значков, однако устройства Android,&lt;br&gt;как правило, делают это автоматически.</translation>
+        <translation>&lt;b&gt;Использование:&lt;/b&gt;&lt;br&gt;Откройте файл APK, иконку которого Вы хотите заменить.&lt;br&gt;Выберите профиль (в соответствии с целевым устройством)&lt;br&gt;и нужный размер значка. Если Вы сомневаетесь насчёт размера,&lt;br&gt;можно заменить все значки. APK Icon Editor предложит подогнать&lt;br&gt;размер неподходящих значков, однако устройства Android,&lt;br&gt;как правило, делают это автоматически.</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="627"/>
+        <location filename="../../src/mainwindow.cpp" line="626"/>
         <source>Join our translation team on Transifex.</source>
-        <translation type="unfinished">Присоединяйтесь к команде переводчиков.</translation>
+        <translation>Присоединяйтесь к команде переводчиков.</translation>
+    </message>
+    <message>
+        <location filename="../../src/mainwindow.cpp" line="436"/>
+        <source>Import Icon</source>
+        <translation>Импорт значка</translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="437"/>
-        <source>Import Icon</source>
-        <translation type="unfinished">Импорт значка</translation>
-    </message>
-    <message>
-        <location filename="../../src/mainwindow.cpp" line="438"/>
         <source>Supported Formats</source>
         <translation>Поддерживаемые форматы</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="440"/>
-        <location filename="../../src/mainwindow.cpp" line="549"/>
+        <location filename="../../src/mainwindow.cpp" line="439"/>
+        <location filename="../../src/mainwindow.cpp" line="548"/>
         <source>All Files</source>
         <translation>Все файлы</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="472"/>
+        <location filename="../../src/mainwindow.cpp" line="471"/>
         <source>You are trying to load invalid or unsupported icon.</source>
-        <translation type="unfinished">Вы пытаетесб загрузить значок неверного формата.</translation>
+        <translation>Вы пытаетесб загрузить значок неверного формата.</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="454"/>
+        <location filename="../../src/mainwindow.cpp" line="453"/>
         <source>Icon you are trying to load is off-size.
 Resize automatically?</source>
-        <translation type="unfinished">Вы пытаетесь загрузить значок несоответствующего размера.
+        <translation>Вы пытаетесь загрузить значок несоответствующего размера.
 Изменить размер автоматически?</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="306"/>
+        <location filename="../../src/mainwindow.cpp" line="305"/>
         <source>Auto-check for Updates</source>
-        <translation type="unfinished">Автопроверка обновлений</translation>
+        <translation>Автопроверка обновлений</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="308"/>
-        <location filename="../../src/mainwindow.cpp" line="625"/>
+        <location filename="../../src/mainwindow.cpp" line="307"/>
+        <location filename="../../src/mainwindow.cpp" line="624"/>
         <source>Visit Website</source>
         <translation>Посетить веб-сайт</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="309"/>
-        <location filename="../../src/mainwindow.cpp" line="626"/>
+        <location filename="../../src/mainwindow.cpp" line="308"/>
+        <location filename="../../src/mainwindow.cpp" line="625"/>
         <source>Report a Bug</source>
         <translation>Сообщить об ошибке</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="310"/>
+        <location filename="../../src/mainwindow.cpp" line="309"/>
         <source>Check for &amp;Updates</source>
-        <translation type="unfinished">&amp;Проверить обновления</translation>
+        <translation>&amp;Проверить обновления</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="485"/>
+        <location filename="../../src/mainwindow.cpp" line="484"/>
         <source>Save Icon</source>
-        <translation type="unfinished">Сохранить значок</translation>
+        <translation>Сохранить значок</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="509"/>
+        <location filename="../../src/mainwindow.cpp" line="508"/>
         <source>Resize Icon</source>
-        <translation type="unfinished">Изменить размер</translation>
+        <translation>Изменить размер</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="509"/>
+        <location filename="../../src/mainwindow.cpp" line="508"/>
         <source>Icon side (in pixels):</source>
-        <translation type="unfinished">Сторона: (в пикселях):</translation>
+        <translation>Сторона: (в пикселях):</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="617"/>
+        <location filename="../../src/mainwindow.cpp" line="616"/>
         <source>APK Icon Editor is the tool designed to easily edit and replace&lt;br&gt;APK (Android Package) icons. Written in C++ and Qt framework.</source>
-        <translation type="unfinished">APK Icon Editor - инструмент для простого редактирования&lt;br&gt;и замены значков APK (Android Package). Написан на C++ и Qt.</translation>
+        <translation>APK Icon Editor - инструмент для простого редактирования&lt;br&gt;и замены значков APK (Android Package). Написан на C++ и Qt.</translation>
+    </message>
+    <message>
+        <location filename="../../src/mainwindow.cpp" line="624"/>
+        <source>Visit our official website.</source>
+        <translation>Посетить наш официальный сайт.</translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="625"/>
-        <source>Visit our official website.</source>
-        <translation type="unfinished">Посетить наш официальный сайт.</translation>
+        <source>Found a bug? Let us know so we can fix it!</source>
+        <translation>Нашли ошибку? Дайте нам знать!</translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="626"/>
-        <source>Found a bug? Let us know so we can fix it!</source>
-        <translation type="unfinished">Нашли ошибку? Дайте нам знать!</translation>
-    </message>
-    <message>
-        <location filename="../../src/mainwindow.cpp" line="627"/>
         <source>Help Translate</source>
-        <translation type="unfinished">Помочь перевести</translation>
+        <translation>Помочь перевести</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="629"/>
+        <location filename="../../src/mainwindow.cpp" line="628"/>
         <source>List of Authors</source>
-        <translation type="unfinished">Спсиок авторов</translation>
+        <translation>Спсиок авторов</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="629"/>
+        <location filename="../../src/mainwindow.cpp" line="628"/>
         <source>Contributors, translators, testers and helpers.</source>
-        <translation type="unfinished">Авторы, переводчики, тестеры и помощники.</translation>
+        <translation>Авторы, переводчики, тестеры и помощники.</translation>
+    </message>
+    <message>
+        <location filename="../../src/mainwindow.cpp" line="656"/>
+        <source>Icon Missing</source>
+        <translation>Значок отсутствует</translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="657"/>
-        <source>Icon Missing</source>
-        <translation type="unfinished">Значок отсутствует</translation>
-    </message>
-    <message>
-        <location filename="../../src/mainwindow.cpp" line="658"/>
         <source>This APK does not support current DPI.</source>
-        <translation type="unfinished">Данный APK не поддерживает текущий DPI.</translation>
+        <translation>Данный APK не поддерживает текущий DPI.</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="665"/>
+        <location filename="../../src/mainwindow.cpp" line="664"/>
         <source>Update</source>
         <translation>Обновление</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="666"/>
+        <location filename="../../src/mainwindow.cpp" line="665"/>
         <source>%1 v%2 is available.
 Download?</source>
         <translation>Доступен %1 v%2.
 Скачать?</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="698"/>
+        <location filename="../../src/mainwindow.cpp" line="697"/>
         <source>Discard Changes?</source>
         <translation>Отклонить изменения?</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="699"/>
+        <location filename="../../src/mainwindow.cpp" line="698"/>
         <source>APK has been modified. Discard changes?</source>
         <translation>APK был изменён. Отклонить изменения?</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="557"/>
+        <location filename="../../src/mainwindow.cpp" line="556"/>
         <source>File not found</source>
         <translation>Файл не найден</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="286"/>
+        <location filename="../../src/mainwindow.cpp" line="285"/>
         <source>CLICK HERE
 (or drag APK and icons)</source>
-        <translation type="unfinished">Нажмите здесь
+        <translation>Нажмите здесь
 (или перетащите APK и значки)</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="549"/>
+        <location filename="../../src/mainwindow.cpp" line="548"/>
         <source>Open APK</source>
-        <translation type="unfinished">Открытие APK</translation>
+        <translation>Открытие APK</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="557"/>
+        <location filename="../../src/mainwindow.cpp" line="556"/>
         <source>Could not find APK:
 %1</source>
         <translation>Файл не найден:
 %1</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="609"/>
+        <location filename="../../src/mainwindow.cpp" line="608"/>
         <source>About</source>
         <translation>О программе</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="613"/>
+        <location filename="../../src/mainwindow.cpp" line="612"/>
         <source>Built on: %1 - %2</source>
         <translation>Сборка за: %1 - %2</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="614"/>
+        <location filename="../../src/mainwindow.cpp" line="613"/>
         <source>Author: %1</source>
         <translation>Автор: Александр Горишняк</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="615"/>
+        <location filename="../../src/mainwindow.cpp" line="614"/>
         <source>License</source>
         <translation>Лицензия</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="453"/>
+        <location filename="../../src/mainwindow.cpp" line="452"/>
         <source>Resize?</source>
-        <translation type="unfinished">Изменить размер?</translation>
+        <translation>Изменить размер?</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="313"/>
+        <location filename="../../src/mainwindow.cpp" line="312"/>
         <source>Processing</source>
         <translation>Обработка</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="288"/>
-        <location filename="../../src/mainwindow.cpp" line="572"/>
+        <location filename="../../src/mainwindow.cpp" line="287"/>
+        <location filename="../../src/mainwindow.cpp" line="571"/>
         <source>Pack APK</source>
-        <translation type="unfinished">Упаковать APK</translation>
+        <translation>Упаковать APK</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="307"/>
+        <location filename="../../src/mainwindow.cpp" line="306"/>
         <source>Associate .APK</source>
         <translation>Ассоциировать .APK</translation>
     </message>

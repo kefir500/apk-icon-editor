@@ -27,7 +27,8 @@ HEADERS += main.h \
            profile.h \
            updater.h
 
-TRANSLATIONS += ../lang/ru/apk-icon-editor.ts
+TRANSLATIONS += ../lang/en/apk-icon-editor.ts \
+                ../lang/ru/apk-icon-editor.ts
 
 RESOURCES += ../res/resources.qrc
 RC_FILE += ../res/icon.rc
