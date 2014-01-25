@@ -1,0 +1,34 @@
+@font-face {
+    font-family: opensans;
+    src: url('../../fonts/opensans-light-webfont.eot');
+    src: url('../../fonts/opensans-light-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../../fonts/opensans-light-webfont.woff') format('woff'),
+         url('../../fonts/opensans-light-webfont.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+h1, h2  {
+	font-family: opensans;
+    font-weight: bold !important;
+}
+
+#projectname {
+	font-family: opensans;
+	padding-bottom: 0;
+	line-height: 0.8;
+}
+
+#projectbrief {
+	font-family: opensans;
+    font-weight: light;
+	padding-top: 2px;
+}
+
+.memproto {
+	background-color: #DAED8F;
+}
+
+.tablist li {
+	text-shadow: none !important;
+}

@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/">
+        <file>gfx/bg.png</file>
+        <file>gfx/bug.png</file>
+        <file>gfx/icon-android.png</file>
+        <file>gfx/icon-kindle.png</file>
+        <file>gfx/logo.png</file>
+        <file>gfx/task-pack.png</file>
+        <file>fonts/OpenSans-Light.ttf</file>
+    </qresource>
+</RCC>

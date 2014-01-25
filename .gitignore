@@ -1,0 +1,6 @@
+.trash/
+bin/
+*.user
+*.autosave
+*.pro.user
+*.pro.user.*

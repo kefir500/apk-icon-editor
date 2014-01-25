@@ -1,0 +1,1 @@
+Copy nsProcess/nsProcess.dll to %NSIS%/Plugins directory.
