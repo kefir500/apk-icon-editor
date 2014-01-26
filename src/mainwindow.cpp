@@ -597,7 +597,7 @@ void MainWindow::browseBugs() const
 {
     QDesktopServices::openUrl(QUrl(URL_BUGS));
 }
-#include <QGraphicsBlurEffect>
+
 void MainWindow::about()
 {
     const QString LINK("<a href=\"%1\">%2</a> - %3");
@@ -607,7 +607,7 @@ void MainWindow::about()
     QMessageBox aboutBox(this);
     aboutBox.setWindowTitle(tr("About"));
     aboutBox.setText(
-        QString("<h3>%1 %2</h3>").arg(APP, VER) +
+        QString("<h3>%1 v%2</h3>").arg(APP, VER) +
         "<p>" +
             tr("Built on: %1 - %2").arg(__DATE__, __TIME__) + "<br>" +
             tr("Author: %1").arg("Alexander Gorishnyak") + "<br>" +
