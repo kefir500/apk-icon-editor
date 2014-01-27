@@ -1,5 +1,6 @@
 .trash/
 bin/
+docs/html/
 *.user
 *.autosave
 *.pro.user

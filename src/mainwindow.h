@@ -8,6 +8,7 @@
 #include <QPushButton>
 #include <QProgressDialog>
 #include <QSignalMapper>
+#include <QActionGroup>
 #include <QTranslator>
 #include <QSettings>
 #include <QCloseEvent>
@@ -46,9 +47,20 @@ private:
     QMenu *menuSett;
     QMenu *menuHelp;
 
-    // Sub-menus:
+    // Sub-menus, sub-actions:
     QMenu *menuRecent;
     QMenu *menuLang;
+    QMenu *menuPack;
+    QMenu *menuRatio;
+    QActionGroup *groupRatio;
+    QAction *actRatio0;
+    QAction *actRatio1;
+    QAction *actRatio3;
+    QAction *actRatio5;
+    QAction *actRatio7;
+    QAction *actRatio9;
+    QAction *actPackSign;
+    QAction *actPackOptimize;
 
     // Actions:
     QAction *actApkOpen;
@@ -62,8 +74,9 @@ private:
     QAction *actIconResize;
     QAction *actIconRevert;
     QAction *actIconBack;
-    QAction *actAutoUpdate;
     QAction *actAssoc;
+    QAction *actReset;
+    QAction *actAutoUpdate;
     QAction *actWebsite;
     QAction *actReport;
     QAction *actUpdate;
@@ -100,6 +113,8 @@ private slots:
 
     void apkPacked(QString filename);       ///< Handle APK packed from the \c filename.
     void apkUnpacked(QString filename);     ///< Handle APK unpacked from the \c filename.
+
+    void resetSettings();                   ///< Reset settings to default.
 
     /// Close loading dialog. If \c success, sets \filename as the current APK.
     void loadingComplete(bool success = false, QString filename = NULL);

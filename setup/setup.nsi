@@ -2,7 +2,7 @@
 !define COMPANYNAME "Qwerty Minds"
 !define VERSIONMAJOR 0
 !define VERSIONMINOR 2
-!define VERSION "${VERSIONMAJOR}.${VERSIONMINOR} Beta"
+!define VERSION "${VERSIONMAJOR}.${VERSIONMINOR}.1 Beta"
 !define ABOUTURL "http://kefir500.github.io/apk-icon-editor"
 !define UPDATEURL "http://kefir500.github.io/apk-icon-editor"
 !define EXE "$INSTDIR\apk-icon-editor.exe"
@@ -104,6 +104,7 @@ SectionEnd
 Section "-un.Uninstall"
 	Delete "${EXE}"
 	Delete "$INSTDIR\authors.txt"
+	Delete "$INSTDIR\versions.txt"
 	Delete "$INSTDIR\Qt5Core.dll"
 	Delete "$INSTDIR\Qt5Gui.dll"
 	Delete "$INSTDIR\Qt5Network.dll"

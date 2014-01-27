@@ -5,24 +5,15 @@
 #include <QProcess>
 #include <QRegExp>
 #include <QDir>
+#include <QtConcurrent/QtConcurrentRun>
 
 #ifdef QT_DEBUG
     #include <QDebug>
 #endif
 
-static const QString TEMPDIR_APK = QDir::toNativeSeparators(TEMPDIR + "apk/");
-
-Apk::Apk()
-{
-    thread = new QThread(this);
-    moveToThread(thread);
-}
-
-void Apk::retranslate()
-{
-    strError = tr("%1 Error");
-    strErrorStart = tr("Error starting <b>%1</b>");
-}
+const QString Apk::STR_ERROR = tr("%1 Error");
+const QString Apk::STR_ERRORSTART = tr("Error starting <b>%1</b>");
+const QString Apk::TEMPDIR_APK = QDir::toNativeSeparators(TEMPDIR + "apk/");
 
 void removeRecursively(QString dir)
 {
@@ -30,7 +21,7 @@ void removeRecursively(QString dir)
     QDir meta(dir);
     meta.removeRecursively();
 #else
-    // TODO This code needs to be reviewed:
+    // TODO: This code needs to be reviewed:
     QDir d(dir);
     if (d.exists(dir)) {
         Q_FOREACH(QFileInfo info, d.entryInfoList(QDir::NoDotAndDotDot | QDir::System | QDir::Hidden  | QDir::AllDirs | QDir::Files, QDir::DirsFirst)) {
@@ -58,23 +49,19 @@ QString parse(QString regexp, QString str)
         return NULL;
 }
 
-// --- UNPACKING APK ---
-
 void Apk::unpack(QString _filename)
 {
-    thread->disconnect(this);
-    connect(thread, SIGNAL(started()), this, SLOT(doUnpack()));
     filename = _filename;
-    thread->start();
+    QtConcurrent::run(this, &Apk::doUnpack);
 }
 
-void Apk::pack(QString _filename)
+void Apk::pack(QString _filename, short ratio, bool doSign, bool doOptimize)
 {
-    thread->disconnect(this);
-    connect(thread, SIGNAL(started()), this, SLOT(doPack()));
     filename = _filename;
-    thread->start();
+    QtConcurrent::run(this, &Apk::doPack, ratio, doSign, doOptimize);
 }
+
+// --- UNPACKING APK ---
 
 bool Apk::doUnpack()
 {
@@ -94,18 +81,17 @@ bool Apk::doUnpack()
 
     emit loading(100, tr("APK successfully loaded"));
     emit unpacked(filename);
-    thread->quit();
     return true;
 }
 
 bool Apk::readManifest()
 {
-    const QString aapt_error(strError.arg("AAPT"));
+    const QString AAPT_ERROR(tr(STR_ERROR.toLatin1()).arg("AAPT"));
 
     QProcess p;
     p.start(QString("aapt dump badging \"%1\"").arg(filename));
     if (!p.waitForStarted(-1)) {
-        return die(aapt_error, strErrorStart.arg("aapt"));
+        return die(AAPT_ERROR, tr(STR_ERRORSTART.toLatin1()).arg("aapt"));
     }
     p.waitForFinished(-1);
 
@@ -116,9 +102,9 @@ bool Apk::readManifest()
         return true;
     }
     case 1:
-        return die(aapt_error, tr("AndroidManifest.xml not found.\nAPK is invalid."));
+        return die(AAPT_ERROR, tr("AndroidManifest.xml not found.\nAPK is invalid."));
     default:
-        return die(aapt_error, tr("Error reading APK."));
+        return die(AAPT_ERROR, tr("Error reading APK."));
     }
 }
 
@@ -127,7 +113,7 @@ bool Apk::unzip() const
     QProcess p;
     p.start(QString("7za x \"%1\" -y -o\"%2apk\"").arg(filename, TEMPDIR));
     if (!p.waitForStarted(-1)) {
-        return die(strError.arg("7ZA"), strErrorStart.arg("7za"));
+        return die(tr(STR_ERROR.toLatin1()).arg("7ZA"), tr(STR_ERRORSTART.toLatin1()).arg("7za"));
     }
     p.waitForFinished(-1);
     return getZipSuccess(p.exitCode());
@@ -163,7 +149,7 @@ void Apk::loadIcons()
 
 // --- PACKING APK ---
 
-bool Apk::doPack()
+bool Apk::doPack(short ratio, bool doSign, bool doOptimize)
 {
     bool isSigned = false;
     bool isOptimized = false;
@@ -176,17 +162,39 @@ bool Apk::doPack()
     }
 
     emit loading(40, tr("Packing APK..."));
-    if (!zip()) {
+    if (!zip(ratio)) {
         return false;
     }
 
-    emit loading(60, tr("Signing APK..."));
-    if (checkJavaInstalled()) {
-        if (isSigned = sign()) {
-            emit loading(80, tr("Optimizing APK..."));
-            isOptimized = optimize();
-        }
+    // Sign:
+
+    if (doSign) {
+        emit loading(60, tr("Signing APK..."));
+        isSigned = sign();
     }
+    else {
+        isSigned = true;
+        QFile::rename(TEMPDIR + "temp-1.apk", TEMPDIR + "temp-2.apk");
+    }
+
+    // Optimize:
+
+    if (doOptimize) {
+        emit loading(80, tr("Optimizing APK..."));
+        isOptimized = optimize();
+    }
+    else {
+        isOptimized = true;
+        QFile::rename(TEMPDIR + "temp-2.apk", TEMPDIR + "temp-3.apk");
+    }
+
+    // Finalize:
+
+    if (!finalize()) {
+        return die(tr("Error"), tr("Could not create output APK file."));
+    }
+
+    // Finished!
 
     emit loading(100, tr("APK successfully packed!"));
 
@@ -201,11 +209,16 @@ bool Apk::doPack()
         if (!isOptimized) {
             errtext += "<br>&bull; " + tr("APK is <b>not optimized</b>;");
         }
+        if (!checkJavaInstalled()) {
+            errtext += "<hr>" +
+                    tr("Signing APK requires Java Runtime Environment.") +
+                    QString("<br><a href=\"%1\">%2</a> %3.")
+                    .arg(URL_JAVA, tr("Download"), tr("(or check PATH variable if already installed)"));
+        }
         emit warning(tr("APK packed"), errtext);
     }
 
     emit packed(filename);
-    thread->quit();
     return true;
 }
 
@@ -214,22 +227,26 @@ bool Apk::saveIcons() const
     for (int i = 0; i < icons.size(); ++i) {
         if (icons[i]) {
             if (!icons[i]->save()) {
-                return die(strError.arg("PNG"), tr("Error saving PNG icon."));
+                return die(tr(STR_ERROR.toLatin1()).arg("PNG"), tr("Error saving PNG icon."));
             }
         }
     }
     return true;
 }
 
-bool Apk::zip() const
+bool Apk::zip(short ratio) const
 {
     QProcess p;
-    p.start(QString("7za a -tzip -mx9 \"%1temp.zip\" \"%2*\"").arg(TEMPDIR, TEMPDIR_APK));
+    p.start(QString("7za a -tzip -mx%1 \"%2temp.zip\" \"%3*\"").arg(QString::number(ratio), TEMPDIR, TEMPDIR_APK));
     if (!p.waitForStarted(-1)) {
-        return die(strError.arg("7ZA"), strErrorStart.arg("7za"));
+        return die(tr(STR_ERROR.toLatin1()).arg("7ZA"), tr(STR_ERRORSTART.toLatin1()).arg("7za"));
     }
     p.waitForFinished(-1);
-    return getZipSuccess(p.exitCode());
+    bool success;
+    if (success = getZipSuccess(p.exitCode())) {
+        QFile::rename(TEMPDIR + "temp.zip", TEMPDIR + "temp-1.apk");
+    }
+    return success;
 }
 
 bool Apk::checkJavaInstalled() const
@@ -241,75 +258,72 @@ bool Apk::checkJavaInstalled() const
         return true;
     }
     else {
-        QFile::rename(TEMPDIR + "temp.zip", TEMPDIR + "temp.apk");
-        emit warning(strError.arg("Java"),
-                     tr("Java Runtime Environment is not installed on this machine.<br>"
-                        "APK will be packed but won't be signed.") +
-                     QString(" <a href=\"%1\">%2</a>").arg(URL_JAVA, tr("Download JRE")));
         return false;
     }
 }
 
 bool Apk::sign() const
 {
-    const QString TEMPZIP(TEMPDIR + "temp.zip");
-    const QString TEMPAPK(TEMPDIR + "temp.apk");
+    const QString APK_SRC(TEMPDIR + "temp-1.apk");
+    const QString APK_DST(TEMPDIR + "temp-2.apk");
     const QString SIGNAPK(QApplication::applicationDirPath() + "/signer/");
 
     QProcess p;
     p.start(QString("java -jar \"%1signapk.jar\" \"%1certificate.pem\" \"%1key.pk8\" \"%2\" \"%3\"")
-            .arg(SIGNAPK, TEMPZIP, TEMPAPK));
-    if (!p.waitForStarted(-1)) {
-        return die(strError.arg("Java"), strErrorStart.arg("java"));
+            .arg(SIGNAPK, APK_SRC, APK_DST));
+
+    if (p.waitForStarted(-1)) {
+        p.waitForFinished(-1);
+        if (p.exitCode() == 0) {
+            QFile::remove(APK_SRC);
+            return true;
+        }
     }
-    p.waitForFinished(-1);
-    if (p.exitCode() == 0) {
-        QFile::remove(TEMPZIP);
-        return true;
-    }
-    else {
-        QFile::rename(TEMPZIP, filename);
-        return false;
-    }
+    // Something went wrong:
+    QFile::rename(APK_SRC, APK_DST);
+    return false;
 }
 
 bool Apk::optimize() const
 {
-    QString outFile = filename;
-    QFileInfo fi(outFile);
-    QString suffix = fi.suffix();
-    if (suffix.toLower() == "apk") {
-        outFile.chop(4);
-    }
-    const QString APK_SRC(TEMPDIR + "temp.apk");
-    const QString APK_DST(outFile + ".apk");
+    const QString APK_SRC(TEMPDIR + "temp-2.apk");
+    const QString APK_DST(TEMPDIR + "temp-3.apk");
 
     QProcess p;
     p.start(QString("zipalign -f 4 \"%1\" \"%2\"").arg(APK_SRC, APK_DST));
-    if (!p.waitForStarted(-1)) {
-        return die(tr("Error"), strErrorStart.arg("<b>zipalign</b>"));
+
+    if (p.waitForStarted(-1)) {
+        p.waitForFinished(-1);
+        if (p.exitCode() == 0) {
+            QFile::remove(APK_SRC);
+            return true;
+        }
     }
-    p.waitForFinished(-1);
-    if (p.exitCode() == 0) {
-        QFile::remove(APK_SRC);
-        return true;
+    // Something went wrong:
+    QFile::rename(APK_SRC, APK_DST);
+    return false;
+}
+
+bool Apk::finalize()
+{
+    QFileInfo fi(filename);
+    QString suffix = fi.suffix();
+    if (suffix.toLower() != "apk") {
+        filename += ".apk";
     }
-    else {
-        QFile::rename(APK_SRC, APK_DST);
-        return false;
-    }
+    QFile::remove(filename);
+    return QFile::rename(TEMPDIR + "temp-3.apk", filename);
 }
 
 bool Apk::die(QString title, QString text) const
 {
-    thread->quit();
     emit error(title, text);
     return false;
 }
 
 bool Apk::getZipSuccess(int code) const
 {
-    const QString error_7za(strError.arg("7ZA"));
+    const QString error_7za(tr(STR_ERROR.toLatin1()).arg("7ZA"));
 
     switch (code) {
     case 0:

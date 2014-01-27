@@ -6,7 +6,6 @@
 
 #include "icon.h"
 #include "profile.h" // for Dpi enum
-#include <QThread>
 
 /// \brief APK manager class.
 ///
@@ -19,25 +18,40 @@ class Apk : public QObject {
     Q_OBJECT
 
 private:
-    QString filename;                   ///< Current APK filename.
-    QString manifest;                   ///< Stores AndroidManifest.xml.
-    QList<QSharedPointer<Icon>> icons;  ///< Stores [shared pointers to] loaded APK icons.
-    QThread *thread;                    ///< Separate thread to #pack/#unpack.
+    QString filename;                       ///< Current APK filename.
+    QString manifest;                       ///< Stores AndroidManifest.xml.
+    QList<QSharedPointer<Icon>> icons;      ///< Stores [shared pointers to] loaded APK icons.
+    static const QString STR_ERROR;         ///< Error text template.
+    static const QString STR_ERRORSTART;    ///< Error text template.
+    static const QString TEMPDIR_APK;       ///< Temporary directory for unpacked resources.
 
-    QString strError;                   ///< Holds static error text ("%APP% error").
-    QString strErrorStart;              ///< Holds static error text ("Error starting %APP%").
-
-    /// \brief This function has to be called on fatal error. Kills active thread and emits #error signal.
+    /// \brief This function has to be called on fatal error.
+    /// Emits #error signal and returns \c FALSE.
     /// \param[in] title Error message brief title.
     /// \param[in] text  Error message detailed text.
-    /// \return This function always returns FALSE.
+    /// \return This function always returns \c FALSE.
     bool die(QString title, QString text) const;
 
     /// \brief Checks if 7za worked successfully by its exit code.
     /// \param[in] code 7za exit code.
-    /// \retval TRUE if 7za succesfully zipped/unzipped APK (#code equals 0).
-    /// \retval FALSE if 7za did not finish successfully (#code is non-zero).
+    /// \retval \c TRUE if 7za succesfully zipped/unzipped APK (#code equals 0).
+    /// \retval \c FALSE if 7za did not finish successfully (#code is non-zero).
     bool getZipSuccess(int code) const;
+
+    /// \brief Start immediate APK unpacking.
+    /// \return \c TRUE on success.
+    /// \warning This function MUST emit #error or #unpacked signal before exit.
+    /// \todo Write a wrapper function to improve design.
+    bool doUnpack();
+
+    /// \brief Start immediate APK packing.
+    /// \param[in] ratio 7za compression ratio (0-9).
+    /// \param[in] doSign If \c TRUE, sign APK.
+    /// \param[in] doOptimize If \c TRUE, optimize APK.
+    /// \return \c TRUE on success.
+    /// \warning This function MUST emit #error or #packed signal before exit.
+    /// \todo Write a wrapper function to improve design.
+    bool doPack(short ratio = 9, bool doSign = true, bool doOptimize = true);
 
     // Unpacking APK:
     bool readManifest();    ///< Read AndroidManifest.xml and save it to #manifest variable.
@@ -46,10 +60,11 @@ private:
 
     // Packing APK:
     bool saveIcons() const;             ///< Save icons from #icons list to PNG images.
-    bool zip() const;                   ///< Pack APK using "7za" tool.
+    bool zip(short ratio = 9) const;    ///< Pack APK  with specified compression \c ratio uusing "7za" tool.
     bool checkJavaInstalled() const;    ///< Check if Java Runtime Environment is installed.
     bool sign() const;                  ///< Sign APK using "signapk" tool.
-    bool optimize() const;              ///< Optimize APK (optional) using "zipalign" tool.
+    bool optimize() const;              ///< Optimize APK using "zipalign" tool.
+    bool finalize();                    ///< Move the final APK from temporary to user-specified directory.
 
 public:
     /// \brief Replace one of APK icons stored at #icons list.
@@ -62,10 +77,18 @@ public:
     /// \return Requested #icon.
     Icon *getIcon(Dpi id) const;
 
-    /// \brief Update QString translations.
-    void retranslate();
+    /// \brief Unpack APK by calling private #doUnpack method in a separate #thread.
+    /// \param[in] _filename Name of APK file to unpack.
+    void unpack(QString filename);
 
-    Apk();
+    /// \brief Pack APK by calling private #doPack method in a separate #thread.
+    /// \param[in] _filename Name of APK file to pack.
+    /// \param[in] ratio Compression ratio (0-9).
+    /// \param[in] doSign If \c TRUE, sign APK.
+    /// \param[in] doOptimize If \c TRUE, optimize APK.
+    void pack(QString filename, short ratio, bool doSign, bool doOptimize);
+
+    explicit Apk(QObject *parent) : QObject(parent) { }
 
 signals:
     /// \brief This signal represents current loading state.
@@ -96,28 +119,7 @@ signals:
     /// \param[in] filename Filename (with full path) of just packed APK.
     void packed(QString filename) const;
 
-private slots:
-    /// \brief Start immediate APK unpacking.
-    /// \return TRUE on success.
-    /// \warning Function should return FALSE only if #die method was called before.
-    /// \todo Probably such behavior (see \b warning) needs some refactoring.
-    bool doUnpack();
-
-    /// \brief Start immediate APK packing.
-    /// \return TRUE on success.
-    /// \warning Function should return FALSE only if #die method was called before.
-    /// \todo Probably such behavior (see \b warning) needs some refactoring.
-    bool doPack();
-
 public slots:
-    /// \brief Unpack APK by calling private #doUnpack method in a separate #thread.
-    /// \param[in] _filename Name of APK file to unpack.
-    void unpack(QString _filename);
-
-    /// \brief Pack APK by calling private #doPack method in a separate #thread.
-    /// \param[in] _filename Name of APK file to pack.
-    void pack(QString _filename);
-
     /// \brief Delete temporary files.
     void clearTemp();
 };

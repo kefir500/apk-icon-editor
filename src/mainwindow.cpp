@@ -20,7 +20,7 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) : QMainWindow(pa
     resize(WINDOW_WIDTH, WINDOW_HEIGHT);
     setAcceptDrops(true);
 
-    apk = new Apk();
+    apk = new Apk(this);
     updater = new Updater(this);
     translator = new QTranslator(this);
     translatorQt = new QTranslator(this);
@@ -57,8 +57,20 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) : QMainWindow(pa
     actIconRevert = new QAction(this);
     actIconBack = new QAction(this);
     menuLang = new QMenu(this);
+    menuPack = new QMenu(this);
+    menuRatio = new QMenu(this);
+    groupRatio = new QActionGroup(this);
+    actRatio0 = new QAction(this);
+    actRatio1 = new QAction(this);
+    actRatio3 = new QAction(this);
+    actRatio5 = new QAction(this);
+    actRatio7 = new QAction(this);
+    actRatio9 = new QAction(this);
+    actPackSign = new QAction(this);
+    actPackOptimize = new QAction(this);
     actAutoUpdate = new QAction(this);
     actAssoc = new QAction(this);
+    actReset = new QAction(this);
     actWebsite = new QAction(this);
     actReport = new QAction(this);
     actUpdate = new QAction(this);
@@ -75,11 +87,29 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) : QMainWindow(pa
     menuIcon->addAction(actIconScale);
     menuIcon->addAction(actIconResize);
     menuIcon->addAction(actIconRevert);
-    menuFile->addSeparator();
     menuIcon->addAction(actIconBack);
     menuSett->addMenu(menuLang);
+    menuSett->addMenu(menuPack);
     menuSett->addAction(actAutoUpdate);
+    menuSett->addSeparator();
     menuSett->addAction(actAssoc);
+    menuSett->addAction(actReset);
+    menuPack->addMenu(menuRatio);
+    menuPack->addAction(actPackSign);
+    menuPack->addAction(actPackOptimize);
+    groupRatio->addAction(actRatio0);
+    groupRatio->addAction(actRatio1);
+    groupRatio->addAction(actRatio3);
+    groupRatio->addAction(actRatio5);
+    groupRatio->addAction(actRatio7);
+    groupRatio->addAction(actRatio9);
+    actRatio0->setData(0);
+    actRatio1->setData(1);
+    actRatio3->setData(3);
+    actRatio5->setData(0);
+    actRatio7->setData(7);
+    actRatio9->setData(9);
+    menuRatio->addActions(groupRatio->actions());
     menuHelp->addAction(actWebsite);
     menuHelp->addAction(actReport);
     menuHelp->addSeparator();
@@ -95,6 +125,14 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) : QMainWindow(pa
     actIconScale->setVisible(false); // not sure about its necessity
     actIconResize->setEnabled(false);
     actIconRevert->setEnabled(false);
+    actRatio0->setCheckable(true);
+    actRatio1->setCheckable(true);
+    actRatio3->setCheckable(true);
+    actRatio5->setCheckable(true);
+    actRatio7->setCheckable(true);
+    actRatio9->setCheckable(true);
+    actPackSign->setCheckable(true);
+    actPackOptimize->setCheckable(true);
     actAutoUpdate->setCheckable(true);
     actApkSave->setIcon(QIcon(":/gfx/task-pack.png"));
     actApkOpen->setShortcut(QKeySequence("Ctrl+O"));
@@ -171,6 +209,7 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) : QMainWindow(pa
     connect(actIconRevert, SIGNAL(triggered()), this, SLOT(iconRevert()));
     connect(actIconBack, SIGNAL(triggered()), this, SLOT(setPreviewColor()));
     connect(actAssoc, SIGNAL(triggered()), this, SLOT(associate()));
+    connect(actReset, SIGNAL(triggered()), this, SLOT(resetSettings()));
     connect(actWebsite, SIGNAL(triggered()), this, SLOT(browseSite()));
     connect(actReport, SIGNAL(triggered()), this, SLOT(browseBugs()));
     connect(actUpdate, SIGNAL(triggered()), updater, SLOT(check()));
@@ -246,9 +285,13 @@ void MainWindow::restoreSettings()
     QString sLastDir = settings->value("Directory", "").toString();
     QByteArray sGeometry = settings->value("Geometry", NULL).toByteArray();
     QStringList sRecent = settings->value("Recent", NULL).toStringList();
-    bool sUpdate = settings->value("Update", true ).toBool();
+    short sRatio = settings->value("Compression", 9).toInt();
+    bool sSign = settings->value("Sign", true).toBool();
+    bool sOptimize = settings->value("Optimize", true).toBool();
+    bool sUpdate = settings->value("Update", true).toBool();
 
     // Restore settings:
+
     profiles->setCurrentGroup(sProfile);
     if (!sRecent.isEmpty()) {
         recent = sRecent;
@@ -258,10 +301,43 @@ void MainWindow::restoreSettings()
         clearRecent();
     }
 
+    switch (sRatio) {
+    case 0:
+        actRatio0->setChecked(true);
+        break;
+    case 1:
+        actRatio1->setChecked(true);
+        break;
+    case 3:
+        actRatio3->setChecked(true);
+        break;
+    case 5:
+        actRatio5->setChecked(true);
+        break;
+    case 7:
+        actRatio7->setChecked(true);
+        break;
+    case 9:
+        actRatio9->setChecked(true);
+        break;
+    }
+
     currentPath = sLastDir;
     restoreGeometry(sGeometry);
     setLanguage(sLanguage);
+    actPackSign->setChecked(sSign);
+    actPackOptimize->setChecked(sOptimize);
     actAutoUpdate->setChecked(sUpdate);
+}
+
+void MainWindow::resetSettings()
+{
+    if (QMessageBox::question(this, tr("Reset?"), tr("Reset settings to default?"))
+            == QMessageBox::Yes) {
+        settings->clear();
+        restoreSettings();
+        resize(WINDOW_WIDTH, WINDOW_HEIGHT);
+    }
 }
 
 void MainWindow::setLanguage(QString lang)
@@ -302,15 +378,25 @@ void MainWindow::setLanguage(QString lang)
     actIconRevert->setText(tr("Revert &Original"));
     actIconBack->setText(tr("Preview Background &Color"));
     menuLang->setTitle(tr("&Language"));
+    menuPack->setTitle(tr("&Packing"));
+    menuRatio->setTitle(tr("&Compression Ratio"));
+    actRatio0->setText(QString("0 (%1)").arg(tr("No Compression")));
+    actRatio1->setText(QString("1 (%1)").arg(tr("Fastest Compression")));
+    actRatio3->setText(QString("3 (%1)").arg(tr("Fast Compression")));
+    actRatio5->setText(QString("5 (%1)").arg(tr("Normal Compression")));
+    actRatio7->setText(QString("7 (%1)").arg(tr("Maximum Compression")));
+    actRatio9->setText(QString("9 (%1)").arg(tr("Ultra Compression")));
+    actPackSign->setText(QString("%1 (%2)").arg(tr("&Sign APK"), tr("Important")));
+    actPackOptimize->setText(tr("&Optimize APK"));
     actAutoUpdate->setText(tr("Auto-check for Updates"));
     actAssoc->setText(tr("Associate .APK"));
+    actReset->setText(tr("Reset Settings"));
     actWebsite->setText(tr("Visit Website"));
     actReport->setText(tr("Report a Bug"));
     actUpdate->setText(tr("Check for &Updates"));
     actAboutQt->setText(tr("About Qt"));
     actAbout->setText(tr("About %1").arg(APP));
     progress->setWindowTitle(tr("Processing"));
-    apk->retranslate();
 }
 
 void MainWindow::addToRecent(QString filename)
@@ -328,15 +414,28 @@ void MainWindow::addToRecent(QString filename)
 
 void MainWindow::refreshRecent()
 {
-    menuRecent->clear();
-    for (short i = 0; i < recent.size(); ++i) {
-        QAction *actRecent = new QAction(recent[i], menuRecent);
-        menuRecent->addAction(actRecent);
-        connect(actRecent, SIGNAL(triggered()), mapRecent, SLOT(map()));
-        mapRecent->setMapping(actRecent, recent[i]);
+    if (!recent.isEmpty()) {
+        menuRecent->clear();
+        for (short i = 0; i < recent.size(); ++i) {
+            QAction *actRecent = new QAction(recent[i], menuRecent);
+            menuRecent->addAction(actRecent);
+            connect(actRecent, SIGNAL(triggered()), mapRecent, SLOT(map()));
+            mapRecent->setMapping(actRecent, recent[i]);
+        }
+        menuRecent->addSeparator();
+        menuRecent->addAction(actRecentClear);
     }
+    else {
+        clearRecent();
+    }
+}
+
+void MainWindow::clearRecent()
+{
+    recent.clear();
+    menuRecent->clear();
     menuRecent->addSeparator();
-    menuRecent->addAction(actRecentClear);
+    menuRecent->addAction(actNoRecent);
 }
 
 void MainWindow::hideEmptyDpi()
@@ -414,14 +513,6 @@ void MainWindow::apkUnpacked(QString filename)
     actIconResize->setEnabled(true);
     actIconScale->setEnabled(true);
     btnPack->setEnabled(true);
-}
-
-void MainWindow::clearRecent()
-{
-    recent.clear();
-    menuRecent->clear();
-    menuRecent->addSeparator();
-    menuRecent->addAction(actNoRecent);
 }
 
 bool MainWindow::iconOpen(QString filename)
@@ -553,7 +644,7 @@ void MainWindow::apkLoad(QString filename)
     // Opening file:
     QFile file(filename);
     if (!file.exists()) {
-        error(tr("File not found"), tr("Could not find APK:\n%1").arg(filename));
+        warning(tr("File not found"), tr("Could not find APK:\n%1").arg(filename));
         recent.removeOne(filename);
         refreshRecent();
         return;
@@ -573,7 +664,10 @@ void MainWindow::apkSave()
     if (!filename.isEmpty()) {
         currentPath = QFileInfo(filename).absolutePath();
         progress->setValue(0);
-        apk->pack(filename);
+        bool sign = actPackSign->isChecked();
+        bool optimize = actPackOptimize->isChecked();
+        short ratio = groupRatio->checkedAction()->data().toInt();
+        apk->pack(filename, ratio, sign, optimize);
     }
 }
 
@@ -600,6 +694,7 @@ void MainWindow::browseBugs() const
 
 void MainWindow::about()
 {
+    const QString APPDIR(QApplication::applicationDirPath());
     const QString LINK("<a href=\"%1\">%2</a> - %3");
     /*const QString DATE = QLocale(QLocale::C).toDate(QString(__DATE__).simplified(),
                            QLatin1String("MMM d yyyy")).toString(Qt::ISODate);*/
@@ -624,8 +719,8 @@ void MainWindow::about()
             LINK.arg(URL_WEBSITE, tr("Visit Website"), tr("Visit our official website.")) + "<br>" +
             LINK.arg(URL_BUGS, tr("Report a Bug"), tr("Found a bug? Let us know so we can fix it!")) + "<br>" +
             LINK.arg(URL_TRANSLATE, tr("Help Translate"), tr("Join our translation team on Transifex.")) + "<br>" +
-            LINK.arg(QString("file:///%1/authors.txt")
-                .arg(QApplication::applicationDirPath()), tr("List of Authors"), tr("Contributors, translators, testers and helpers.")) +
+            LINK.arg(QString("file:///%1/authors.txt").arg(APPDIR), tr("List of Authors"), tr("Contributors, translators, testers and helpers.")) + "<br>" +
+            LINK.arg(QString("file:///%1/versions.txt").arg(APPDIR), tr("Version History"), tr("List of changes made to the project.")) +
         "</p>"
     );
     aboutBox.setIconPixmap(QPixmap(":/gfx/logo.png"));
@@ -746,6 +841,9 @@ void MainWindow::closeEvent(QCloseEvent *event)
     // Save settings:
     settings->setValue("Profile", profiles->currentGroupText());
     settings->setValue("Language", currentLang);
+    settings->setValue("Compression", groupRatio->checkedAction()->data().toInt());
+    settings->setValue("Sign", actPackSign->isChecked());
+    settings->setValue("Optimize", actPackOptimize->isChecked());
     settings->setValue("Update", actAutoUpdate->isChecked());
     settings->setValue("Directory", currentPath);
     settings->setValue("Geometry", saveGeometry());
