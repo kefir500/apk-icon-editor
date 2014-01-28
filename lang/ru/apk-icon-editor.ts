@@ -104,7 +104,7 @@ APK is invalid.</source>
     <message>
         <location filename="../../src/apk.cpp" line="216"/>
         <source>(or check PATH variable if already installed)</source>
-        <translation>(если JRE уже установлен, проверьте переменную PATH, )</translation>
+        <translation>(если JRE уже установлен, проверьте переменную PATH)</translation>
     </message>
     <message>
         <location filename="../../src/apk.cpp" line="230"/>
