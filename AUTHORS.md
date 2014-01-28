@@ -7,7 +7,7 @@
 #### Russian
 - [Alexander Gorishnyak](https://github.com/kefir500)
 
-## Alpha Testing
+## Testers
 - Vladimir Gorishnyak
 
 ## Special Thanks

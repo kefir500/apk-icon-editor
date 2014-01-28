@@ -14,4 +14,4 @@ __APK Icon Editor__ is the tool designed to easily edit and replace APK (Android
 * __Java Runtime Environment (JRE)__ - for APKs signing.
 
 ## License
-__GNU General Public License v2.0__
+* __GNU General Public License v2.0__
