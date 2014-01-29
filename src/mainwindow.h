@@ -15,6 +15,7 @@
 #include "apk.h"
 #include "combolist.h"
 #include "drawarea.h"
+#include "effects.h"
 #include "updater.h"
 
 #define QT5_2_0 (QT_VERSION >= QT_VERSION_CHECK(5, 2, 0))
@@ -30,6 +31,7 @@ private:
     DrawArea *drawArea;
     ComboList *profiles;
     QPushButton *btnPack;
+    EffectsDialog *effects;
     QProgressDialog *progress;
     QSignalMapper *mapLang;
     QSignalMapper *mapRecent;
@@ -74,6 +76,7 @@ private:
     QAction *actIconResize;
     QAction *actIconRevert;
     QAction *actIconBack;
+    QAction *actIconEffect;
     QAction *actAssoc;
     QAction *actReset;
     QAction *actAutoUpdate;
@@ -116,6 +119,11 @@ private slots:
 
     void resetSettings();                   ///< Reset settings to default.
 
+    void setColorActive(bool activate);     ///< Turn "Colorize" effect on/off.
+    void setBlurActive(bool activate);      ///< Turn "Blur" effect on/off.
+    void setColor(QColor color);            ///< Set the \c color of "Colorize" effect.
+    void setBlur(qreal radius);             ///< Set the \c radius of "Blur" effect.
+
     /// Close loading dialog. If \c success, sets \filename as the current APK.
     void loadingComplete(bool success = false, QString filename = NULL);
 
@@ -150,6 +158,7 @@ private slots:
     void setLanguage(QString lang); ///< Set GUI language.
     void setCurrentIcon(int id);    ///< Set icon to draw in \c drawArea widget.
     void setPreviewColor();         ///< Show dialog to select background preview color.
+    void showEffectsDialog();       ///< Show "Effects" dialog.
     void hideEmptyDpi();            ///< Hide unused (empty) icons from \c profiles widget.
     void clearRecent();             ///< Clear list of recently opened APKs.
 

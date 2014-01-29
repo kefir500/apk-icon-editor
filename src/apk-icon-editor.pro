@@ -13,6 +13,7 @@ SOURCES += main.cpp \
            mainwindow.cpp \
            combolist.cpp \
            drawarea.cpp \
+           effects.cpp \
            apk.cpp \
            icon.cpp \
            profile.cpp \
@@ -22,6 +23,7 @@ HEADERS += main.h \
            mainwindow.h \
            combolist.h \
            drawarea.h \
+           effects.h \
            apk.h \
            icon.h \
            profile.h \

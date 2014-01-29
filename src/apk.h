@@ -67,11 +67,6 @@ private:
     bool finalize();                    ///< Move the final APK from temporary to user-specified directory.
 
 public:
-    /// \brief Replace one of APK icons stored at #icons list.
-    /// \param[in] id   DPI of icon to replace.
-    /// \param[in] icon Icon to replace with.
-    void setIcon(Dpi id, Icon *icon);
-
     /// \brief Get APK icon from #icons list.
     /// \param[in] id DPI of the required icon.
     /// \return Requested #icon.

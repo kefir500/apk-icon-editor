@@ -2,6 +2,7 @@
     <qresource prefix="/">
         <file>gfx/bg.png</file>
         <file>gfx/bug.png</file>
+        <file>gfx/effects.png</file>
         <file>gfx/icon-android.png</file>
         <file>gfx/icon-kindle.png</file>
         <file>gfx/logo.png</file>

@@ -30,7 +30,7 @@ void DrawArea::setIcon(Icon *_icon)
     icon = _icon;
     welcome = false;
     setStyleSheet(STYLE_DEFAULT);
-    //repaint();
+    repaint();
 }
 
 void DrawArea::mousePressEvent(QMouseEvent *event)

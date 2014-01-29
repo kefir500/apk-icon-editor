@@ -341,10 +341,10 @@ bool Apk::getZipSuccess(int code) const
     }
 }
 
-void Apk::setIcon(Dpi id, Icon *icon)
+/*void Apk::setIcon(Dpi id, Icon *icon)
 {
     icons[id] = QSharedPointer<Icon>(icon);
-}
+}*/
 
 Icon *Apk::getIcon(Dpi id) const
 {

@@ -7,8 +7,6 @@
 #include <QColorDialog>
 #include <QFileDialog>
 #include <QInputDialog>
-#include <QDate>
-#include <QDesktopServices>
 #include <QApplication>
 
 #ifdef QT_DEBUG
@@ -21,6 +19,7 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) : QMainWindow(pa
     setAcceptDrops(true);
 
     apk = new Apk(this);
+    effects = new EffectsDialog(this);
     updater = new Updater(this);
     translator = new QTranslator(this);
     translatorQt = new QTranslator(this);
@@ -55,6 +54,7 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) : QMainWindow(pa
     actIconScale = new QAction(this);
     actIconResize = new QAction(this);
     actIconRevert = new QAction(this);
+    actIconEffect = new QAction(this);
     actIconBack = new QAction(this);
     menuLang = new QMenu(this);
     menuPack = new QMenu(this);
@@ -87,6 +87,8 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) : QMainWindow(pa
     menuIcon->addAction(actIconScale);
     menuIcon->addAction(actIconResize);
     menuIcon->addAction(actIconRevert);
+    menuIcon->addAction(actIconEffect);
+    menuIcon->addSeparator();
     menuIcon->addAction(actIconBack);
     menuSett->addMenu(menuLang);
     menuSett->addMenu(menuPack);
@@ -125,6 +127,7 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) : QMainWindow(pa
     actIconScale->setVisible(false); // not sure about its necessity
     actIconResize->setEnabled(false);
     actIconRevert->setEnabled(false);
+    actIconEffect->setEnabled(false);
     actRatio0->setCheckable(true);
     actRatio1->setCheckable(true);
     actRatio3->setCheckable(true);
@@ -141,6 +144,8 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) : QMainWindow(pa
     actIconSave->setShortcut(QKeySequence("Ctrl+S"));
     actIconResize->setShortcut(QKeySequence("Ctrl+I"));
     actIconRevert->setShortcut(QKeySequence("Ctrl+Z"));
+    actIconEffect->setShortcut(QKeySequence("F"));
+    actIconEffect->setIcon(QIcon(":/gfx/effects.png"));
     actReport->setIcon(QIcon(":/gfx/bug.png"));
     actExit->setShortcut(QKeySequence("Ctrl+Q"));
 
@@ -157,6 +162,7 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) : QMainWindow(pa
     drawArea->addAction(actIconScale);
     drawArea->addAction(actIconResize);
     drawArea->addAction(actIconRevert);
+    drawArea->addAction(actIconEffect);
     drawArea->addAction(separator2);
     drawArea->addAction(actIconBack);
     drawArea->setSizePolicy(QSizePolicy::MinimumExpanding,
@@ -207,6 +213,7 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) : QMainWindow(pa
     connect(actIconScale, SIGNAL(triggered()), this, SLOT(iconScale()));
     connect(actIconResize, SIGNAL(triggered()), this, SLOT(iconResize()));
     connect(actIconRevert, SIGNAL(triggered()), this, SLOT(iconRevert()));
+    connect(actIconEffect, SIGNAL(triggered()), this, SLOT(showEffectsDialog()));
     connect(actIconBack, SIGNAL(triggered()), this, SLOT(setPreviewColor()));
     connect(actAssoc, SIGNAL(triggered()), this, SLOT(associate()));
     connect(actReset, SIGNAL(triggered()), this, SLOT(resetSettings()));
@@ -217,6 +224,10 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) : QMainWindow(pa
     connect(actAbout, SIGNAL(triggered()), this, SLOT(about()));
     connect(btnPack, SIGNAL(clicked()), this, SLOT(apkSave()));
     connect(mapRecent, SIGNAL(mapped(QString)), this, SLOT(apkLoad(QString)));
+    connect(effects, SIGNAL(colorActivated(bool)), this, SLOT(setColorActive(bool)));
+    connect(effects, SIGNAL(blurActivated(bool)), this, SLOT(setBlurActive(bool)));
+    connect(effects, SIGNAL(colorize(QColor)), this, SLOT(setColor(QColor)));
+    connect(effects, SIGNAL(blur(qreal)), this, SLOT(setBlur(qreal)));
     connect(apk, SIGNAL(loading(short, QString)), this, SLOT(loading(short, QString)), Qt::BlockingQueuedConnection);
     connect(apk, SIGNAL(success(QString, QString)), this, SLOT(success(QString, QString)));
     connect(apk, SIGNAL(warning(QString, QString)), this, SLOT(warning(QString, QString)));
@@ -376,6 +387,7 @@ void MainWindow::setLanguage(QString lang)
     actIconScale->setText(tr("Scale to &Fit"));
     actIconResize->setText(tr("&Resize Icon"));
     actIconRevert->setText(tr("Revert &Original"));
+    actIconEffect->setText(tr("E&ffects"));
     actIconBack->setText(tr("Preview Background &Color"));
     menuLang->setTitle(tr("&Language"));
     menuPack->setTitle(tr("&Packing"));
@@ -397,6 +409,8 @@ void MainWindow::setLanguage(QString lang)
     actAboutQt->setText(tr("About Qt"));
     actAbout->setText(tr("About %1").arg(APP));
     progress->setWindowTitle(tr("Processing"));
+
+    effects->retranslate();
 }
 
 void MainWindow::addToRecent(QString filename)
@@ -467,6 +481,54 @@ void MainWindow::setCurrentIcon(int id)
     }
 }
 
+void MainWindow::setColorActive(bool activate)
+{
+    Icon *icon = drawArea->getIcon();
+    if (!icon->isNull()) {
+        icon->setColorEnabled(activate);
+        drawArea->repaint();
+    }
+    else {
+        invalidDpi();
+    }
+}
+
+void MainWindow::setBlurActive(bool activate)
+{
+    Icon *icon = drawArea->getIcon();
+    if (!icon->isNull()) {
+        icon->setBlurEnabled(activate);
+        drawArea->repaint();
+    }
+    else {
+        invalidDpi();
+    }
+}
+
+void MainWindow::setColor(QColor color)
+{
+    Icon *icon = drawArea->getIcon();
+    if (!icon->isNull()) {
+        icon->setColor(color);
+        drawArea->repaint();
+    }
+    else {
+        invalidDpi();
+    }
+}
+
+void MainWindow::setBlur(qreal radius)
+{
+    Icon *icon = drawArea->getIcon();
+    if (!icon->isNull()) {
+        icon->setBlur(radius);
+        drawArea->repaint();
+    }
+    else {
+        invalidDpi();
+    }
+}
+
 void MainWindow::setActiveApk(QString filename)
 {
     setWindowModified(false);
@@ -505,11 +567,12 @@ void MainWindow::apkUnpacked(QString filename)
     profiles->setCurrentItem(id);
     hideEmptyDpi();
 
-    // Enable operations with APK:
+    // Enable operations with APK and icons:
     actApkSave->setEnabled(true);
     actIconOpen->setEnabled(true);
     actIconSave->setEnabled(true);
     actIconRevert->setEnabled(true);
+    actIconEffect->setEnabled(true);
     actIconResize->setEnabled(true);
     actIconScale->setEnabled(true);
     btnPack->setEnabled(true);
@@ -625,6 +688,34 @@ void MainWindow::setPreviewColor()
         QPixmap icon(32, 32);
         icon.fill(color);
         actIconBack->setIcon(QIcon(icon));
+    }
+}
+
+void MainWindow::showEffectsDialog()
+{
+    Icon *icon = drawArea->getIcon();
+    if (!icon->isNull()) {
+        bool tempIsColor = icon->getColorEnabled();
+        bool tempIsBlur = icon->getBlurEnabled();
+        QColor tempColor = icon->getColor();
+        qreal tempBlur = icon->getBlur();
+        effects->setColorEnabled(icon->getColorEnabled());
+        effects->setColor(icon->getColor());
+        effects->setBlurEnabled(icon->getBlurEnabled());
+        effects->setBlur(icon->getBlur());
+        // TODO: Get rid of flicker on exec().
+        if (effects->exec() == QDialog::Accepted) {
+            setWindowModified(true);
+        }
+        else {
+            icon->setColorEnabled(tempIsColor);
+            icon->setBlurEnabled(tempIsBlur);
+            icon->setColor(tempColor);
+            icon->setBlur(tempBlur);
+        }
+    }
+    else {
+        invalidDpi();
     }
 }
 
