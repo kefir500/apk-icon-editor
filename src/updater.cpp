@@ -27,7 +27,7 @@ void Updater::download()
 
 bool Updater::compare(QString v1, QString v2)
 {
-    // Unit test is available fot this function.
+    // Unit test is available for this function.
 
     QStringList list1 = v1.split('.');
     QStringList list2 = v2.split('.');
