@@ -1,5 +1,12 @@
 # Version History
 
+## 0.3.1
+* Added *Rotate* effect.
+* Improved *Colorize* effect.
+* Fixed *Blur* transparency.
+* Minor GUI improvements.
+* Minor bug fixes.
+
 ## 0.3
 * Added *Colorize* effect.
 * Added *Blur* effect.
