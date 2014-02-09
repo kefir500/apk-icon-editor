@@ -98,6 +98,7 @@ private:
     void restoreSettings();                 ///< Restore settings from INI.
     bool confirmExit();                     ///< Ask user to confim exit.
     void invalidDpi();                      ///< Show "Invalid DPI" message.
+    void connectRepaintSignals();           ///< Create signal-slot connections to repaint windows.
 
     void initLanguages();                   ///< Initialize available languages.
     void initProfiles();                    ///< Initialize available profiles.
@@ -118,11 +119,6 @@ private slots:
     void apkUnpacked(QString filename);     ///< Handle APK unpacked from the \c filename.
 
     void resetSettings();                   ///< Reset settings to default.
-
-    void setColorActive(bool activate);     ///< Turn "Colorize" effect on/off.
-    void setBlurActive(bool activate);      ///< Turn "Blur" effect on/off.
-    void setColor(QColor color);            ///< Set the \c color of "Colorize" effect.
-    void setBlur(qreal radius);             ///< Set the \c radius of "Blur" effect.
 
     /// Close loading dialog. If \c success, sets \filename as the current APK.
     void loadingComplete(bool success = false, QString filename = NULL);

@@ -38,8 +38,12 @@ bool Icon::revert()
 {
     isColor = false;
     isBlur = false;
+    angle = 0;
+    flipX = false;
+    flipY = false;
     color = Qt::black;
-    blur = 0;
+    depth = 1.0;
+    blur = 1.0;
     return !(pixmap = QPixmap(filename_original)).isNull();
 }
 
@@ -47,22 +51,36 @@ QPixmap Icon::applyEffects()
 {
     QPixmap gfx = pixmap;
 
-    if (isColor) {
+    if (isColor && !qFuzzyIsNull(depth)) {
         QLabel w;
         QGraphicsColorizeEffect *effect = new QGraphicsColorizeEffect();
         effect->setColor(color);
+        effect->setStrength(depth);
         w.setPixmap(gfx);
         w.setGraphicsEffect(effect);
         gfx = w.grab();
     }
 
-    if (isBlur && blur != 0) {
+    if (isBlur && blur >= 1.0) {
         QLabel w;
         QGraphicsBlurEffect *effect = new QGraphicsBlurEffect();
         effect->setBlurRadius(blur);
+        effect->setBlurHints(QGraphicsBlurEffect::QualityHint);
         w.setPixmap(gfx);
         w.setGraphicsEffect(effect);
         gfx = w.grab();
+    }
+
+    if (flipX) {
+        gfx = gfx.transformed(QTransform().scale(-1, 1));
+    }
+
+    if (flipY) {
+        gfx = gfx.transformed(QTransform().scale(1, -1));
+    }
+
+    if (angle != 0) {
+        gfx = gfx.transformed(QTransform().rotate(angle));
     }
 
     return gfx;

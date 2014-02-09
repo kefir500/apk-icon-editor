@@ -150,21 +150,12 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) : QMainWindow(pa
     actExit->setShortcut(QKeySequence("Ctrl+Q"));
 
     drawArea = new DrawArea(this);
-    QAction *separator1 = new QAction(this);
-    QAction *separator2 = new QAction(this);
-    separator1->setSeparator(true);
-    separator2->setSeparator(true);
+    QAction *separator = new QAction(this);
+    separator->setSeparator(true);
     drawArea->setContextMenuPolicy(Qt::ActionsContextMenu);
     drawArea->addAction(actApkOpen);
-    drawArea->addAction(separator1);
-    drawArea->addAction(actIconOpen);
-    drawArea->addAction(actIconSave);
-    drawArea->addAction(actIconScale);
-    drawArea->addAction(actIconResize);
-    drawArea->addAction(actIconRevert);
-    drawArea->addAction(actIconEffect);
-    drawArea->addAction(separator2);
-    drawArea->addAction(actIconBack);
+    drawArea->addAction(separator);
+    drawArea->addActions(menuIcon->actions());
     drawArea->setSizePolicy(QSizePolicy::MinimumExpanding,
                             QSizePolicy::MinimumExpanding);
 
@@ -180,6 +171,7 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) : QMainWindow(pa
                              & ~Qt::WindowCloseButtonHint);
 
     profiles = new ComboList(this);
+    profiles->addActions(menuIcon->actions());
 
     btnPack = new QPushButton(this);
     btnPack->setEnabled(false);
@@ -224,10 +216,6 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) : QMainWindow(pa
     connect(actAbout, SIGNAL(triggered()), this, SLOT(about()));
     connect(btnPack, SIGNAL(clicked()), this, SLOT(apkSave()));
     connect(mapRecent, SIGNAL(mapped(QString)), this, SLOT(apkLoad(QString)));
-    connect(effects, SIGNAL(colorActivated(bool)), this, SLOT(setColorActive(bool)));
-    connect(effects, SIGNAL(blurActivated(bool)), this, SLOT(setBlurActive(bool)));
-    connect(effects, SIGNAL(colorize(QColor)), this, SLOT(setColor(QColor)));
-    connect(effects, SIGNAL(blur(qreal)), this, SLOT(setBlur(qreal)));
     connect(apk, SIGNAL(loading(short, QString)), this, SLOT(loading(short, QString)), Qt::BlockingQueuedConnection);
     connect(apk, SIGNAL(success(QString, QString)), this, SLOT(success(QString, QString)));
     connect(apk, SIGNAL(warning(QString, QString)), this, SLOT(warning(QString, QString)));
@@ -464,6 +452,18 @@ void MainWindow::hideEmptyDpi()
     }
 }
 
+void MainWindow::connectRepaintSignals()
+{
+    connect(effects, SIGNAL(colorActivated(bool)), drawArea, SLOT(repaint()));
+    connect(effects, SIGNAL(blurActivated(bool)), drawArea, SLOT(repaint()));
+    connect(effects, SIGNAL(rotate(int)), drawArea, SLOT(repaint()));
+    connect(effects, SIGNAL(flipX(bool)), drawArea, SLOT(repaint()));
+    connect(effects, SIGNAL(flipY(bool)), drawArea, SLOT(repaint()));
+    connect(effects, SIGNAL(colorize(QColor)), drawArea, SLOT(repaint()));
+    connect(effects, SIGNAL(colorDepth(qreal)), drawArea, SLOT(repaint()));
+    connect(effects, SIGNAL(blur(qreal)), drawArea, SLOT(repaint()));
+}
+
 void MainWindow::setCurrentIcon(int id)
 {
     if (id == -1) {
@@ -477,55 +477,17 @@ void MainWindow::setCurrentIcon(int id)
     int side = profile.getDpiSide(static_cast<Dpi>(id));
     drawArea->setRect(side, side);
     if (Icon *icon = apk->getIcon(static_cast<Dpi>(id))) {
+        disconnect(effects, 0, 0, 0);
+        connect(effects, SIGNAL(colorActivated(bool)), icon, SLOT(setColorEnabled(bool)), Qt::DirectConnection);
+        connect(effects, SIGNAL(blurActivated(bool)), icon, SLOT(setBlurEnabled(bool)), Qt::DirectConnection);
+        connect(effects, SIGNAL(rotate(int)), icon, SLOT(setAngle(int)), Qt::DirectConnection);
+        connect(effects, SIGNAL(flipX(bool)), icon, SLOT(setFlipX(bool)), Qt::DirectConnection);
+        connect(effects, SIGNAL(flipY(bool)), icon, SLOT(setFlipY(bool)), Qt::DirectConnection);
+        connect(effects, SIGNAL(colorize(QColor)), icon, SLOT(setColor(QColor)), Qt::DirectConnection);
+        connect(effects, SIGNAL(colorDepth(qreal)), icon, SLOT(setDepth(qreal)), Qt::DirectConnection);
+        connect(effects, SIGNAL(blur(qreal)), icon, SLOT(setBlur(qreal)), Qt::DirectConnection);
+        connectRepaintSignals();
         drawArea->setIcon(icon);
-    }
-}
-
-void MainWindow::setColorActive(bool activate)
-{
-    Icon *icon = drawArea->getIcon();
-    if (!icon->isNull()) {
-        icon->setColorEnabled(activate);
-        drawArea->repaint();
-    }
-    else {
-        invalidDpi();
-    }
-}
-
-void MainWindow::setBlurActive(bool activate)
-{
-    Icon *icon = drawArea->getIcon();
-    if (!icon->isNull()) {
-        icon->setBlurEnabled(activate);
-        drawArea->repaint();
-    }
-    else {
-        invalidDpi();
-    }
-}
-
-void MainWindow::setColor(QColor color)
-{
-    Icon *icon = drawArea->getIcon();
-    if (!icon->isNull()) {
-        icon->setColor(color);
-        drawArea->repaint();
-    }
-    else {
-        invalidDpi();
-    }
-}
-
-void MainWindow::setBlur(qreal radius)
-{
-    Icon *icon = drawArea->getIcon();
-    if (!icon->isNull()) {
-        icon->setBlur(radius);
-        drawArea->repaint();
-    }
-    else {
-        invalidDpi();
     }
 }
 
@@ -695,23 +657,35 @@ void MainWindow::showEffectsDialog()
 {
     Icon *icon = drawArea->getIcon();
     if (!icon->isNull()) {
-        bool tempIsColor = icon->getColorEnabled();
-        bool tempIsBlur = icon->getBlurEnabled();
-        QColor tempColor = icon->getColor();
-        qreal tempBlur = icon->getBlur();
-        effects->setColorEnabled(icon->getColorEnabled());
-        effects->setColor(icon->getColor());
-        effects->setBlurEnabled(icon->getBlurEnabled());
-        effects->setBlur(icon->getBlur());
+        const int TEMP_ANGLE = icon->getAngle();
+        const bool TEMP_FLIP_X = icon->getFlipX();
+        const bool TEMP_FLIP_Y = icon->getFlipY();
+        const bool TEMP_IS_COLOR = icon->getColorEnabled();
+        const bool TEMP_IS_BLUR = icon->getBlurEnabled();
+        const QColor TEMP_COLOR = icon->getColor();
+        const qreal TEMP_DEPTH = icon->getDepth();
+        const qreal TEMP_BLUR = icon->getBlur();
+        effects->setRotation(TEMP_ANGLE);
+        effects->setFlipX(TEMP_FLIP_X);
+        effects->setFlipY(TEMP_FLIP_Y);
+        effects->setColorEnabled(TEMP_IS_COLOR);
+        effects->setColor(TEMP_COLOR);
+        effects->setColorDepth(TEMP_DEPTH * 100);
+        effects->setBlurEnabled(TEMP_IS_BLUR);
+        effects->setBlur(TEMP_BLUR * 10);
         // TODO: Get rid of flicker on exec().
         if (effects->exec() == QDialog::Accepted) {
             setWindowModified(true);
         }
         else {
-            icon->setColorEnabled(tempIsColor);
-            icon->setBlurEnabled(tempIsBlur);
-            icon->setColor(tempColor);
-            icon->setBlur(tempBlur);
+            icon->setAngle(TEMP_ANGLE);
+            icon->setFlipX(TEMP_FLIP_X);
+            icon->setFlipY(TEMP_FLIP_Y);
+            icon->setColorEnabled(TEMP_IS_COLOR);
+            icon->setBlurEnabled(TEMP_IS_BLUR);
+            icon->setColor(TEMP_COLOR);
+            icon->setDepth(TEMP_DEPTH);
+            icon->setBlur(TEMP_BLUR);
         }
     }
     else {

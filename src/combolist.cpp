@@ -18,6 +18,8 @@ ComboList::ComboList(QWidget *parent) : QWidget(parent)
     layout->addWidget(list);
     layout->setMargin(0);
 
+    list->setContextMenuPolicy(Qt::ActionsContextMenu);
+
     connect(list, SIGNAL(currentRowChanged(int)), this, SIGNAL(itemChanged(int)));
     connect(combo, SIGNAL(currentTextChanged(QString)), this, SLOT(setCurrentGroup(QString)));
 }

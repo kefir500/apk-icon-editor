@@ -37,11 +37,11 @@
 
 const int WINDOW_WIDTH      = 714;
 const int WINDOW_HEIGHT     = 484;
-const QString VER           = "0.3";
+const QString VER           = "0.3.1";
 const QString URL_WEBSITE   = "http://kefir500.github.io/apk-icon-editor/";
 const QString URL_GITHUB    = "https://github.com/kefir500/apk-icon-editor/";
 const QString URL_VERSION   = URL_WEBSITE + "VERSION";
-const QString URL_UPDATE    = URL_WEBSITE + "download/";
+const QString URL_UPDATE    = URL_WEBSITE + "download/#update";
 const QString URL_BUGS      = URL_GITHUB + "issues/new/";
 const QString URL_JAVA      = "http://java.com/download";
 const QString URL_TRANSLATE = "https://www.transifex.com/projects/p/apk-icon-editor/";
