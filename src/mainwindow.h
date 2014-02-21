@@ -6,6 +6,7 @@
 
 #include <QMainWindow>
 #include <QPushButton>
+#include <QCheckBox>
 #include <QProgressDialog>
 #include <QSignalMapper>
 #include <QActionGroup>
@@ -16,32 +17,26 @@
 #include "combolist.h"
 #include "drawarea.h"
 #include "effects.h"
+#include "dialogs.h"
 #include "updater.h"
-
-#define QT5_2_0 (QT_VERSION >= QT_VERSION_CHECK(5, 2, 0))
-
-#ifdef QT5_2_0
-    #include <QtWinExtras/QtWinExtras>
-#endif
+#include "dropbox.h"
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
 
 private:
     DrawArea *drawArea;
-    ComboList *profiles;
+    ComboList *devices;
     QPushButton *btnPack;
+    QCheckBox *checkDropbox;
     EffectsDialog *effects;
-    QProgressDialog *progress;
+    ProgressDialog *loadingDialog;
+    ProgressDialog *uploadDialog;
     QSignalMapper *mapLang;
     QSignalMapper *mapRecent;
     QTranslator *translator;
     QTranslator *translatorQt;
     QSettings *settings;
-
-#ifdef QT5_2_0
-    QWinTaskbarButton *taskbar;
-#endif
 
     // Menus:
     QMenu *menuFile;
@@ -88,6 +83,7 @@ private:
 
     Apk *apk;
     Updater *updater;
+    Dropbox *dropbox;
     QString currentLang;
     QString currentPath;
     QStringList recent;
@@ -115,13 +111,14 @@ private slots:
     void apkLoad(QString filename = NULL);  ///< Open APK from the \c filename. If \c filename is NULL, show "Open" dialog.
     void apkSave();                         ///< Save APK (calls "Save" dialog).
 
-    void apkPacked(QString filename);       ///< Handle APK packed from the \c filename.
-    void apkUnpacked(QString filename);     ///< Handle APK unpacked from the \c filename.
+    /// Handle packed APK.
+    /// \param[in] filename  Name of the packed APK file.
+    /// \param[in] isSuccess \c FALSE if APK is packed with warnings.
+    /// \param[in] text      Additional message text.
+    void apkPacked(QString filename, bool isSuccess = true, QString text = false);
 
-    void resetSettings();                   ///< Reset settings to default.
-
-    /// Close loading dialog. If \c success, sets \filename as the current APK.
-    void loadingComplete(bool success = false, QString filename = NULL);
+    void apkUnpacked(QString filename);             ///< Handle APK unpacked from the \c filename.
+    void resetSettings();                           ///< Reset settings to default.
 
 //------------------------------------------------------------------------------
 
@@ -164,10 +161,10 @@ private slots:
     /// \param[in] version Number representing the new version.
     bool newVersion(QString version);
 
-    /// Show "Loading" dialog with the given parameters.
-    /// \param[in] percentage Loading progress (0-100).
-    /// \param[in] text Additional loading text.
-    void loading(short percentage, QString text = NULL);
+    void authDropbox();
+    void uploaded(bool isSuccess = true);
+
+    QString input(QString title, QString text);
 
     /// Show success message.
     /// \param[in] title Message brief title.

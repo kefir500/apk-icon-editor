@@ -21,6 +21,7 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) : QMainWindow(pa
     apk = new Apk(this);
     effects = new EffectsDialog(this);
     updater = new Updater(this);
+    dropbox = new Dropbox(this);
     translator = new QTranslator(this);
     translatorQt = new QTranslator(this);
     settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, "apk-icon-editor", "config", this);
@@ -28,10 +29,6 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) : QMainWindow(pa
     QWidget *w = new QWidget(this);
     QHBoxLayout *layout = new QHBoxLayout(w);
     setCentralWidget(w);
-
-#ifdef QT5_2_0
-    taskbar = new QWinTaskbarButton(this);
-#endif
 
     QMenuBar *menu = new QMenuBar(this);
     setMenuBar(menu);
@@ -159,26 +156,25 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) : QMainWindow(pa
     drawArea->setSizePolicy(QSizePolicy::MinimumExpanding,
                             QSizePolicy::MinimumExpanding);
 
-    progress = new QProgressDialog(this);
-    progress->setRange(0, 100);
-    progress->setModal(true);
-    progress->setFixedSize(200, 62);
-    progress->setAutoClose(false);
-    progress->setAutoReset(false);
-    progress->setCancelButton(NULL);
-    progress->setWindowFlags(progress->windowFlags()
-                             & ~Qt::WindowContextHelpButtonHint
-                             & ~Qt::WindowCloseButtonHint);
+    loadingDialog = new ProgressDialog(this);
+    loadingDialog->setIcon(QPixmap(":/gfx/task-pack.png"));
+    loadingDialog->setAllowCancel(false);
 
-    profiles = new ComboList(this);
-    profiles->addActions(menuIcon->actions());
+    uploadDialog = new ProgressDialog(this);
+    uploadDialog->setIcon(QPixmap(":/gfx/icon-dropbox.png"));
+
+    devices = new ComboList(this);
+    devices->addActions(menuIcon->actions());
 
     btnPack = new QPushButton(this);
     btnPack->setEnabled(false);
     btnPack->setFixedHeight(64);
+    checkDropbox = new QCheckBox(this);
+    checkDropbox->setIcon(QIcon(QPixmap(":/gfx/icon-dropbox.png")));
 
     QVBoxLayout *layoutProfile = new QVBoxLayout();
-    layoutProfile->addWidget(profiles);
+    layoutProfile->addWidget(devices);
+    layoutProfile->addWidget(checkDropbox);
     layoutProfile->addWidget(btnPack);
 
     layout->addWidget(drawArea);
@@ -194,8 +190,8 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) : QMainWindow(pa
     hideEmptyDpi();
 
     connect(drawArea, SIGNAL(clicked()), this, SLOT(apkLoad()));
-    connect(profiles, SIGNAL(groupChanged(int)), this, SLOT(hideEmptyDpi()));
-    connect(profiles, SIGNAL(itemChanged(int)), this, SLOT(setCurrentIcon(int)));
+    connect(devices, SIGNAL(groupChanged(int)), this, SLOT(hideEmptyDpi()));
+    connect(devices, SIGNAL(itemChanged(int)), this, SLOT(setCurrentIcon(int)));
     connect(actApkOpen, SIGNAL(triggered()), this, SLOT(apkLoad()));
     connect(actApkSave, SIGNAL(triggered()), this, SLOT(apkSave()));
     connect(actExit, SIGNAL(triggered()), this, SLOT(close()));
@@ -216,13 +212,16 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) : QMainWindow(pa
     connect(actAbout, SIGNAL(triggered()), this, SLOT(about()));
     connect(btnPack, SIGNAL(clicked()), this, SLOT(apkSave()));
     connect(mapRecent, SIGNAL(mapped(QString)), this, SLOT(apkLoad(QString)));
-    connect(apk, SIGNAL(loading(short, QString)), this, SLOT(loading(short, QString)), Qt::BlockingQueuedConnection);
-    connect(apk, SIGNAL(success(QString, QString)), this, SLOT(success(QString, QString)));
-    connect(apk, SIGNAL(warning(QString, QString)), this, SLOT(warning(QString, QString)));
+    connect(apk, SIGNAL(loading(short, QString)), loadingDialog, SLOT(setProgress(short, QString)), Qt::BlockingQueuedConnection);
     connect(apk, SIGNAL(error(QString, QString)), this, SLOT(error(QString, QString)));
-    connect(apk, SIGNAL(error(QString, QString)), this, SLOT(loadingComplete()));
-    connect(apk, SIGNAL(packed(QString)), this, SLOT(apkPacked(QString)));
+    connect(apk, SIGNAL(error(QString, QString)), loadingDialog, SLOT(finish()));
+    connect(apk, SIGNAL(packed(QString, bool, QString)), this, SLOT(apkPacked(QString, bool, QString)));
     connect(apk, SIGNAL(unpacked(QString)), this, SLOT(apkUnpacked(QString)));
+    connect(dropbox, SIGNAL(auth_required()), this, SLOT(authDropbox()));
+    connect(dropbox, SIGNAL(progress(short, QString)), uploadDialog, SLOT(setProgress(short, QString)));
+    connect(dropbox, SIGNAL(error(QString, QString)), this, SLOT(error(QString, QString)));
+    connect(dropbox, SIGNAL(uploaded(bool)), this, SLOT(uploaded(bool)));
+    connect(uploadDialog, SIGNAL(rejected()), dropbox, SLOT(cancel()));
     connect(updater, SIGNAL(version(QString)), this, SLOT(newVersion(QString)));
     connect(this, SIGNAL(destroyed()), apk, SLOT(clearTemp()));
 
@@ -266,10 +265,10 @@ void MainWindow::initProfiles()
     Profile::init();
     for (int i = 0; i < Profile::count(); ++i) {
         Profile profile = Profile::at(i);
-        profiles->addGroup(profile.title(), profile.thumb());
+        devices->addGroup(profile.title(), profile.thumb());
         for (int j = 0; j <= XXHDPI; ++j) {
             Dpi DPI = static_cast<Dpi>(j);
-            profiles->addItem(profile.title(), profile.getDpiTitle(DPI));
+            devices->addItem(profile.title(), profile.getDpiTitle(DPI));
         }
     }
 }
@@ -284,14 +283,22 @@ void MainWindow::restoreSettings()
     QString sLastDir = settings->value("Directory", "").toString();
     QByteArray sGeometry = settings->value("Geometry", NULL).toByteArray();
     QStringList sRecent = settings->value("Recent", NULL).toStringList();
-    short sRatio = settings->value("Compression", 9).toInt();
-    bool sSign = settings->value("Sign", true).toBool();
-    bool sOptimize = settings->value("Optimize", true).toBool();
     bool sUpdate = settings->value("Update", true).toBool();
+
+    settings->beginGroup("APK");
+        short sRatio = settings->value("Compression", 9).toInt();
+        bool sSign = settings->value("Sign", true).toBool();
+        bool sOptimize = settings->value("Optimize", true).toBool();
+    settings->endGroup();
+
+    settings->beginGroup("Dropbox");
+        QString sDropbox = settings->value("Token", NULL).toString();
+        bool bDropbox = settings->value("Enable", false).toBool();
+    settings->endGroup();
 
     // Restore settings:
 
-    profiles->setCurrentGroup(sProfile);
+    devices->setCurrentGroup(sProfile);
     if (!sRecent.isEmpty()) {
         recent = sRecent;
         refreshRecent();
@@ -327,6 +334,8 @@ void MainWindow::restoreSettings()
     actPackSign->setChecked(sSign);
     actPackOptimize->setChecked(sOptimize);
     actAutoUpdate->setChecked(sUpdate);
+    dropbox->setToken(sDropbox);
+    checkDropbox->setChecked(bDropbox);
 }
 
 void MainWindow::resetSettings()
@@ -358,7 +367,8 @@ void MainWindow::setLanguage(QString lang)
 
     // Retranslate strings:
     drawArea->setText(tr("CLICK HERE\n(or drag APK and icons)"));
-    profiles->setLabelText(tr("Size Profile:"));
+    devices->setLabelText(tr("Device:"));
+    checkDropbox->setText(tr("Upload to %1").arg("Dropbox"));
     btnPack->setText(tr("Pack APK"));
     menuFile->setTitle(tr("&File"));
     menuIcon->setTitle(tr("&Icon"));
@@ -396,7 +406,8 @@ void MainWindow::setLanguage(QString lang)
     actUpdate->setText(tr("Check for &Updates"));
     actAboutQt->setText(tr("About Qt"));
     actAbout->setText(tr("About %1").arg(APP));
-    progress->setWindowTitle(tr("Processing"));
+    loadingDialog->setWindowTitle(tr("Processing"));
+    uploadDialog->setWindowTitle(tr("Uploading"));
 
     effects->retranslate();
 }
@@ -448,7 +459,7 @@ void MainWindow::hideEmptyDpi()
         if (Icon *icon = apk->getIcon(DPI)) {
             visible = !icon->isNull();
         }
-        profiles->setItemVisible(DPI, visible);
+        devices->setItemVisible(DPI, visible);
     }
 }
 
@@ -473,7 +484,7 @@ void MainWindow::setCurrentIcon(int id)
 #endif
         return;
     }
-    Profile profile = Profile::at(profiles->currentGroupIndex());
+    Profile profile = Profile::at(devices->currentGroupIndex());
     int side = profile.getDpiSide(static_cast<Dpi>(id));
     drawArea->setRect(side, side);
     if (Icon *icon = apk->getIcon(static_cast<Dpi>(id))) {
@@ -498,35 +509,37 @@ void MainWindow::setActiveApk(QString filename)
     addToRecent(filename);
 }
 
-void MainWindow::loadingComplete(bool success, QString filename)
+void MainWindow::apkPacked(QString filename, bool isSuccess, QString text)
 {
-    progress->close();
-#ifdef QT5_2_0
-    taskbar->clearOverlayIcon();
-    QWinTaskbarProgress *taskProgress = taskbar->progress();
-    taskProgress->setVisible(false);
-    taskProgress->reset();
-#endif
-    activateWindow();
+    loadingDialog->finish();
+    setActiveApk(filename);
 
-    if (success) {
-        setActiveApk(filename);
+    const bool UPLOAD_TO_DROPBOX = checkDropbox->isChecked();
+
+    if (isSuccess) {
+        if (!UPLOAD_TO_DROPBOX) {
+            success(NULL, text);
+        }
+        else {
+            dropbox->upload(filename);
+        }
     }
-}
-
-void MainWindow::apkPacked(QString filename)
-{
-    loadingComplete(true, filename);
+    else {
+        warning(NULL, text);
+        dropbox->upload(filename);
+    }
 }
 
 void MainWindow::apkUnpacked(QString filename)
 {
-    loadingComplete(true, filename);
-    int id = profiles->currentItemIndex();
+    loadingDialog->finish();
+    setActiveApk(filename);
+
+    int id = devices->currentItemIndex();
     if (id == -1) {
         id = 0;
     }
-    profiles->setCurrentItem(id);
+    devices->setCurrentItem(id);
     hideEmptyDpi();
 
     // Enable operations with APK and icons:
@@ -562,8 +575,8 @@ bool MainWindow::iconOpen(QString filename)
     QPixmap backup = icon->getPixmap();
 
     if (icon->replace(QPixmap(filename))) {
-        Profile profile = Profile::at(profiles->currentGroupIndex());
-        int side = profile.getDpiSide(static_cast<Dpi>(profiles->currentItemIndex()));
+        Profile profile = Profile::at(devices->currentGroupIndex());
+        int side = profile.getDpiSide(static_cast<Dpi>(devices->currentItemIndex()));
         if (icon->width() != side || icon->height() != side) {
             int result = QMessageBox::warning(this, tr("Resize?"),
                                       tr("Icon you are trying to load is off-size.\nResize automatically?"),
@@ -607,8 +620,8 @@ bool MainWindow::iconSave(QString filename)
 
 void MainWindow::iconScale()
 {
-    Profile profile = Profile::at(profiles->currentGroupIndex());
-    int side = profile.getDpiSide(static_cast<Dpi>(profiles->currentItemIndex()));
+    Profile profile = Profile::at(devices->currentGroupIndex());
+    int side = profile.getDpiSide(static_cast<Dpi>(devices->currentItemIndex()));
     iconResize(side);
 }
 
@@ -718,7 +731,7 @@ void MainWindow::apkLoad(QString filename)
     currentPath = QFileInfo(filename).absolutePath();
 
     // Unpacking:
-    progress->setValue(0);
+    loadingDialog->setProgress(0);
     apk->unpack(filename);
 }
 
@@ -728,7 +741,7 @@ void MainWindow::apkSave()
                                                     currentPath, "APK (*.apk)");
     if (!filename.isEmpty()) {
         currentPath = QFileInfo(filename).absolutePath();
-        progress->setValue(0);
+        loadingDialog->setProgress(0);
         bool sign = actPackSign->isChecked();
         bool optimize = actPackOptimize->isChecked();
         short ratio = groupRatio->checkedAction()->data().toInt();
@@ -797,20 +810,6 @@ void MainWindow::aboutQt() const
     QApplication::aboutQt();
 }
 
-void MainWindow::loading(short percentage, QString text)
-{
-    progress->setLabelText(text);
-    progress->setValue(percentage);
-    progress->show();
-#ifdef QT5_2_0
-    taskbar->setWindow(windowHandle());
-    taskbar->setOverlayIcon(QIcon(":/gfx/task-pack.png"));
-    QWinTaskbarProgress *taskProgress = taskbar->progress();
-    taskProgress->setValue(percentage);
-    taskProgress->setVisible(true);
-#endif
-}
-
 void MainWindow::invalidDpi()
 {
     warning(tr("Icon Missing"),
@@ -836,19 +835,50 @@ bool MainWindow::newVersion(QString version)
     }
 }
 
+void MainWindow::authDropbox()
+{
+    QString code = InputDialog::getString(tr("Enter Dropbox Code"),
+                                          tr("Allow access to Dropbox in your browser and paste the provided code here:"),
+                                          QPixmap(":/gfx/icon-dropbox.png"),
+                                          this);
+    activateWindow();
+    if (!code.isEmpty()) {
+        dropbox->login(code);
+    }
+    else {
+        uploadDialog->finish();
+    }
+}
+
+void MainWindow::uploaded(bool isSuccess)
+{
+    uploadDialog->finish();
+    if (isSuccess) {
+        success(NULL, tr("APK successfully packed and uploaded!"));
+    }
+}
+
+QString MainWindow::input(QString title, QString text)
+{
+    return QInputDialog::getText(this, title, text);
+}
+
 void MainWindow::success(QString title, QString text)
 {
     QMessageBox::information(this, title, text);
+    activateWindow();
 }
 
 void MainWindow::warning(QString title, QString text)
 {
     QMessageBox::warning(this, title, text);
+    activateWindow();
 }
 
 void MainWindow::error(QString title, QString text)
 {
     QMessageBox::critical(this, title, text);
+    activateWindow();
 }
 
 bool MainWindow::confirmExit()
@@ -904,15 +934,23 @@ void MainWindow::closeEvent(QCloseEvent *event)
     }
 
     // Save settings:
-    settings->setValue("Profile", profiles->currentGroupText());
+    settings->setValue("Profile", devices->currentGroupText());
     settings->setValue("Language", currentLang);
-    settings->setValue("Compression", groupRatio->checkedAction()->data().toInt());
-    settings->setValue("Sign", actPackSign->isChecked());
-    settings->setValue("Optimize", actPackOptimize->isChecked());
     settings->setValue("Update", actAutoUpdate->isChecked());
     settings->setValue("Directory", currentPath);
     settings->setValue("Geometry", saveGeometry());
     settings->setValue("Recent", recent);
+
+    settings->beginGroup("APK");
+        settings->setValue("Compression", groupRatio->checkedAction()->data().toInt());
+        settings->setValue("Sign", actPackSign->isChecked());
+        settings->setValue("Optimize", actPackOptimize->isChecked());
+    settings->endGroup();
+
+    settings->beginGroup("Dropbox");
+        settings->setValue("Token", dropbox->getToken());
+        settings->setValue("Enable", checkDropbox->isChecked());
+    settings->endGroup();
 
     // Close window:
     event->accept();

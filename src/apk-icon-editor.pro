@@ -11,23 +11,28 @@ TEMPLATE = app
 
 SOURCES += main.cpp \
            mainwindow.cpp \
+           dialogs.cpp \
            combolist.cpp \
            drawarea.cpp \
            effects.cpp \
            apk.cpp \
            icon.cpp \
            profile.cpp \
-           updater.cpp
+           updater.cpp \
+           dropbox.cpp
 
 HEADERS += main.h \
            mainwindow.h \
+           dialogs.h \
            combolist.h \
            drawarea.h \
            effects.h \
            apk.h \
            icon.h \
            profile.h \
-           updater.h
+           updater.h \
+           dropbox.h \
+    keys.h
 
 TRANSLATIONS += ../lang/en/apk-icon-editor.ts \
                 ../lang/ru/apk-icon-editor.ts
@@ -37,5 +42,4 @@ RC_FILE += ../res/icon.rc
 
 win32 {
     DESTDIR = ../bin/win32
-    LIBS += -lshell32 # To handle UAC
 }
