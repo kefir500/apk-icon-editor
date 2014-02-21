@@ -1,3 +1,6 @@
+/// \file combolist.h
+/// \brief This file contains #ComboList declaration.
+
 #ifndef COMBOLIST_H
 #define COMBOLIST_H
 

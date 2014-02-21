@@ -1,5 +1,5 @@
 /// \file effects.h
-/// \brief This file contains #EffectsDialog class declaration.
+/// \brief This file contains #EffectsDialog declaration.
 
 #ifndef EFFECTS_H
 #define EFFECTS_H
