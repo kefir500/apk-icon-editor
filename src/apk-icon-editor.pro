@@ -32,7 +32,7 @@ HEADERS += main.h \
            profile.h \
            updater.h \
            dropbox.h \
-    keys.h
+           keys.h
 
 TRANSLATIONS += ../lang/en/apk-icon-editor.ts \
                 ../lang/ru/apk-icon-editor.ts

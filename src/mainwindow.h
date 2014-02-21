@@ -142,11 +142,11 @@ private slots:
 
 //------------------------------------------------------------------------------
 
-    void associate() const;     ///< Associate .apk extension with "APK Icon Editor"
-    void browseSite() const;    ///< Open website URL in the default browser.
-    void browseBugs() const;    ///< Open bugs webpage in the default browser.
-    void about();               ///< Show "About APK Icon Editor" dialog.
-    void aboutQt() const;       ///< Show "About Qt" dialog.
+    void associate() const;         ///< Associate .apk extension with "APK Icon Editor"
+    void browseSite() const;        ///< Open website URL in the default browser.
+    void browseBugs() const;        ///< Open bugs webpage in the default browser.
+    void about();                   ///< Show "About APK Icon Editor" dialog.
+    void aboutQt() const;           ///< Show "About Qt" dialog.
 
     void setLanguage(QString lang); ///< Set GUI language.
     void setCurrentIcon(int id);    ///< Set icon to draw in \c drawArea widget.
@@ -161,10 +161,11 @@ private slots:
     /// \param[in] version Number representing the new version.
     bool newVersion(QString version);
 
+    /// Show "Enter Dropbox code" message.
     void authDropbox();
-    void uploaded(bool isSuccess = true);
 
-    QString input(QString title, QString text);
+    /// Show "Uploaded" message.
+    void uploaded(bool isSuccess = true);
 
     /// Show success message.
     /// \param[in] title Message brief title.

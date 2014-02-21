@@ -1,5 +1,9 @@
 # Version History
 
+## 0.4
+* Added *Dropbox* support.
+* Minor GUI improvements.
+
 ## 0.3.1
 * Added *Rotate* effect.
 * Improved *Colorize* effect.

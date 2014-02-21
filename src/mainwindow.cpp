@@ -858,11 +858,6 @@ void MainWindow::uploaded(bool isSuccess)
     }
 }
 
-QString MainWindow::input(QString title, QString text)
-{
-    return QInputDialog::getText(this, title, text);
-}
-
 void MainWindow::success(QString title, QString text)
 {
     QMessageBox::information(this, title, text);
