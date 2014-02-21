@@ -35,9 +35,11 @@
     const QString APP = "APK Icon Editor (DEBUG)";
 #endif
 
+#define QT5_2_0 (QT_VERSION >= QT_VERSION_CHECK(5, 2, 0))
+
 const int WINDOW_WIDTH      = 714;
 const int WINDOW_HEIGHT     = 484;
-const QString VER           = "0.3.1";
+const QString VER           = "0.4";
 const QString URL_WEBSITE   = "http://kefir500.github.io/apk-icon-editor/";
 const QString URL_GITHUB    = "https://github.com/kefir500/apk-icon-editor/";
 const QString URL_VERSION   = URL_WEBSITE + "VERSION";
