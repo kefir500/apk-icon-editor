@@ -91,16 +91,6 @@ signals:
     /// \param[in] text       Loading text.
     void loading(short percentage, QString text = NULL) const;
 
-    /// \brief This signal is emitted to send success message.
-    /// \param[in] title Message brief title.
-    /// \param[in] text  Message detailed text.
-    void success(QString title, QString text) const;
-
-    /// \brief This signal is emitted to send warning message.
-    /// \param title Message brief title.
-    /// \param text  Message detailed text.
-    void warning(QString title, QString text) const;
-
     /// \brief This signal is emitted to send error message.
     /// \param[in] title Message brief title.
     /// \param[in] text  Message detailed text.
@@ -112,7 +102,9 @@ signals:
 
     /// \brief This signal is emitted when APK is successfully packed.
     /// \param[in] filename Filename (with full path) of just packed APK.
-    void packed(QString filename) const;
+    /// \param[in] success  \c FALSE if APK is packed with warnings.
+    /// \param[in] text     Additional message text.
+    void packed(QString filename, bool success = true, QString text = NULL) const;
 
 public slots:
     /// \brief Delete temporary files.

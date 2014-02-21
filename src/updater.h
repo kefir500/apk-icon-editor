@@ -4,7 +4,7 @@
 #ifndef UPDATER_H
 #define UPDATER_H
 
-#include <QtNetwork/QNetworkReply>
+#include <QNetworkReply>
 #include <QUrl>
 
 /// \brief Application update checker.

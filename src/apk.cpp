@@ -199,26 +199,24 @@ bool Apk::doPack(short ratio, bool doSign, bool doOptimize)
     emit loading(100, tr("APK successfully packed!"));
 
     if (isSigned && isOptimized) {
-        emit success(tr("APK packed"), tr("APK successfully packed!"));
+        emit packed(filename, true, tr("APK successfully packed!"));
     }
     else {
-        QString errtext(tr("APK packed with following warnings:"));
+        QString warning(tr("APK packed with following warnings:"));
         if (!isSigned) {
-            errtext += "<br>&bull; " + tr("APK is <b>not signed</b>;");
+            warning += "<br>&bull; " + tr("APK is <b>not signed</b>;");
         }
         if (!isOptimized) {
-            errtext += "<br>&bull; " + tr("APK is <b>not optimized</b>;");
+            warning += "<br>&bull; " + tr("APK is <b>not optimized</b>;");
         }
         if (!checkJavaInstalled()) {
-            errtext += "<hr>" +
+            warning += "<hr>" +
                     tr("Signing APK requires Java Runtime Environment.") +
                     QString("<br><a href=\"%1\">%2</a> %3.")
                     .arg(URL_JAVA, tr("Download"), tr("(or check PATH variable if already installed)"));
         }
-        emit warning(tr("APK packed"), errtext);
+        emit packed(filename, false, warning);
     }
-
-    emit packed(filename);
     return true;
 }
 
