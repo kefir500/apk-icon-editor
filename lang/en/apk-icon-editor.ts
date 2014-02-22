@@ -144,55 +144,55 @@ APK is invalid.</source>
 <context>
     <name>Dropbox</name>
     <message>
-        <location filename="../../src/dropbox.cpp" line="62"/>
-        <location filename="../../src/dropbox.cpp" line="93"/>
+        <location filename="../../src/dropbox.cpp" line="66"/>
+        <location filename="../../src/dropbox.cpp" line="102"/>
         <source>Error uploading APK to %1.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/dropbox.cpp" line="64"/>
-        <location filename="../../src/dropbox.cpp" line="94"/>
-        <location filename="../../src/dropbox.cpp" line="157"/>
+        <location filename="../../src/dropbox.cpp" line="72"/>
+        <source>Code: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/dropbox.cpp" line="74"/>
+        <location filename="../../src/dropbox.cpp" line="103"/>
+        <location filename="../../src/dropbox.cpp" line="166"/>
         <source>Upload Error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/dropbox.cpp" line="83"/>
+        <location filename="../../src/dropbox.cpp" line="92"/>
         <source>MiB</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/dropbox.cpp" line="65"/>
-        <source>Code: %2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../src/dropbox.cpp" line="79"/>
+        <location filename="../../src/dropbox.cpp" line="88"/>
         <source>Uploaded: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/dropbox.cpp" line="86"/>
+        <location filename="../../src/dropbox.cpp" line="95"/>
         <source>Finishing upload. Please wait...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/dropbox.cpp" line="95"/>
+        <location filename="../../src/dropbox.cpp" line="104"/>
         <source>Check your Internet connection.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/dropbox.cpp" line="137"/>
+        <location filename="../../src/dropbox.cpp" line="146"/>
         <source>Checking if you are logged in...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/dropbox.cpp" line="153"/>
+        <location filename="../../src/dropbox.cpp" line="162"/>
         <source>Uploading to %1...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/dropbox.cpp" line="157"/>
+        <location filename="../../src/dropbox.cpp" line="166"/>
         <source>Could not open local file.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -243,416 +243,415 @@ APK is invalid.</source>
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="335"/>
+        <location filename="../../src/mainwindow.cpp" line="343"/>
         <source>Reset?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="335"/>
+        <location filename="../../src/mainwindow.cpp" line="343"/>
         <source>Reset settings to default?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="361"/>
+        <location filename="../../src/mainwindow.cpp" line="369"/>
         <source>CLICK HERE
 (or drag APK and icons)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="362"/>
+        <location filename="../../src/mainwindow.cpp" line="370"/>
         <source>Device:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="363"/>
-        <source>Upload to %1</source>
-		<comment>"Upload" = verb.</comment>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../src/mainwindow.cpp" line="364"/>
-        <location filename="../../src/mainwindow.cpp" line="732"/>
-        <source>Pack APK</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../src/mainwindow.cpp" line="365"/>
-        <source>&amp;File</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../src/mainwindow.cpp" line="366"/>
-        <source>&amp;Icon</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../src/mainwindow.cpp" line="367"/>
-        <source>&amp;Settings</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../src/mainwindow.cpp" line="368"/>
-        <source>&amp;Help</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../src/mainwindow.cpp" line="369"/>
-        <source>&amp;Open APK</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../src/mainwindow.cpp" line="370"/>
-        <source>&amp;Export (Pack) APK</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../../src/mainwindow.cpp" line="371"/>
-        <source>&amp;Recent APKs</source>
+        <source>Upload to %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="372"/>
-        <source>E&amp;xit</source>
+        <location filename="../../src/mainwindow.cpp" line="740"/>
+        <source>Pack APK</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="373"/>
-        <source>&amp;Clear List</source>
+        <source>&amp;File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="374"/>
-        <source>No Recent Files</source>
+        <source>&amp;Icon</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="375"/>
-        <source>Replace &amp;Icon</source>
+        <source>&amp;Settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="376"/>
-        <source>&amp;Save Icon</source>
+        <source>&amp;Help</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="377"/>
-        <source>Scale to &amp;Fit</source>
+        <source>&amp;Open APK</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="378"/>
-        <source>&amp;Resize Icon</source>
+        <source>&amp;Export (Pack) APK</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="379"/>
-        <source>Revert &amp;Original</source>
+        <source>&amp;Recent APKs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="380"/>
-        <source>E&amp;ffects</source>
+        <source>E&amp;xit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="381"/>
-        <source>Preview Background &amp;Color</source>
+        <source>&amp;Clear List</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="382"/>
-        <source>&amp;Language</source>
+        <source>No Recent Files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="383"/>
-        <source>&amp;Packing</source>
+        <source>Replace &amp;Icon</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="384"/>
-        <source>&amp;Compression Ratio</source>
+        <source>&amp;Save Icon</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="385"/>
-        <source>No Compression</source>
+        <source>Scale to &amp;Fit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="386"/>
-        <source>Fastest Compression</source>
+        <source>&amp;Resize Icon</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="387"/>
-        <source>Fast Compression</source>
+        <source>Revert &amp;Original</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="388"/>
-        <source>Normal Compression</source>
+        <source>E&amp;ffects</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="389"/>
-        <source>Maximum Compression</source>
+        <source>Preview Background &amp;Color</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="390"/>
-        <source>Ultra Compression</source>
+        <source>&amp;Language</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="391"/>
-        <source>&amp;Sign APK</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../src/mainwindow.cpp" line="391"/>
-        <source>Important</source>
+        <source>&amp;Packing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="392"/>
-        <source>&amp;Optimize APK</source>
+        <source>&amp;Compression Ratio</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="393"/>
-        <source>Auto-check for Updates</source>
+        <source>No Compression</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="394"/>
-        <source>Associate .APK</source>
+        <source>Fastest Compression</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="395"/>
-        <source>Reset Settings</source>
+        <source>Fast Compression</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="396"/>
-        <location filename="../../src/mainwindow.cpp" line="789"/>
-        <source>Visit Website</source>
+        <source>Normal Compression</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="397"/>
-        <location filename="../../src/mainwindow.cpp" line="790"/>
-        <source>Report a Bug</source>
+        <source>Maximum Compression</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="398"/>
-        <source>Check for &amp;Updates</source>
+        <source>Ultra Compression</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="399"/>
-        <source>About Qt</source>
+        <source>&amp;Sign APK</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/mainwindow.cpp" line="399"/>
+        <source>Important</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="400"/>
-        <source>About %1</source>
+        <source>&amp;Optimize APK</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="401"/>
-        <source>Processing</source>
+        <source>Auto-check for Updates</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="402"/>
+        <source>Associate .APK</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/mainwindow.cpp" line="403"/>
+        <source>Reset Settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/mainwindow.cpp" line="404"/>
+        <location filename="../../src/mainwindow.cpp" line="797"/>
+        <source>Visit Website</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/mainwindow.cpp" line="405"/>
+        <location filename="../../src/mainwindow.cpp" line="798"/>
+        <source>Report a Bug</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/mainwindow.cpp" line="406"/>
+        <source>Check for &amp;Updates</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/mainwindow.cpp" line="407"/>
+        <source>About Qt</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/mainwindow.cpp" line="408"/>
+        <source>About %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/mainwindow.cpp" line="409"/>
+        <source>Processing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/mainwindow.cpp" line="410"/>
         <source>Uploading</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="557"/>
+        <location filename="../../src/mainwindow.cpp" line="565"/>
         <source>Import Icon</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="558"/>
+        <location filename="../../src/mainwindow.cpp" line="566"/>
         <source>Supported Formats</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="560"/>
-        <location filename="../../src/mainwindow.cpp" line="709"/>
+        <location filename="../../src/mainwindow.cpp" line="568"/>
+        <location filename="../../src/mainwindow.cpp" line="717"/>
         <source>All Files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="573"/>
+        <location filename="../../src/mainwindow.cpp" line="581"/>
         <source>Resize?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="574"/>
+        <location filename="../../src/mainwindow.cpp" line="582"/>
         <source>Icon you are trying to load is off-size.
 Resize automatically?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="592"/>
+        <location filename="../../src/mainwindow.cpp" line="600"/>
         <source>Can&apos;t Load Icon</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="592"/>
+        <location filename="../../src/mainwindow.cpp" line="600"/>
         <source>You are trying to load invalid or unsupported icon.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="605"/>
+        <location filename="../../src/mainwindow.cpp" line="613"/>
         <source>Save Icon</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="629"/>
+        <location filename="../../src/mainwindow.cpp" line="637"/>
         <source>Resize Icon</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="629"/>
+        <location filename="../../src/mainwindow.cpp" line="637"/>
         <source>Icon side (in pixels):</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="709"/>
+        <location filename="../../src/mainwindow.cpp" line="717"/>
         <source>Open APK</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="717"/>
+        <location filename="../../src/mainwindow.cpp" line="725"/>
         <source>File not found</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="717"/>
+        <location filename="../../src/mainwindow.cpp" line="725"/>
         <source>Could not find APK:
 %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="773"/>
+        <location filename="../../src/mainwindow.cpp" line="781"/>
         <source>About</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="777"/>
+        <location filename="../../src/mainwindow.cpp" line="785"/>
         <source>Built on: %1 - %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="778"/>
+        <location filename="../../src/mainwindow.cpp" line="786"/>
         <source>Author: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="779"/>
+        <location filename="../../src/mainwindow.cpp" line="787"/>
         <source>License</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="781"/>
+        <location filename="../../src/mainwindow.cpp" line="789"/>
         <source>APK Icon Editor is the tool designed to easily edit and replace&lt;br&gt;APK (Android Package) icons. Written in C++ and Qt framework.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="783"/>
+        <location filename="../../src/mainwindow.cpp" line="791"/>
         <source>&lt;b&gt;Usage:&lt;/b&gt;&lt;br&gt;Open the APK file in which you would like to replace icon(s).&lt;br&gt;Select profile (according to the final device) and the needed DPI.&lt;br&gt;If you are in doubt about the DPI, you may replace all of them.&lt;br&gt;APK Icon Editor will ask to scale icons with the wrong size, but&lt;br&gt;note that Android devices are usually able to do it automatically.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="789"/>
+        <location filename="../../src/mainwindow.cpp" line="797"/>
         <source>Visit our official website.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="790"/>
+        <location filename="../../src/mainwindow.cpp" line="798"/>
         <source>Found a bug? Let us know so we can fix it!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="791"/>
+        <location filename="../../src/mainwindow.cpp" line="799"/>
         <source>Help Translate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="791"/>
+        <location filename="../../src/mainwindow.cpp" line="799"/>
         <source>Join our translation team on Transifex.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="792"/>
+        <location filename="../../src/mainwindow.cpp" line="800"/>
         <source>List of Authors</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="792"/>
+        <location filename="../../src/mainwindow.cpp" line="800"/>
         <source>Contributors, translators, testers and helpers.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="793"/>
+        <location filename="../../src/mainwindow.cpp" line="801"/>
         <source>Version History</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="793"/>
+        <location filename="../../src/mainwindow.cpp" line="801"/>
         <source>List of changes made to the project.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="807"/>
+        <location filename="../../src/mainwindow.cpp" line="815"/>
         <source>Icon Missing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="808"/>
+        <location filename="../../src/mainwindow.cpp" line="816"/>
         <source>This APK does not support current DPI.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="815"/>
+        <location filename="../../src/mainwindow.cpp" line="823"/>
         <source>Update</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="816"/>
+        <location filename="../../src/mainwindow.cpp" line="824"/>
         <source>%1 v%2 is available.
 Download?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="832"/>
+        <location filename="../../src/mainwindow.cpp" line="840"/>
         <source>Enter Dropbox Code</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="833"/>
+        <location filename="../../src/mainwindow.cpp" line="841"/>
         <source>Allow access to Dropbox in your browser and paste the provided code here:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="848"/>
+        <location filename="../../src/mainwindow.cpp" line="857"/>
         <source>APK successfully packed and uploaded!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="878"/>
+        <location filename="../../src/mainwindow.cpp" line="882"/>
         <source>Discard Changes?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="879"/>
+        <location filename="../../src/mainwindow.cpp" line="883"/>
         <source>APK has been modified. Discard changes?</source>
         <translation type="unfinished"></translation>
     </message>
