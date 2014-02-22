@@ -4,7 +4,7 @@
 #include <QFileInfo>
 #include <QDesktopServices>
 
-const QString DROPBOX_AUTH      = "https://www.dropbox.com/1/oauth2/authorize?response_type=code&client_id=855xbc27r2d2y6a";
+const QString DROPBOX_AUTH      = QString("https://www.dropbox.com/1/oauth2/authorize?response_type=code&client_id=%1").arg(DROPBOX_ID);
 const QString DROPBOX_TOKEN     = "https://api.dropbox.com/1/oauth2/token";
 const QString DROPBOX_ACCOUNT   = "https://api.dropbox.com/1/account/info";
 const QString DROPBOX_UPLOAD    = "https://api-content.dropbox.com/1/files_put/sandbox/";
@@ -55,14 +55,23 @@ void Dropbox::catchReply(QNetworkReply *reply)
              reply->error() == QNetworkReply::UnknownContentError) {
         auth();
     }
+    else {
+        catchError(reply->error(), reply->errorString());
+    }
 }
 
-void Dropbox::catchError(QNetworkReply::NetworkError reply)
+void Dropbox::catchError(QNetworkReply::NetworkError code, QString text)
 {
-    const QString ERR(tr("Error uploading APK to %1.").arg("Dropbox"));
-    if (reply != QNetworkReply::OperationCanceledError) {
-        emit error(tr("Upload Error"),
-                   QString("%1\n%2").arg(ERR, tr("Code: %2")).arg(reply));
+    if (code != QNetworkReply::OperationCanceledError) {
+        const QString ERR_DROPBOX(tr("Error uploading APK to %1.").arg("Dropbox"));
+        QString errtext;
+        if (!text.isEmpty()) {
+            errtext = QString("%1\n%2").arg(ERR_DROPBOX, tr(text.toStdString().c_str()));
+        }
+        else {
+            errtext = QString("%1\n%2").arg(ERR_DROPBOX, tr("Code: %1").arg(code));
+        }
+        emit error(tr("Upload Error"), errtext);
         uploaded(false);
     }
 }

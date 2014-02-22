@@ -57,7 +57,7 @@ signals:
 
 private slots:
     void catchReply(QNetworkReply *reply);
-    void catchError(QNetworkReply::NetworkError reply);
+    void catchError(QNetworkReply::NetworkError code, QString text = NULL);
     void uploadProgress(qint64 sent, qint64 total);
     void timeout();
 
