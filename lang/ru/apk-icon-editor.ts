@@ -175,7 +175,7 @@ APK is invalid.</source>
     <message>
         <location filename="../../src/dropbox.cpp" line="95"/>
         <source>Finishing upload. Please wait...</source>
-        <translation>Завершение загрузки. Пожалуйста, подождите...</translation>
+        <translation>Завершение загрузки. Ждите...</translation>
     </message>
     <message>
         <location filename="../../src/dropbox.cpp" line="104"/>
