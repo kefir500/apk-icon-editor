@@ -1,6 +1,6 @@
 # Version History
 
-## 0.4
+## 0.4.1
 * Added *Dropbox* support.
 * Minor GUI improvements.
 
