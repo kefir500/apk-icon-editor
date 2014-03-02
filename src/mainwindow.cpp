@@ -526,7 +526,9 @@ void MainWindow::apkPacked(QString filename, bool isSuccess, QString text)
     }
     else {
         warning(NULL, text);
-        dropbox->upload(filename);
+        if (UPLOAD_TO_DROPBOX) {
+            dropbox->upload(filename);
+        }
     }
 }
 

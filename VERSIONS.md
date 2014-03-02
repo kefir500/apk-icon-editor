@@ -1,5 +1,8 @@
 # Version History
 
+# 0.4.2
+* Fixed forced upload on warnings.
+
 ## 0.4.1
 * Added *Dropbox* support.
 * Minor GUI improvements.
