@@ -2,7 +2,7 @@
 !define COMPANYNAME "Qwerty Minds"
 !define VERSIONMAJOR 0
 !define VERSIONMINOR 4
-!define VERSION "${VERSIONMAJOR}.${VERSIONMINOR}.1 Beta"
+!define VERSION "${VERSIONMAJOR}.${VERSIONMINOR}.2 Beta"
 !define ABOUTURL "http://kefir500.github.io/apk-icon-editor"
 !define UPDATEURL "http://kefir500.github.io/apk-icon-editor"
 !define EXE "$INSTDIR\apk-icon-editor.exe"
