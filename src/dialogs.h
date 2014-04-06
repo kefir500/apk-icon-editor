@@ -42,8 +42,11 @@ public:
     explicit InputDialog(QString title, QString text, QPixmap _icon, QWidget *parent = 0);
 
 private slots:
+    /// Paste text from clipboard to #input box.
+    void paste();
+
     /// Check text entered by user.
-    /// \param text If empty, "OK" button is disabled.
+    /// \param text If is empty, "OK" button is replaced by "Paste" button.
     void checkInput(QString text);
 
 };
@@ -62,10 +65,10 @@ private:
 #endif
 
 public:
-    /// Set current progress #text.
+    /// Set current progress \c text.
     void setText(QString text) { label->setText(text); }
 
-    /// Set current progress #pixmap.
+    /// Set current progress \c pixmap.
     void setIcon(QPixmap pixmap);
 
     /// If #allow is \c FALSE, forbid cancelling dialog by user.

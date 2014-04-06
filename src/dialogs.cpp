@@ -47,9 +47,24 @@ QString InputDialog::getString(QString title, QString text, QPixmap _icon, QWidg
     }
 }
 
+void InputDialog::paste()
+{
+    input->paste();
+}
+
 void InputDialog::checkInput(QString text)
 {
-    buttons->button(QDialogButtonBox::Ok)->setEnabled(!text.isEmpty());
+    buttons->clear();
+    if (!text.isEmpty()) {
+        buttons->addButton(QDialogButtonBox::Ok)->setDefault(true);
+    }
+    else {
+        QPushButton *btnPaste = new QPushButton(tr("Paste"), this);
+        buttons->addButton(btnPaste, QDialogButtonBox::ActionRole);
+        btnPaste->setDefault(true);
+        connect(btnPaste, SIGNAL(clicked()), this, SLOT(paste()));
+    }
+    buttons->addButton(QDialogButtonBox::Cancel);
 }
 
 // Progress Dialog
