@@ -32,8 +32,8 @@ public slots:
     /// This function checks if \c v1 is greater then \c v2.
     /// Note that <b>%1.%2.%3.%N</b> scheme is used to represent application version.
     /// Only numbers and dots are acceptable.
-    /// \retval TRUE if \c v1 > \c v2.
-    /// \retval FALSE if \c v1 <= \c v2.
+    /// \retval \c TRUE if \c v1 > \c v2.
+    /// \retval \c FALSE if \c v1 <= \c v2.
     /// \note Unit test is available for this function.
     bool compare(QString v1, QString v2);
 

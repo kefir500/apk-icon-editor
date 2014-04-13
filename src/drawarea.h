@@ -19,7 +19,7 @@ private:
     QColor background;  ///< Preview area background color.
     int rect_w;         ///< Template rectangle width.
     int rect_h;         ///< Template rectangle height.
-    bool welcome;       ///< If true, welcome text is rendered and #clicked signal is allowed.
+    bool welcome;       ///< If \c TRUE, welcome text is rendered and #clicked signal is allowed.
 
 public:
     explicit DrawArea(QWidget *parent);

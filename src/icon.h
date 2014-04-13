@@ -37,21 +37,21 @@ public:
 
     /// \brief Save pixmap to given filename.
     /// \param[in] filename File to save pixmap to. If NULL, #filename_original is used.
-    /// \retval TRUE on success.
-    /// \retval FALSE on error.
+    /// \retval \c TRUE on success.
+    /// \retval \c FALSE on error.
     /// \todo Empty #pixmap is currently handled by a dirty workaround.
     bool save(QString filename = NULL);
 
     /// \brief Replace #pixmap with the specified one.
     /// \param[in] pixmap Pixmap to replace with.
-    /// \retval TRUE on success.
-    /// \retval FALSE on error.
+    /// \retval \c TRUE on success.
+    /// \retval \c FALSE on error.
     bool replace(QPixmap _pixmap);
 
     /// \brief Resize pixmap to square with the specified side.
     /// \param[in] side Side in pixels.
-    /// \retval TRUE on success.
-    /// \retval FALSE on error.
+    /// \retval \c TRUE on success.
+    /// \retval \c FALSE on error.
     bool resize(int side);
 
     bool revert();                                          ///< Revert the original #pixmap (loaded fron #filename_original).

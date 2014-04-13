@@ -61,7 +61,7 @@ public:
 
     /// Set visiblity of the \e item.
     /// \param[in] id Index of the \e item to show/hide.
-    /// \param[in] visible Shows the \e item if TRUE, otherwise hides it.
+    /// \param[in] visible Shows the \e item if \c TRUE, otherwise hides it.
     void setItemVisible(int id, bool visible) { list->item(id)->setHidden(!visible); }
 
     /// Add new group.
