@@ -7,11 +7,12 @@ __APK Icon Editor__ is the tool designed to easily edit and replace APK (Android
 * Edit, replace and extract APK icons;
 * Sign and optimize APKs;
 * Supported image formats: PNG, ICO, GIF, JPG, BMP;
-* Size pre-sets for _Android Standard_ and all _Amazon Kindle Fire_ models;
+* Size pre-sets for *Android Standard* and all *Amazon Kindle Fire* models;
+* Cloud storage upload: *Dropbox*, *Google Drive*, *Microsoft OneDrive*;
 * Multilingual extensible interface.
 
 ## Requirements
-* __Java Runtime Environment (JRE)__ - for APKs signing.
+* **Java Runtime Environment (JRE)** - for signing APKs.
 
 ## License
-* __GNU General Public License v2.0__
+* **GNU General Public License v2.0**
