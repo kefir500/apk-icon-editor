@@ -1,9 +1,9 @@
 .trash/
 bin/
 docs/html/
+lang/
+!lang/README
 *.user
 *.autosave
 *.pro.user
 *.pro.user.*
-lang/
-!lang/README
