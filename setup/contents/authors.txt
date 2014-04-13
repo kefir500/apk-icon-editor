@@ -3,6 +3,7 @@ Alexander Gorishnyak
 
 Translations:
 Russian - Alexander Gorishnyak
+Chinese (China) - QQ775405984
 
 Alpha Testing:
 Vladimir Gorishnyak
