@@ -5,3 +5,5 @@ docs/html/
 *.autosave
 *.pro.user
 *.pro.user.*
+lang/
+!lang/README
