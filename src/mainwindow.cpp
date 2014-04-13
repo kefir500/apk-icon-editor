@@ -239,21 +239,25 @@ void MainWindow::initLanguages()
     mapLang = new QSignalMapper(this);
     connect(mapLang, SIGNAL(mapped(QString)), this, SLOT(setLanguage(QString)));
 
+    // Add default English:
+    QStringList langs;
+    langs << "apk-icon-editor.en";
+
     // Loading language list:
     const QDir LANGPATH(QApplication::applicationDirPath() + "/lang");
-    QStringList langs = LANGPATH.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+    langs << LANGPATH.entryList(QStringList() << "apk-icon-editor.*");
 
     for (int i = 0; i < langs.size(); ++i) {
 
         // Get native language title:
-        QString locale = langs[i].left(2);
-        QString lang = QLocale(locale).nativeLanguageName();
-        if (lang.size() > 1) {
-            lang[0] = lang[0].toUpper();
+        QString locale = langs[i].split('.')[1];
+        QString title = QLocale(locale).nativeLanguageName();
+        if (title.size() > 1) {
+            title[0] = title[0].toUpper();
         }
 
         // Set up menu action:
-        QAction *actLang = new QAction(QIcon(QString("%1/%2/flag.png").arg(LANGPATH.absolutePath(), locale)), lang, this);
+        QAction *actLang = new QAction(QIcon(QString("%1/flag.%2.png").arg(LANGPATH.absolutePath(), locale)), title, this);
         connect(actLang, SIGNAL(triggered()), mapLang, SLOT(map()));
         mapLang->setMapping(actLang, locale);
         menuLang->addAction(actLang);
@@ -275,7 +279,7 @@ void MainWindow::initProfiles()
 
 void MainWindow::restoreSettings()
 {
-    QString locale = QLocale::system().name().left(2);
+    QString locale = QLocale::system().name();
 
     // Read settings:
     QString sProfile = settings->value("Profile", NULL).toString();
@@ -350,11 +354,11 @@ void MainWindow::resetSettings()
 
 void MainWindow::setLanguage(QString lang)
 {
-    QString LANGPATH(QApplication::applicationDirPath() + "/lang/" + lang);
+    QString LANGPATH(QApplication::applicationDirPath() + "/lang");
     QApplication::removeTranslator(translator);
     QApplication::removeTranslator(translatorQt);
-    if (translator->load("apk-icon-editor", LANGPATH)) {
-        translatorQt->load("qt", LANGPATH);
+    if (translator->load(QString("apk-icon-editor.%1").arg(lang), LANGPATH)) {
+        translatorQt->load(QString("qt.%1").arg(lang), LANGPATH);
         QApplication::installTranslator(translator);
         QApplication::installTranslator(translatorQt);
     }
@@ -363,7 +367,12 @@ void MainWindow::setLanguage(QString lang)
     }
 
     currentLang = lang;
-    menuLang->setIcon(QIcon(QString("%1/flag.png").arg(LANGPATH)));
+    QPixmap flag;
+    if (flag.load(QString("%1/flag.%2.png").arg(LANGPATH, lang)) == false) {
+        lang = lang.left(2);
+        flag = QString("%1/flag.%2.png").arg(LANGPATH, lang);
+    }
+    menuLang->setIcon(flag);
 
     // Retranslate strings:
     drawArea->setText(tr("CLICK HERE\n(or drag APK and icons)"));
