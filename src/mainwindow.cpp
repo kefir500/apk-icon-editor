@@ -846,45 +846,38 @@ bool MainWindow::newVersion(QString version)
     }
 }
 
-void MainWindow::authDropbox()
+void MainWindow::authCloud()
 {
-    QString code = InputDialog::getString(tr("Enter Dropbox Code"),
-                                          tr("Allow access to Dropbox in your browser and paste the provided code here:"),
-                                          QPixmap(":/gfx/icon-dropbox.png"),
-                                          this);
-    activateWindow();
+    Cloud *cloud = dynamic_cast<Cloud*>(sender());
+    QApplication::alert(this);
+    QString code = InputDialog::getString(tr("Authorization"),
+                                          tr("Allow access to %1 in your browser and paste the provided code here:").arg(cloud->getTitle()),
+                                          cloud->getIcon(), this);
     if (!code.isEmpty()) {
-        dropbox->login(code);
+        cloud->login(code);
+        uploadDialog->activateWindow();
     }
     else {
-        uploadDialog->finish();
-    }
-}
-
-void MainWindow::uploaded(bool isSuccess)
-{
-    uploadDialog->finish();
-    if (isSuccess) {
-        success(NULL, tr("APK successfully packed and uploaded!"));
+        cloud->cancel();
     }
 }
 
 void MainWindow::success(QString title, QString text)
 {
+    QApplication::alert(this);
     QMessageBox::information(this, title, text);
-    activateWindow();
 }
 
 void MainWindow::warning(QString title, QString text)
 {
+    QApplication::alert(this);
     QMessageBox::warning(this, title, text);
-    activateWindow();
 }
 
 void MainWindow::error(QString title, QString text)
 {
+    QApplication::alert(this);
     QMessageBox::critical(this, title, text);
-    activateWindow();
 }
 
 bool MainWindow::confirmExit()
