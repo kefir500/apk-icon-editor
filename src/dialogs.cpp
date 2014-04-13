@@ -135,7 +135,7 @@ void ProgressDialog::setAllowCancel(bool allow)
 
 void ProgressDialog::finish()
 {
-    close();
+    accept();
     progress->setValue(0);
 #ifdef QT5_2_0
     taskbar->clearOverlayIcon();

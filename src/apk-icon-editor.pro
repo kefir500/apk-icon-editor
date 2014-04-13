@@ -16,10 +16,10 @@ SOURCES += main.cpp \
            drawarea.cpp \
            effects.cpp \
            apk.cpp \
+           cloud.cpp \
            icon.cpp \
            profile.cpp \
-           updater.cpp \
-           dropbox.cpp
+           updater.cpp
 
 HEADERS += main.h \
            mainwindow.h \
@@ -28,14 +28,15 @@ HEADERS += main.h \
            drawarea.h \
            effects.h \
            apk.h \
+           cloud.h \
            icon.h \
            profile.h \
            updater.h \
-           dropbox.h \
            keys.h
 
-TRANSLATIONS += ../lang/en/apk-icon-editor.ts \
-                ../lang/ru/apk-icon-editor.ts
+TRANSLATIONS += ../lang/apk-icon-editor.en.ts \
+                ../lang/apk-icon-editor.ru.ts \
+                ../lang/apk-icon-editor.zh.ts
 
 RESOURCES += ../res/resources.qrc
 RC_FILE += ../res/icon.rc

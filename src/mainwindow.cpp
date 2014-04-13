@@ -21,10 +21,16 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) : QMainWindow(pa
     apk = new Apk(this);
     effects = new EffectsDialog(this);
     updater = new Updater(this);
-    dropbox = new Dropbox(this);
     translator = new QTranslator(this);
     translatorQt = new QTranslator(this);
     settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, "apk-icon-editor", "config", this);
+
+    dropbox = new Dropbox(this);
+    dropbox->setIcon(QPixmap(":/gfx/icon-dropbox.png"));
+    gdrive = new GoogleDrive(this);
+    gdrive->setIcon(QPixmap(":/gfx/icon-gdrive.png"));
+    onedrive = new OneDrive(this);
+    onedrive->setIcon(QPixmap(":/gfx/icon-onedrive.png"));
 
     QWidget *w = new QWidget(this);
     QHBoxLayout *layout = new QHBoxLayout(w);
@@ -161,7 +167,6 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) : QMainWindow(pa
     loadingDialog->setAllowCancel(false);
 
     uploadDialog = new ProgressDialog(this);
-    uploadDialog->setIcon(QPixmap(":/gfx/icon-dropbox.png"));
 
     devices = new ComboList(this);
     devices->addActions(menuIcon->actions());
@@ -170,11 +175,17 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) : QMainWindow(pa
     btnPack->setEnabled(false);
     btnPack->setFixedHeight(64);
     checkDropbox = new QCheckBox(this);
-    checkDropbox->setIcon(QIcon(QPixmap(":/gfx/icon-dropbox.png")));
+    checkDropbox->setIcon(dropbox->getIcon());
+    checkGDrive = new QCheckBox(this);
+    checkGDrive->setIcon(gdrive->getIcon());
+    checkOneDrive = new QCheckBox(this);
+    checkOneDrive->setIcon(onedrive->getIcon());
 
     QVBoxLayout *layoutProfile = new QVBoxLayout();
     layoutProfile->addWidget(devices);
     layoutProfile->addWidget(checkDropbox);
+    layoutProfile->addWidget(checkGDrive);
+    layoutProfile->addWidget(checkOneDrive);
     layoutProfile->addWidget(btnPack);
 
     layout->addWidget(drawArea);
@@ -217,11 +228,18 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) : QMainWindow(pa
     connect(apk, SIGNAL(error(QString, QString)), loadingDialog, SLOT(finish()));
     connect(apk, SIGNAL(packed(QString, bool, QString)), this, SLOT(apkPacked(QString, bool, QString)));
     connect(apk, SIGNAL(unpacked(QString)), this, SLOT(apkUnpacked(QString)));
-    connect(dropbox, SIGNAL(auth_required()), this, SLOT(authDropbox()));
+    connect(dropbox, SIGNAL(auth_required()), this, SLOT(authCloud()));
     connect(dropbox, SIGNAL(progress(short, QString)), uploadDialog, SLOT(setProgress(short, QString)));
     connect(dropbox, SIGNAL(error(QString, QString)), this, SLOT(error(QString, QString)));
-    connect(dropbox, SIGNAL(uploaded(bool)), this, SLOT(uploaded(bool)));
+    connect(gdrive, SIGNAL(auth_required()), this, SLOT(authCloud()));
+    connect(gdrive, SIGNAL(progress(short, QString)), uploadDialog, SLOT(setProgress(short, QString)));
+    connect(gdrive, SIGNAL(error(QString, QString)), this, SLOT(error(QString, QString)));
+    connect(onedrive, SIGNAL(auth_required()), this, SLOT(authCloud()));
+    connect(onedrive, SIGNAL(progress(short, QString)), uploadDialog, SLOT(setProgress(short, QString)));
+    connect(onedrive, SIGNAL(error(QString, QString)), this, SLOT(error(QString, QString)));
     connect(uploadDialog, SIGNAL(rejected()), dropbox, SLOT(cancel()));
+    connect(uploadDialog, SIGNAL(rejected()), gdrive, SLOT(cancel()));
+    connect(uploadDialog, SIGNAL(rejected()), onedrive, SLOT(cancel()));
     connect(updater, SIGNAL(version(QString)), this, SLOT(newVersion(QString)));
     connect(this, SIGNAL(destroyed()), apk, SLOT(clearTemp()));
 
@@ -296,8 +314,18 @@ void MainWindow::restoreSettings()
     settings->endGroup();
 
     settings->beginGroup("Dropbox");
-        QString sDropbox = settings->value("Token", NULL).toString();
+        QString sDropbox = settings->value("Token", "").toString();
         bool bDropbox = settings->value("Enable", false).toBool();
+    settings->endGroup();
+
+    settings->beginGroup("GDrive");
+        QString sGDrive = settings->value("Token", "").toString();
+        bool bGDrive = settings->value("Enable", false).toBool();
+    settings->endGroup();
+
+    settings->beginGroup("OneDrive");
+        QString sOneDrive = settings->value("Token", "").toString();
+        bool bOneDrive = settings->value("Enable", false).toBool();
     settings->endGroup();
 
     // Restore settings:
@@ -339,7 +367,11 @@ void MainWindow::restoreSettings()
     actPackOptimize->setChecked(sOptimize);
     actAutoUpdate->setChecked(sUpdate);
     dropbox->setToken(sDropbox);
+    gdrive->setToken(sGDrive);
+    onedrive->setToken(sOneDrive);
     checkDropbox->setChecked(bDropbox);
+    checkGDrive->setChecked(bGDrive);
+    checkOneDrive->setChecked(bOneDrive);
 }
 
 void MainWindow::resetSettings()
@@ -378,6 +410,8 @@ void MainWindow::setLanguage(QString lang)
     drawArea->setText(tr("CLICK HERE\n(or drag APK and icons)"));
     devices->setLabelText(tr("Device:"));
     checkDropbox->setText(tr("Upload to %1").arg("Dropbox"));
+    checkGDrive->setText(tr("Upload to %1").arg("Google Drive"));
+    checkOneDrive->setText(tr("Upload to %1").arg("OneDrive"));
     btnPack->setText(tr("Pack APK"));
     menuFile->setTitle(tr("&File"));
     menuIcon->setTitle(tr("&Icon"));
@@ -518,26 +552,37 @@ void MainWindow::setActiveApk(QString filename)
     addToRecent(filename);
 }
 
+void MainWindow::upload(Cloud *uploader, QString filename)
+{
+    QEventLoop loop;
+    connect(uploader, SIGNAL(finished(bool)), &loop, SLOT(quit()), Qt::QueuedConnection);
+    uploadDialog->setIcon(uploader->getIcon());
+    uploader->upload(filename);
+    loop.exec();
+}
+
 void MainWindow::apkPacked(QString filename, bool isSuccess, QString text)
 {
     loadingDialog->finish();
     setActiveApk(filename);
 
-    const bool UPLOAD_TO_DROPBOX = checkDropbox->isChecked();
+    const bool UPLOAD_TO_DROPBOX  = checkDropbox->isChecked();
+    const bool UPLOAD_TO_GDRIVE   = checkGDrive->isChecked();
+    const bool UPLOAD_TO_ONEDRIVE = checkOneDrive->isChecked();
 
     if (isSuccess) {
-        if (!UPLOAD_TO_DROPBOX) {
-            success(NULL, text);
-        }
-        else {
-            dropbox->upload(filename);
-        }
+        if (UPLOAD_TO_DROPBOX)  upload(dropbox, filename);
+        if (UPLOAD_TO_GDRIVE)   upload(gdrive, filename);
+        if (UPLOAD_TO_ONEDRIVE) upload(onedrive, filename);
+        uploadDialog->finish();
+        success(NULL, text);
     }
     else {
         warning(NULL, text);
-        if (UPLOAD_TO_DROPBOX) {
-            dropbox->upload(filename);
-        }
+        if (UPLOAD_TO_DROPBOX)  upload(dropbox, filename);
+        if (UPLOAD_TO_GDRIVE)   upload(gdrive, filename);
+        if (UPLOAD_TO_ONEDRIVE) upload(onedrive, filename);
+        uploadDialog->finish();
     }
 }
 
@@ -949,6 +994,16 @@ void MainWindow::closeEvent(QCloseEvent *event)
     settings->beginGroup("Dropbox");
         settings->setValue("Token", dropbox->getToken());
         settings->setValue("Enable", checkDropbox->isChecked());
+    settings->endGroup();
+
+    settings->beginGroup("GDrive");
+        settings->setValue("Token", gdrive->getToken());
+        settings->setValue("Enable", checkGDrive->isChecked());
+    settings->endGroup();
+
+    settings->beginGroup("OneDrive");
+        settings->setValue("Token", onedrive->getToken());
+        settings->setValue("Enable", checkOneDrive->isChecked());
     settings->endGroup();
 
     // Close window:

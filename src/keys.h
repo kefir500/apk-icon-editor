@@ -9,7 +9,13 @@
 
 #include <QString>
 
-const QString DROPBOX_ID        = "000000000000000";    // DUMMY
-const QString DROPBOX_SECRET    = "000000000000000";    // DUMMY
+const QString DROPBOX_ID        = "0000000000000000";
+const QString DROPBOX_SECRET    = "0000000000000000";
+
+const QString GGDRIVE_ID        = "0000000000000000";
+const QString GGDRIVE_SECRET    = "0000000000000000";
+
+const QString ONEDRIVE_ID       = "0000000000000000";
+const QString ONEDRIVE_SECRET   = "0000000000000000";
 
 #endif // KEYS_H

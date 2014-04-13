@@ -19,7 +19,7 @@
 #include "effects.h"
 #include "dialogs.h"
 #include "updater.h"
-#include "dropbox.h"
+#include "cloud.h"
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -29,6 +29,8 @@ private:
     ComboList *devices;
     QPushButton *btnPack;
     QCheckBox *checkDropbox;
+    QCheckBox *checkGDrive;
+    QCheckBox *checkOneDrive;
     EffectsDialog *effects;
     ProgressDialog *loadingDialog;
     ProgressDialog *uploadDialog;
@@ -84,6 +86,8 @@ private:
     Apk *apk;
     Updater *updater;
     Dropbox *dropbox;
+    GoogleDrive *gdrive;
+    OneDrive *onedrive;
     QString currentLang;
     QString currentPath;
     QStringList recent;
@@ -98,6 +102,9 @@ private:
 
     void initLanguages();                   ///< Initialize available languages.
     void initProfiles();                    ///< Initialize available profiles.
+
+    /// Upload file to cloud service.
+    void upload(Cloud *uploader, QString filename);
 
 protected:
     void dragEnterEvent(QDragEnterEvent *event);
@@ -161,11 +168,8 @@ private slots:
     /// \param[in] version Number representing the new version.
     bool newVersion(QString version);
 
-    /// Show "Enter Dropbox code" message.
-    void authDropbox();
-
-    /// Show "Uploaded" message.
-    void uploaded(bool isSuccess = true);
+    /// Show "Enter \c cloud code" message.
+    void authCloud();
 
     /// Show success message.
     /// \param[in] title Message brief title.
