@@ -66,10 +66,12 @@ void Cloud::catchReply(QNetworkReply *reply)
         }
     }
     else if (reply->error() == QNetworkReply::AuthenticationRequiredError) {
-        // The following IF statement handles situation
-        // when the destination Dropbox folder is removed during upload.
         if (!reply->url().toString().contains(DROPBOX_UPLOAD)) {
             auth();
+        }
+        else {
+            // Handle situation when the destination Dropbox folder is removed during upload.
+            catchError(reply->error(), reply->errorString());
         }
     }
     else if (reply->error() == QNetworkReply::UnknownContentError

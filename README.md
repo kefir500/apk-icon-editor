@@ -1,7 +1,7 @@
 # APK Icon Editor
 
 ## Description
-__APK Icon Editor__ is the tool designed to easily edit and replace APK (Android Package) icons. Written in C++ and Qt framework.
+**APK Icon Editor** is the tool designed to easily edit and replace APK (Android Package) icons. Written in C++ and Qt framework.
 
 ## Features
 * Edit, replace and extract APK icons;
