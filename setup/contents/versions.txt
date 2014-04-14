@@ -2,7 +2,7 @@
 
 ## 0.5
 * Added *Google Drive* support.
-* Added *OneDrive* support.
+* Added *Microsoft OneDrive* support.
 * Added *Chinese (China)* translation.
 * Minor GUI improvements.
 * Minor bug fixes.

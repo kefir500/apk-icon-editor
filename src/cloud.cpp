@@ -385,7 +385,7 @@ void GoogleDrive::startUpload()
 
 OneDrive::OneDrive(QObject *parent) : Cloud(parent)
 {
-    setTitle("OneDrive");
+    setTitle("Microsoft OneDrive");
     setClientID(ONEDRIVE_ID);
     setSecret(ONEDRIVE_SECRET);
     setUrlAuth(ONEDRIVE_AUTH);

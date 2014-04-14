@@ -409,9 +409,9 @@ void MainWindow::setLanguage(QString lang)
     // Retranslate strings:
     drawArea->setText(tr("CLICK HERE\n(or drag APK and icons)"));
     devices->setLabelText(tr("Device:"));
-    checkDropbox->setText(tr("Upload to %1").arg("Dropbox"));
-    checkGDrive->setText(tr("Upload to %1").arg("Google Drive"));
-    checkOneDrive->setText(tr("Upload to %1").arg("OneDrive"));
+    checkDropbox->setText(tr("Upload to %1").arg(dropbox->getTitle()));
+    checkGDrive->setText(tr("Upload to %1").arg(gdrive->getTitle()));
+    checkOneDrive->setText(tr("Upload to %1").arg(onedrive->getTitle()));
     btnPack->setText(tr("Pack APK"));
     menuFile->setTitle(tr("&File"));
     menuIcon->setTitle(tr("&Icon"));
