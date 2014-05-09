@@ -961,6 +961,12 @@ void MainWindow::dropEvent(QDropEvent *event)
     if (mimeData->hasText()) {
         QUrl url(mimeData->text());
         QString filename = url.toLocalFile();
+
+        // Handle Qt Unix bug:
+        if (filename.right(2) == "\r\n") {
+            filename.chop(2);
+        }
+
         QString ext = QFileInfo(filename).suffix().toLower();
         if (EXT_GFX.contains(ext)) {
             iconOpen(filename);
