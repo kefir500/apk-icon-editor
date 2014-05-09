@@ -93,7 +93,7 @@ ProgressDialog::ProgressDialog(QWidget *parent) : QDialog(parent)
     layout->addWidget(progress);
     layout->addWidget(buttons);
 
-#ifdef QT5_2_0
+#if WINEXTRAS
     taskbar = new QWinTaskbarButton(this);
 #endif
 
@@ -105,7 +105,7 @@ void ProgressDialog::setProgress(short percentage, QString text)
     label->setText(text);
     progress->setValue(percentage);
 
-#ifdef QT5_2_0
+#if WINEXTRAS
     taskbar->setWindow(static_cast<QWidget*>(parent())->windowHandle());
     taskbar->setOverlayIcon(*icon->pixmap());
     QWinTaskbarProgress *taskProgress = taskbar->progress();
@@ -137,7 +137,7 @@ void ProgressDialog::finish()
 {
     accept();
     progress->setValue(0);
-#ifdef QT5_2_0
+#if WINEXTRAS
     taskbar->clearOverlayIcon();
     QWinTaskbarProgress *taskProgress = taskbar->progress();
     taskProgress->setVisible(false);

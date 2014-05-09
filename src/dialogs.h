@@ -12,7 +12,7 @@
 #include <QDialogButtonBox>
 #include <QPushButton>
 
-#ifdef QT5_2_0
+#if WINEXTRAS
     #include <QtWinExtras/QtWinExtras>
 #endif
 
@@ -60,7 +60,7 @@ private:
     QLabel *icon;                   ///< Dialog pixmap.
     QProgressBar *progress;         ///< Dialog progress bar.
     QDialogButtonBox *buttons;      ///< Dialog buttons.
-#ifdef QT5_2_0
+#if WINEXTRAS
     QWinTaskbarButton *taskbar;     ///< Represents taskbar button.
 #endif
 

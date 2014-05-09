@@ -35,7 +35,11 @@
     const QString APP = "APK Icon Editor (DEBUG)";
 #endif
 
-#define QT5_2_0 (QT_VERSION >= QT_VERSION_CHECK(5, 2, 0))
+#if defined(Q_OS_WIN32Q) && (QT_VERSION >= QT_VERSION_CHECK(5, 2, 0))
+    #define WINEXTRAS 1
+#else
+    #define WINEXTRAS 0
+#endif
 
 const int WINDOW_WIDTH      = 714;
 const int WINDOW_HEIGHT     = 484;
