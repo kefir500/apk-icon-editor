@@ -1,9 +1,14 @@
 QT += core gui network
 
-# TODO: Following expression won't work with Qt6.
-equals(QT_MAJOR_VERSION, 5) {
+greaterThan(QT_MAJOR_VERSION, 4) {
     QT += widgets
-    greaterThan(QT_MINOR_VERSION, 1): QT += winextras
+    win32 {
+        isEqual(QT_MAJOR_VERSION, 5) {
+            greaterThan(QT_MINOR_VERSION, 1): QT += winextras
+        } else {
+            QT += winextras
+        }
+    }
 }
 
 TARGET = apk-icon-editor
@@ -43,4 +48,8 @@ RC_FILE += ../res/icon.rc
 
 win32 {
     DESTDIR = ../bin/win32
+}
+
+unix {
+    DESTDIR = ../bin/unix
 }
