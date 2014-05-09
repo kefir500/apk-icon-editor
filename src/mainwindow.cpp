@@ -7,6 +7,8 @@
 #include <QColorDialog>
 #include <QFileDialog>
 #include <QInputDialog>
+#include <QMimeData>
+#include <QDesktopServices>
 #include <QApplication>
 
 #ifdef QT_DEBUG
