@@ -20,6 +20,7 @@ class Apk : public QObject {
 private:
     QString filename;                       ///< Current APK filename.
     QString manifest;                       ///< Stores AndroidManifest.xml.
+    QString warnText;                       ///< Stores warning text.
     QList<QSharedPointer<Icon>> icons;      ///< Stores [shared pointers to] loaded APK icons.
     static const QString STR_ERROR;         ///< Error text template.
     static const QString STR_ERRORSTART;    ///< Error text template.
@@ -95,6 +96,11 @@ signals:
     /// \param[in] title Message brief title.
     /// \param[in] text  Message detailed text.
     void error(QString title, QString text) const;
+
+    /// \brief This signal is emitted to send warning message.
+    /// \param[in] title Message brief title.
+    /// \param[in] text  Message detailed text.
+    void warning(QString title, QString text) const;
 
     /// \brief This signal is emitted when APK is successfully unpacked.
     /// \param[in] filename Filename (with full path) of just unpacked APK.

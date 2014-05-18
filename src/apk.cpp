@@ -52,6 +52,7 @@ QString parse(QString regexp, QString str)
 void Apk::unpack(QString _filename)
 {
     filename = _filename;
+    warnText.clear();
     QtConcurrent::run(this, &Apk::doUnpack);
 }
 
@@ -81,6 +82,11 @@ bool Apk::doUnpack()
 
     emit loading(100, tr("APK successfully loaded"));
     emit unpacked(filename);
+
+    if (!warnText.isEmpty()) {
+        warning(tr("Warning"), warnText);
+    }
+
     return true;
 }
 
@@ -97,12 +103,12 @@ bool Apk::readManifest()
 
     // Check AAPT return code:
     switch (p.exitCode()) {
-    case 0: {
+    case 1:
+        warnText = tr("AndroidManifest.xml contains uncritical errors.");
+        // Continue reading AndroidManifest.xml:
+    case 0:
         manifest = p.readAllStandardOutput();
         return true;
-    }
-    case 1:
-        return die(AAPT_ERROR, tr("AndroidManifest.xml not found.\nAPK is invalid."));
     default:
         return die(AAPT_ERROR, tr("Error reading APK."));
     }
