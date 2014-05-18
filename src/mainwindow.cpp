@@ -234,6 +234,7 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) : QMainWindow(pa
     connect(apk, SIGNAL(loading(short, QString)), loadingDialog, SLOT(setProgress(short, QString)), Qt::BlockingQueuedConnection);
     connect(apk, SIGNAL(error(QString, QString)), this, SLOT(error(QString, QString)));
     connect(apk, SIGNAL(error(QString, QString)), loadingDialog, SLOT(finish()));
+    connect(apk, SIGNAL(warning(QString, QString)), this, SLOT(warning(QString, QString)));
     connect(apk, SIGNAL(packed(QString, bool, QString)), this, SLOT(apkPacked(QString, bool, QString)));
     connect(apk, SIGNAL(unpacked(QString)), this, SLOT(apkUnpacked(QString)));
     connect(dropbox, SIGNAL(auth_required()), this, SLOT(authCloud()));
@@ -556,6 +557,7 @@ void MainWindow::setCurrentIcon(int id)
 
 void MainWindow::setActiveApk(QString filename)
 {
+    currentApk = filename;
     setWindowModified(false);
     setWindowTitle(QFileInfo(filename).fileName() + "[*]");
     addToRecent(filename);
@@ -675,8 +677,12 @@ bool MainWindow::iconSave(QString filename)
         return false;
     }
 
-    if (filename.isEmpty()) {
-        filename = QFileDialog::getSaveFileName(this, tr("Save Icon"), NULL, FILTER_GFX);
+    if (filename.isEmpty())
+    {
+        Profile profile = Profile::at(devices->currentGroupIndex());
+        int side = profile.getDpiSide(static_cast<Dpi>(devices->currentItemIndex()));
+        filename = QString("%1-%2").arg(QFileInfo(currentApk).baseName()).arg(side);
+        filename = QFileDialog::getSaveFileName(this, tr("Save Icon"), filename, FILTER_GFX);
         if (filename.isEmpty()) {
             return false;
         }
@@ -833,7 +839,7 @@ void MainWindow::associate() const
 
 void MainWindow::browseSite() const
 {
-    QDesktopServices::openUrl(QUrl(URL_WEBSITE));
+    QDesktopServices::openUrl(URL_WEBSITE);
 }
 
 void MainWindow::browseBugs() const
