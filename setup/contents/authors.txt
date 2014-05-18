@@ -8,5 +8,8 @@ Chinese (China) - QQ775405984
 Alpha Testing:
 Vladimir Gorishnyak
 
+Bug Reports:
+Code War
+
 Special Thanks:
 Mark James (http://www.famfamfam.com/lab/icons/flags) for flag icons

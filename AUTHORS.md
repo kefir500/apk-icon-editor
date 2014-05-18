@@ -6,6 +6,8 @@
 ## Translations
 #### Russian
 - [Alexander Gorishnyak](https://github.com/kefir500)
+#### Chinese (China)
+- [QQ775405984](https://www.transifex.com/accounts/profile/775405984)
 
 ## Testers
 - Vladimir Gorishnyak

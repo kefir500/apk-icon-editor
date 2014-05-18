@@ -1,5 +1,10 @@
 # Version History
 
+## 0.5.1
+* Added "Explore APK Contents" function.
+* Improved handling invalid APK files.
+* Minor improvements and bug fixes.
+
 ## 0.5
 * Added *Google Drive* support.
 * Added *Microsoft OneDrive* support.
