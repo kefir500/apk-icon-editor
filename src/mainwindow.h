@@ -63,6 +63,7 @@ private:
 
     // Actions:
     QAction *actApkOpen;
+    QAction *actApkExplore;
     QAction *actApkSave;
     QAction *actExit;
     QAction *actRecentClear;
@@ -88,6 +89,7 @@ private:
     Dropbox *dropbox;
     GoogleDrive *gdrive;
     OneDrive *onedrive;
+    QString currentApk;
     QString currentLang;
     QString currentPath;
     QStringList recent;
@@ -114,9 +116,9 @@ protected:
     void closeEvent(QCloseEvent *event);
 
 private slots:
-
     void apkLoad(QString filename = NULL);  ///< Open APK from the \c filename. If \c filename is NULL, show "Open" dialog.
     void apkSave();                         ///< Save APK (calls "Save" dialog).
+    void apkExplore();                      ///< Open the folder with APK contents.
 
     /// Handle packed APK.
     /// \param[in] filename  Name of the packed APK file.

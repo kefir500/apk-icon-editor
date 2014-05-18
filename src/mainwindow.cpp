@@ -51,6 +51,7 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) : QMainWindow(pa
     actApkOpen = new QAction(this);
     actApkSave = new QAction(this);
     menuRecent = new QMenu(this);
+    actApkExplore = new QAction(this);
     actExit = new QAction(this);
     actRecentClear = new QAction(this);
     actNoRecent = new QAction(this);
@@ -83,6 +84,8 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) : QMainWindow(pa
     actAbout = new QAction(this);
     menuFile->addAction(actApkOpen);
     menuFile->addMenu(menuRecent);
+    menuFile->addSeparator();
+    menuFile->addAction(actApkExplore);
     menuFile->addSeparator();
     menuFile->addAction(actApkSave);
     menuFile->addSeparator();
@@ -124,6 +127,7 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) : QMainWindow(pa
     menuHelp->addSeparator();
     menuHelp->addAction(actAboutQt);
     menuHelp->addAction(actAbout);
+    actApkExplore->setEnabled(false);
     actApkSave->setEnabled(false);
     actNoRecent->setEnabled(false);
     actIconOpen->setEnabled(false);
@@ -145,6 +149,7 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) : QMainWindow(pa
     actApkSave->setIcon(QIcon(":/gfx/task-pack.png"));
     actApkOpen->setShortcut(QKeySequence("Ctrl+O"));
     actApkSave->setShortcut(QKeySequence("Ctrl+E"));
+    actApkExplore->setShortcut(QKeySequence("Ctrl+D"));
     actIconOpen->setShortcut(QKeySequence("Ctrl+R"));
     actIconSave->setShortcut(QKeySequence("Ctrl+S"));
     actIconResize->setShortcut(QKeySequence("Ctrl+I"));
@@ -207,6 +212,7 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) : QMainWindow(pa
     connect(devices, SIGNAL(itemChanged(int)), this, SLOT(setCurrentIcon(int)));
     connect(actApkOpen, SIGNAL(triggered()), this, SLOT(apkLoad()));
     connect(actApkSave, SIGNAL(triggered()), this, SLOT(apkSave()));
+    connect(actApkExplore, SIGNAL(triggered()), this, SLOT(apkExplore()));
     connect(actExit, SIGNAL(triggered()), this, SLOT(close()));
     connect(actRecentClear, SIGNAL(triggered()), this, SLOT(clearRecent()));
     connect(actIconOpen, SIGNAL(triggered()), this, SLOT(iconOpen()));
@@ -422,6 +428,7 @@ void MainWindow::setLanguage(QString lang)
     actApkOpen->setText(tr("&Open APK"));
     actApkSave->setText(tr("&Export (Pack) APK"));
     menuRecent->setTitle(tr("&Recent APKs"));
+    actApkExplore->setText(tr("Explore APK &Contents"));
     actExit->setText(tr("E&xit"));
     actRecentClear->setText(tr("&Clear List"));
     actNoRecent->setText(tr("No Recent Files"));
@@ -602,6 +609,7 @@ void MainWindow::apkUnpacked(QString filename)
 
     // Enable operations with APK and icons:
     actApkSave->setEnabled(true);
+    actApkExplore->setEnabled(true);
     actIconOpen->setEnabled(true);
     actIconSave->setEnabled(true);
     actIconRevert->setEnabled(true);
@@ -805,6 +813,11 @@ void MainWindow::apkSave()
         short ratio = groupRatio->checkedAction()->data().toInt();
         apk->pack(filename, ratio, sign, optimize);
     }
+}
+
+void MainWindow::apkExplore()
+{
+    QDesktopServices::openUrl(QDir::fromNativeSeparators(TEMPDIR + "apk"));
 }
 
 void MainWindow::associate() const
