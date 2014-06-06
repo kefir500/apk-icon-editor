@@ -73,6 +73,13 @@ public:
     /// \return Requested #icon.
     Icon *getIcon(Dpi id) const;
 
+    QString getPackageName() const;         ///< Returns APK package name.
+    QString getVersionCode() const;         ///< Returns APK version code.
+    QString getVersionName() const;         ///< Returns APK display version.
+    QString getApplicationLabel() const;    ///< Returns APK display name.
+    QString getMinimumSdk() const;          ///< Returns APK minimum SDK version.
+    QString getTargetSdk() const;           ///< Returns APK target SDK version.
+
     /// \brief Unpack APK by calling private #doUnpack method in a separate #thread.
     /// \param[in] _filename Name of APK file to unpack.
     void unpack(QString filename);

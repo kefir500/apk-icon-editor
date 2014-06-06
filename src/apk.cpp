@@ -116,6 +116,9 @@ bool Apk::readManifest()
 
 bool Apk::unzip() const
 {
+    QDir dir(TEMPDIR);
+    dir.mkpath(".");
+
     QProcess p;
     p.start(QString("7za x \"%1\" -y -o\"%2apk\"").arg(filename, TEMPDIR));
     if (!p.waitForStarted(-1)) {
@@ -353,6 +356,36 @@ Icon *Apk::getIcon(Dpi id) const
     else {
         return NULL;
     }
+}
+
+QString Apk::getPackageName() const
+{
+    return parse("package: name='(.+)'", manifest);
+}
+
+QString Apk::getVersionCode() const
+{
+    return parse("versionCode='(.+)'", manifest);
+}
+
+QString Apk::getVersionName() const
+{
+    return parse("versionName='(.+)'", manifest);
+}
+
+QString Apk::getApplicationLabel() const
+{
+    return parse("application-label:'(.+)'", manifest);
+}
+
+QString Apk::getMinimumSdk() const
+{
+    return parse("sdkVersion:'(.+)'", manifest);
+}
+
+QString Apk::getTargetSdk() const
+{
+    return parse("targetSdkVersion:'(.+)'", manifest);
 }
 
 void Apk::clearTemp()

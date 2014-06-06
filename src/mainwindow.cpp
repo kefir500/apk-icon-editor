@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "main.h"
 #include <QHBoxLayout>
+#include <QHeaderView>
 #include <QMenuBar>
 #include <QMessageBox>
 #include <QProgressDialog>
@@ -34,9 +35,8 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) : QMainWindow(pa
     onedrive = new OneDrive(this);
     onedrive->setIcon(QPixmap(":/gfx/icon-onedrive.png"));
 
-    QWidget *w = new QWidget(this);
-    QHBoxLayout *layout = new QHBoxLayout(w);
-    setCentralWidget(w);
+    splitter = new QSplitter(this);
+    setCentralWidget(splitter);
 
     QMenuBar *menu = new QMenuBar(this);
     setMenuBar(menu);
@@ -177,28 +177,49 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) : QMainWindow(pa
 
     devices = new ComboList(this);
     devices->addActions(menuIcon->actions());
+    devices->setEnabled(false);
+    tabProps = new QTableWidget(this);
+    tabProps->setRowCount(6);
+    tabProps->setColumnCount(2);
+    tabProps->verticalHeader()->setVisible(false);
+    tabProps->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    tabProps->setEditTriggers(QTableWidget::NoEditTriggers);
+    tabProps->setSelectionMode(QTableWidget::SingleSelection);
+    tabProps->setEnabled(false);
 
-    btnPack = new QPushButton(this);
-    btnPack->setEnabled(false);
-    btnPack->setFixedHeight(64);
     checkDropbox = new QCheckBox(this);
     checkDropbox->setIcon(dropbox->getIcon());
     checkGDrive = new QCheckBox(this);
     checkGDrive->setIcon(gdrive->getIcon());
     checkOneDrive = new QCheckBox(this);
     checkOneDrive->setIcon(onedrive->getIcon());
+    btnPack = new QPushButton(this);
+    btnPack->setEnabled(false);
+    btnPack->setFixedHeight(64);
 
-    QVBoxLayout *layoutProfile = new QVBoxLayout();
-    layoutProfile->addWidget(devices);
-    layoutProfile->addWidget(checkDropbox);
-    layoutProfile->addWidget(checkGDrive);
-    layoutProfile->addWidget(checkOneDrive);
-    layoutProfile->addWidget(btnPack);
+    tabs = new QTabWidget(this);
+    tabs->setContentsMargins(5, 5, 5, 5);
+    tabs->addTab(devices, NULL);
+    tabs->addTab(tabProps, NULL);
+    tabs->setStyleSheet("padding: 3px;");
+    tabProps->setStyleSheet("padding: 0");
 
-    layout->addWidget(drawArea);
-    layout->addLayout(layoutProfile);
-    layout->setStretch(0, 2);
-    layout->setStretch(1, 1);
+    QWidget *sidebar = new QWidget(this);
+    QVBoxLayout *layoutSide = new QVBoxLayout(sidebar);
+    layoutSide->setMargin(0);
+    layoutSide->addWidget(tabs);
+    layoutSide->addWidget(checkDropbox);
+    layoutSide->addWidget(checkGDrive);
+    layoutSide->addWidget(checkOneDrive);
+    layoutSide->addWidget(btnPack);
+
+    splitter->addWidget(drawArea);
+    splitter->addWidget(sidebar);
+    splitter->setCollapsible(0, false);
+    splitter->setCollapsible(1, false);
+    splitter->setStretchFactor(0, 2);
+    splitter->setStretchFactor(1, 1);
+    splitter->setStyleSheet("QSplitter {padding: 8px;}");
 
     mapRecent = new QSignalMapper(this);
 
@@ -313,6 +334,7 @@ void MainWindow::restoreSettings()
     QString sLanguage = settings->value("Language", locale).toString();
     QString sLastDir = settings->value("Directory", "").toString();
     QByteArray sGeometry = settings->value("Geometry", NULL).toByteArray();
+    QByteArray sSplitter = settings->value("Splitter", NULL).toByteArray();
     QStringList sRecent = settings->value("Recent", NULL).toStringList();
     bool sUpdate = settings->value("Update", true).toBool();
 
@@ -371,6 +393,7 @@ void MainWindow::restoreSettings()
 
     currentPath = sLastDir;
     restoreGeometry(sGeometry);
+    splitter->restoreState(sSplitter);
     setLanguage(sLanguage);
     actPackSign->setChecked(sSign);
     actPackOptimize->setChecked(sOptimize);
@@ -417,7 +440,16 @@ void MainWindow::setLanguage(QString lang)
 
     // Retranslate strings:
     drawArea->setText(tr("CLICK HERE\n(or drag APK and icons)"));
+    tabs->setTabText(0, tr("Icons"));
+    tabs->setTabText(1, tr("Details"));
     devices->setLabelText(tr("Device:"));
+    tabProps->setHorizontalHeaderLabels(QStringList() << tr("Property") << tr("Value"));
+    tabProps->setItem(0, 0, new QTableWidgetItem(tr("Application Name")));
+    tabProps->setItem(1, 0, new QTableWidgetItem(tr("Package Name")));
+    tabProps->setItem(2, 0, new QTableWidgetItem(tr("Version Code")));
+    tabProps->setItem(3, 0, new QTableWidgetItem(tr("Version Name")));
+    tabProps->setItem(4, 0, new QTableWidgetItem(tr("Minimum SDK")));
+    tabProps->setItem(5, 0, new QTableWidgetItem(tr("Target SDK")));
     checkDropbox->setText(tr("Upload to %1").arg(dropbox->getTitle()));
     checkGDrive->setText(tr("Upload to %1").arg(gdrive->getTitle()));
     checkOneDrive->setText(tr("Upload to %1").arg(onedrive->getTitle()));
@@ -609,6 +641,14 @@ void MainWindow::apkUnpacked(QString filename)
     devices->setCurrentItem(id);
     hideEmptyDpi();
 
+    // Parse APK details:
+    tabProps->setItem(0, 1, new QTableWidgetItem(apk->getApplicationLabel()));
+    tabProps->setItem(1, 1, new QTableWidgetItem(apk->getPackageName()));
+    tabProps->setItem(2, 1, new QTableWidgetItem(apk->getVersionCode()));
+    tabProps->setItem(3, 1, new QTableWidgetItem(apk->getVersionName()));
+    tabProps->setItem(4, 1, new QTableWidgetItem(apk->getMinimumSdk()));
+    tabProps->setItem(5, 1, new QTableWidgetItem(apk->getTargetSdk()));
+
     // Enable operations with APK and icons:
     actApkSave->setEnabled(true);
     actApkExplore->setEnabled(true);
@@ -618,6 +658,8 @@ void MainWindow::apkUnpacked(QString filename)
     actIconEffect->setEnabled(true);
     actIconResize->setEnabled(true);
     actIconScale->setEnabled(true);
+    devices->setEnabled(true);
+    tabProps->setEnabled(true);
     btnPack->setEnabled(true);
 }
 
@@ -1010,6 +1052,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
     settings->setValue("Update", actAutoUpdate->isChecked());
     settings->setValue("Directory", currentPath);
     settings->setValue("Geometry", saveGeometry());
+    settings->setValue("Splitter", splitter->saveState());
     settings->setValue("Recent", recent);
 
     settings->beginGroup("APK");

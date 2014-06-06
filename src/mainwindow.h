@@ -5,8 +5,10 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QPushButton>
+#include <QSplitter>
+#include <QTableWidget>
 #include <QCheckBox>
+#include <QPushButton>
 #include <QProgressDialog>
 #include <QSignalMapper>
 #include <QActionGroup>
@@ -25,12 +27,16 @@ class MainWindow : public QMainWindow {
     Q_OBJECT
 
 private:
+    QSplitter *splitter;
     DrawArea *drawArea;
+    QTabWidget *tabs;
     ComboList *devices;
-    QPushButton *btnPack;
+    QTableWidget *tabProps;
+    QListWidget *images;
     QCheckBox *checkDropbox;
     QCheckBox *checkGDrive;
     QCheckBox *checkOneDrive;
+    QPushButton *btnPack;
     EffectsDialog *effects;
     ProgressDialog *loadingDialog;
     ProgressDialog *uploadDialog;
