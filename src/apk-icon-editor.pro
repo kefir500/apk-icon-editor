@@ -40,6 +40,7 @@ HEADERS += main.h \
            keys.h
 
 TRANSLATIONS += ../lang/apk-icon-editor.en.ts \
+                ../lang/apk-icon-editor.fr.ts \
                 ../lang/apk-icon-editor.ru.ts \
                 ../lang/apk-icon-editor.zh.ts
 
