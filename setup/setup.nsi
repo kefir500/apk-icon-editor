@@ -1,8 +1,8 @@
 !define APPNAME "APK Icon Editor"
 !define COMPANYNAME "Qwerty Minds"
 !define VERSIONMAJOR 0
-!define VERSIONMINOR 5
-!define VERSION "${VERSIONMAJOR}.${VERSIONMINOR}.1 Beta"
+!define VERSIONMINOR 6
+!define VERSION "${VERSIONMAJOR}.${VERSIONMINOR} Beta"
 !define ABOUTURL "http://kefir500.github.io/apk-icon-editor"
 !define UPDATEURL "http://kefir500.github.io/apk-icon-editor"
 !define EXE "$INSTDIR\apk-icon-editor.exe"
@@ -22,7 +22,7 @@ RequestExecutionLevel admin
 !define MUI_HEADERIMAGE_RIGHT
 !define MUI_HEADERIMAGE_BITMAP "gfx\header.bmp"
 
-### NSIS will run application exe with admin privileges so drag-n-drop won't work ###
+### NSIS runs application with admin privileges, so drag-n-drop won't work ###
 #!define MUI_FINISHPAGE_RUN ${EXE}
 ###
 
@@ -69,15 +69,6 @@ Section
 	SetOutPath "$INSTDIR\gfx"
 	File "gfx\icon.ico"
 	WriteUninstaller "$INSTDIR\uninstall.exe"
-
-	### Delete translations from previous versions.
-	Delete "$INSTDIR\lang\en\flag.png"
-	Delete "$INSTDIR\lang\ru\apk-icon-editor.qm"
-	Delete "$INSTDIR\lang\ru\qt.qm"
-	Delete "$INSTDIR\lang\ru\flag.png"
-	RMDir "$INSTDIR\lang\en"
-	RMDir "$INSTDIR\lang\ru"
-
 	CreateShortCut "$SMPROGRAMS\${APPNAME}.lnk" ${EXE}
 	WriteRegStr HKCU "Software\apk-icon-editor" "InstallDir" "$INSTDIR"
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "DisplayName" "${APPNAME}"
@@ -135,13 +126,16 @@ Section "-un.Uninstall"
 	Delete "$INSTDIR\imageformats\qgif.dll"
 	Delete "$INSTDIR\imageformats\qico.dll"
 	Delete "$INSTDIR\imageformats\qjpeg.dll"
+	Delete "$INSTDIR\lang\apk-icon-editor.fr.qm"
 	Delete "$INSTDIR\lang\apk-icon-editor.ru.qm"
 	Delete "$INSTDIR\lang\apk-icon-editor.zh.qm"
+	Delete "$INSTDIR\lang\qt.fr.qm"
 	Delete "$INSTDIR\lang\qt.ru.qm"
 	Delete "$INSTDIR\lang\qt.zh.qm"
 	Delete "$INSTDIR\lang\flag.en.png"
+	Delete "$INSTDIR\lang\flag.fr.png"
 	Delete "$INSTDIR\lang\flag.ru.png"
-	Delete "$INSTDIR\lang\flag.cn.png"
+	Delete "$INSTDIR\lang\flag.zh.png"
 	Delete "$INSTDIR\licenses\7za.txt"
 	Delete "$INSTDIR\licenses\opensans.txt"
 	Delete "$INSTDIR\platforms\qwindows.dll"

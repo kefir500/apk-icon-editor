@@ -2,14 +2,17 @@ Author:
 Alexander Gorishnyak
 
 Translations:
-Russian - Alexander Gorishnyak
 Chinese (China) - QQ775405984
+French - Stold, AzRock
+Russian - Alexander Gorishnyak
 
-Alpha Testing:
+Testers:
 Vladimir Gorishnyak
+Code War
 
 Bug Reports:
 Code War
+Apollo_IV
 
 Special Thanks:
 Mark James (http://www.famfamfam.com/lab/icons/flags) for flag icons

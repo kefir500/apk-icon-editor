@@ -1,7 +1,12 @@
 # Version History
 
+# 0.6
+* Added *Details* tab.
+* Added *French* translation.
+* Improved GUI.
+
 ## 0.5.1
-* Added "Explore APK Contents" function.
+* Added *Explore APK Contents* function.
 * Improved handling invalid APK files.
 * Minor improvements and bug fixes.
 
@@ -34,7 +39,7 @@
 
 ## 0.2.1
 * Added APK packing options.
-* Added "Reset Settings" function.
+* Added *Reset Settings* function.
 * Improved error/warning handlers.
 * Fixed recent list bug.
 * Minor bug fixes.
