@@ -893,8 +893,6 @@ void MainWindow::about()
 {
     const QString APPDIR(QApplication::applicationDirPath());
     const QString LINK("<a href=\"%1\">%2</a> - %3");
-    /*const QString DATE = QLocale(QLocale::C).toDate(QString(__DATE__).simplified(),
-                           QLatin1String("MMM d yyyy")).toString(Qt::ISODate);*/
 
     QMessageBox aboutBox(this);
     aboutBox.setWindowTitle(tr("About"));
@@ -916,12 +914,42 @@ void MainWindow::about()
             LINK.arg(URL_WEBSITE, tr("Visit Website"), tr("Visit our official website.")) + "<br>" +
             LINK.arg(URL_BUGS, tr("Report a Bug"), tr("Found a bug? Let us know so we can fix it!")) + "<br>" +
             LINK.arg(URL_TRANSLATE, tr("Help Translate"), tr("Join our translation team on Transifex.")) + "<br>" +
-            LINK.arg(QString("file:///%1/authors.txt").arg(APPDIR), tr("List of Authors"), tr("Contributors, translators, testers and helpers.")) + "<br>" +
             LINK.arg(QString("file:///%1/versions.txt").arg(APPDIR), tr("Version History"), tr("List of changes made to the project.")) +
         "</p>"
     );
     aboutBox.setIconPixmap(QPixmap(":/gfx/logo.png"));
+    QPushButton btnAuthors(tr("Authors"));
+    connect(&btnAuthors, SIGNAL(clicked()), this, SLOT(aboutAuthors()), Qt::QueuedConnection);
+    aboutBox.addButton(QMessageBox::Ok);
+    aboutBox.addButton(&btnAuthors, QMessageBox::RejectRole);
     aboutBox.exec();
+}
+
+void MainWindow::aboutAuthors()
+{
+    QMessageBox authors(this);
+    authors.setWindowTitle(tr("Authors"));
+    authors.setIconPixmap(QPixmap(":/gfx/logo.png"));
+
+    QString strAuthors;
+    bool newline = true;
+    QFile inputFile(QApplication::applicationDirPath() + "/authors.txt");
+    if (inputFile.open(QIODevice::ReadOnly)) {
+        QTextStream in(&inputFile);
+        while (!in.atEnd()) {
+            QString line = in.readLine();
+            if (line == "Special Thanks:") {
+                strAuthors.chop(4); // Chop the last "<br>" tag.
+                break;
+            }
+            strAuthors += !newline ? line + "<br>" : QString("<b>%1</b><br>").arg(line);
+            newline = line.isEmpty();
+        }
+        strAuthors.chop(4); // Chop the last "<br>" tag.
+        inputFile.close();
+        authors.setText(strAuthors);
+        authors.exec();
+    }
 }
 
 void MainWindow::aboutQt() const

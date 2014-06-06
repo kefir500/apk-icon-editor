@@ -161,6 +161,7 @@ private slots:
     void browseSite() const;        ///< Open website URL in the default browser.
     void browseBugs() const;        ///< Open bugs webpage in the default browser.
     void about();                   ///< Show "About APK Icon Editor" dialog.
+    void aboutAuthors();            ///< Show the list of authors dialog.
     void aboutQt() const;           ///< Show "About Qt" dialog.
 
     void setLanguage(QString lang); ///< Set GUI language.
