@@ -41,11 +41,11 @@
     #define WINEXTRAS 0
 #endif
 
-const int WINDOW_WIDTH      = 714;
+const int WINDOW_WIDTH      = 760;
 const int WINDOW_HEIGHT     = 484;
 
 // Application:
-const QString VER           = "0.5.1";
+const QString VER           = "0.6";
 const QString URL_WEBSITE   = "http://kefir500.github.io/apk-icon-editor/";
 const QString URL_GITHUB    = "https://github.com/kefir500/apk-icon-editor/";
 const QString URL_VERSION   = URL_WEBSITE + "VERSION";
