@@ -3,7 +3,6 @@
 
 EffectsDialog::EffectsDialog(QWidget *parent) : QDialog(parent)
 {
-    setWindowTitle(tr("Effects"));
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
     resize(260, 300);
 
@@ -90,6 +89,7 @@ EffectsDialog::EffectsDialog(QWidget *parent) : QDialog(parent)
 
 void EffectsDialog::retranslate()
 {
+    setWindowTitle(tr("Effects"));
     groupRotate->setTitle(tr("Rotation"));
     btnFlipX->setText(tr("Flip Horizontal"));
     btnFlipY->setText(tr("Flip Vertical"));
