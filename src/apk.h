@@ -22,8 +22,11 @@ private:
     QString manifest;                       ///< Stores AndroidManifest.xml.
     QString warnText;                       ///< Stores warning text.
     QList<QSharedPointer<Icon>> icons;      ///< Stores [shared pointers to] loaded APK icons.
-    static const QString STR_ERROR;         ///< Error text template.
-    static const QString STR_ERRORSTART;    ///< Error text template.
+
+    static const QString STR_ERROR;         ///< Error display text template.
+    static const QString STR_ERRORSTART;    ///< Error display text template.
+    static const QString LOG_ERRORSTART;    ///< Error log text template.
+    static const QString LOG_EXITCODE;      ///< Error log text template.
     static const QString TEMPDIR_APK;       ///< Temporary directory for unpacked resources.
 
     /// \brief This function has to be called on fatal error.

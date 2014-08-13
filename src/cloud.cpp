@@ -213,6 +213,7 @@ void Cloud::upload(QString _filename)
     // This is NOT an actual upload!
     // See Uploader::startUpload()
 
+    qDebug() << "Uploading to" << title;
     emit progress(0, tr("Checking if you are logged in..."));
     filename = _filename;
     if (!token.isEmpty()) {

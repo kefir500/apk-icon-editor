@@ -7,12 +7,10 @@
 #include <QDir>
 #include <QtConcurrent/QtConcurrentRun>
 
-#ifdef QT_DEBUG
-    #include <QDebug>
-#endif
-
 const QString Apk::STR_ERROR = tr("%1 Error");
 const QString Apk::STR_ERRORSTART = tr("Error starting <b>%1</b>");
+const QString Apk::LOG_ERRORSTART("%1: could not start");
+const QString Apk::LOG_EXITCODE("%1 exit code: %2");
 const QString Apk::TEMPDIR_APK = QDir::toNativeSeparators(TEMPDIR + "apk/");
 
 void removeRecursively(QString dir)
@@ -51,6 +49,7 @@ QString parse(QString regexp, QString str)
 
 void Apk::unpack(QString _filename)
 {
+    qDebug() << "Unpacking" << _filename;
     filename = _filename;
     warnText.clear();
     QtConcurrent::run(this, &Apk::doUnpack);
@@ -58,6 +57,9 @@ void Apk::unpack(QString _filename)
 
 void Apk::pack(QString _filename, short ratio, bool doSign, bool doOptimize)
 {
+    qDebug() << qPrintable(QString("Packing \"%1\": ratio(%2), sign(%3), zipalign(%4)")
+                           .arg(_filename).arg(ratio).arg(doSign).arg(doOptimize));
+
     filename = _filename;
     QtConcurrent::run(this, &Apk::doPack, ratio, doSign, doOptimize);
 }
@@ -82,6 +84,7 @@ bool Apk::doUnpack()
 
     emit loading(100, tr("APK successfully loaded"));
     emit unpacked(filename);
+    qDebug() << "Unpacked.\n";
 
     if (!warnText.isEmpty()) {
         warning(tr("Warning"), warnText);
@@ -97,12 +100,15 @@ bool Apk::readManifest()
     QProcess p;
     p.start(QString("aapt dump badging \"%1\"").arg(filename));
     if (!p.waitForStarted(-1)) {
+        qDebug() << qPrintable(LOG_ERRORSTART.arg("aapt"));
         return die(AAPT_ERROR, tr(STR_ERRORSTART.toLatin1()).arg("aapt"));
     }
     p.waitForFinished(-1);
 
     // Check AAPT return code:
-    switch (p.exitCode()) {
+    int code = p.exitCode();
+    qDebug() << qPrintable(LOG_EXITCODE.arg("aapt").arg(code));
+    switch (code) {
     case 1:
         warnText = tr("AndroidManifest.xml contains uncritical errors.");
         // Continue reading AndroidManifest.xml:
@@ -110,6 +116,7 @@ bool Apk::readManifest()
         manifest = p.readAllStandardOutput();
         return true;
     default:
+        qDebug() << p.readAllStandardError().trimmed();
         return die(AAPT_ERROR, tr("Error reading APK."));
     }
 }
@@ -122,6 +129,7 @@ bool Apk::unzip() const
     QProcess p;
     p.start(QString("7za x \"%1\" -y -o\"%2apk\"").arg(filename, TEMPDIR));
     if (!p.waitForStarted(-1)) {
+        qDebug() << qPrintable(LOG_ERRORSTART.arg("7za"));
         return die(tr(STR_ERROR.toLatin1()).arg("7ZA"), tr(STR_ERRORSTART.toLatin1()).arg("7za"));
     }
     p.waitForFinished(-1);
@@ -178,6 +186,7 @@ bool Apk::doPack(short ratio, bool doSign, bool doOptimize)
     // Sign:
 
     if (doSign) {
+        qDebug() << "Signing...";
         emit loading(60, tr("Signing APK..."));
         isSigned = sign();
     }
@@ -189,6 +198,7 @@ bool Apk::doPack(short ratio, bool doSign, bool doOptimize)
     // Optimize:
 
     if (doOptimize) {
+        qDebug() << "Aligning...";
         emit loading(80, tr("Optimizing APK..."));
         isOptimized = optimize();
     }
@@ -206,6 +216,7 @@ bool Apk::doPack(short ratio, bool doSign, bool doOptimize)
     // Finished!
 
     emit loading(100, tr("APK successfully packed!"));
+    qDebug() << "Packed.\n";
 
     if (isSigned && isOptimized) {
         emit packed(filename, true, tr("APK successfully packed!"));
@@ -246,6 +257,7 @@ bool Apk::zip(short ratio) const
     QProcess p;
     p.start(QString("7za a -tzip -mx%1 \"%2temp.zip\" \"%3*\"").arg(QString::number(ratio), TEMPDIR, TEMPDIR_APK));
     if (!p.waitForStarted(-1)) {
+        qDebug() << qPrintable(LOG_ERRORSTART.arg("7za"));
         return die(tr(STR_ERROR.toLatin1()).arg("7ZA"), tr(STR_ERRORSTART.toLatin1()).arg("7za"));
     }
     p.waitForFinished(-1);
@@ -265,6 +277,7 @@ bool Apk::checkJavaInstalled() const
         return true;
     }
     else {
+        qDebug() << "Java 32-bit not found!";
         return false;
     }
 }
@@ -285,7 +298,15 @@ bool Apk::sign() const
             QFile::remove(APK_SRC);
             return true;
         }
+        else {
+            qDebug() << qPrintable(LOG_EXITCODE.arg("Java").arg(p.exitCode()));
+            qDebug() << p.readAllStandardError().trimmed();
+        }
     }
+    else {
+        qDebug() << qPrintable(LOG_ERRORSTART.arg("Java"));
+    }
+
     // Something went wrong:
     QFile::rename(APK_SRC, APK_DST);
     return false;
@@ -305,7 +326,15 @@ bool Apk::optimize() const
             QFile::remove(APK_SRC);
             return true;
         }
+        else {
+            qDebug() << qPrintable(LOG_EXITCODE.arg("zipalign").arg(p.exitCode()));
+            qDebug() << p.readAllStandardError().trimmed();
+        }
     }
+    else {
+        qDebug() << qPrintable(LOG_ERRORSTART.arg("zipalign"));
+    }
+
     // Something went wrong:
     QFile::rename(APK_SRC, APK_DST);
     return false;
@@ -330,6 +359,7 @@ bool Apk::die(QString title, QString text) const
 
 bool Apk::getZipSuccess(int code) const
 {
+    qDebug() << qPrintable(LOG_EXITCODE.arg("7za").arg(code));
     const QString error_7za(tr(STR_ERROR.toLatin1()).arg("7ZA"));
 
     switch (code) {

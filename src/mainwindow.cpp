@@ -12,10 +12,6 @@
 #include <QDesktopServices>
 #include <QApplication>
 
-#ifdef QT_DEBUG
-    #include <QDebug>
-#endif
-
 MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) : QMainWindow(parent)
 {
     resize(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -418,6 +414,7 @@ void MainWindow::resetSettings()
 
 void MainWindow::setLanguage(QString lang)
 {
+    qDebug() << "Language set to" << lang;
     QString LANGPATH(QApplication::applicationDirPath() + "/lang");
     QApplication::removeTranslator(translator);
     QApplication::removeTranslator(translatorQt);
@@ -1110,5 +1107,6 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 MainWindow::~MainWindow()
 {
+    qDebug() << "Exiting...";
     delete apk;
 }
