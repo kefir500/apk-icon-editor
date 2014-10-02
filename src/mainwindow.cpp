@@ -189,6 +189,9 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) : QMainWindow(pa
     checkGDrive->setIcon(gdrive->getIcon());
     checkOneDrive = new QCheckBox(this);
     checkOneDrive->setIcon(onedrive->getIcon());
+    checkUpload = new QCheckBox(this);
+    checkUpload->setChecked(true);
+    checkUpload->setIcon(QPixmap(":/gfx/icon-upload.png"));
     btnPack = new QPushButton(this);
     btnPack->setEnabled(false);
     btnPack->setFixedHeight(64);
@@ -207,6 +210,7 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) : QMainWindow(pa
     layoutSide->addWidget(checkDropbox);
     layoutSide->addWidget(checkGDrive);
     layoutSide->addWidget(checkOneDrive);
+    layoutSide->addWidget(checkUpload);
     layoutSide->addWidget(btnPack);
 
     splitter->addWidget(drawArea);
@@ -227,6 +231,7 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) : QMainWindow(pa
     connect(drawArea, SIGNAL(clicked()), this, SLOT(apkLoad()));
     connect(devices, SIGNAL(groupChanged(int)), this, SLOT(hideEmptyDpi()));
     connect(devices, SIGNAL(itemChanged(int)), this, SLOT(setCurrentIcon(int)));
+    connect(checkUpload, SIGNAL(toggled(bool)), this, SLOT(enableUpload(bool)));
     connect(actApkOpen, SIGNAL(triggered()), this, SLOT(apkLoad()));
     connect(actApkSave, SIGNAL(triggered()), this, SLOT(apkSave()));
     connect(actApkExplore, SIGNAL(triggered()), this, SLOT(apkExplore()));
@@ -338,6 +343,7 @@ void MainWindow::restoreSettings()
         short sRatio = settings->value("Compression", 9).toInt();
         bool sSign = settings->value("Sign", true).toBool();
         bool sOptimize = settings->value("Optimize", true).toBool();
+        bool sUpload = settings->value("Upload", true).toBool();
     settings->endGroup();
 
     settings->beginGroup("Dropbox");
@@ -397,6 +403,7 @@ void MainWindow::restoreSettings()
     dropbox->setToken(sDropbox);
     gdrive->setToken(sGDrive);
     onedrive->setToken(sOneDrive);
+    checkUpload->setChecked(sUpload);
     checkDropbox->setChecked(bDropbox);
     checkGDrive->setChecked(bGDrive);
     checkOneDrive->setChecked(bOneDrive);
@@ -450,6 +457,7 @@ void MainWindow::setLanguage(QString lang)
     checkDropbox->setText(tr("Upload to %1").arg(dropbox->getTitle()));
     checkGDrive->setText(tr("Upload to %1").arg(gdrive->getTitle()));
     checkOneDrive->setText(tr("Upload to %1").arg(onedrive->getTitle()));
+    checkUpload->setText(tr("Enable Upload to Cloud Storages"));
     btnPack->setText(tr("Pack APK"));
     menuFile->setTitle(tr("&File"));
     menuIcon->setTitle(tr("&Icon"));
@@ -592,6 +600,13 @@ void MainWindow::setActiveApk(QString filename)
     addToRecent(filename);
 }
 
+void MainWindow::enableUpload(bool enable)
+{
+    checkDropbox->setVisible(enable);
+    checkGDrive->setVisible(enable);
+    checkOneDrive->setVisible(enable);
+}
+
 void MainWindow::upload(Cloud *uploader, QString filename)
 {
     QEventLoop loop;
@@ -611,17 +626,21 @@ void MainWindow::apkPacked(QString filename, bool isSuccess, QString text)
     const bool UPLOAD_TO_ONEDRIVE = checkOneDrive->isChecked();
 
     if (isSuccess) {
-        if (UPLOAD_TO_DROPBOX)  upload(dropbox, filename);
-        if (UPLOAD_TO_GDRIVE)   upload(gdrive, filename);
-        if (UPLOAD_TO_ONEDRIVE) upload(onedrive, filename);
+        if (checkUpload->isChecked()) {
+            if (UPLOAD_TO_DROPBOX)  upload(dropbox, filename);
+            if (UPLOAD_TO_GDRIVE)   upload(gdrive, filename);
+            if (UPLOAD_TO_ONEDRIVE) upload(onedrive, filename);
+        }
         uploadDialog->finish();
         success(NULL, text);
     }
     else {
         warning(NULL, text);
-        if (UPLOAD_TO_DROPBOX)  upload(dropbox, filename);
-        if (UPLOAD_TO_GDRIVE)   upload(gdrive, filename);
-        if (UPLOAD_TO_ONEDRIVE) upload(onedrive, filename);
+        if (checkUpload->isChecked()) {
+            if (UPLOAD_TO_DROPBOX)  upload(dropbox, filename);
+            if (UPLOAD_TO_GDRIVE)   upload(gdrive, filename);
+            if (UPLOAD_TO_ONEDRIVE) upload(onedrive, filename);
+        }
         uploadDialog->finish();
     }
 }
@@ -1084,6 +1103,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
         settings->setValue("Compression", groupRatio->checkedAction()->data().toInt());
         settings->setValue("Sign", actPackSign->isChecked());
         settings->setValue("Optimize", actPackOptimize->isChecked());
+        settings->setValue("Upload", checkUpload->isChecked());
     settings->endGroup();
 
     settings->beginGroup("Dropbox");
