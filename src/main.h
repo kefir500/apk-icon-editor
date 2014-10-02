@@ -41,8 +41,8 @@
     #define WINEXTRAS 0
 #endif
 
-const int WINDOW_WIDTH      = 760;
-const int WINDOW_HEIGHT     = 484;
+const int WINDOW_WIDTH      = 800;
+const int WINDOW_HEIGHT     = 480;
 
 // Application:
 const QString VER           = "0.6";

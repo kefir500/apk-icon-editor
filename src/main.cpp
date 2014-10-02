@@ -3,12 +3,11 @@
 #include <QApplication>
 #include <QFontDatabase>
 #include <QStandardPaths>
-#include <iostream>
 
 const QString LOG_PATH(QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/apk-icon-editor/");
 QFile logfile(LOG_PATH + "apk-icon-editor.log");
 
-void msgHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+void msgHandler(QtMsgType type, const QMessageLogContext &, const QString &msg)
 {
     QTextStream ts(&logfile);
     const QString TIME = QTime::currentTime().toString();

@@ -1,5 +1,5 @@
 /// \file combolist.h
-/// \brief This file contains #ComboList declaration.
+/// \brief This file contains #ComboList widget declaration.
 
 #ifndef COMBOLIST_H
 #define COMBOLIST_H

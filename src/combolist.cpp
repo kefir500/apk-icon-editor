@@ -1,5 +1,5 @@
 #include "combolist.h"
-#include <QVBoxLayout>
+#include <QBoxLayout>
 
 ComboList::ComboList(QWidget *parent) : QWidget(parent)
 {
@@ -10,6 +10,7 @@ ComboList::ComboList(QWidget *parent) : QWidget(parent)
     label = new QLabel(this);
     combo = new QComboBox(this);
     combo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+    combo->setStyleSheet("QComboBox {padding: 4px}");
     list = new QListWidget(this);
 
     titleLayout->addWidget(label);

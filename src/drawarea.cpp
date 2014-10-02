@@ -18,6 +18,7 @@ DrawArea::DrawArea(QWidget *parent) : QLabel(parent)
 
     setMouseTracking(true);
     setAutoFillBackground(true);
+    setCursor(Qt::PointingHandCursor);
 
     background = palette().color(QPalette::Background);
     rect_w = 0;
@@ -29,6 +30,7 @@ void DrawArea::setIcon(Icon *_icon)
 {
     icon = _icon;
     welcome = false;
+    setCursor(Qt::ArrowCursor);
     setStyleSheet(STYLE_DEFAULT);
     repaint();
 }
