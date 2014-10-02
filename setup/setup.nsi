@@ -1,8 +1,8 @@
 !define APPNAME "APK Icon Editor"
 !define COMPANYNAME "Qwerty Minds"
-!define VERSIONMAJOR 0
-!define VERSIONMINOR 6
-!define VERSION "${VERSIONMAJOR}.${VERSIONMINOR} Beta"
+!define VERSIONMAJOR 1
+!define VERSIONMINOR 0
+!define VERSION "${VERSIONMAJOR}.${VERSIONMINOR}.0"
 !define ABOUTURL "http://kefir500.github.io/apk-icon-editor"
 !define UPDATEURL "http://kefir500.github.io/apk-icon-editor"
 !define EXE "$INSTDIR\apk-icon-editor.exe"
@@ -65,7 +65,7 @@ FunctionEnd
 
 Section
 	SetOutPath "$INSTDIR"
-	File /r "contents\"
+	File /r "..\bin\win32\"
 	SetOutPath "$INSTDIR\gfx"
 	File "gfx\icon.ico"
 	WriteUninstaller "$INSTDIR\uninstall.exe"
@@ -104,6 +104,7 @@ SectionEnd
 Section "-un.Uninstall"
 	Delete "${EXE}"
 	Delete "$INSTDIR\authors.txt"
+	Delete "$INSTDIR\faq.txt"
 	Delete "$INSTDIR\versions.txt"
 	Delete "$INSTDIR\Qt5Core.dll"
 	Delete "$INSTDIR\Qt5Gui.dll"
@@ -126,12 +127,15 @@ Section "-un.Uninstall"
 	Delete "$INSTDIR\imageformats\qgif.dll"
 	Delete "$INSTDIR\imageformats\qico.dll"
 	Delete "$INSTDIR\imageformats\qjpeg.dll"
+	Delete "$INSTDIR\lang\apk-icon-editor.de.qm"
 	Delete "$INSTDIR\lang\apk-icon-editor.fr.qm"
 	Delete "$INSTDIR\lang\apk-icon-editor.ru.qm"
 	Delete "$INSTDIR\lang\apk-icon-editor.zh.qm"
+	Delete "$INSTDIR\lang\qt.de.qm"
 	Delete "$INSTDIR\lang\qt.fr.qm"
 	Delete "$INSTDIR\lang\qt.ru.qm"
 	Delete "$INSTDIR\lang\qt.zh.qm"
+	Delete "$INSTDIR\lang\flag.de.png"
 	Delete "$INSTDIR\lang\flag.en.png"
 	Delete "$INSTDIR\lang\flag.fr.png"
 	Delete "$INSTDIR\lang\flag.ru.png"
