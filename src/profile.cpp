@@ -4,7 +4,8 @@
 QList<Profile> Profile::profiles;
 
 Profile::Profile(QString title, QIcon icon,
-                 short ldpi, short mdpi, short hdpi, short xhdpi, short xxhdpi)
+                 short ldpi, short mdpi, short hdpi,
+                 short xhdpi, short xxhdpi, short xxxhdpi)
 {
     m_title = title;
     m_thumb = icon;
@@ -13,6 +14,7 @@ Profile::Profile(QString title, QIcon icon,
     presets.push_back(DpiPreset("HDPI", hdpi));
     presets.push_back(DpiPreset("XHDPI", xhdpi));
     presets.push_back(DpiPreset("XXHDPI", xxhdpi));
+    presets.push_back(DpiPreset("XXXHDPI", xxxhdpi));
 }
 
 void Profile::init()
@@ -20,15 +22,15 @@ void Profile::init()
     const QIcon ANDROID(":/gfx/icon-android.png");
     const QIcon KINDLE(":/gfx/icon-kindle.png");
 
-    Profile android("Android Default", ANDROID, 36, 48, 72, 96, 144);
-    Profile kindle1("Kindle Fire (1st Gen)", KINDLE, 36, 322, 72, 96, 144);
-    Profile kindle2("Kindle Fire (2nd Gen)", KINDLE, 36, 365, 72, 96, 144);
-    Profile kindle3("Kindle Fire HD 7\" (2nd Gen)", KINDLE, 36, 48, 425, 96, 144);
-    Profile kindle4("Kindle Fire HD 8.9\" (2nd Gen)", KINDLE, 36, 48, 675, 96, 144);
-    Profile kindle5("Kindle Fire HD 7\" (3rd Gen)", KINDLE, 36, 48, 375, 96, 144);
-    Profile kindle6("Kindle Fire HDX 7\" (3rd Gen)", KINDLE, 36, 48, 72, 562, 144);
-    Profile kindle7("Kindle Fire HDX 8.9\" (3rd Gen)", KINDLE, 36, 48, 72, 624, 144);
-    Profile kindle8("Kindle Fire - All Models", KINDLE, 36, 365, 675, 624, 144);
+    Profile android("Android Default", ANDROID, 36, 48, 72, 96, 144, 192);
+    Profile kindle1("Kindle Fire (1st Gen)", KINDLE, 36, 322, 72, 96, 144, 192);
+    Profile kindle2("Kindle Fire (2nd Gen)", KINDLE, 36, 365, 72, 96, 144, 192);
+    Profile kindle3("Kindle Fire HD 7\" (2nd Gen)", KINDLE, 36, 48, 425, 96, 144, 192);
+    Profile kindle4("Kindle Fire HD 8.9\" (2nd Gen)", KINDLE, 36, 48, 675, 96, 144, 192);
+    Profile kindle5("Kindle Fire HD 7\" (3rd Gen)", KINDLE, 36, 48, 375, 96, 144, 192);
+    Profile kindle6("Kindle Fire HDX 7\" (3rd Gen)", KINDLE, 36, 48, 72, 562, 144, 192);
+    Profile kindle7("Kindle Fire HDX 8.9\" (3rd Gen)", KINDLE, 36, 48, 72, 624, 144, 192);
+    Profile kindle8("Kindle Fire - All Models", KINDLE, 36, 365, 675, 624, 144, 192);
     kindle1.presets[MDPI].info = "Carousel";
     kindle2.presets[MDPI].info = "Carousel";
     kindle3.presets[HDPI].info = "Carousel";

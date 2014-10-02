@@ -319,7 +319,7 @@ void MainWindow::initProfiles()
     for (int i = 0; i < Profile::count(); ++i) {
         Profile profile = Profile::at(i);
         devices->addGroup(profile.title(), profile.thumb());
-        for (int j = 0; j <= XXHDPI; ++j) {
+        for (int j = LDPI; j < DPI_COUNT; ++j) {
             Dpi DPI = static_cast<Dpi>(j);
             devices->addItem(profile.title(), profile.getDpiTitle(DPI));
         }
@@ -543,7 +543,7 @@ void MainWindow::clearRecent()
 
 void MainWindow::hideEmptyDpi()
 {
-    for (short i = LDPI; i <= XXHDPI; ++i) {
+    for (short i = LDPI; i < DPI_COUNT; ++i) {
         bool visible = false;
         const Dpi DPI = static_cast<Dpi>(i);
         if (Icon *icon = apk->getIcon(DPI)) {

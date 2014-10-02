@@ -9,7 +9,7 @@
 /// \brief This enum represents supported DPI values for icons.
 
 enum Dpi {
-    LDPI, MDPI, HDPI, XHDPI, XXHDPI
+    LDPI, MDPI, HDPI, XHDPI, XXHDPI, XXXHDPI, DPI_COUNT
 };
 
 /// \brief This class provides profiles with DPI presets for different devices.
@@ -56,7 +56,8 @@ public:
     // Constructors:
     Profile() { }
     Profile(QString title, QIcon icon,
-            short ldpi, short mdpi, short hdpi, short xhdpi, short xxhdpi);
+            short ldpi, short mdpi, short hdpi,
+            short xhdpi, short xxhdpi, short xxxhdpi);
 };
 
 Q_DECLARE_METATYPE(Profile)
