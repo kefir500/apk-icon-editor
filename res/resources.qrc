@@ -11,5 +11,6 @@
         <file>gfx/logo.png</file>
         <file>gfx/task-pack.png</file>
         <file>fonts/OpenSans-Light.ttf</file>
+        <file>gfx/icon-upload.png</file>
     </qresource>
 </RCC>
