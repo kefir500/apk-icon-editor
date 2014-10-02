@@ -11,5 +11,5 @@
 - Russian – [Alexander Gorishnyak](https://www.transifex.com/accounts/profile/kefir500)
 
 ## Special Thanks
-Igor Pavlov – 7-Zip file archiver
+- Igor Pavlov – 7-Zip file archiver
 - [Mark James](http://www.famfamfam.com) – flag icons
