@@ -5,6 +5,7 @@
 
 ## Features
 * Edit, replace and extract APK icons;
+* Edit application name, version and resources;
 * Sign and optimize APKs;
 * Supported image formats: PNG, ICO, GIF, JPG, BMP;
 * Size pre-sets for *Android Standard* and all *Amazon Kindle Fire* models;
@@ -15,4 +16,4 @@
 * **Java Runtime Environment (JRE)** - for signing APKs.
 
 ## License
-* **GNU General Public License v2.0**
+* **GNU General Public License v3.0**

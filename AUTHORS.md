@@ -1,16 +1,15 @@
-## Author
-- [Alexander Gorishnyak](https://github.com/kefir500)
-
-## Contributors
+## Authors
+- [Alexander Gorishnyak](https://github.com/kefir500) – [APK Icon Editor](https://github.com/kefir500/apk-icon-editor)
+- [Connor Tumbleson](https://github.com/iBotPeaches) – [Apktool](https://github.com/iBotPeaches/Apktool)
+- [Ryszard Wiśniewski](https://github.com/brutall) – [Apktool (original)](https://github.com/brutall/brut.apktool)
+- [Ben Gruver](https://github.com/JesusFreke) – [smali/baksmali](https://github.com/JesusFreke/smali)
 
 ## Translations
-#### Russian
-- [Alexander Gorishnyak](https://github.com/kefir500)
-#### Chinese (China)
-- [QQ775405984](https://www.transifex.com/accounts/profile/775405984)
-
-## Testers
-- Vladimir Gorishnyak
+- Chinese (China) – [QQ775405984](https://www.transifex.com/accounts/profile/775405984)
+- French – [Stold](https://www.transifex.com/accounts/profile/Stold), [AzRock](https://www.transifex.com/accounts/profile/AzRock)
+- German – [Sebastian Herrmann](https://www.transifex.com/accounts/profile/herrherrmann)
+- Russian – [Alexander Gorishnyak](https://www.transifex.com/accounts/profile/kefir500)
 
 ## Special Thanks
-- [Mark James](http://www.famfamfam.com/lab/icons/flags) for flag icons
+Igor Pavlov – 7-Zip file archiver
+- [Mark James](http://www.famfamfam.com) – flag icons
