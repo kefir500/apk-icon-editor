@@ -50,6 +50,7 @@ private:
     QCheckBox *checkDropbox;
     QCheckBox *checkGDrive;
     QCheckBox *checkOneDrive;
+    QCheckBox *checkUpload;
     QPushButton *btnPack;
     EffectsDialog *effects;
     ToolDialog *toolDialog;
@@ -182,6 +183,7 @@ private slots:
     void stringChanged(int, int);   ///< Handle translation cell changes.
     void applyAppName();            ///< Apply global application name to all translations.
     void askReloadApk();            ///< Ask to repack APK if the tool ("7za" or "apktool") was changed.
+    void enableUpload(bool enable); ///< Enable or disable upload to cloud services.
     void clearRecent();             ///< Clear list of recently opened APKs.
 
 //------------------------------------------------------------------------------
@@ -192,6 +194,9 @@ private slots:
 
     /// Show "Enter \c cloud code" message.
     void authCloud();
+
+    /// Calls QDialog::setWindowModified(true).
+    void setModified();
 
     /// Show success message.
     /// \param[in] title Message brief title.

@@ -1,6 +1,7 @@
 #include "main.h"
 #include "mainwindow.h"
 #include <QApplication>
+#include <QTextCodec>
 #include <QFontDatabase>
 #include <QStandardPaths>
 
@@ -54,6 +55,7 @@ int main(int argc, char *argv[])
     qDebug() << qPrintable(QString("%1 v%2").arg(APP, VER));
     qDebug() << "Initializing...";
 
+    QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
     QFontDatabase::addApplicationFont(":/fonts/OpenSans-Light.ttf");
 
     MainWindow w(argc, argv);

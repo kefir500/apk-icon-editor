@@ -8,8 +8,9 @@
 #include <QTime>
 #include <QtConcurrent/QtConcurrentRun>
 
-const QString Apk::STR_ERROR = tr("%1 Error");
-const QString Apk::STR_ERRORSTART = tr("Error starting <b>%1</b>");
+const char *Apk::STR_ERROR = QT_TR_NOOP("%1 Error");
+const char *Apk::STR_ERRORSTART = QT_TR_NOOP("Error starting <b>%1</b>");
+const char *Apk::STR_CHECKPATH = QT_TR_NOOP("(check the PATH variable if JRE is already installed)");
 const QString Apk::LOG_ERRORSTART("%1: could not start");
 const QString Apk::LOG_EXITCODE("%1 exit code: %2");
 const QString Apk::TEMPDIR_APK = QDir::toNativeSeparators(TEMPDIR + "apk/");
@@ -119,13 +120,13 @@ bool Apk::doUnpack(PackOptions options)
 
 bool Apk::readManifest()
 {
-    const QString AAPT_ERROR(tr(STR_ERROR.toLatin1()).arg("AAPT"));
+    const QString AAPT_ERROR(tr(STR_ERROR).arg("AAPT"));
 
     QProcess p;
     p.start(QString("aapt dump badging \"%1\"").arg(filename));
     if (!p.waitForStarted(-1)) {
         qDebug() << qPrintable(LOG_ERRORSTART.arg("aapt"));
-        return die(AAPT_ERROR, tr(STR_ERRORSTART.toLatin1()).arg("aapt"));
+        return die(AAPT_ERROR, tr(STR_ERRORSTART).arg("aapt"));
     }
     p.waitForFinished(-1);
 
@@ -348,7 +349,7 @@ bool Apk::doPack(PackOptions opts)
             warning += "<hr>" +
                     tr("Signing APK requires Java Runtime Environment.") +
                     QString("<br><a href=\"%1\">%2</a> %3.")
-                    .arg(URL_JAVA, tr("Download"), tr("(or check PATH variable if already installed)"));
+                    .arg(URL_JAVA, tr("Download"), tr(STR_CHECKPATH));
         }
         emit packed(filename, false, warning);
     }
@@ -360,7 +361,7 @@ bool Apk::saveIcons() const
     for (int i = 0; i < icons.size(); ++i) {
         if (icons[i]) {
             if (!icons[i]->save()) {
-                return die(tr(STR_ERROR.toLatin1()).arg("PNG"), tr("Error saving PNG icon."));
+                return die(tr(STR_ERROR).arg("PNG"), tr("Error saving PNG icon."));
             }
         }
     }
@@ -440,7 +441,7 @@ bool Apk::zip(short ratio) const
     p.start(QString("7za a -tzip -mx%1 \"%2temp.zip\" \"%3*\"").arg(QString::number(ratio), TEMPDIR, TEMPDIR_APK));
     if (!p.waitForStarted(-1)) {
         qDebug() << qPrintable(LOG_ERRORSTART.arg("7za"));
-        return die(tr(STR_ERROR.toLatin1()).arg("7ZA"), tr(STR_ERRORSTART.toLatin1()).arg("7za"));
+        return die(tr(STR_ERROR).arg("7ZA"), tr(STR_ERRORSTART).arg("7za"));
     }
     p.waitForFinished(-1);
     bool success;
@@ -571,7 +572,7 @@ bool Apk::die(QString title, QString text) const
 bool Apk::getZipSuccess(int code) const
 {
     qDebug() << qPrintable(LOG_EXITCODE.arg("7za").arg(code));
-    const QString error_7za(tr(STR_ERROR.toLatin1()).arg("7ZA"));
+    const QString error_7za(tr(STR_ERROR).arg("7ZA"));
 
     switch (code) {
     case 0:

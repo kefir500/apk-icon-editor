@@ -50,8 +50,9 @@ private:
     QList<QSharedPointer<Icon>> icons;      ///< Stores [shared pointers to] loaded APK icons.
     QList<Resource> strings;                ///< Stores APK string resources.
 
-    static const QString STR_ERROR;         ///< Error display text template.
-    static const QString STR_ERRORSTART;    ///< Error display text template.
+    static const char *STR_ERROR;           ///< Error display text template.
+    static const char *STR_ERRORSTART;      ///< Error display text template.
+    static const char *STR_CHECKPATH;       ///< "Check the PATH variable" string.
     static const QString LOG_ERRORSTART;    ///< Error log text template.
     static const QString LOG_EXITCODE;      ///< Error log text template.
     static const QString TEMPDIR_APK;       ///< Temporary directory for unpacked resources.

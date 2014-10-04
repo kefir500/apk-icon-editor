@@ -9,6 +9,7 @@
 #include <QFileDialog>
 #include <QInputDialog>
 #include <QMimeData>
+#include <QTextCodec>
 #include <QDesktopServices>
 #include <QApplication>
 
@@ -128,8 +129,11 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) : QMainWindow(pa
     actIconSave->setShortcut(QKeySequence("Ctrl+S"));
     actIconResize->setShortcut(QKeySequence("Ctrl+I"));
     actIconRevert->setShortcut(QKeySequence("Ctrl+Z"));
-    actIconEffect->setShortcut(QKeySequence("F"));
+    actIconEffect->setShortcut(QKeySequence("Ctrl+F"));
+    actPacking->setShortcut(QKeySequence("Ctrl+P"));
+    actFaq->setShortcut(QKeySequence("F1"));
     actIconEffect->setIcon(QIcon(":/gfx/effects.png"));
+    actPacking->setIcon(QIcon(":/gfx/task-pack.png"));
     actReport->setIcon(QIcon(":/gfx/bug.png"));
     actExit->setShortcut(QKeySequence("Ctrl+Q"));
 
@@ -151,6 +155,7 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) : QMainWindow(pa
 
     devices = new ComboList(this);
     devices->addActions(menuIcon->actions());
+    devices->setContentsMargins(4, 4, 4, 4);
     devices->setEnabled(false);
     QWidget *tabStrings = new QWidget(this);
     QGridLayout *layoutStrings = new QGridLayout(tabStrings);
@@ -232,15 +237,14 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) : QMainWindow(pa
     splitter->addWidget(sidebar);
     splitter->setCollapsible(0, false);
     splitter->setCollapsible(1, false);
-    splitter->setStretchFactor(0, 2);
-    splitter->setStretchFactor(1, 1);
+    splitter->setStretchFactor(0, 3);
+    splitter->setStretchFactor(1, 2);
     splitter->setStyleSheet("QSplitter {padding: 8px;}");
 
     mapRecent = new QSignalMapper(this);
 
     initLanguages();
     initProfiles();
-    restoreSettings();
     hideEmptyDpi();
 
     connect(drawArea, SIGNAL(clicked()), this, SLOT(apkLoad()));
@@ -298,6 +302,8 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) : QMainWindow(pa
     connect(uploadDialog, SIGNAL(rejected()), onedrive, SLOT(cancel()));
     connect(updater, SIGNAL(version(QString)), this, SLOT(newVersion(QString)));
     connect(this, SIGNAL(destroyed()), apk, SLOT(clearTemp()));
+
+    restoreSettings();
 
     if (actAutoUpdate->isChecked()) {
         updater->check();
@@ -1068,10 +1074,16 @@ void MainWindow::browseBugs() const
     QDesktopServices::openUrl(QUrl(URL_BUGS));
 }
 
+void MainWindow::browseFaq() const
+{
+    const QString APPDIR(QApplication::applicationDirPath());
+    QDesktopServices::openUrl(QString("file:///%1/faq.txt").arg(APPDIR));
+}
+
 void MainWindow::about()
 {
     const QString APPDIR(QApplication::applicationDirPath());
-    const QString LINK("<a href=\"%1\">%2</a> - %3");
+    const QString LINK("<a href=\"%1\">%2</a> &ndash; %3");
 
     QMessageBox aboutBox(this);
     aboutBox.setWindowTitle(tr("About"));
@@ -1080,7 +1092,7 @@ void MainWindow::about()
         "<p>" +
             tr("Built on: %1 - %2").arg(__DATE__, __TIME__) + "<br>" +
             tr("Author: %1").arg("Alexander Gorishnyak") + "<br>" +
-            tr("License") + ": <a href=\"http://www.gnu.org/licenses/gpl-2.0.html\">GNU General Public License v2.0</a>" +
+            tr("License") + ": <a href=\"http://www.gnu.org/licenses/gpl-3.0.html\">GNU GPL v3.0</a>" +
         "</p><p>" +
             tr("APK Icon Editor is the tool designed to easily edit and replace<br>APK (Android Package) icons. Written in C++ and Qt framework.") +
         "</p><p>" +
@@ -1115,9 +1127,10 @@ void MainWindow::aboutAuthors()
     QFile inputFile(QApplication::applicationDirPath() + "/authors.txt");
     if (inputFile.open(QIODevice::ReadOnly)) {
         QTextStream in(&inputFile);
+        in.setCodec(QTextCodec::codecForName("UTF-8"));
         while (!in.atEnd()) {
             QString line = in.readLine();
-            if (line == "Special Thanks:") {
+            if (line == "Testers:") {
                 strAuthors.chop(4); // Chop the last "<br>" tag.
                 break;
             }
