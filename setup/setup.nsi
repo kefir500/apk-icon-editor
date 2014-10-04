@@ -123,6 +123,7 @@ Section "-un.Uninstall"
 	Delete "$INSTDIR\7za.exe"
 	Delete "$INSTDIR\aapt.exe"
 	Delete "$INSTDIR\zipalign.exe"
+	Delete "$INSTDIR\apktool.jar"
 	Delete "$INSTDIR\gfx\icon.ico"
 	Delete "$INSTDIR\imageformats\qgif.dll"
 	Delete "$INSTDIR\imageformats\qico.dll"
@@ -141,6 +142,7 @@ Section "-un.Uninstall"
 	Delete "$INSTDIR\lang\flag.ru.png"
 	Delete "$INSTDIR\lang\flag.zh.png"
 	Delete "$INSTDIR\licenses\7za.txt"
+	Delete "$INSTDIR\licenses\apktool.txt"
 	Delete "$INSTDIR\licenses\opensans.txt"
 	Delete "$INSTDIR\platforms\qwindows.dll"
 	Delete "$INSTDIR\signer\certificate.pem"
@@ -161,12 +163,12 @@ Section "-un.Uninstall"
 SectionEnd
 
 Section "un.Remove settings" SEC_DELETE
-	Delete "$APPDATA\apk-icon-editor\config.ini"
-	RMDir "$APPDATA\apk-icon-editor"
+	RMDir /r "$APPDATA\apk-icon-editor"
+	RMDir /r "$TEMP\apk-icon-editor"
 	DeleteRegKey HKCU "Software\Classes\apk-icon-editor.apk"
 	DeleteRegKey HKCU "Software\Classes\.apk"
 SectionEnd
 
 !insertmacro MUI_UNFUNCTION_DESCRIPTION_BEGIN
-	!insertmacro MUI_DESCRIPTION_TEXT ${SEC_DELETE} "Remove $\"${APPNAME}$\" configuration files and user data."
+	!insertmacro MUI_DESCRIPTION_TEXT ${SEC_DELETE} "Remove $\"${APPNAME}$\" configuration files, user data and temporary information."
 !insertmacro MUI_UNFUNCTION_DESCRIPTION_END
