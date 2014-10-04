@@ -145,10 +145,12 @@ void Apk::loadIcons()
     pngs.push_back(parse("application-icon-240:'(.+)'", manifest));
     pngs.push_back(parse("application-icon-320:'(.+)'", manifest));
     pngs.push_back(parse("application-icon-480:'(.+)'", manifest));
+    pngs.push_back(parse("application-icon-640:'(.+)'", manifest));
+    qDebug() << "Icons:" << pngs;
 
     // Load icons themselves:
     icons.clear();
-    for (short i = 0; i < 5; ++i) {
+    for (short i = LDPI; i < DPI_COUNT; ++i) {
         QString pngFile(pngs[i]);
         if (pngFile.isEmpty()) {
             icons.push_back(QSharedPointer<Icon>(new Icon)); // Push dummy
