@@ -346,6 +346,12 @@ void MainWindow::initLanguages()
         mapLang->setMapping(actLang, locale);
         menuLang->addAction(actLang);
     }
+
+    // Add "Help Translate" action:
+    menuLang->addSeparator();
+    actTranslate = new QAction(this);
+    connect(actTranslate, SIGNAL(triggered()), this, SLOT(browseTranslate()));
+    menuLang->addAction(actTranslate);
 }
 
 void MainWindow::initProfiles()
@@ -506,6 +512,7 @@ void MainWindow::setLanguage(QString lang)
     actIconBack->setText(tr("Preview Background &Color"));
     actPacking->setText(tr("&Repacking"));
     menuLang->setTitle(tr("&Language"));
+    actTranslate->setText(tr("Help Translate"));
     actAutoUpdate->setText(tr("Auto-check for Updates"));
     actAssoc->setText(tr("Associate .APK"));
     actReset->setText(tr("Reset Settings"));
@@ -1158,6 +1165,11 @@ void MainWindow::invalidDpi()
 {
     warning(tr("Icon Missing"),
             tr("This APK does not support current DPI."));
+}
+
+void MainWindow::browseTranslate()
+{
+    QDesktopServices::openUrl(QUrl(URL_TRANSLATE));
 }
 
 bool MainWindow::newVersion(QString version)

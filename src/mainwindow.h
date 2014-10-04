@@ -87,6 +87,7 @@ private:
     QAction *actIconBack;
     QAction *actIconEffect;
     QAction *actPacking;
+    QAction *actTranslate;
     QAction *actAssoc;
     QAction *actReset;
     QAction *actAutoUpdate;
@@ -196,6 +197,9 @@ private slots:
 
     /// Show "Enter \c cloud code" message.
     void authCloud();
+
+    /// Open Transifex URL in the default browser.
+    void browseTranslate();
 
     /// Calls QDialog::setWindowModified(true).
     void setModified();
