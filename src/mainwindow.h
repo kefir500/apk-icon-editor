@@ -90,6 +90,7 @@ private:
     QAction *actAssoc;
     QAction *actReset;
     QAction *actAutoUpdate;
+    QAction *actFaq;
     QAction *actWebsite;
     QAction *actReport;
     QAction *actUpdate;
@@ -169,6 +170,7 @@ private slots:
     void associate() const;         ///< Associate .apk extension with "APK Icon Editor"
     void browseSite() const;        ///< Open website URL in the default browser.
     void browseBugs() const;        ///< Open bugs webpage in the default browser.
+    void browseFaq() const;         ///< Open FAQ text document.
     void about();                   ///< Show "About APK Icon Editor" dialog.
     void aboutAuthors();            ///< Show the list of authors dialog.
     void aboutQt() const;           ///< Show "About Qt" dialog.

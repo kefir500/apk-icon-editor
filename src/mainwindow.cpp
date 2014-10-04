@@ -75,6 +75,7 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) : QMainWindow(pa
     actAutoUpdate = new QAction(this);
     actAssoc = new QAction(this);
     actReset = new QAction(this);
+    actFaq = new QAction(this);
     actWebsite = new QAction(this);
     actReport = new QAction(this);
     actUpdate = new QAction(this);
@@ -103,6 +104,8 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) : QMainWindow(pa
     menuSett->addSeparator();
     menuSett->addAction(actAssoc);
     menuSett->addAction(actReset);
+    menuHelp->addAction(actFaq);
+    menuHelp->addSeparator();
     menuHelp->addAction(actWebsite);
     menuHelp->addAction(actReport);
     menuHelp->addSeparator();
@@ -268,6 +271,7 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) : QMainWindow(pa
     connect(actReset, SIGNAL(triggered()), this, SLOT(resetSettings()));
     connect(actWebsite, SIGNAL(triggered()), this, SLOT(browseSite()));
     connect(actReport, SIGNAL(triggered()), this, SLOT(browseBugs()));
+    connect(actFaq, SIGNAL(triggered()), this, SLOT(browseFaq()));
     connect(actUpdate, SIGNAL(triggered()), updater, SLOT(check()));
     connect(actAboutQt, SIGNAL(triggered()), this, SLOT(aboutQt()));
     connect(actAbout, SIGNAL(triggered()), this, SLOT(about()));
@@ -505,6 +509,7 @@ void MainWindow::setLanguage(QString lang)
     actAutoUpdate->setText(tr("Auto-check for Updates"));
     actAssoc->setText(tr("Associate .APK"));
     actReset->setText(tr("Reset Settings"));
+    actFaq->setText(tr("FAQ"));
     actWebsite->setText(tr("Visit Website"));
     actReport->setText(tr("Report a Bug"));
     actUpdate->setText(tr("Check for &Updates"));
