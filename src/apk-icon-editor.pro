@@ -20,6 +20,7 @@ SOURCES += main.cpp \
            combolist.cpp \
            drawarea.cpp \
            effects.cpp \
+           tooldialog.cpp \
            apk.cpp \
            cloud.cpp \
            icon.cpp \
@@ -32,6 +33,7 @@ HEADERS += main.h \
            combolist.h \
            drawarea.h \
            effects.h \
+           tooldialog.h \
            apk.h \
            cloud.h \
            icon.h \

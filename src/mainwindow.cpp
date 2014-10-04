@@ -19,6 +19,7 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) : QMainWindow(pa
 
     apk = new Apk(this);
     effects = new EffectsDialog(this);
+    toolDialog = new ToolDialog(this);
     updater = new Updater(this);
     translator = new QTranslator(this);
     translatorQt = new QTranslator(this);
@@ -44,6 +45,16 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) : QMainWindow(pa
     menu->addMenu(menuIcon);
     menu->addMenu(menuSett);
     menu->addMenu(menuHelp);
+
+    labelTool = new QLabel(this);
+    btnTool = new QToolButton(this);
+    QWidget *menuCorner = new QWidget(this);
+    QHBoxLayout *layoutCorner = new QHBoxLayout(menuCorner);
+    layoutCorner->addWidget(labelTool);
+    layoutCorner->addWidget(btnTool);
+    layoutCorner->setMargin(0);
+    menu->setCornerWidget(menuCorner);
+
     actApkOpen = new QAction(this);
     actApkSave = new QAction(this);
     menuRecent = new QMenu(this);
@@ -58,18 +69,8 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) : QMainWindow(pa
     actIconRevert = new QAction(this);
     actIconEffect = new QAction(this);
     actIconBack = new QAction(this);
+    actPacking = new QAction(this);
     menuLang = new QMenu(this);
-    menuPack = new QMenu(this);
-    menuRatio = new QMenu(this);
-    groupRatio = new QActionGroup(this);
-    actRatio0 = new QAction(this);
-    actRatio1 = new QAction(this);
-    actRatio3 = new QAction(this);
-    actRatio5 = new QAction(this);
-    actRatio7 = new QAction(this);
-    actRatio9 = new QAction(this);
-    actPackSign = new QAction(this);
-    actPackOptimize = new QAction(this);
     actAutoUpdate = new QAction(this);
     actAssoc = new QAction(this);
     actReset = new QAction(this);
@@ -94,28 +95,13 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) : QMainWindow(pa
     menuIcon->addAction(actIconEffect);
     menuIcon->addSeparator();
     menuIcon->addAction(actIconBack);
+    menuSett->addAction(actPacking);
+    menuSett->addSeparator();
     menuSett->addMenu(menuLang);
-    menuSett->addMenu(menuPack);
     menuSett->addAction(actAutoUpdate);
     menuSett->addSeparator();
     menuSett->addAction(actAssoc);
     menuSett->addAction(actReset);
-    menuPack->addMenu(menuRatio);
-    menuPack->addAction(actPackSign);
-    menuPack->addAction(actPackOptimize);
-    groupRatio->addAction(actRatio0);
-    groupRatio->addAction(actRatio1);
-    groupRatio->addAction(actRatio3);
-    groupRatio->addAction(actRatio5);
-    groupRatio->addAction(actRatio7);
-    groupRatio->addAction(actRatio9);
-    actRatio0->setData(0);
-    actRatio1->setData(1);
-    actRatio3->setData(3);
-    actRatio5->setData(0);
-    actRatio7->setData(7);
-    actRatio9->setData(9);
-    menuRatio->addActions(groupRatio->actions());
     menuHelp->addAction(actWebsite);
     menuHelp->addAction(actReport);
     menuHelp->addSeparator();
@@ -133,14 +119,6 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) : QMainWindow(pa
     actIconResize->setEnabled(false);
     actIconRevert->setEnabled(false);
     actIconEffect->setEnabled(false);
-    actRatio0->setCheckable(true);
-    actRatio1->setCheckable(true);
-    actRatio3->setCheckable(true);
-    actRatio5->setCheckable(true);
-    actRatio7->setCheckable(true);
-    actRatio9->setCheckable(true);
-    actPackSign->setCheckable(true);
-    actPackOptimize->setCheckable(true);
     actAutoUpdate->setCheckable(true);
     actApkSave->setIcon(QIcon(":/gfx/task-pack.png"));
     actApkOpen->setShortcut(QKeySequence("Ctrl+O"));
@@ -174,14 +152,58 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) : QMainWindow(pa
     devices = new ComboList(this);
     devices->addActions(menuIcon->actions());
     devices->setEnabled(false);
-    tabProps = new QTableWidget(this);
-    tabProps->setRowCount(6);
-    tabProps->setColumnCount(2);
-    tabProps->verticalHeader()->setVisible(false);
-    tabProps->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    tabProps->setEditTriggers(QTableWidget::NoEditTriggers);
-    tabProps->setSelectionMode(QTableWidget::SingleSelection);
-    tabProps->setEnabled(false);
+    QWidget *tabStrings = new QWidget(this);
+    QGridLayout *layoutStrings = new QGridLayout(tabStrings);
+    labelAppName = new QLabel(this);
+    labelVersionName = new QLabel(this);
+    labelVersionCode = new QLabel(this);
+    editAppName = new QLineEdit(this);
+    editAppName->setEnabled(false);
+    editVersionName = new QLineEdit(this);
+    editVersionName->setEnabled(false);
+    editVersionCode = new QSpinBox(this);
+    editVersionCode->setEnabled(false);
+    editVersionCode->setMinimum(1);
+    editVersionCode->setMaximum(std::numeric_limits<int>::max());
+    btnApplyAppName = new QPushButton(this);
+    btnApplyAppName->setEnabled(false);
+    tableStrings = new QTableWidget(this);
+    tableStrings->setColumnCount(3);
+    tableStrings->verticalHeader()->setVisible(false);
+    tableStrings->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Interactive);
+    tableStrings->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
+    tableStrings->horizontalHeader()->setSectionHidden(2, true);
+    tableStrings->setSelectionMode(QTableWidget::SingleSelection);
+    labelApktool = new QLabel(this);
+    labelApktool->setWordWrap(true);
+    labelApktool->setFont(QFont("Open Sans Light", 10));
+    labelApktool->setAlignment(Qt::AlignCenter);
+    labelApktool->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::MinimumExpanding);
+    btnRepacking = new QPushButton(this);
+    btnRepacking->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
+    panelApktool = new QWidget(this);
+    panelApktool->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    panelApktool->setObjectName("panelApktool");
+    panelApktool->setStyleSheet("QWidget#panelApktool {border: 1px solid gray}");
+    QVBoxLayout *layoutApktool = new QVBoxLayout(panelApktool);
+    layoutApktool->setAlignment(Qt::AlignCenter);
+    layoutApktool->addWidget(labelApktool);
+    layoutApktool->addWidget(btnRepacking);
+
+    layoutStrings->addWidget(labelAppName,      0, 0, 1, 1);
+    layoutStrings->addWidget(editAppName,       1, 0, 1, 1);
+    layoutStrings->addWidget(btnApplyAppName,   1, 1, 1, 1);
+    layoutStrings->addWidget(tableStrings,      2, 0, 1, 2);
+    layoutStrings->addWidget(panelApktool,      3, 0, 1, 2);
+    layoutStrings->addWidget(labelVersionName,  4, 0, 1, 1);
+    layoutStrings->addWidget(editVersionName,   4, 1, 1, 1);
+    layoutStrings->addWidget(labelVersionCode,  5, 0, 1, 1);
+    layoutStrings->addWidget(editVersionCode,   5, 1, 1, 1);
+    layoutStrings->setMargin(4);
+
+    tabs = new QTabWidget(this);
+    tabs->addTab(devices, NULL);
+    tabs->addTab(tabStrings, NULL);
 
     checkDropbox = new QCheckBox(this);
     checkDropbox->setIcon(dropbox->getIcon());
@@ -195,13 +217,6 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) : QMainWindow(pa
     btnPack = new QPushButton(this);
     btnPack->setEnabled(false);
     btnPack->setFixedHeight(64);
-
-    tabs = new QTabWidget(this);
-    tabs->setContentsMargins(5, 5, 5, 5);
-    tabs->addTab(devices, NULL);
-    tabs->addTab(tabProps, NULL);
-    tabs->setStyleSheet("padding: 3px;");
-    tabProps->setStyleSheet("padding: 0");
 
     QWidget *sidebar = new QWidget(this);
     QVBoxLayout *layoutSide = new QVBoxLayout(sidebar);
@@ -244,6 +259,7 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) : QMainWindow(pa
     connect(actIconRevert, SIGNAL(triggered()), this, SLOT(iconRevert()));
     connect(actIconEffect, SIGNAL(triggered()), this, SLOT(showEffectsDialog()));
     connect(actIconBack, SIGNAL(triggered()), this, SLOT(setPreviewColor()));
+    connect(actPacking, SIGNAL(triggered()), toolDialog, SLOT(open()));
     connect(actAssoc, SIGNAL(triggered()), this, SLOT(associate()));
     connect(actReset, SIGNAL(triggered()), this, SLOT(resetSettings()));
     connect(actWebsite, SIGNAL(triggered()), this, SLOT(browseSite()));
@@ -253,6 +269,15 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) : QMainWindow(pa
     connect(actAbout, SIGNAL(triggered()), this, SLOT(about()));
     connect(btnPack, SIGNAL(clicked()), this, SLOT(apkSave()));
     connect(mapRecent, SIGNAL(mapped(QString)), this, SLOT(apkLoad(QString)));
+    connect(tableStrings, SIGNAL(cellChanged(int, int)), this, SLOT(stringChanged(int, int)));
+    connect(editAppName, SIGNAL(textEdited(QString)), this, SLOT(setModified()));
+    connect(editVersionCode, SIGNAL(valueChanged(int)), this, SLOT(setModified()));
+    connect(editVersionName, SIGNAL(textEdited(QString)), this, SLOT(setModified()));
+    connect(btnApplyAppName, SIGNAL(clicked()), this, SLOT(applyAppName()));
+    connect(btnRepacking, SIGNAL(clicked()), toolDialog, SLOT(open()));
+    connect(btnTool, SIGNAL(clicked()), this, SLOT(switchTool()));
+    connect(toolDialog, SIGNAL(apktoolChecked(bool)), this, SLOT(enableApktool(bool)));
+    connect(toolDialog, SIGNAL(toolChanged()), this, SLOT(askReloadApk()));
     connect(apk, SIGNAL(loading(short, QString)), loadingDialog, SLOT(setProgress(short, QString)), Qt::BlockingQueuedConnection);
     connect(apk, SIGNAL(error(QString, QString)), this, SLOT(error(QString, QString)));
     connect(apk, SIGNAL(error(QString, QString)), loadingDialog, SLOT(finish()));
@@ -340,7 +365,9 @@ void MainWindow::restoreSettings()
     bool sUpdate = settings->value("Update", true).toBool();
 
     settings->beginGroup("APK");
+        bool sApktool = settings->value("Apktool", false).toBool();
         short sRatio = settings->value("Compression", 9).toInt();
+        bool sSmali = settings->value("Smali", false).toBool();
         bool sSign = settings->value("Sign", true).toBool();
         bool sOptimize = settings->value("Optimize", true).toBool();
         bool sUpload = settings->value("Upload", true).toBool();
@@ -364,6 +391,7 @@ void MainWindow::restoreSettings()
     // Restore settings:
 
     devices->setCurrentGroup(sProfile);
+
     if (!sRecent.isEmpty()) {
         recent = sRecent;
         refreshRecent();
@@ -372,33 +400,17 @@ void MainWindow::restoreSettings()
         clearRecent();
     }
 
-    switch (sRatio) {
-    case 0:
-        actRatio0->setChecked(true);
-        break;
-    case 1:
-        actRatio1->setChecked(true);
-        break;
-    case 3:
-        actRatio3->setChecked(true);
-        break;
-    case 5:
-        actRatio5->setChecked(true);
-        break;
-    case 7:
-        actRatio7->setChecked(true);
-        break;
-    case 9:
-        actRatio9->setChecked(true);
-        break;
-    }
+    bool tempUseApktool = toolDialog->getUseApktool();
 
     currentPath = sLastDir;
     restoreGeometry(sGeometry);
     splitter->restoreState(sSplitter);
     setLanguage(sLanguage);
-    actPackSign->setChecked(sSign);
-    actPackOptimize->setChecked(sOptimize);
+    toolDialog->setUseApktool(sApktool);
+    toolDialog->setRatio(sRatio);
+    toolDialog->setSmali(sSmali);
+    toolDialog->setSign(sSign);
+    toolDialog->setOptimize(sOptimize);
     actAutoUpdate->setChecked(sUpdate);
     dropbox->setToken(sDropbox);
     gdrive->setToken(sGDrive);
@@ -407,6 +419,10 @@ void MainWindow::restoreSettings()
     checkDropbox->setChecked(bDropbox);
     checkGDrive->setChecked(bGDrive);
     checkOneDrive->setChecked(bOneDrive);
+
+    if (sApktool != tempUseApktool) {
+        askReloadApk();
+    }
 }
 
 void MainWindow::resetSettings()
@@ -445,15 +461,16 @@ void MainWindow::setLanguage(QString lang)
     // Retranslate strings:
     drawArea->setText(tr("CLICK HERE\n(or drag APK and icons)"));
     tabs->setTabText(0, tr("Icons"));
-    tabs->setTabText(1, tr("Details"));
+    tabs->setTabText(1, tr("Properties"));
+    tabs->setTabText(2, tr("Details"));
     devices->setLabelText(tr("Device:"));
-    tabProps->setHorizontalHeaderLabels(QStringList() << tr("Property") << tr("Value"));
-    tabProps->setItem(0, 0, new QTableWidgetItem(tr("Application Name")));
-    tabProps->setItem(1, 0, new QTableWidgetItem(tr("Package Name")));
-    tabProps->setItem(2, 0, new QTableWidgetItem(tr("Version Code")));
-    tabProps->setItem(3, 0, new QTableWidgetItem(tr("Version Name")));
-    tabProps->setItem(4, 0, new QTableWidgetItem(tr("Minimum SDK")));
-    tabProps->setItem(5, 0, new QTableWidgetItem(tr("Target SDK")));
+    labelAppName->setText(tr("Application Name") + ':');
+    labelVersionName->setText(tr("Version Name") + ':');
+    labelVersionCode->setText(tr("Version Code") + ':');
+    btnApplyAppName->setText(tr("Apply to All"));
+    labelApktool->setText(tr("To edit application name and version, switch to \"Apktool\" mode."));
+    btnRepacking->setText(tr("&Repacking"));
+    tableStrings->setHorizontalHeaderLabels(QStringList() << tr("Language") << tr("Application Name"));
     checkDropbox->setText(tr("Upload to %1").arg(dropbox->getTitle()));
     checkGDrive->setText(tr("Upload to %1").arg(gdrive->getTitle()));
     checkOneDrive->setText(tr("Upload to %1").arg(onedrive->getTitle()));
@@ -477,17 +494,8 @@ void MainWindow::setLanguage(QString lang)
     actIconRevert->setText(tr("Revert &Original"));
     actIconEffect->setText(tr("E&ffects"));
     actIconBack->setText(tr("Preview Background &Color"));
+    actPacking->setText(tr("&Repacking"));
     menuLang->setTitle(tr("&Language"));
-    menuPack->setTitle(tr("&Packing"));
-    menuRatio->setTitle(tr("&Compression Ratio"));
-    actRatio0->setText(QString("0 (%1)").arg(tr("No Compression")));
-    actRatio1->setText(QString("1 (%1)").arg(tr("Fastest Compression")));
-    actRatio3->setText(QString("3 (%1)").arg(tr("Fast Compression")));
-    actRatio5->setText(QString("5 (%1)").arg(tr("Normal Compression")));
-    actRatio7->setText(QString("7 (%1)").arg(tr("Maximum Compression")));
-    actRatio9->setText(QString("9 (%1)").arg(tr("Ultra Compression")));
-    actPackSign->setText(QString("%1 (%2)").arg(tr("&Sign APK"), tr("Important")));
-    actPackOptimize->setText(tr("&Optimize APK"));
     actAutoUpdate->setText(tr("Auto-check for Updates"));
     actAssoc->setText(tr("Associate .APK"));
     actReset->setText(tr("Reset Settings"));
@@ -496,10 +504,13 @@ void MainWindow::setLanguage(QString lang)
     actUpdate->setText(tr("Check for &Updates"));
     actAboutQt->setText(tr("About Qt"));
     actAbout->setText(tr("About %1").arg(APP));
+    labelTool->setText(tr("Current Mode:"));
     loadingDialog->setWindowTitle(tr("Processing"));
     uploadDialog->setWindowTitle(tr("Uploading"));
+    btnTool->setToolTip(toolDialog->getUseApktool() ? toolDialog->hint_apktool() : toolDialog->hint_7zip());
 
     effects->retranslate();
+    toolDialog->retranslate();
 }
 
 void MainWindow::addToRecent(QString filename)
@@ -563,6 +574,74 @@ void MainWindow::connectRepaintSignals()
     connect(effects, SIGNAL(colorize(QColor)), drawArea, SLOT(repaint()));
     connect(effects, SIGNAL(colorDepth(qreal)), drawArea, SLOT(repaint()));
     connect(effects, SIGNAL(blur(qreal)), drawArea, SLOT(repaint()));
+}
+
+void MainWindow::stringChanged(int row, int col)
+{
+    if (col == 1) {
+        // Mark this cell as "edited":
+        tableStrings->item(row, col)->setData(Qt::UserRole, true);
+        setWindowModified(true);
+    }
+}
+
+void MainWindow::applyAppName()
+{
+    QString name = editAppName->text();
+    if (!name.isEmpty()) {
+        if (QMessageBox::question(this, NULL, tr("Apply current application name to all translations?"))
+        == QMessageBox::Yes) {
+            for (int i = 0; i < tableStrings->rowCount(); ++i) {
+                tableStrings->item(i, 1)->setText(name);
+            }
+        }
+    }
+}
+
+void MainWindow::switchTool()
+{
+    toolDialog->setUseApktool(!toolDialog->getUseApktool());
+    askReloadApk();
+}
+
+void MainWindow::enableApktool(bool value)
+{
+    btnTool->setText(value ? "apktool" : "7-Zip");
+    btnTool->setToolTip(value ? toolDialog->hint_apktool() : toolDialog->hint_7zip());
+
+    menuBar()->resize(0, 0); // "Repaint" menu bar
+
+    // If any APK is loaded:
+    if (!currentApk.isEmpty()) {
+        editAppName->setEnabled(value);
+        editVersionCode->setEnabled(value);
+        editVersionName->setEnabled(value);
+        btnApplyAppName->setEnabled(value);
+    }
+
+    if (value) {
+        tableStrings->setVisible(true);
+        panelApktool->setVisible(false);
+    }
+    else {
+        tableStrings->setVisible(false);
+        panelApktool->setVisible(true);
+    }
+}
+
+void MainWindow::askReloadApk()
+{
+    if (currentApk.isEmpty()) { // Check if any APK is currently loaded
+        return;
+    }
+
+    int result = QMessageBox::question(this, tr("Repack?"),
+                                       tr("Changing tool requires repacking.\nProceed?"),
+                                       QMessageBox::Yes, QMessageBox::No);
+
+    if (result != QMessageBox::Yes || !apkLoad(currentApk)) {
+        toolDialog->setUseApktool(!toolDialog->getUseApktool());
+    }
 }
 
 void MainWindow::setCurrentIcon(int id)
@@ -657,13 +736,48 @@ void MainWindow::apkUnpacked(QString filename)
     devices->setCurrentItem(id);
     hideEmptyDpi();
 
-    // Parse APK details:
-    tabProps->setItem(0, 1, new QTableWidgetItem(apk->getApplicationLabel()));
-    tabProps->setItem(1, 1, new QTableWidgetItem(apk->getPackageName()));
-    tabProps->setItem(2, 1, new QTableWidgetItem(apk->getVersionCode()));
-    tabProps->setItem(3, 1, new QTableWidgetItem(apk->getVersionName()));
-    tabProps->setItem(4, 1, new QTableWidgetItem(apk->getMinimumSdk()));
-    tabProps->setItem(5, 1, new QTableWidgetItem(apk->getTargetSdk()));
+    // Load strings to table:
+    editAppName->clear();
+    editVersionCode->clear();
+    editVersionName->clear();
+    tableStrings->clear();
+    tableStrings->setHorizontalHeaderLabels(QStringList() << tr("Language") << tr("Application Name"));
+    QList<Resource> res = apk->getStrings();
+    tableStrings->setRowCount(res.size());
+    for (int i = res.size() - 1; i >= 0; --i) {
+        QFileInfo fi(res[i].getFilename());
+        QString locale = fi.dir().dirName().mid(7);
+        QString native = QLocale(locale).nativeLanguageName();
+        if (!native.isEmpty()) {
+            native[0] = native[0].toUpper();
+            native = QString("%1 (%2)").arg(native, locale);
+        }
+        else {
+            if (locale.isEmpty()) { // This has to be the last iteration
+                editAppName->setText(res[i].getValue());
+                tableStrings->removeRow(i);
+                continue;
+            }
+            else {
+                native = locale;
+            }
+        }
+        QTableWidgetItem *c1 = new QTableWidgetItem(native);
+        QTableWidgetItem *c2 = new QTableWidgetItem(res[i].getValue());
+        QTableWidgetItem *c3 = new QTableWidgetItem(res[i].getFilename());
+        c1->setFlags(c1->flags() & ~Qt::ItemIsEditable);
+        tableStrings->blockSignals(true);
+        tableStrings->setItem(i, 0, c1);
+        tableStrings->setItem(i, 1, c2);
+        tableStrings->setItem(i, 2, c3);
+        tableStrings->item(i, 1)->setData(Qt::UserRole, false); // Mark as "not edited"
+        tableStrings->blockSignals(false);
+    }
+    if (editAppName->text().isEmpty()) {
+        editAppName->setText(apk->getApplicationLabel());
+    }
+    editVersionCode->setValue(apk->getVersionCode().toInt());
+    editVersionName->setText(apk->getVersionName());
 
     // Enable operations with APK and icons:
     actApkSave->setEnabled(true);
@@ -674,9 +788,16 @@ void MainWindow::apkUnpacked(QString filename)
     actIconEffect->setEnabled(true);
     actIconResize->setEnabled(true);
     actIconScale->setEnabled(true);
+    if (toolDialog->getUseApktool()) {
+        editAppName->setEnabled(true);
+        editVersionCode->setEnabled(true);
+        editVersionName->setEnabled(true);
+        btnApplyAppName->setEnabled(true);
+    }
     devices->setEnabled(true);
-    tabProps->setEnabled(true);
     btnPack->setEnabled(true);
+
+    setWindowModified(false);
 }
 
 bool MainWindow::iconOpen(QString filename)
@@ -836,46 +957,88 @@ void MainWindow::showEffectsDialog()
     }
 }
 
-void MainWindow::apkLoad(QString filename)
+bool MainWindow::apkLoad(QString filename)
 {
     if (confirmExit()) {
-        return;
+        return false;
     }
 
     // Open dialog:
     if (filename.isEmpty()) {
         if ((filename = QFileDialog::getOpenFileName(this, tr("Open APK"), currentPath, "APK (*.apk);;" + tr("All Files"))).isEmpty()) {
-            return;
+            return false;
         }
     }
 
     // Opening file:
     QFile file(filename);
     if (!file.exists()) {
-        warning(tr("File not found"), tr("Could not find APK:\n%1").arg(filename));
+        error(tr("File not found"), tr("Could not find APK:\n%1").arg(filename));
         recent.removeOne(filename);
         refreshRecent();
-        return;
+        return false;
     }
 
     currentPath = QFileInfo(filename).absolutePath();
 
     // Unpacking:
     loadingDialog->setProgress(0);
-    apk->unpack(filename);
+    PackOptions opts;
+    opts.filename = filename;
+    opts.isApktool = toolDialog->getUseApktool();
+    opts.isSmali = toolDialog->getSmali();
+    apk->unpack(opts);
+    return true;
 }
 
 void MainWindow::apkSave()
 {
-    QString filename = QFileDialog::getSaveFileName(this, tr("Pack APK"),
-                                                    currentPath, "APK (*.apk)");
+    // Check if required field are empty:
+    if (editAppName->text().isEmpty()) {
+        warning(NULL, tr("\"%1\" field cannot be empty.").arg(tr("Application Name")));
+        tabs->setCurrentIndex(1);
+        editAppName->setFocus();
+        return;
+    }
+    else if (editVersionName->text().isEmpty()) {
+        warning(NULL, tr("\"%1\" field cannot be empty.").arg(tr("Version Name")));
+        tabs->setCurrentIndex(1);
+        editVersionName->setFocus();
+        return;
+    }
+
+    // Fill empty translation values:
+    for (int i = 0; i < tableStrings->rowCount(); ++i) {
+        if (tableStrings->item(i, 1)->text().isEmpty()) {
+            tableStrings->item(i, 1)->setText(editAppName->text());
+        }
+    }
+
+    QString filename = QFileDialog::getSaveFileName(this, tr("Pack APK"), currentPath, "APK (*.apk)");
     if (!filename.isEmpty()) {
         currentPath = QFileInfo(filename).absolutePath();
         loadingDialog->setProgress(0);
-        bool sign = actPackSign->isChecked();
-        bool optimize = actPackOptimize->isChecked();
-        short ratio = groupRatio->checkedAction()->data().toInt();
-        apk->pack(filename, ratio, sign, optimize);
+
+        PackOptions opts;
+        opts.filename = filename;
+        opts.isApktool = toolDialog->getUseApktool();
+        opts.ratio = toolDialog->getRatio();
+        opts.isSmali = toolDialog->getSmali();
+        opts.isSign = toolDialog->getSign();
+        opts.isOptimize = toolDialog->getOptimize();
+        opts.appName = editAppName->text();
+        opts.appVersionName = editVersionName->text();
+        opts.appVersionCode = editVersionCode->text();
+        QList<Resource> res;
+        for (int i = 0; i < tableStrings->rowCount(); ++i) {
+            // Save only edited strings:
+            if (tableStrings->item(i, 1)->data(Qt::UserRole) == true) {
+                res.push_back(Resource(tableStrings->item(i, 2)->text(),
+                                       tableStrings->item(i, 1)->text()));
+            }
+        }
+        opts.resources = res;
+        apk->pack(opts);
     }
 }
 
@@ -1032,6 +1195,11 @@ void MainWindow::error(QString title, QString text)
     QMessageBox::critical(this, title, text);
 }
 
+void MainWindow::setModified()
+{
+    setWindowModified(true);
+}
+
 bool MainWindow::confirmExit()
 {
     if (isWindowModified()) {
@@ -1100,9 +1268,11 @@ void MainWindow::closeEvent(QCloseEvent *event)
     settings->setValue("Recent", recent);
 
     settings->beginGroup("APK");
-        settings->setValue("Compression", groupRatio->checkedAction()->data().toInt());
-        settings->setValue("Sign", actPackSign->isChecked());
-        settings->setValue("Optimize", actPackOptimize->isChecked());
+        settings->setValue("Apktool", toolDialog->getUseApktool());
+        settings->setValue("Compression", toolDialog->getRatio());
+        settings->setValue("Smali", toolDialog->getSmali());
+        settings->setValue("Sign", toolDialog->getSign());
+        settings->setValue("Optimize", toolDialog->getOptimize());
         settings->setValue("Upload", checkUpload->isChecked());
     settings->endGroup();
 

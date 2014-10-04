@@ -9,6 +9,8 @@
 #include <QTableWidget>
 #include <QCheckBox>
 #include <QPushButton>
+#include <QToolButton>
+#include <QSpinBox>
 #include <QProgressDialog>
 #include <QSignalMapper>
 #include <QActionGroup>
@@ -19,6 +21,7 @@
 #include "combolist.h"
 #include "drawarea.h"
 #include "effects.h"
+#include "tooldialog.h"
 #include "dialogs.h"
 #include "updater.h"
 #include "cloud.h"
@@ -31,13 +34,25 @@ private:
     DrawArea *drawArea;
     QTabWidget *tabs;
     ComboList *devices;
-    QTableWidget *tabProps;
-    QListWidget *images;
+    QLabel *labelTool;
+    QToolButton *btnTool;
+    QLabel *labelAppName;
+    QLabel *labelVersionName;
+    QLabel *labelVersionCode;
+    QLineEdit *editAppName;
+    QLineEdit *editVersionName;
+    QSpinBox *editVersionCode;
+    QPushButton *btnApplyAppName;
+    QWidget *panelApktool;
+    QLabel *labelApktool;
+    QPushButton *btnRepacking;
+    QTableWidget *tableStrings;
     QCheckBox *checkDropbox;
     QCheckBox *checkGDrive;
     QCheckBox *checkOneDrive;
     QPushButton *btnPack;
     EffectsDialog *effects;
+    ToolDialog *toolDialog;
     ProgressDialog *loadingDialog;
     ProgressDialog *uploadDialog;
     QSignalMapper *mapLang;
@@ -55,17 +70,6 @@ private:
     // Sub-menus, sub-actions:
     QMenu *menuRecent;
     QMenu *menuLang;
-    QMenu *menuPack;
-    QMenu *menuRatio;
-    QActionGroup *groupRatio;
-    QAction *actRatio0;
-    QAction *actRatio1;
-    QAction *actRatio3;
-    QAction *actRatio5;
-    QAction *actRatio7;
-    QAction *actRatio9;
-    QAction *actPackSign;
-    QAction *actPackOptimize;
 
     // Actions:
     QAction *actApkOpen;
@@ -81,6 +85,7 @@ private:
     QAction *actIconRevert;
     QAction *actIconBack;
     QAction *actIconEffect;
+    QAction *actPacking;
     QAction *actAssoc;
     QAction *actReset;
     QAction *actAutoUpdate;
@@ -122,7 +127,10 @@ protected:
     void closeEvent(QCloseEvent *event);
 
 private slots:
-    void apkLoad(QString filename = NULL);  ///< Open APK from the \c filename. If \c filename is NULL, show "Open" dialog.
+    /// \brief Open APK from the \c filename. If \c filename is NULL, show "Open" dialog.
+    /// \param[in] filename  Name of the APK file to unpack.
+    /// \return \c FALSE, if \c filename not found or "Open" dialog is closed.
+    bool apkLoad(QString filename = NULL);
     void apkSave();                         ///< Save APK (calls "Save" dialog).
     void apkExplore();                      ///< Open the folder with APK contents.
 
@@ -169,6 +177,11 @@ private slots:
     void setPreviewColor();         ///< Show dialog to select background preview color.
     void showEffectsDialog();       ///< Show "Effects" dialog.
     void hideEmptyDpi();            ///< Hide unused (empty) icons from \c profiles widget.
+    void switchTool();              ///< Switch current repacking tool ("7za"/"apktool").
+    void enableApktool(bool value); ///< Enable or disable application name/version editing.
+    void stringChanged(int, int);   ///< Handle translation cell changes.
+    void applyAppName();            ///< Apply global application name to all translations.
+    void askReloadApk();            ///< Ask to repack APK if the tool ("7za" or "apktool") was changed.
     void clearRecent();             ///< Clear list of recently opened APKs.
 
 //------------------------------------------------------------------------------
