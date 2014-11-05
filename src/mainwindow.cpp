@@ -526,6 +526,7 @@ void MainWindow::setLanguage(QString lang)
     loadingDialog->setWindowTitle(tr("Processing"));
     uploadDialog->setWindowTitle(tr("Uploading"));
     btnTool->setToolTip(toolDialog->getUseApktool() ? toolDialog->hint_apktool() : toolDialog->hint_7zip());
+    menuBar()->resize(0, 0); // "Repaint" menu bar
 
     effects->retranslate();
     toolDialog->retranslate();
