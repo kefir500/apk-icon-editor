@@ -172,7 +172,7 @@ bool Apk::unzip_apktool(bool smali) const
     p.start(QString("java -jar \"%1/apktool.jar\" d \"%2\" -f %3 -o \"%4apk\"")
             .arg(QApplication::applicationDirPath(), filename, (smali ? "" : "-s"), TEMPDIR));
     if (!p.waitForStarted(-1)) {
-        if (checkJavaInstalled()) {
+        if (isJavaInstalled()) {
             qDebug() << qPrintable(LOG_ERRORSTART.arg("apktool"));
             return die(tr(STR_ERROR).arg("APKTOOL"), tr(STR_ERRORSTART).arg("apktool"));
         }
@@ -345,7 +345,7 @@ bool Apk::doPack(PackOptions opts)
         if (!isOptimized) {
             warning += "<br>&bull; " + tr("APK is <b>not optimized</b>;");
         }
-        if (!checkJavaInstalled()) {
+        if (!isJavaInstalled()) {
             warning += "<hr>" +
                     tr("Signing APK requires Java Runtime Environment.") +
                     QString("<br><a href=\"%1\">%2</a> %3.")
@@ -457,7 +457,7 @@ bool Apk::zip_apktool() const
     p.start(QString("java -jar \"%1/apktool.jar\" b \"%2\" -f -o \"%4temp.zip\"")
             .arg(QApplication::applicationDirPath(), TEMPDIR_APK, TEMPDIR));
     if (!p.waitForStarted(-1)) {
-        if (checkJavaInstalled()) {
+        if (isJavaInstalled()) {
             qDebug() << qPrintable(LOG_ERRORSTART.arg("apktool"));
             return die(tr(STR_ERROR).arg("APKTOOL"), tr(STR_ERRORSTART).arg("apktool"));
         }
@@ -480,16 +480,21 @@ bool Apk::zip_apktool() const
     }
 }
 
-bool Apk::checkJavaInstalled() const
+bool Apk::isJavaInstalled(bool debug)
 {
     QProcess p;
     p.start("java -version");
     if (p.waitForStarted(-1)) {
         p.waitForFinished(-1);
+        if (debug) {
+            qDebug() << p.readAllStandardError().trimmed();
+        }
         return true;
     }
     else {
-        qDebug() << "Java 32-bit not found!";
+        if (debug) {
+            qDebug() << "Java 32-bit not found!";
+        }
         return false;
     }
 }

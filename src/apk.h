@@ -96,7 +96,6 @@ private:
     bool saveIcons() const;             ///< Save icons from #icons list to PNG images.
     bool zip(short ratio = 9) const;    ///< Pack APK with specified compression \c ratio using "7za" tool.
     bool zip_apktool() const;           ///< Pack APK using "apktool" tool.
-    bool checkJavaInstalled() const;    ///< Check if Java Runtime Environment is installed.
     bool sign() const;                  ///< Sign APK using "signapk" tool.
     bool optimize() const;              ///< Optimize APK using "zipalign" tool.
     bool finalize();                    ///< Move the final APK from temporary to user-specified directory.
@@ -114,6 +113,11 @@ public:
     QString getApplicationLabel() const;    ///< Returns APK display name.
     QString getMinimumSdk() const;          ///< Returns APK minimum SDK version.
     QString getTargetSdk() const;           ///< Returns APK target SDK version.
+
+    /// \brief Check if Java Runtime Environment is installed.
+    /// \param[in] debug If \c TRUE, writes info to the log file.
+    /// \return \c TRUE if Java Runtime Environment is installed.
+    static bool isJavaInstalled(bool debug = false);
 
     void unpack(PackOptions options);       ///< Unpack APK by calling private #doUnpack method in a separate #thread.
     void pack(PackOptions options);         ///< Pack APK by calling private #doPack method in a separate #thread.
