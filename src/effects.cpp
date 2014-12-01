@@ -10,21 +10,23 @@ EffectsDialog::EffectsDialog(QWidget *parent) : QDialog(parent)
     QGridLayout *layoutRotate = new QGridLayout();
     QVBoxLayout *layoutColor = new QVBoxLayout();
     QHBoxLayout *layoutColorDepth = new QHBoxLayout();
-    QVBoxLayout *layoutBlur = new QVBoxLayout();
+    QGridLayout *layoutEffects = new QGridLayout();
 
     groupRotate = new QGroupBox(this);
     groupColor = new QGroupBox(this);
-    groupBlur = new QGroupBox(this);
-    QString degree = "%1" + QString(QChar(0xB0));
-    btnRotate0 = new QPushButton(degree.arg("0"), this);
-    btnRotate90 = new QPushButton(degree.arg("90"), this);
-    btnRotate180 = new QPushButton(degree.arg("180"), this);
-    btnRotate270 = new QPushButton(degree.arg("270"), this);
+    const QString DEGREE = "%1" + QString(QChar(0xB0));
+    btnRotate0 = new QPushButton(DEGREE.arg("0"), this);
+    btnRotate90 = new QPushButton(DEGREE.arg("90"), this);
+    btnRotate180 = new QPushButton(DEGREE.arg("180"), this);
+    btnRotate270 = new QPushButton(DEGREE.arg("270"), this);
     btnFlipX = new QPushButton(this);
     btnFlipY = new QPushButton(this);
     btnColor = new QPushButton(this);
     labelColor = new QLabel(this);
     slideColor = new QSlider(Qt::Horizontal, this);
+    labelCorners = new QLabel(this);
+    slideCorners = new QSlider(Qt::Horizontal, this);
+    labelBlur = new QLabel(this);
     slideBlur = new QSlider(Qt::Horizontal, this);
     colorDialog = new QColorDialog(this);
     buttons = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, this);
@@ -39,18 +41,19 @@ EffectsDialog::EffectsDialog(QWidget *parent) : QDialog(parent)
     btnRotate90->setAutoExclusive(true);
     btnRotate180->setAutoExclusive(true);
     btnRotate270->setAutoExclusive(true);
+    slideCorners->setRange(0, 512);
     slideBlur->setRange(10, 500);
     slideColor->setRange(0, 100);
     groupColor->setCheckable(true);
-    groupBlur->setCheckable(true);
     groupRotate->setLayout(layoutRotate);
     groupColor->setLayout(layoutColor);
-    groupBlur->setLayout(layoutBlur);
     btnColor->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
 
     layout->addWidget(groupRotate);
     layout->addWidget(groupColor);
-    layout->addWidget(groupBlur);
+    //layout->addWidget(groupBlur);
+    layout->addWidget(slideCorners);
+    layout->addLayout(layoutEffects);
     layoutRotate->addWidget(btnRotate0, 0, 0);
     layoutRotate->addWidget(btnRotate90, 0, 1);
     layoutRotate->addWidget(btnRotate180, 0, 2);
@@ -61,7 +64,10 @@ EffectsDialog::EffectsDialog(QWidget *parent) : QDialog(parent)
     layoutColor->addLayout(layoutColorDepth);
     layoutColorDepth->addWidget(labelColor);
     layoutColorDepth->addWidget(slideColor);
-    layoutBlur->addWidget(slideBlur);
+    layoutEffects->addWidget(labelCorners, 1, 0);
+    layoutEffects->addWidget(slideCorners, 1, 1);
+    layoutEffects->addWidget(labelBlur, 0, 0);
+    layoutEffects->addWidget(slideBlur, 0, 1);
     layout->addWidget(buttons);
 
     mapRotate = new QSignalMapper(this);
@@ -76,12 +82,12 @@ EffectsDialog::EffectsDialog(QWidget *parent) : QDialog(parent)
     mapRotate->setMapping(btnRotate270, 270);
 
     connect(groupColor, SIGNAL(clicked(bool)), this, SIGNAL(colorActivated(bool)));
-    connect(groupBlur, SIGNAL(clicked(bool)), this, SIGNAL(blurActivated(bool)));
     connect(btnFlipX, SIGNAL(clicked(bool)), this, SIGNAL(flipX(bool)));
     connect(btnFlipY, SIGNAL(clicked(bool)), this, SIGNAL(flipY(bool)));
     connect(btnColor, SIGNAL(clicked()), colorDialog, SLOT(exec()));
     connect(slideColor, SIGNAL(valueChanged(int)), this, SLOT(setColorDepth(int)));
     connect(slideBlur, SIGNAL(valueChanged(int)), this, SLOT(setBlur(int)));
+    connect(slideCorners, SIGNAL(valueChanged(int)), this, SLOT(setCorners(int)));
     connect(colorDialog, SIGNAL(colorSelected(QColor)), this, SLOT(setColor(QColor)));
     connect(buttons, SIGNAL(accepted()), this, SLOT(accept()));
     connect(buttons, SIGNAL(rejected()), this, SLOT(reject()));
@@ -95,7 +101,8 @@ void EffectsDialog::retranslate()
     btnFlipY->setText(tr("Flip Vertical"));
     groupColor->setTitle(tr("Color Overlay"));
     labelColor->setText(tr("Intensity:"));
-    groupBlur->setTitle(tr("Blur"));
+    labelCorners->setText(tr("Rounded"));
+    labelBlur->setText(tr("Blur"));
     btnColor->setText(tr("Select Color"));
 }
 
@@ -136,4 +143,10 @@ void EffectsDialog::setBlur(int value)
 {
     slideBlur->setSliderPosition(value);
     emit blur(qreal(value) / 10);
+}
+
+void EffectsDialog::setCorners(int radius)
+{
+    slideCorners->setSliderPosition(radius);
+    emit round(radius);
 }

@@ -21,7 +21,6 @@ class EffectsDialog : public QDialog
 private:
     QGroupBox *groupRotate;
     QGroupBox *groupColor;
-    QGroupBox *groupBlur;
     QPushButton *btnRotate0;
     QPushButton *btnRotate90;
     QPushButton *btnRotate180;
@@ -30,8 +29,11 @@ private:
     QPushButton *btnFlipY;
     QPushButton *btnColor;
     QLabel *labelColor;
+    QLabel *labelCorners;
+    QLabel *labelBlur;
     QSlider *slideColor;
     QSlider *slideBlur;
+    QSlider *slideCorners;
     QColorDialog *colorDialog;
     QDialogButtonBox *buttons;
     QSignalMapper *mapRotate;
@@ -49,13 +51,11 @@ signals:
     void colorize(QColor color);        ///< Set "Colorize" effect \c color.
     void colorDepth(qreal depth);       ///< Set "Colorize" effect color \c depth.
     void blur(qreal radius);            ///< Set "Blur" effect \c radius.
+    void round(qreal radius);           ///< Set rounded corners \c radius.
 
 public slots:
     /// Turn "Colorize" effect groupbox on/off.
     void setColorEnabled(bool state) { groupColor->setChecked(state); }
-
-    /// Turn "Blur" effect groupbox on/off.
-    void setBlurEnabled(bool state) { groupBlur->setChecked(state); }
 
     /// Turn "Flip Horizontal" button on/off.
     void setFlipX(bool value) { btnFlipX->setChecked(value); }
@@ -67,6 +67,7 @@ public slots:
     void setColor(QColor color);    ///< Set "Colorize" effect button \c color.
     void setColorDepth(int depth);  ///< Set "Colorize" slider \c value.
     void setBlur(int value);        ///< Set "Blur" slider \c value.
+    void setCorners(int value);     ///< Set "Rounded Corners" slider \c value.
 
 };
 

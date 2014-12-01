@@ -594,6 +594,7 @@ void MainWindow::connectRepaintSignals()
     connect(effects, SIGNAL(colorize(QColor)), drawArea, SLOT(repaint()));
     connect(effects, SIGNAL(colorDepth(qreal)), drawArea, SLOT(repaint()));
     connect(effects, SIGNAL(blur(qreal)), drawArea, SLOT(repaint()));
+    connect(effects, SIGNAL(round(qreal)), drawArea, SLOT(repaint()));
 }
 
 void MainWindow::stringChanged(int row, int col)
@@ -679,13 +680,13 @@ void MainWindow::setCurrentIcon(int id)
     if (Icon *icon = apk->getIcon(static_cast<Dpi>(id))) {
         disconnect(effects, 0, 0, 0);
         connect(effects, SIGNAL(colorActivated(bool)), icon, SLOT(setColorEnabled(bool)), Qt::DirectConnection);
-        connect(effects, SIGNAL(blurActivated(bool)), icon, SLOT(setBlurEnabled(bool)), Qt::DirectConnection);
         connect(effects, SIGNAL(rotate(int)), icon, SLOT(setAngle(int)), Qt::DirectConnection);
         connect(effects, SIGNAL(flipX(bool)), icon, SLOT(setFlipX(bool)), Qt::DirectConnection);
         connect(effects, SIGNAL(flipY(bool)), icon, SLOT(setFlipY(bool)), Qt::DirectConnection);
         connect(effects, SIGNAL(colorize(QColor)), icon, SLOT(setColor(QColor)), Qt::DirectConnection);
         connect(effects, SIGNAL(colorDepth(qreal)), icon, SLOT(setDepth(qreal)), Qt::DirectConnection);
         connect(effects, SIGNAL(blur(qreal)), icon, SLOT(setBlur(qreal)), Qt::DirectConnection);
+        connect(effects, SIGNAL(round(qreal)), icon, SLOT(setCorners(qreal)), Qt::DirectConnection);
         connectRepaintSignals();
         drawArea->setIcon(icon);
     }
@@ -945,18 +946,18 @@ void MainWindow::showEffectsDialog()
         const bool TEMP_FLIP_X = icon->getFlipX();
         const bool TEMP_FLIP_Y = icon->getFlipY();
         const bool TEMP_IS_COLOR = icon->getColorEnabled();
-        const bool TEMP_IS_BLUR = icon->getBlurEnabled();
         const QColor TEMP_COLOR = icon->getColor();
         const qreal TEMP_DEPTH = icon->getDepth();
         const qreal TEMP_BLUR = icon->getBlur();
+        const qreal TEMP_ROUND = icon->getCorners();
         effects->setRotation(TEMP_ANGLE);
         effects->setFlipX(TEMP_FLIP_X);
         effects->setFlipY(TEMP_FLIP_Y);
         effects->setColorEnabled(TEMP_IS_COLOR);
         effects->setColor(TEMP_COLOR);
         effects->setColorDepth(TEMP_DEPTH * 100);
-        effects->setBlurEnabled(TEMP_IS_BLUR);
         effects->setBlur(TEMP_BLUR * 10);
+        effects->setCorners(TEMP_ROUND);
         // TODO: Get rid of flicker on exec().
         if (effects->exec() == QDialog::Accepted) {
             setWindowModified(true);
@@ -966,10 +967,10 @@ void MainWindow::showEffectsDialog()
             icon->setFlipX(TEMP_FLIP_X);
             icon->setFlipY(TEMP_FLIP_Y);
             icon->setColorEnabled(TEMP_IS_COLOR);
-            icon->setBlurEnabled(TEMP_IS_BLUR);
             icon->setColor(TEMP_COLOR);
             icon->setDepth(TEMP_DEPTH);
             icon->setBlur(TEMP_BLUR);
+            icon->setCorners(TEMP_ROUND);
         }
     }
     else {

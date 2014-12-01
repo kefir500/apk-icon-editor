@@ -18,13 +18,13 @@ class Icon : public QObject {
 private:
     QPixmap pixmap;                     ///< Stores pixmap itself.
     bool isColor;                       ///< If \c TRUE, renders colorize effect.
-    bool isBlur;                        ///< If \c TRUE, renders blur effect.
     bool flipX;                         ///< Stores horizontal flipping state.
     bool flipY;                         ///< Stores vertical flipping state.
     short angle;                        ///< Stores angle of rotation (in degrees).
     QColor color;                       ///< Stores "Colorize" effect color.
     qreal depth;                        ///< Stores "Colorize" effect depth.
     qreal blur;                         ///< Stores "Blur" effect radius.
+    qreal radius;                       ///< Stores rounded corners radius.
     const QString filename_original;    ///< Stores pixmap filename specified in constructor. Used to #revert the original one.
 
 public:
@@ -60,25 +60,25 @@ public:
     int height() const { return pixmap.height(); }          ///< Get #pixmap height.
     QPixmap getPixmap() { return applyEffects(); }          ///< Get #pixmap.
 
-    QPixmap applyEffects();                                 ///< Apply graphic effects to #pixmap.
+    QPixmap applyEffects() const;                           ///< Apply graphic effects to #pixmap.
     bool getColorEnabled() { return isColor; }              ///< Returns \c TRUE if "Colorize" effect is enabled.
-    bool getBlurEnabled() { return isBlur; }                ///< Returns \c TRUE if "Blur effect is enabled.
     int getAngle() { return angle; }                        ///< Returns rotation #angle (in degrees).
     bool getFlipX() { return flipX; }                       ///< Returns \c TRUE if #pixmap is flipped horizontally.
     bool getFlipY() { return flipY; }                       ///< Returns \c TRUE if #pixmap is flipped vertically.
     QColor getColor() { return color; }                     ///< Returns "Colorize" effect #color.
     qreal getDepth() { return depth; }                      ///< Returns "Colorize" effect #depth.
     qreal getBlur() { return blur; }                        ///< Returns "Blur" effect \c radius.
+    qreal getCorners() { return radius; }                   ///< Returns the #radius of rounded corners.
 
 public slots:
     void setColorEnabled(bool enable) { isColor = enable; } ///< Enable or disable "Colorize" effect.
-    void setBlurEnabled(bool enable) { isBlur = enable; }   ///< Enable or disable "Blur" effect.
     void setAngle(int _angle) { angle = _angle; }           ///< Set rotation #angle (in degrees).
     void setFlipX(bool value) { flipX = value; }            ///< Set horizontal flipping.
     void setFlipY(bool value) { flipY = value; }            ///< Set vertical flipping
     void setColor(QColor _color) { color = _color; }        ///< Set "Colorize" effect #color.
     void setDepth(qreal _depth) { depth = _depth; }         ///< Set "Colorize" effect color #depth.
     void setBlur(qreal radius) { blur = radius; }           ///< Set "Blur" effect \c radius.
+    void setCorners(qreal _radius) { radius = _radius; }    ///< Set the #radius of rounded corners.
 };
 
 /// \brief Filter for open/save dialogs.

@@ -1,5 +1,6 @@
 #include "icon.h"
 #include <QLabel>
+#include <QPainter>
 
 Icon::Icon(QString filename) : filename_original(filename)
 {
@@ -37,7 +38,6 @@ bool Icon::resize(int side)
 bool Icon::revert()
 {
     isColor = false;
-    isBlur = false;
     angle = 0;
     flipX = false;
     flipY = false;
@@ -47,7 +47,7 @@ bool Icon::revert()
     return !(pixmap = QPixmap(filename_original)).isNull();
 }
 
-QPixmap Icon::applyEffects()
+QPixmap Icon::applyEffects() const
 {
     QPixmap gfx = pixmap;
 
@@ -61,7 +61,31 @@ QPixmap Icon::applyEffects()
         gfx = w.grab();
     }
 
-    if (isBlur && blur >= 1.0) {
+    if (!qFuzzyIsNull(radius)) {
+        /*QImage canvas(gfx.size(), QImage::Format_ARGB32_Premultiplied);
+        QPainter paint(&canvas);
+        paint.drawPixmap(0, 0, gfx);
+        paint.setPen(Qt::NoPen);
+        paint.setBrush(QColor(0, 0, 0, 0));
+        paint.setRenderHint(QPainter::Antialiasing);
+        paint.setCompositionMode(QPainter::CompositionMode_DestinationIn);
+        paint.drawRoundedRect(gfx.rect(), radius, radius);
+        paint.end();
+        gfx = QPixmap::fromImage(canvas);*/
+
+        QImage canvas(gfx.size(), QImage::Format_ARGB32_Premultiplied);
+        QPainter painter(&canvas);
+        painter.setCompositionMode(QPainter::CompositionMode_Source);
+        painter.fillRect(gfx.rect(), Qt::transparent);
+        painter.setPen(Qt::NoPen);
+        painter.setBrush(QBrush(gfx));
+        painter.setRenderHint(QPainter::Antialiasing);
+        painter.drawRoundedRect(gfx.rect(), radius, radius);
+        painter.end();
+        gfx = QPixmap::fromImage(canvas);
+    }
+
+    if (blur >= 1.0) {
         QLabel w;
         QGraphicsBlurEffect *effect = new QGraphicsBlurEffect();
         effect->setBlurRadius(blur);
