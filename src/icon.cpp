@@ -62,17 +62,6 @@ QPixmap Icon::applyEffects() const
     }
 
     if (!qFuzzyIsNull(radius)) {
-        /*QImage canvas(gfx.size(), QImage::Format_ARGB32_Premultiplied);
-        QPainter paint(&canvas);
-        paint.drawPixmap(0, 0, gfx);
-        paint.setPen(Qt::NoPen);
-        paint.setBrush(QColor(0, 0, 0, 0));
-        paint.setRenderHint(QPainter::Antialiasing);
-        paint.setCompositionMode(QPainter::CompositionMode_DestinationIn);
-        paint.drawRoundedRect(gfx.rect(), radius, radius);
-        paint.end();
-        gfx = QPixmap::fromImage(canvas);*/
-
         QImage canvas(gfx.size(), QImage::Format_ARGB32_Premultiplied);
         QPainter painter(&canvas);
         painter.setCompositionMode(QPainter::CompositionMode_Source);
