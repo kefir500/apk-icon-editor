@@ -44,6 +44,7 @@ bool Icon::revert()
     color = Qt::black;
     depth = 1.0;
     blur = 1.0;
+    radius = 0;
     return !(pixmap = QPixmap(filename_original)).isNull();
 }
 
@@ -74,7 +75,7 @@ QPixmap Icon::applyEffects() const
         gfx = QPixmap::fromImage(canvas);
     }
 
-    if (blur >= 1.0) {
+    if (blur > 1.0) {
         QLabel w;
         QGraphicsBlurEffect *effect = new QGraphicsBlurEffect();
         effect->setBlurRadius(blur);
