@@ -1065,7 +1065,7 @@ void MainWindow::apkSave()
 
 void MainWindow::apkExplore()
 {
-    QDesktopServices::openUrl(QDir::fromNativeSeparators(TEMPDIR + "apk"));
+    QDesktopServices::openUrl(QUrl::fromLocalFile(TEMPDIR + "apk"));
 }
 
 void MainWindow::associate() const
@@ -1086,13 +1086,13 @@ void MainWindow::browseSite() const
 
 void MainWindow::browseBugs() const
 {
-    QDesktopServices::openUrl(QUrl(URL_BUGS));
+    QDesktopServices::openUrl(URL_BUGS);
 }
 
 void MainWindow::browseFaq() const
 {
     const QString APPDIR(QApplication::applicationDirPath());
-    QDesktopServices::openUrl(QString("file:///%1/faq.txt").arg(APPDIR));
+    QDesktopServices::openUrl(QUrl::fromLocalFile(QString("file:///%1/faq.txt").arg(APPDIR)));
 }
 
 void MainWindow::about()
