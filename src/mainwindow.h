@@ -220,7 +220,7 @@ private slots:
     void error(QString title, QString text);
 
 public:
-    MainWindow(int argc, char *argv[], QWidget *parent = 0);
+    MainWindow(QWidget *parent = 0);
     ~MainWindow();
 };
 

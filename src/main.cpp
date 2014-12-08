@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
     QFontDatabase::addApplicationFont(":/fonts/OpenSans-Light.ttf");
 
-    MainWindow w(argc, argv);
+    MainWindow w;
     w.show();
 
     qDebug() << "Starting...\n";

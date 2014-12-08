@@ -13,7 +13,7 @@
 #include <QDesktopServices>
 #include <QApplication>
 
-MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) : QMainWindow(parent)
+MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
     resize(WINDOW_WIDTH, WINDOW_HEIGHT);
     setAcceptDrops(true);
@@ -314,8 +314,8 @@ MainWindow::MainWindow(int argc, char *argv[], QWidget *parent) : QMainWindow(pa
         updater->check();
     }
 
-    if (argc > 1) {
-        apkLoad(QString::fromLocal8Bit(argv[1]));
+    if (QCoreApplication::arguments().size() > 1) {
+        apkLoad(QCoreApplication::arguments()[1]);
     }
 }
 
