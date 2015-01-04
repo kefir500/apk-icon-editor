@@ -1218,12 +1218,14 @@ void MainWindow::success(QString title, QString text)
 
 void MainWindow::warning(QString title, QString text)
 {
+    qDebug() << qPrintable(QString("Warning (%1): %2").arg(title).arg(text));
     QApplication::alert(this);
     QMessageBox::warning(this, title, text);
 }
 
 void MainWindow::error(QString title, QString text)
 {
+    qDebug() << qPrintable(QString("Error (%1): %2").arg(title).arg(text));
     QApplication::alert(this);
     QMessageBox::critical(this, title, text);
 }
