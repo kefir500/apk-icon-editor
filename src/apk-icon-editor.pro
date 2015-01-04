@@ -53,6 +53,10 @@ win32 {
     DESTDIR = ../bin/win32
 }
 
-unix {
-    DESTDIR = ../bin/unix
+unix:macx {
+    DESTDIR = ../bin/macosx
+}
+
+unix:!macx {
+    DESTDIR = ../bin/linux
 }
