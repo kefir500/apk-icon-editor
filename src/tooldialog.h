@@ -15,17 +15,17 @@ class ToolDialog : public QDialog
 
 public:
     explicit ToolDialog(QWidget *parent = 0);
-    short getRatio() const { return short(slideRatio->value() * 1.9); }
+    short getRatio() const { return slideRatio->value(); }
     bool getUseApktool() const { return radioApktool->isChecked(); }
     bool getSmali() const {return checkSmali->isChecked(); }
     bool getSign() const { return checkSign->isChecked(); }
     bool getOptimize() const { return checkOptimize->isChecked(); }
-    QString hint_7zip() { return tr(STR_7ZIP); }
+    QString hint_quazip() { return tr(STR_QUAZIP); }
     QString hint_apktool() { return tr(STR_APKTOOL); }
     void retranslate();
 
 private:
-    static const char *STR_7ZIP;
+    static const char *STR_QUAZIP;
     static const char *STR_APKTOOL;
     QRadioButton *radioZip;
     QRadioButton *radioApktool;

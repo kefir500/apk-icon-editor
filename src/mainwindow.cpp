@@ -526,7 +526,7 @@ void MainWindow::setLanguage(QString lang)
     labelTool->setText(tr("Current Mode:"));
     loadingDialog->setWindowTitle(tr("Processing"));
     uploadDialog->setWindowTitle(tr("Uploading"));
-    btnTool->setToolTip(toolDialog->getUseApktool() ? toolDialog->hint_apktool() : toolDialog->hint_7zip());
+    btnTool->setToolTip(toolDialog->getUseApktool() ? toolDialog->hint_apktool() : toolDialog->hint_quazip());
     menuBar()->resize(0, 0); // "Repaint" menu bar
 
     effects->retranslate();
@@ -627,8 +627,8 @@ void MainWindow::switchTool()
 
 void MainWindow::enableApktool(bool value)
 {
-    btnTool->setText(value ? "apktool" : "7-Zip");
-    btnTool->setToolTip(value ? toolDialog->hint_apktool() : toolDialog->hint_7zip());
+    btnTool->setText(value ? "Apktool" : "QuaZIP");
+    btnTool->setToolTip(value ? toolDialog->hint_apktool() : toolDialog->hint_quazip());
 
     menuBar()->resize(0, 0); // "Repaint" menu bar
 

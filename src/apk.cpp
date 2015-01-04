@@ -7,6 +7,7 @@
 #include <QDir>
 #include <QTime>
 #include <QtConcurrent/QtConcurrentRun>
+#include <QuaZIP/JlCompress.h>
 
 const char *Apk::STR_ERROR = QT_TR_NOOP("%1 Error");
 const char *Apk::STR_ERRORSTART = QT_TR_NOOP("Error starting <b>%1</b>");
@@ -151,6 +152,22 @@ bool Apk::unzip() const
     QDir dir(TEMPDIR);
     dir.mkpath(".");
 
+#ifndef USE_7ZIP
+
+    QTime sw;
+    sw.start();
+    QStringList result = JlCompress::extractDir(filename, TEMPDIR + "apk");
+    qDebug() << qPrintable(QString("Unpacked in %1s").arg(sw.elapsed() / 1000.0));
+    if (!result.isEmpty()) {
+        return true;
+    }
+    else {
+        const QString QUAZIP_ERROR = tr(STR_ERROR).arg("QuaZIP");
+        return die(QUAZIP_ERROR, QUAZIP_ERROR);
+    }
+
+#elif
+
     QProcess p;
     QTime sw;
     sw.start();
@@ -162,6 +179,8 @@ bool Apk::unzip() const
     p.waitForFinished(-1);
     qDebug() << qPrintable(QString("Unpacked in %1s").arg(sw.elapsed() / 1000.0));
     return getZipSuccess(p.exitCode());
+
+#endif
 }
 
 bool Apk::unzip_apktool(bool smali) const
@@ -437,6 +456,20 @@ void Apk::saveXmlChanges(QString appName, QString versionName, QString versionCo
 
 bool Apk::zip(short ratio) const
 {
+#ifndef USE_7ZIP
+
+    bool result = JlCompress::compressDir(TEMPDIR + "temp.zip", TEMPDIR_APK, ratio);
+    if (result) {
+        QFile::rename(TEMPDIR + "temp.zip", TEMPDIR + "temp-1.apk");
+        return true;
+    }
+    else {
+        const QString QUAZIP_ERROR = tr(STR_ERROR).arg("QuaZIP");
+        return die(QUAZIP_ERROR, QUAZIP_ERROR);
+    }
+
+#elif
+
     QProcess p;
     p.start(QString("7za a -tzip -mx%1 \"%2temp.zip\" \"%3*\"").arg(QString::number(ratio), TEMPDIR, TEMPDIR_APK));
     if (!p.waitForStarted(-1)) {
@@ -449,6 +482,8 @@ bool Apk::zip(short ratio) const
         QFile::rename(TEMPDIR + "temp.zip", TEMPDIR + "temp-1.apk");
     }
     return success;
+
+#endif
 }
 
 bool Apk::zip_apktool() const

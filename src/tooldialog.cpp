@@ -2,13 +2,13 @@
 #include <QSlider>
 #include <QDialogButtonBox>
 
-const char *ToolDialog::STR_7ZIP = QT_TR_NOOP(
-    "Use default 7-zip repacking.\n"
+const char *ToolDialog::STR_QUAZIP = QT_TR_NOOP(
+    "Use default QuaZIP repacking.\n"
     "This is the fastest method.\n"
     "Provides different compression ratios.");
 
 const char *ToolDialog::STR_APKTOOL = QT_TR_NOOP(
-    "Use apktool repacking. This method is slower,\n"
+    "Use Apktool repacking. This method is slower,\n"
     "but it provides more reverse-engineering options\n"
     "like editing application name and version\n"
     "as well as decompiling binary resources.");
@@ -35,7 +35,7 @@ ToolDialog::ToolDialog(QWidget *parent) : QDialog(parent)
     labelMin = new QLabel(this);
     labelMax = new QLabel(this);
     slideRatio = new QSlider(Qt::Horizontal, this);
-    slideRatio->setRange(0, 5);
+    slideRatio->setRange(0, 9);
     slideRatio->setTickPosition(QSlider::TicksBelow);
     checkSmali = new QCheckBox(this);
 
@@ -103,7 +103,6 @@ void ToolDialog::setOptionApktool()
 void ToolDialog::setRatio(short value)
 {
     tempRatio = value;
-    value = ceil(value / 2.f);
     slideRatio->setValue(value);
 }
 
@@ -141,7 +140,7 @@ void ToolDialog::setOptimize(bool optimize)
 void ToolDialog::retranslate()
 {
     setWindowTitle(tr("Repacking"));
-    radioZip->setText(tr(STR_7ZIP));
+    radioZip->setText(tr(STR_QUAZIP));
     radioApktool->setText(tr(STR_APKTOOL));
     labelComp->setText(tr("Compression:"));
     labelMin->setText(tr("MIN"));
