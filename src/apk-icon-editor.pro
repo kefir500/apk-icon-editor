@@ -1,5 +1,7 @@
 QT += core gui network
 
+DEFINES += QUAZIP_STATIC
+
 greaterThan(QT_MAJOR_VERSION, 4) {
     QT += widgets
     win32 {
@@ -41,10 +43,11 @@ HEADERS += main.h \
            updater.h \
            keys.h
 
-TRANSLATIONS += ../lang/apk-icon-editor.en.ts \
-                ../lang/apk-icon-editor.fr.ts \
-                ../lang/apk-icon-editor.ru.ts \
-                ../lang/apk-icon-editor.zh.ts
+INCLUDEPATH += ../lib/include
+
+LIBS += -L../lib/bin -lquazip
+
+TRANSLATIONS += ../lang/apk-icon-editor.en.ts
 
 RESOURCES += ../res/resources.qrc
 RC_FILE += ../res/icon.rc
