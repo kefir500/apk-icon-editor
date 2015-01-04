@@ -121,7 +121,7 @@ bool Apk::doUnpack(PackOptions options)
 
 bool Apk::readManifest()
 {
-    const QString AAPT_ERROR(tr(STR_ERROR).arg("AAPT"));
+    const QString AAPT_ERROR(tr(STR_ERROR).arg("Aapt"));
 
     QProcess p;
     p.start(QString("aapt dump badging \"%1\"").arg(filename));
@@ -193,10 +193,10 @@ bool Apk::unzip_apktool(bool smali) const
     if (!p.waitForStarted(-1)) {
         if (isJavaInstalled()) {
             qDebug() << qPrintable(LOG_ERRORSTART.arg("apktool"));
-            return die(tr(STR_ERROR).arg("APKTOOL"), tr(STR_ERRORSTART).arg("apktool"));
+            return die(tr(STR_ERROR).arg("Apktool"), tr(STR_ERRORSTART).arg("apktool"));
         }
         else {
-            return die(tr(STR_ERROR).arg("APKTOOL"),
+            return die(tr(STR_ERROR).arg("Apktool"),
                        tr("\"Apktool\" requires Java Runtime Environment.") +
                           QString("<br><a href=\"%1\">%2</a> %3.<br>%4").arg(
                                   URL_JAVA, tr("Download"), tr(STR_CHECKPATH),
@@ -210,7 +210,8 @@ bool Apk::unzip_apktool(bool smali) const
     }
     else {
         qDebug() << p.readAllStandardError();
-        return die(tr(STR_ERROR).arg("APKTOOL"), tr(STR_ERROR).arg("APKTOOL"));
+        const QString ERROR_APKTOOL = tr(STR_ERROR).arg("Apktool");
+        return die(ERROR_APKTOOL, ERROR_APKTOOL);
     }
 }
 
@@ -494,10 +495,10 @@ bool Apk::zip_apktool() const
     if (!p.waitForStarted(-1)) {
         if (isJavaInstalled()) {
             qDebug() << qPrintable(LOG_ERRORSTART.arg("apktool"));
-            return die(tr(STR_ERROR).arg("APKTOOL"), tr(STR_ERRORSTART).arg("apktool"));
+            return die(tr(STR_ERROR).arg("Apktool"), tr(STR_ERRORSTART).arg("apktool"));
         }
         else {
-            return die(tr(STR_ERROR).arg("APKTOOL"),
+            return die(tr(STR_ERROR).arg("Apktool"),
                        tr("\"Apktool\" requires Java Runtime Environment.") +
                           QString("<br><a href=\"%1\">%2</a> %3.<br>%4").arg(
                                   URL_JAVA, tr("Download"), tr(STR_CHECKPATH),
@@ -511,7 +512,7 @@ bool Apk::zip_apktool() const
     }
     else {
         qDebug() << p.readAllStandardError();
-        return die(tr(STR_ERROR).arg("APKTOOL"), tr(STR_ERROR).arg("apktool"));
+        return die(tr(STR_ERROR).arg("Apktool"), tr(STR_ERROR).arg("Apktool"));
     }
 }
 
