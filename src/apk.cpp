@@ -165,7 +165,9 @@ bool Apk::unzip() const
         const QString QUAZIP_ERROR = tr(STR_ERROR).arg("QuaZIP");
         return die(QUAZIP_ERROR, QUAZIP_ERROR);
     }
+    
 #elif
+
     QProcess p;
     QTime sw;
     sw.start();
