@@ -165,7 +165,7 @@ bool Apk::unzip() const
         const QString QUAZIP_ERROR = tr(STR_ERROR).arg("QuaZIP");
         return die(QUAZIP_ERROR, QUAZIP_ERROR);
     }
-#elif
+#else
 
     QProcess p;
     QTime sw;
@@ -468,7 +468,7 @@ bool Apk::zip(short ratio) const
         return die(QUAZIP_ERROR, QUAZIP_ERROR);
     }
 
-#elif
+#else
 
     QProcess p;
     p.start(QString("7za a -tzip -mx%1 \"%2temp.zip\" \"%3*\"").arg(QString::number(ratio), TEMPDIR, TEMPDIR_APK));
