@@ -141,7 +141,7 @@ private slots:
     /// \param[in] filename  Name of the packed APK file.
     /// \param[in] isSuccess \c FALSE if APK is packed with warnings.
     /// \param[in] text      Additional message text.
-    void apkPacked(QString filename, bool isSuccess = true, QString text = false);
+    void apkPacked(QString filename, bool isSuccess = true, QString text);
 
     void apkUnpacked(QString filename);             ///< Handle APK unpacked from the \c filename.
     void resetSettings();                           ///< Reset settings to default.
