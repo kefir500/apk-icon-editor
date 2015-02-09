@@ -169,7 +169,7 @@ bool Apk::unzip() const
 //#elif
 
     QProcess p;
-    QTime sw;
+    
     sw.start();
     p.start(QString("7za x \"%1\" -y -o\"%2apk\"").arg(filename, TEMPDIR));
     if (!p.waitForStarted(-1)) {
