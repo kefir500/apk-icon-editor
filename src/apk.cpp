@@ -167,7 +167,7 @@ bool Apk::unzip() const
     }
 
 #elif
-
+    QTime sw;
     QProcess p;
     
     sw.start();
