@@ -77,7 +77,7 @@ public:
     /// \param[in] group Name of the existing \e group.
     /// \param[in] name Title of the new \e item.
     /// \param[in] data Custom user data for the new \e item.
-    void addItem(QString group, QString name, QVariant data = NULL);
+    void addItem(QString group, QString name, QVariant data = 0);
 
     /// Refresh item #list (according to #items bindings).
     void refresh();
