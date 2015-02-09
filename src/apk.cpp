@@ -469,7 +469,7 @@ bool Apk::zip(short ratio) const
         return die(QUAZIP_ERROR, QUAZIP_ERROR);
     }
 
-//#elif
+#elif
 
     QProcess p;
     p.start(QString("7za a -tzip -mx%1 \"%2temp.zip\" \"%3*\"").arg(QString::number(ratio), TEMPDIR, TEMPDIR_APK));
