@@ -47,7 +47,7 @@ private:
     QString manifest;                       ///< Stores AndroidManifest.xml.
     QString var_androidLabel;               ///< Stores the name of "android:label" variable (AndroidManifest.xml).
     QString warnText;                       ///< Stores warning text.
-    QList<QSharedPointer<Icon>> icons;      ///< Stores [shared pointers to] loaded APK icons.
+    QList<QSharedPointer<Icon> > icons;      ///< Stores [shared pointers to] loaded APK icons.
     QList<Resource> strings;                ///< Stores APK string resources.
 
     static const char *STR_ERROR;           ///< Error display text template.
