@@ -166,7 +166,7 @@ bool Apk::unzip() const
         return die(QUAZIP_ERROR, QUAZIP_ERROR);
     }
 
-//#elif
+#elif
 
     QProcess p;
     
