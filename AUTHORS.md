@@ -10,6 +10,10 @@
 - German – [Sebastian Herrmann](https://www.transifex.com/accounts/profile/herrherrmann)
 - Russian – [Alexander Gorishnyak](https://www.transifex.com/accounts/profile/kefir500)
 
+## Contributors
+[Ameen Ali](https://github.com/AmeenAli)
+
 ## Special Thanks
-- Igor Pavlov – 7-Zip file archiver
+- Sergey Tachenov – [QuaZIP](http://quazip.sourceforge.net)
+- Andre Somers – [SimpleCrypt](http://qt-project.org/wiki/Simple_encryption)
 - [Mark James](http://www.famfamfam.com) – flag icons
