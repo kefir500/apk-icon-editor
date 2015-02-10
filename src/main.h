@@ -35,7 +35,7 @@
     const QString APP = "APK Icon Editor (DEBUG)";
 #endif
 
-#if defined(Q_OS_WIN32Q) && (QT_VERSION >= QT_VERSION_CHECK(5, 2, 0))
+#if defined(Q_OS_WIN) && (QT_VERSION >= QT_VERSION_CHECK(5, 2, 0))
     #define WINEXTRAS 1
 #else
     #define WINEXTRAS 0
