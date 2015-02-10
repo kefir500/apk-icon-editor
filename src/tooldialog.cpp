@@ -16,8 +16,9 @@ const char *ToolDialog::STR_APKTOOL = QT_TR_NOOP(
 ToolDialog::ToolDialog(QWidget *parent) : QDialog(parent)
 {
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
-
+    setWindowIcon(QIcon(":/gfx/task-pack.png"));
     resize(200, 0);
+
     QVBoxLayout *layout = new QVBoxLayout(this);
     QHBoxLayout *layoutZip = new QHBoxLayout();
     QHBoxLayout *layoutApktool = new QHBoxLayout();
