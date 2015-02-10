@@ -3,7 +3,7 @@
 
 // Input Dialog
 
-InputDialog::InputDialog(QString title, QString text, QPixmap _icon, QWidget *parent)
+InputDialog::InputDialog(QString title, QString text, bool password, QPixmap _icon, QWidget *parent)
     : QDialog(parent)
 {
     setWindowTitle(title);
@@ -20,6 +20,7 @@ InputDialog::InputDialog(QString title, QString text, QPixmap _icon, QWidget *pa
 
     label->setText(text);
     icon->setPixmap(_icon);
+    input->setEchoMode(password ? QLineEdit::Password : QLineEdit::Normal);
 
     QHBoxLayout *row1 = new QHBoxLayout();
     row1->addWidget(icon);
@@ -36,9 +37,9 @@ InputDialog::InputDialog(QString title, QString text, QPixmap _icon, QWidget *pa
     connect(buttons, SIGNAL(rejected()), this, SLOT(reject()));
 }
 
-QString InputDialog::getString(QString title, QString text, QPixmap _icon, QWidget *parent)
+QString InputDialog::getString(QString title, QString text, bool password, QPixmap _icon, QWidget *parent)
 {
-    InputDialog dialog(title, text, _icon, parent);
+    InputDialog dialog(title, text, password, _icon, parent);
     if (dialog.exec() == QDialog::Accepted) {
         return dialog.input->text();
     }
