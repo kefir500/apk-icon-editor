@@ -1,5 +1,6 @@
 .trash/
 /bin/
+/build/
 /docs/html/
 /lang/
 !/lang/README
