@@ -31,6 +31,3 @@ SOURCES += $$PWD/qioapi.cpp \
            $$PWD/quazipnewinfo.cpp \
            $$PWD/unzip.c \
            $$PWD/zip.c
-
-#INCLUDEPATH += S:/libs/zlib/include
-#LIBS +=

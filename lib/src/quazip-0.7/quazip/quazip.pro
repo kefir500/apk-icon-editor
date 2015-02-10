@@ -22,6 +22,7 @@ QT -= gui
 # 2.0, VERSION to 2.0.0.
 # And so on.
 
+INCLUDEPATH += $$[QT_INSTALL_HEADERS]/QtZlib
 
 # This one handles dllimport/dllexport directives.
 DEFINES += QUAZIP_BUILD
