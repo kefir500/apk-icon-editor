@@ -16,17 +16,17 @@ KeyManager::KeyManager(QWidget *parent) : QDialog(parent)
     radioPem = new QRadioButton(this);
     radioKey = new QRadioButton(this);
 
+    radioPem->setText("PEM/PK8");
+
     boxPem = new FileBox(this);
     boxPk8 = new FileBox(this);
     boxKey = new FileBox(this);
 
-    boxPem->setTitle("PEM");
-    boxPk8->setTitle("PK8");
-    boxKey->setTitle("KeyStore");
+    boxPem->setTitle("PEM:");
+    boxPk8->setTitle("PK8:");
 
-    boxPem->setTitleWidth(44);
-    boxPk8->setTitleWidth(44);
-    boxKey->setTitleWidth(44);
+    boxPem->setTitleWidth(26);
+    boxPk8->setTitleWidth(26);
 
     boxPem->setFormats("PEM (*.pem);;");
     boxPk8->setFormats("PK8 (*.pk8);;");
@@ -78,8 +78,8 @@ KeyManager::KeyManager(QWidget *parent) : QDialog(parent)
 void KeyManager::retranslate()
 {
     setWindowTitle(tr("Key Manager"));
-    radioPem->setText("PEM/PK8");
     radioKey->setText(QString("KeyStore (%1)").arg(tr("Requires JDK")));
+    boxKey->setTitle(QString("%1:").arg(tr("KeyStore")));
     btnNew->setText(tr("Create &New KeyStore or Alias"));
     editAlias->setTitle(QString("%1:").arg(tr("Alias")));
     editAliasPass->setTitle(QString("%1:").arg(tr("Alias Password")));
@@ -249,11 +249,11 @@ KeyCreator::KeyCreator(QWidget *parent) : QDialog(parent)
 
 void KeyCreator::retranslate()
 {
-    labelStorePass1->setText(QString("%1 (%2):").arg(tr("Password"), tr("KeyStore")));
-    labelStorePass2->setText(QString("%1 (%2):").arg(tr("Confirm Password"), tr("KeyStore")));
+    labelStorePass1->setText(QString("%1:").arg(tr("Password (KeyStore)")));
+    labelStorePass2->setText(QString("%1:").arg(tr("Confirm Password")));
     labelAlias->setText(QString("%1:").arg(tr("Alias")));
-    labelAliasPass1->setText(QString("%1 (%2):").arg(tr("Password"), tr("Alias")));
-    labelAliasPass2->setText(QString("%1 (%2):").arg(tr("Confirm Password"), tr("Alias")));
+    labelAliasPass1->setText(QString("%1:").arg(tr("Password (Alias)")));
+    labelAliasPass2->setText(QString("%1:").arg(tr("Confirm Password")));
     labelYears->setText(QString("%1:").arg(tr("Validity (Years)")));
     labelName->setText(QString("%1:").arg(tr("First and Last Name")));
     labelUnit->setText(QString("%1:").arg(tr("Organizational Unit")));

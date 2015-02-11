@@ -407,11 +407,12 @@ void MainWindow::initCrypt()
 
 void MainWindow::restoreSettings()
 {
-    QString locale = QLocale::system().name();
+    const QString LOCALE = QLocale::system().name();
+    const QString KEYS_DIR = QApplication::applicationDirPath() + "/signer/";
 
     // Read settings:
-    QString sProfile = settings->value("Profile", NULL).toString();
-    QString sLanguage = settings->value("Language", locale).toString();
+    QString sProfile = settings->value("Profile", "").toString();
+    QString sLanguage = settings->value("Language", LOCALE).toString();
     QString sLastDir = settings->value("Directory", "").toString();
     QByteArray sGeometry = settings->value("Geometry", NULL).toByteArray();
     QByteArray sSplitter = settings->value("Splitter", NULL).toByteArray();
@@ -1292,7 +1293,7 @@ void MainWindow::authCloud()
     QApplication::alert(this);
     QString code = InputDialog::getString(tr("Authorization"),
                                           tr("Allow access to %1 in your browser and paste the provided code here:").arg(cloud->getTitle()),
-                                          cloud->getIcon(), this);
+                                          true, cloud->getIcon(), this);
     if (!code.isEmpty()) {
         cloud->login(code);
         uploadDialog->activateWindow();

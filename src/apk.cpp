@@ -22,7 +22,7 @@ QDebug operator<<(QDebug d, const PackOptions &o) {
     d << "\n\tApplication name:" << o.appName;
     d << "\n\tApplication version code:" << o.appVersionCode;
     d << "\n\tApplication version name:" << o.appVersionName;
-    d << "\n\tUsing apktool:" << o.isApktool;
+    d << "\n\tUsing Apktool:" << o.isApktool;
     d << "\n\tRatio:" << o.ratio;
     d << "\n\tSmali:" << o.isSmali;
     d << "\n\tSign:" << o.isSign;
