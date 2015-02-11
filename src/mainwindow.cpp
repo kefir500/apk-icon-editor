@@ -1112,13 +1112,7 @@ void MainWindow::about()
             tr("Author: %1").arg("Alexander Gorishnyak") + "<br>" +
             tr("License") + ": <a href=\"http://www.gnu.org/licenses/gpl-3.0.html\">GNU GPL v3.0</a>" +
         "</p><p>" +
-            tr("APK Icon Editor is the tool designed to easily edit and replace<br>APK (Android Package) icons. Written in C++ and Qt framework.") +
-        "</p><p>" +
-            tr("<b>Usage:</b><br>Open the APK file in which you would like to replace icon(s).<br>"
-            "Select profile (according to the final device) and the needed DPI.<br>"
-            "If you are in doubt about the DPI, you may replace all of them.<br>"
-            "APK Icon Editor will ask to scale icons with the wrong size, but<br>"
-            "note that Android devices are usually able to do it automatically.") +
+            tr("APK Icon Editor is the tool designed to easily edit and replace APK (Android Package) icons. Written in C++ and Qt framework.") +
         "</p><p>" +
             LINK.arg(URL_WEBSITE, tr("Visit Website"), tr("Visit our official website.")) + "<br>" +
             LINK.arg(URL_BUGS, tr("Report a Bug"), tr("Found a bug? Let us know so we can fix it!")) + "<br>" +
