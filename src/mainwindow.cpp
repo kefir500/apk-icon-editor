@@ -124,6 +124,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     actIconRevert->setEnabled(false);
     actIconEffect->setEnabled(false);
     actAutoUpdate->setCheckable(true);
+    actApkOpen->setIcon(QIcon(":/gfx/open.png"));
     actApkSave->setIcon(QIcon(":/gfx/task-pack.png"));
     actApkOpen->setShortcut(QKeySequence("Ctrl+O"));
     actApkSave->setShortcut(QKeySequence("Ctrl+E"));
@@ -137,7 +138,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     actFaq->setShortcut(QKeySequence("F1"));
     actIconEffect->setIcon(QIcon(":/gfx/effects.png"));
     actPacking->setIcon(QIcon(":/gfx/task-pack.png"));
+    actFaq->setIcon(QIcon(":/gfx/help.png"));
     actReport->setIcon(QIcon(":/gfx/bug.png"));
+    actAbout->setIcon(QIcon(":/gfx/apk-icon-editor.png"));
     actExit->setShortcut(QKeySequence("Ctrl+Q"));
 
     drawArea = new DrawArea(this);
