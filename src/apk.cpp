@@ -27,6 +27,13 @@ QDebug operator<<(QDebug d, const PackOptions &o) {
     d << "\n\tSmali:" << o.isSmali;
     d << "\n\tSign:" << o.isSign;
     d << "\n\tZipalign:" << o.isOptimize;
+    d << "\n\tUsing KeyStore:" << o.isKeystore;
+    d << "\n\tPEM" << (QFile::exists(o.filePem) ? "found;" : "NOT found;");
+    d << "\n\tPK8" << (QFile::exists(o.filePk8) ? "found;" : "NOT found;");
+    d << "\n\tKeyStore" << (QFile::exists(o.fileKey) ? "found;" : "NOT found;");
+    d << "\n\tKeyStore Password:" << (!o.passStore.isEmpty() ? "present;" : "NOT present;");
+    d << "\n\tAlias:" << o.alias;
+    d << "\n\tAlias Password:" << (!o.passAlias.isEmpty() ? "present;" : "NOT present;");
     return d;
 }
 
@@ -324,7 +331,12 @@ bool Apk::doPack(PackOptions opts)
     if (opts.isSign) {
         qDebug() << "Signing...";
         emit loading(60, tr("Signing APK..."));
-        isSigned = sign();
+        if (opts.isKeystore) {
+            isSigned = sign(opts.fileKey, opts.alias, opts.passStore, opts.passAlias);
+        }
+        else {
+            isSigned = sign(opts.filePem, opts.filePk8);
+        }
     }
     else {
         isSigned = true;
@@ -535,15 +547,21 @@ bool Apk::isJavaInstalled(bool debug)
     }
 }
 
-bool Apk::sign() const
+bool Apk::sign(const QString PEM, const QString PK8) const
 {
     const QString APK_SRC(TEMPDIR + "temp-1.apk");
     const QString APK_DST(TEMPDIR + "temp-2.apk");
     const QString SIGNAPK(QApplication::applicationDirPath() + "/signer/");
 
+    if (!QFile::exists(PEM) || !QFile::exists(PEM)) {
+        emit warning(NULL, tr("PEM/PK8 not found."));
+        QFile::rename(APK_SRC, APK_DST);
+        return false;
+    }
+
     QProcess p;
-    p.start(QString("java -jar \"%1signapk.jar\" \"%1certificate.pem\" \"%1key.pk8\" \"%2\" \"%3\"")
-            .arg(SIGNAPK, APK_SRC, APK_DST));
+    p.start(QString("java -jar \"%1signapk.jar\" \"%2\" \"%3\" \"%4\" \"%5\"")
+            .arg(SIGNAPK, PEM, PK8, APK_SRC, APK_DST));
 
     if (p.waitForStarted(-1)) {
         p.waitForFinished(-1);
@@ -552,12 +570,57 @@ bool Apk::sign() const
             return true;
         }
         else {
+            QString error_text = p.readAllStandardError().trimmed();
+            if (error_text.isEmpty()) error_text = p.readAllStandardOutput().trimmed();
             qDebug() << qPrintable(LOG_EXITCODE.arg("Java").arg(p.exitCode()));
-            qDebug() << p.readAllStandardError().trimmed();
+            qDebug() << error_text;
         }
     }
     else {
         qDebug() << qPrintable(LOG_ERRORSTART.arg("Java"));
+    }
+
+    // Something went wrong:
+    QFile::rename(APK_SRC, APK_DST);
+    return false;
+}
+
+bool Apk::sign(const QString KEY, const QString ALIAS,
+               const QString PASS_STORE, const QString PASS_KEY) const
+{
+    const QString APK_SRC(TEMPDIR + "temp-1.apk");
+    const QString APK_DST(TEMPDIR + "temp-2.apk");
+
+    if (!QFile::exists(KEY)) {
+        emit warning(NULL, tr("KeyStore not found."));
+        QFile::rename(APK_SRC, APK_DST);
+        return false;
+    }
+
+    QProcess p;
+    const QString ENV_PATH = qgetenv("PATH");
+    const QString JAVA_HOME = qgetenv("JAVA_HOME");
+    qputenv("PATH", QString("%1;%2/bin").arg(ENV_PATH, JAVA_HOME).toStdString().c_str());
+    p.start(QString("jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 "
+            "-keystore \"%1\" \"%2\" -storepass \"%3\" -keypass \"%4\" \"%5\"")
+            .arg(KEY, APK_SRC, PASS_STORE, PASS_KEY, ALIAS));
+    qputenv("PATH", ENV_PATH.toStdString().c_str());
+
+    if (p.waitForStarted(-1)) {
+        p.waitForFinished(-1);
+        if (p.exitCode() == 0) {
+            QFile::rename(APK_SRC, APK_DST);
+            return true;
+        }
+        else {
+            QString error_text = p.readAllStandardError().trimmed();
+            if (error_text.isEmpty()) error_text = p.readAllStandardOutput().trimmed();
+            qDebug() << qPrintable(LOG_EXITCODE.arg("Jarsigner").arg(p.exitCode()));
+            qDebug() << error_text;
+        }
+    }
+    else {
+        qDebug() << qPrintable(LOG_ERRORSTART.arg("Jarsigner"));
     }
 
     // Something went wrong:

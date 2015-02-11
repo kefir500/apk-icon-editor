@@ -26,6 +26,13 @@ struct PackOptions {
     bool isSmali;               ///< If \c TRUE, decompile "classes.dex" (only in "apktool" mode).
     bool isSign;                ///< If \c TRUE, sign APK.
     bool isOptimize;            ///< If \c TRUE, optimize (zipalign) APK.
+    bool isKeystore;            ///< If \c TRUE, use "KeyStore". If \c FALSE, use "PEM/PK8".
+    QString filePem;            ///< Path to PEM file.
+    QString filePk8;            ///< Path to PK8 file.
+    QString fileKey;            ///< Path to KeyStore file.
+    QString alias;              ///< KeyStore alias.
+    QString passStore;          ///< KeyStore password.
+    QString passAlias;          ///< KeyStore alias password.
     QString appName;            ///< Output APK name (only in "apktool" mode).
     QString appVersionName;     ///< Output APK version name (only in "apktool" mode).
     QString appVersionCode;     ///< Output APK version code (only in "apktool" mode).
@@ -96,7 +103,14 @@ private:
     bool saveIcons() const;             ///< Save icons from #icons list to PNG images.
     bool zip(short ratio = 9) const;    ///< Pack APK with specified compression \c ratio using "7za" tool.
     bool zip_apktool() const;           ///< Pack APK using "apktool" tool.
-    bool sign() const;                  ///< Sign APK using "signapk" tool.
+
+    /// Sign APK using "signapk" tool.
+    bool sign(const QString PEM, const QString PK8) const;
+
+    /// Sign APK using "jarsigner" tool.
+    bool sign(const QString KEY, const QString ALIAS,
+              const QString PASS_STORE, const QString PASS_KEY) const;
+
     bool optimize() const;              ///< Optimize APK using "zipalign" tool.
     bool finalize();                    ///< Move the final APK from temporary to user-specified directory.
 

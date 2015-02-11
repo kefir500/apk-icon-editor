@@ -21,6 +21,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     apk = new Apk(this);
     effects = new EffectsDialog(this);
     toolDialog = new ToolDialog(this);
+    keyManager = new KeyManager(this);
     updater = new Updater(this);
     translator = new QTranslator(this);
     translatorQt = new QTranslator(this);
@@ -71,6 +72,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     actIconEffect = new QAction(this);
     actIconBack = new QAction(this);
     actPacking = new QAction(this);
+    actKeys = new QAction(this);
     menuLang = new QMenu(this);
     actAutoUpdate = new QAction(this);
     actAssoc = new QAction(this);
@@ -98,6 +100,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     menuIcon->addSeparator();
     menuIcon->addAction(actIconBack);
     menuSett->addAction(actPacking);
+    menuSett->addAction(actKeys);
     menuSett->addSeparator();
     menuSett->addMenu(menuLang);
     menuSett->addAction(actAutoUpdate);
@@ -135,9 +138,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     actIconRevert->setShortcut(QKeySequence("Ctrl+Z"));
     actIconEffect->setShortcut(QKeySequence("Ctrl+F"));
     actPacking->setShortcut(QKeySequence("Ctrl+P"));
+    actKeys->setShortcut(QKeySequence("Ctrl+K"));
     actFaq->setShortcut(QKeySequence("F1"));
     actIconEffect->setIcon(QIcon(":/gfx/effects.png"));
     actPacking->setIcon(QIcon(":/gfx/task-pack.png"));
+    actKeys->setIcon(QIcon(":/gfx/key.png"));
     actFaq->setIcon(QIcon(":/gfx/help.png"));
     actReport->setIcon(QIcon(":/gfx/bug.png"));
     actAbout->setIcon(QIcon(":/gfx/apk-icon-editor.png"));
@@ -270,6 +275,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     connect(actIconEffect, SIGNAL(triggered()), this, SLOT(showEffectsDialog()));
     connect(actIconBack, SIGNAL(triggered()), this, SLOT(setPreviewColor()));
     connect(actPacking, SIGNAL(triggered()), toolDialog, SLOT(open()));
+    connect(actKeys, SIGNAL(triggered()), keyManager, SLOT(open()));
     connect(actAssoc, SIGNAL(triggered()), this, SLOT(associate()));
     connect(actReset, SIGNAL(triggered()), this, SLOT(resetSettings()));
     connect(actWebsite, SIGNAL(triggered()), this, SLOT(browseSite()));
@@ -295,6 +301,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     connect(apk, SIGNAL(warning(QString, QString)), this, SLOT(warning(QString, QString)));
     connect(apk, SIGNAL(packed(QString, bool, QString)), this, SLOT(apkPacked(QString, bool, QString)));
     connect(apk, SIGNAL(unpacked(QString)), this, SLOT(apkUnpacked(QString)));
+    connect(keyManager, SIGNAL(success(QString, QString)), this, SLOT(success(QString, QString)));
+    connect(keyManager, SIGNAL(warning(QString, QString)), this, SLOT(warning(QString, QString)));
+    connect(keyManager, SIGNAL(error(QString, QString)), this, SLOT(error(QString, QString)));
     connect(dropbox, SIGNAL(auth_required()), this, SLOT(authCloud()));
     connect(dropbox, SIGNAL(progress(short, QString)), uploadDialog, SLOT(setProgress(short, QString)));
     connect(dropbox, SIGNAL(error(QString, QString)), this, SLOT(error(QString, QString)));
@@ -393,6 +402,16 @@ void MainWindow::restoreSettings()
         bool sUpload = settings->value("Upload", true).toBool();
     settings->endGroup();
 
+    settings->beginGroup("Key");
+        QString sFilePem = settings->value("PEM", KEYS_DIR + "certificate.pem").toString();
+        QString sFilePk8 = settings->value("PK8", KEYS_DIR + "key.pk8").toString();
+        QString sFileKey = settings->value("KeyStore", "").toString();
+        QString sAlias = settings->value("Alias", "").toString();
+        QString sPassStore = settings->value("PassStore", "").toString();
+        QString sPassAlias = settings->value("PassAlias", "").toString();
+        bool bIsKeystore = settings->value("Method", false).toBool();
+    settings->endGroup();
+
     settings->beginGroup("Dropbox");
         QString sDropbox = settings->value("Token", "").toString();
         bool bDropbox = settings->value("Enable", false).toBool();
@@ -431,6 +450,19 @@ void MainWindow::restoreSettings()
     toolDialog->setSmali(sSmali);
     toolDialog->setSign(sSign);
     toolDialog->setOptimize(sOptimize);
+    keyManager->setFilePem(sFilePem);
+    keyManager->setFilePk8(sFilePk8);
+    keyManager->setFileKey(sFileKey);
+    keyManager->setAlias(sAlias);
+    crypt->setKey(SIMPLECRYPT_KEY);
+    sPassStore = crypt->decryptToString(sPassStore);
+    sPassAlias = crypt->decryptToString(sPassAlias);
+    crypt->setKey(keyMac);
+    sPassStore = crypt->decryptToString(sPassStore);
+    sPassAlias = crypt->decryptToString(sPassAlias);
+    keyManager->setPassStore(sPassStore);
+    keyManager->setPassAlias(sPassAlias);
+    keyManager->setIsKeyStore(bIsKeystore);
     actAutoUpdate->setChecked(sUpdate);
     dropbox->setToken(sDropbox);
     gdrive->setToken(sGDrive);
@@ -515,6 +547,7 @@ void MainWindow::setLanguage(QString lang)
     actIconEffect->setText(tr("E&ffects"));
     actIconBack->setText(tr("Preview Background &Color"));
     actPacking->setText(tr("&Repacking"));
+    actKeys->setText(tr("Key Manager"));
     menuLang->setTitle(tr("&Language"));
     actTranslate->setText(tr("Help Translate"));
     actAutoUpdate->setText(tr("Auto-check for Updates"));
@@ -534,6 +567,7 @@ void MainWindow::setLanguage(QString lang)
 
     effects->retranslate();
     toolDialog->retranslate();
+    keyManager->retranslate();
 }
 
 void MainWindow::addToRecent(QString filename)
@@ -1040,6 +1074,35 @@ void MainWindow::apkSave()
 
     QString filename = QFileDialog::getSaveFileName(this, tr("Pack APK"), currentPath, "APK (*.apk)");
     if (!filename.isEmpty()) {
+
+        const QPixmap PIXMAP_KEY(":/gfx/key.png");
+
+        QString alias = keyManager->getAlias();
+        QString pass_store = keyManager->getPassStore();
+        QString pass_alias = keyManager->getPassAlias();
+
+        const bool USING_KEYSTORE = keyManager->getIsKeystore();
+        if (USING_KEYSTORE) {
+            if (pass_store.isEmpty()) {
+                pass_store = InputDialog::getString(NULL, tr("Enter the KeyStore password:"),
+                                                    true, PIXMAP_KEY.scaled(16, 16,
+                                                                            Qt::IgnoreAspectRatio,
+                                                                            Qt::SmoothTransformation), this);
+            }
+            if (alias.isEmpty()) {
+                alias = InputDialog::getString(NULL, tr("Enter the alias:"),
+                                               false, PIXMAP_KEY.scaled(16, 16,
+                                                                        Qt::IgnoreAspectRatio,
+                                                                        Qt::SmoothTransformation), this);
+            }
+            if (pass_alias.isEmpty()) {
+                pass_alias = InputDialog::getString(NULL, tr("Enter the alias password:"),
+                                                    true, PIXMAP_KEY.scaled(16, 16,
+                                                                            Qt::IgnoreAspectRatio,
+                                                                            Qt::SmoothTransformation), this);
+            }
+        }
+
         currentPath = QFileInfo(filename).absolutePath();
         loadingDialog->setProgress(0);
 
@@ -1050,6 +1113,13 @@ void MainWindow::apkSave()
         opts.isSmali = toolDialog->getSmali();
         opts.isSign = toolDialog->getSign();
         opts.isOptimize = toolDialog->getOptimize();
+        opts.filePem = keyManager->getFilePem();
+        opts.filePk8 = keyManager->getFilePk8();
+        opts.fileKey = keyManager->getFileKey();
+        opts.isKeystore = USING_KEYSTORE;
+        opts.alias = alias;
+        opts.passStore = pass_store;
+        opts.passAlias = pass_alias;
         opts.appName = editAppName->text();
         opts.appVersionName = editVersionName->text();
         opts.appVersionCode = editVersionCode->text();
@@ -1306,6 +1376,24 @@ void MainWindow::closeEvent(QCloseEvent *event)
         settings->setValue("Sign", toolDialog->getSign());
         settings->setValue("Optimize", toolDialog->getOptimize());
         settings->setValue("Upload", checkUpload->isChecked());
+    settings->endGroup();
+
+    settings->beginGroup("Key");
+        settings->setValue("PK8", keyManager->getFilePk8());
+        settings->setValue("PEM", keyManager->getFilePem());
+        settings->setValue("KeyStore", keyManager->getFileKey());
+        settings->setValue("Alias", keyManager->getAlias());
+        QString passStore = keyManager->getPassStore();
+        QString passAlias = keyManager->getPassAlias();
+        crypt->setKey(keyMac);
+        passStore = crypt->encryptToString(passStore);
+        passAlias = crypt->encryptToString(passAlias);
+        crypt->setKey(SIMPLECRYPT_KEY);
+        passStore = crypt->encryptToString(passStore);
+        passAlias = crypt->encryptToString(passAlias);
+        settings->setValue("PassStore", passStore);
+        settings->setValue("PassAlias", passAlias);
+        settings->setValue("Method", keyManager->getIsKeystore());
     settings->endGroup();
 
     settings->beginGroup("Dropbox");

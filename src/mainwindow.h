@@ -22,6 +22,7 @@
 #include "drawarea.h"
 #include "effects.h"
 #include "tooldialog.h"
+#include "keymanager.h"
 #include "dialogs.h"
 #include "updater.h"
 #include "cloud.h"
@@ -54,6 +55,7 @@ private:
     QPushButton *btnPack;
     EffectsDialog *effects;
     ToolDialog *toolDialog;
+    KeyManager *keyManager;
     ProgressDialog *loadingDialog;
     ProgressDialog *uploadDialog;
     QSignalMapper *mapLang;
@@ -87,6 +89,7 @@ private:
     QAction *actIconBack;
     QAction *actIconEffect;
     QAction *actPacking;
+    QAction *actKeys;
     QAction *actTranslate;
     QAction *actAssoc;
     QAction *actReset;
