@@ -1,8 +1,8 @@
 !define APPNAME "APK Icon Editor"
 !define COMPANYNAME "Qwerty Minds"
 !define VERSIONMAJOR 1
-!define VERSIONMINOR 1
-!define VERSION "${VERSIONMAJOR}.${VERSIONMINOR}.2"
+!define VERSIONMINOR 2
+!define VERSION "${VERSIONMAJOR}.${VERSIONMINOR}.0"
 !define ABOUTURL "http://kefir500.github.io/apk-icon-editor"
 !define UPDATEURL "http://kefir500.github.io/apk-icon-editor/download/#update"
 !define EXE "$INSTDIR\apk-icon-editor.exe"
@@ -140,14 +140,21 @@ Section "-un.Uninstall"
 	Delete "$INSTDIR\lang\flag.fr.png"
 	Delete "$INSTDIR\lang\flag.ru.png"
 	Delete "$INSTDIR\lang\flag.zh.png"
-	Delete "$INSTDIR\licenses\7za.txt"
+	Delete "$INSTDIR\licenses\aapt.txt"
+	Delete "$INSTDIR\licenses\apk-icon-editor.txt"
 	Delete "$INSTDIR\licenses\apktool.txt"
 	Delete "$INSTDIR\licenses\opensans.txt"
+	Delete "$INSTDIR\licenses\quazip.txt"
+	Delete "$INSTDIR\licenses\simplecrypt.txt"
 	Delete "$INSTDIR\platforms\qwindows.dll"
 	Delete "$INSTDIR\signer\certificate.pem"
 	Delete "$INSTDIR\signer\key.pk8"
 	Delete "$INSTDIR\signer\signapk.jar"
 	Delete "$INSTDIR\uninstall.exe"
+	# Previous versions
+	Delete "$INSTDIR\7za.exe"
+	Delete "$INSTDIR\licenses\7za.txt"
+	# Previous versions END
 	RMDir "$INSTDIR\gfx"
 	RMDir "$INSTDIR\imageformats"
 	RMDir "$INSTDIR\lang"
