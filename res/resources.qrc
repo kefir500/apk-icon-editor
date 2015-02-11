@@ -12,5 +12,9 @@
         <file>gfx/task-pack.png</file>
         <file>fonts/OpenSans-Light.ttf</file>
         <file>gfx/icon-upload.png</file>
+        <file>gfx/key.png</file>
+        <file>gfx/help.png</file>
+        <file>gfx/apk-icon-editor.png</file>
+        <file>gfx/open.png</file>
     </qresource>
 </RCC>
