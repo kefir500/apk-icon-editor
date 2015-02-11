@@ -528,20 +528,31 @@ bool Apk::zip_apktool() const
     }
 }
 
-bool Apk::isJavaInstalled(bool debug)
+bool Apk::isJavaInstalled(Java type, bool debug)
 {
     QProcess p;
-    p.start("java -version");
+    QString prefix;
+    switch (type) {
+    case JRE:
+        p.start("java -version");
+        prefix = "JRE";
+        break;
+    case JDK:
+        p.start("javac -version");
+        prefix = "JDK";
+        break;
+    }
     if (p.waitForStarted(-1)) {
         p.waitForFinished(-1);
         if (debug) {
+            qDebug() << prefix << "32-bit found:";
             qDebug() << p.readAllStandardError().trimmed();
         }
         return true;
     }
     else {
         if (debug) {
-            qDebug() << "Java 32-bit not found!";
+            qDebug() << prefix << "32-bit not found!";
         }
         return false;
     }

@@ -128,10 +128,13 @@ public:
     QString getMinimumSdk() const;          ///< Returns APK minimum SDK version.
     QString getTargetSdk() const;           ///< Returns APK target SDK version.
 
+    enum Java { JRE, JDK };
+
     /// \brief Check if Java Runtime Environment is installed.
+    /// \param[in] type JRE/JDK.
     /// \param[in] debug If \c TRUE, writes info to the log file.
     /// \return \c TRUE if Java Runtime Environment is installed.
-    static bool isJavaInstalled(bool debug = false);
+    static bool isJavaInstalled(Java type = JRE, bool debug = false);
 
     void unpack(PackOptions options);       ///< Unpack APK by calling private #doUnpack method in a separate #thread.
     void pack(PackOptions options);         ///< Pack APK by calling private #doPack method in a separate #thread.

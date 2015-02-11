@@ -319,7 +319,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     connect(updater, SIGNAL(version(QString)), this, SLOT(newVersion(QString)));
     connect(this, SIGNAL(destroyed()), apk, SLOT(clearTemp()));
 
-    Apk::isJavaInstalled(true);
+    Apk::isJavaInstalled(Apk::JRE, true);
+    Apk::isJavaInstalled(Apk::JDK, true);
     restoreSettings();
 
     if (actAutoUpdate->isChecked()) {
