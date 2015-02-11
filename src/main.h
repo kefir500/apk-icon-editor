@@ -45,7 +45,7 @@ const int WINDOW_WIDTH      = 800;
 const int WINDOW_HEIGHT     = 480;
 
 // Application:
-const QString VER           = "1.1.2";
+const QString VER           = "1.2.0";
 const QString URL_WEBSITE   = "http://kefir500.github.io/apk-icon-editor/";
 const QString URL_GITHUB    = "https://github.com/kefir500/apk-icon-editor/";
 const QString URL_VERSION   = URL_WEBSITE + "VERSION";
