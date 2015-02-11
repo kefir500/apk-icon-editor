@@ -17,6 +17,7 @@
 #include <QTranslator>
 #include <QSettings>
 #include <QCloseEvent>
+#include <SimpleCrypt/simplecrypt.h>
 #include "apk.h"
 #include "combolist.h"
 #include "drawarea.h"
@@ -63,6 +64,7 @@ private:
     QTranslator *translator;
     QTranslator *translatorQt;
     QSettings *settings;
+    SimpleCrypt *crypt;
 
     // Menus:
     QMenu *menuFile;
@@ -110,6 +112,7 @@ private:
     QString currentLang;
     QString currentPath;
     QStringList recent;
+    quint64 keyMac;
 
     void setActiveApk(QString filename);    ///< Mark \c filename as currently active.
     void addToRecent(QString filename);     ///< Add \c filename to recent list.
@@ -121,6 +124,7 @@ private:
 
     void initLanguages();                   ///< Initialize available languages.
     void initProfiles();                    ///< Initialize available profiles.
+    void initCrypt();                       ///< Initialize cryptographic system.
 
     /// Upload file to cloud service.
     void upload(Cloud *uploader, QString filename);

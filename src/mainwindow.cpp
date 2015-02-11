@@ -11,6 +11,7 @@
 #include <QMimeData>
 #include <QTextCodec>
 #include <QDesktopServices>
+#include <QNetworkInterface>
 #include <QApplication>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
@@ -256,6 +257,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
     initLanguages();
     initProfiles();
+    initCrypt();
     hideEmptyDpi();
 
     connect(drawArea, SIGNAL(clicked()), this, SLOT(apkLoad()));
@@ -378,6 +380,28 @@ void MainWindow::initProfiles()
             Dpi DPI = static_cast<Dpi>(j);
             devices->addItem(profile.title(), profile.getDpiTitle(DPI));
         }
+    }
+}
+
+void MainWindow::initCrypt()
+{
+    crypt = new SimpleCrypt();
+    QString strKeyMac;
+    foreach (QNetworkInterface net, QNetworkInterface::allInterfaces()) {
+        if (!(net.flags() & QNetworkInterface::IsLoopBack)) {
+            QStringList mac = net.hardwareAddress().split(':');
+            if (mac.size() >= 6) {
+                strKeyMac = "0x" + mac[0] + mac[1] + mac[2]
+                                 + mac[3] + mac[4] + mac[5]
+                                 + mac[0] + mac[1];
+                break;
+            }
+        }
+    }
+    bool ok;
+    keyMac = strKeyMac.toULongLong(&ok, 16);
+    if (!ok) {
+        keyMac = SIMPLECRYPT_KEY;
     }
 }
 
