@@ -350,10 +350,7 @@ void KeyCreator::accept()
 
     if (p.waitForStarted(-1)) {
         p.waitForFinished(10000);
-        if (p.exitCode() == 0) {
-            // TODO fire signal FILENAME
-        }
-        else {
+        if (p.exitCode() != 0) {
             QString error_text = p.readAllStandardError().trimmed();
             if (error_text.isEmpty()) error_text = p.readAllStandardOutput().trimmed();
             qDebug() << qPrintable(QString("Keytool exit code: %1").arg(p.exitCode()));
