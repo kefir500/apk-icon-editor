@@ -414,9 +414,9 @@ void MainWindow::restoreSettings()
     QString sProfile = settings->value("Profile", "").toString();
     QString sLanguage = settings->value("Language", LOCALE).toString();
     QString sLastDir = settings->value("Directory", "").toString();
-    QByteArray sGeometry = settings->value("Geometry", NULL).toByteArray();
-    QByteArray sSplitter = settings->value("Splitter", NULL).toByteArray();
-    QStringList sRecent = settings->value("Recent", NULL).toStringList();
+    QByteArray sGeometry = settings->value("Geometry", 0).toByteArray();
+    QByteArray sSplitter = settings->value("Splitter", 0).toByteArray();
+    QStringList sRecent = settings->value("Recent", 0).toStringList();
     bool sUpdate = settings->value("Update", true).toBool();
 
     settings->beginGroup("APK");

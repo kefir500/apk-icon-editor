@@ -33,7 +33,7 @@ private:
         QString title;      ///< Preset title ("LDPI", "MDPI"...).
         QString info;       ///< Preset additional information.
         short side;         ///< Expected side of square icon.
-        DpiPreset(QString _title, short _side) : side(_side), title(_title) { }
+        DpiPreset(QString _title, short _side) : title(_title), side(_side) { }
     };
 
     static QList<Profile> profiles; ///< Static list of initialized profiles. Filled in #init method.
