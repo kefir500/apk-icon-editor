@@ -1191,7 +1191,7 @@ void MainWindow::browseBugs() const
 void MainWindow::browseFaq() const
 {
     const QString APPDIR(QApplication::applicationDirPath());
-    QDesktopServices::openUrl(QUrl::fromLocalFile(QString("file:///%1/faq.txt").arg(APPDIR)));
+    QDesktopServices::openUrl(QUrl::fromLocalFile(QString("%1/faq.txt").arg(APPDIR)));
 }
 
 void MainWindow::about()
