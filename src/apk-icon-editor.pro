@@ -1,28 +1,29 @@
-QT += core network
+QT += core widgets network
 TEMPLATE = app
+
+VERSION = 1.2.0
+QMAKE_TARGET_COMPANY = Qwerty Minds
+QMAKE_TARGET_DESCRIPTION = A tool designed to easily edit and replace APK icons
+QMAKE_TARGET_COPYRIGHT = Copyright (C) 2014-2015
 
 CONFIG(release, debug|release) {
     TARGET = apk-icon-editor
-    OBJECTS_DIR = ../build/release
-    MOC_DIR = ../build/release
-    RCC_DIR = ../build/release
+    QMAKE_TARGET_PRODUCT = APK Icon Editor
 }
 
 CONFIG(debug, debug|release) {
     TARGET = apk-icon-editor-debug
-    OBJECTS_DIR = ../build/debug
-    MOC_DIR = ../build/debug
-    RCC_DIR = ../build/debug
+    QMAKE_TARGET_PRODUCT = APK Icon Editor (Debug)
 }
 
-greaterThan(QT_MAJOR_VERSION, 4) {
-    QT += widgets
-    win32 {
-        isEqual(QT_MAJOR_VERSION, 5) {
-            greaterThan(QT_MINOR_VERSION, 1): QT += winextras
-        } else {
-            QT += winextras
-        }
+DEFINES += APP='"\\\"$$QMAKE_TARGET_PRODUCT\\\""'
+DEFINES += VER=\\\"$$VERSION\\\"
+
+win32 {
+    isEqual(QT_MAJOR_VERSION, 5) {
+        greaterThan(QT_MINOR_VERSION, 1): QT += winextras
+    } else {
+        QT += winextras
     }
 }
 
@@ -63,6 +64,8 @@ INCLUDEPATH += $$[QT_INSTALL_HEADERS]/QtZlib
 win32 {
     DESTDIR = ../bin/win32
     LIBS += -L../lib/bin/win32
+    RC_ICONS = ../res/icons/icon.ico \
+               ../res/icons/icon-apk.ico
 }
 
 macx {
@@ -82,4 +85,3 @@ DEFINES += QUAZIP_STATIC
 
 TRANSLATIONS += ../lang/apk-icon-editor.en.ts
 RESOURCES += ../res/resources.qrc
-RC_FILE += ../res/icon.rc

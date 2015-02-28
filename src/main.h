@@ -29,12 +29,6 @@
 
 #include <QDir>
 
-#ifndef QT_DEBUG
-    const QString APP = "APK Icon Editor";
-#else
-    const QString APP = "APK Icon Editor (DEBUG)";
-#endif
-
 #if defined(Q_OS_WIN) && (QT_VERSION >= QT_VERSION_CHECK(5, 2, 0))
     #define WINEXTRAS 1
 #else
@@ -45,7 +39,6 @@ const int WINDOW_WIDTH      = 800;
 const int WINDOW_HEIGHT     = 480;
 
 // Application:
-const QString VER           = "1.2.0";
 const QString URL_WEBSITE   = "http://kefir500.github.io/apk-icon-editor/";
 const QString URL_GITHUB    = "https://github.com/kefir500/apk-icon-editor/";
 const QString URL_VERSION   = URL_WEBSITE + "VERSION";
