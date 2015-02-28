@@ -16,7 +16,7 @@ RequestExecutionLevel admin
 !include MUI2.nsh
 !include nsProcess\nsProcess.nsh
 
-!define MUI_ICON "gfx\icon.ico"
+!define MUI_ICON "..\res\icons\icon.ico"
 !define MUI_WELCOMEFINISHPAGE_BITMAP "gfx\welcome.bmp"
 !define MUI_HEADERIMAGE
 !define MUI_HEADERIMAGE_RIGHT
