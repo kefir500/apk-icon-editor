@@ -58,6 +58,7 @@ HEADERS += main.h \
            keys.h
 
 INCLUDEPATH += ../lib/include
+INCLUDEPATH += $$[QT_INSTALL_HEADERS]/QtZlib
 
 win32 {
     DESTDIR = ../bin/win32
