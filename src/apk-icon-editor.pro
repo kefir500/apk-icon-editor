@@ -63,21 +63,19 @@ INCLUDEPATH += $$[QT_INSTALL_HEADERS]/QtZlib
 
 win32 {
     DESTDIR = ../bin/win32
-    LIBS += -L../lib/bin/win32
     RC_ICONS = ../res/icons/icon.ico \
                ../res/icons/icon-apk.ico
 }
 
 macx {
     DESTDIR = ../bin/macosx
-    LIBS += -L../lib/bin/macosx
 }
 
 unix:!macx {
     DESTDIR = ../bin/linux
-    LIBS += -L../lib/bin/linux
 }
 
+LIBS += -L../lib/bin
 LIBS += -lquazip \
         -lsimplecrypt
 

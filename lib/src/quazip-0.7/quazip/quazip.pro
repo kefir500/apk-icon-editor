@@ -80,3 +80,7 @@ symbian {
         BLD_INF_RULES.prj_exports += "$$header $$exportheaders.path/$$basename(header)"
     }
 }
+
+# APK Icon Editor destination directory:
+
+DESTDIR = ../../../bin
