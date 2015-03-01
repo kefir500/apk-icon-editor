@@ -429,8 +429,8 @@ void MainWindow::restoreSettings()
     settings->endGroup();
 
     settings->beginGroup("Key");
-        QString sFilePem = settings->value("PEM", KEYS_DIR + "certificate.pem").toString();
-        QString sFilePk8 = settings->value("PK8", KEYS_DIR + "key.pk8").toString();
+        QString sFilePem = settings->value("PEM", "").toString();
+        QString sFilePk8 = settings->value("PK8", "").toString();
         QString sFileKey = settings->value("KeyStore", "").toString();
         QString sAlias = settings->value("Alias", "").toString();
         QString sPassStore = settings->value("PassStore", "").toString();
@@ -476,8 +476,8 @@ void MainWindow::restoreSettings()
     toolDialog->setSmali(sSmali);
     toolDialog->setSign(sSign);
     toolDialog->setOptimize(sOptimize);
-    keyManager->setFilePem(sFilePem);
-    keyManager->setFilePk8(sFilePk8);
+    keyManager->setFilePem(QFile::exists(sFilePem) ? sFilePem : KEYS_DIR + "certificate.pem");
+    keyManager->setFilePk8(QFile::exists(sFilePk8) ? sFilePk8 : KEYS_DIR + "key.pk8");
     keyManager->setFileKey(sFileKey);
     keyManager->setAlias(sAlias);
     crypt->setKey(SIMPLECRYPT_KEY);
