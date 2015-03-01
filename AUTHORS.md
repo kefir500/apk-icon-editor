@@ -7,7 +7,8 @@
 ## Translations
 - Chinese (China) – [QQ775405984](https://www.transifex.com/accounts/profile/775405984)
 - French – [Stold](https://www.transifex.com/accounts/profile/Stold), [AzRock](https://www.transifex.com/accounts/profile/AzRock)
-- German – [Sebastian Herrmann](https://www.transifex.com/accounts/profile/herrherrmann)
+- German – [Sebastian Herrmann](https://www.transifex.com/accounts/profile/herrherrmann), [Wasilis Mandratzis-Walz](https://www.transifex.com/accounts/profile/beonex)
+- Greek – [Wasilis Mandratzis-Walz](https://www.transifex.com/accounts/profile/beonex), [Manos Santos](https://www.transifex.com/accounts/profile/goldensacrum)
 - Russian – [Alexander Gorishnyak](https://www.transifex.com/accounts/profile/kefir500)
 
 ## Contributors
