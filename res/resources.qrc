@@ -16,5 +16,6 @@
         <file>gfx/help.png</file>
         <file>gfx/apk-icon-editor.png</file>
         <file>gfx/open.png</file>
+        <file>gfx/icon-blackberry.png</file>
     </qresource>
 </RCC>

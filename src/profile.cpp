@@ -20,9 +20,14 @@ Profile::Profile(QString title, QIcon icon,
 void Profile::init()
 {
     const QIcon ANDROID(":/gfx/icon-android.png");
+    const QIcon BLACKBERRY(":/gfx/icon-blackberry.png");
     const QIcon KINDLE(":/gfx/icon-kindle.png");
 
     Profile android("Android Default", ANDROID, 36, 48, 72, 96, 144, 192);
+    Profile bb_q10("BlackBerry Q10", BLACKBERRY, 90, 90, 90, 90, 90, 90);
+    Profile bb_z10("BlackBerry Z10", BLACKBERRY, 110, 110, 110, 110, 110, 110);
+    Profile bb_z30("BlackBerry Z30", BLACKBERRY, 96, 96, 96, 96, 96, 96);
+    Profile bb_passport("BlackBerry Passport", BLACKBERRY, 144, 144, 144, 144, 144, 144);
     Profile kindle1("Kindle Fire (1st Gen)", KINDLE, 36, 322, 72, 96, 144, 192);
     Profile kindle2("Kindle Fire (2nd Gen)", KINDLE, 36, 365, 72, 96, 144, 192);
     Profile kindle3("Kindle Fire HD 7\" (2nd Gen)", KINDLE, 36, 48, 425, 96, 144, 192);
@@ -43,6 +48,10 @@ void Profile::init()
     kindle8.presets[XHDPI].info = "Kindle Fire HDX Carousel";
 
     profiles.push_back(android);
+    profiles.push_back(bb_q10);
+    profiles.push_back(bb_z10);
+    profiles.push_back(bb_z30);
+    profiles.push_back(bb_passport);
     profiles.push_back(kindle1);
     profiles.push_back(kindle2);
     profiles.push_back(kindle3);
