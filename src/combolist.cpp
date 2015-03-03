@@ -11,6 +11,7 @@ ComboList::ComboList(QWidget *parent) : QWidget(parent)
     combo = new QComboBox(this);
     combo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     combo->setStyleSheet("QComboBox {padding: 4px}");
+    qobject_cast<QListView *>(combo->view())->setSpacing(1);
     list = new QListWidget(this);
 
     titleLayout->addWidget(label);
