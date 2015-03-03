@@ -9,6 +9,7 @@
 - French – [Stold](https://www.transifex.com/accounts/profile/Stold), [AzRock](https://www.transifex.com/accounts/profile/AzRock)
 - German – [Sebastian Herrmann](https://www.transifex.com/accounts/profile/herrherrmann), [Wasilis Mandratzis-Walz](https://www.transifex.com/accounts/profile/beonex)
 - Greek – [Wasilis Mandratzis-Walz](https://www.transifex.com/accounts/profile/beonex), [Manos Santos](https://www.transifex.com/accounts/profile/goldensacrum)
+- Portuguese (Brazil) – [Valnei Júnior](https://www.transifex.com/accounts/profile/valneijr)
 - Russian – [Alexander Gorishnyak](https://www.transifex.com/accounts/profile/kefir500)
 
 ## Contributors
