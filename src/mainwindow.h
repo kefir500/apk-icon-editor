@@ -36,6 +36,7 @@ private:
     DrawArea *drawArea;
     QTabWidget *tabs;
     ComboList *devices;
+    QPushButton *btnApplyIcons;
     QLabel *labelTool;
     QToolButton *btnTool;
     QLabel *labelAppName;
@@ -188,6 +189,7 @@ private slots:
     void setPreviewColor();         ///< Show dialog to select background preview color.
     void showEffectsDialog();       ///< Show "Effects" dialog.
     void hideEmptyDpi();            ///< Hide unused (empty) icons from \c profiles widget.
+    void cloneIcons();              ///< Apply current icon to all DPI sizes.
     void switchTool();              ///< Switch current repacking tool ("7za"/"apktool").
     void enableApktool(bool value); ///< Enable or disable application name/version editing.
     void stringChanged(int, int);   ///< Handle translation cell changes.

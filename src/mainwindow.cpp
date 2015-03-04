@@ -165,10 +165,17 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
     uploadDialog = new ProgressDialog(this);
 
+    QWidget *tabIcons = new QWidget(this);
+    QVBoxLayout *layoutIcons = new QVBoxLayout(tabIcons);
     devices = new ComboList(this);
     devices->addActions(menuIcon->actions());
-    devices->setContentsMargins(4, 4, 4, 4);
     devices->setEnabled(false);
+    btnApplyIcons = new QPushButton(this);
+    btnApplyIcons->setEnabled(false);
+    layoutIcons->addWidget(devices);
+    layoutIcons->addWidget(btnApplyIcons);
+    layoutIcons->setMargin(4);
+
     QWidget *tabStrings = new QWidget(this);
     QGridLayout *layoutStrings = new QGridLayout(tabStrings);
     labelAppName = new QLabel(this);
@@ -219,7 +226,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     layoutStrings->setMargin(4);
 
     tabs = new QTabWidget(this);
-    tabs->addTab(devices, NULL);
+    tabs->addTab(tabIcons, NULL);
     tabs->addTab(tabStrings, NULL);
 
     checkDropbox = new QCheckBox(this);
@@ -288,6 +295,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     connect(actAbout, SIGNAL(triggered()), this, SLOT(about()));
     connect(btnPack, SIGNAL(clicked()), this, SLOT(apkSave()));
     connect(mapRecent, SIGNAL(mapped(QString)), this, SLOT(apkLoad(QString)));
+    connect(btnApplyIcons, SIGNAL(clicked()), this, SLOT(cloneIcons()));
     connect(tableStrings, SIGNAL(cellChanged(int, int)), this, SLOT(stringChanged(int, int)));
     connect(editAppName, SIGNAL(textEdited(QString)), this, SLOT(setModified()));
     connect(editVersionCode, SIGNAL(valueChanged(int)), this, SLOT(setModified()));
@@ -542,6 +550,7 @@ void MainWindow::setLanguage(QString lang)
     tabs->setTabText(1, tr("Properties"));
     tabs->setTabText(2, tr("Details"));
     devices->setLabelText(tr("Device:"));
+    btnApplyIcons->setText(tr("Apply to All"));
     labelAppName->setText(tr("Application Name") + ':');
     labelVersionName->setText(tr("Version Name") + ':');
     labelVersionCode->setText(tr("Version Code") + ':');
@@ -658,6 +667,22 @@ void MainWindow::connectRepaintSignals()
     connect(effects, SIGNAL(colorDepth(qreal)), drawArea, SLOT(repaint()));
     connect(effects, SIGNAL(blur(qreal)), drawArea, SLOT(repaint()));
     connect(effects, SIGNAL(round(qreal)), drawArea, SLOT(repaint()));
+}
+
+void MainWindow::cloneIcons()
+{
+    Icon *newIcon = drawArea->getIcon();
+    if (!newIcon->isNull()) {
+        if (QMessageBox::question(this, NULL, tr("Apply the current icon to all sizes?"))
+         == QMessageBox::Yes) {
+            for (short i = LDPI; i < DPI_COUNT; ++i) {
+                const Dpi DPI = static_cast<Dpi>(i);
+                Icon *oldIcon = apk->getIcon(DPI);
+                oldIcon->replace(newIcon->getPixmap());
+            }
+        }
+        setWindowModified(true);
+    }
 }
 
 void MainWindow::stringChanged(int row, int col)
@@ -876,6 +901,7 @@ void MainWindow::apkUnpacked(QString filename)
     actIconEffect->setEnabled(true);
     actIconResize->setEnabled(true);
     actIconScale->setEnabled(true);
+    btnApplyIcons->setEnabled(true);
     if (toolDialog->getUseApktool()) {
         editAppName->setEnabled(true);
         editVersionCode->setEnabled(true);
