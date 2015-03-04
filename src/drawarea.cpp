@@ -50,9 +50,9 @@ void DrawArea::paintEvent(QPaintEvent *event)
         const int x = width()/2 - rect_w/2;
         const int y = height()/2 - rect_h/2;
         painter.fillRect(x+1, y+1, rect_w-1, rect_h-1, background);
-        //if (background == palette().color(QPalette::Background)) {
+        if (background == palette().color(QPalette::Window)) {
             painter.fillRect(x+1, y+1, rect_w-1, rect_h-1, Qt::Dense7Pattern);
-        //}
+        }
         painter.drawPixmap(width()/2 - icon->width()/2,
                            height()/2 - icon->height()/2,
                            icon->getPixmap());
