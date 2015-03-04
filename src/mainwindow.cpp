@@ -888,10 +888,6 @@ void MainWindow::apkUnpacked(QString filename)
     editVersionCode->setValue(apk->getVersionCode().toInt());
     editVersionName->setText(apk->getVersionName());
 
-    qDebug() << "Application name:" << editAppName->text();
-    qDebug() << "Application version code:" << editVersionCode->text();
-    qDebug() << "Application version name:" << editVersionName->text() << '\n';
-
     // Enable operations with APK and icons:
     actApkSave->setEnabled(true);
     actApkExplore->setEnabled(true);
