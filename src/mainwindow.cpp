@@ -384,7 +384,7 @@ void MainWindow::initProfiles()
     for (int i = 0; i < Profile::count(); ++i) {
         Profile profile = Profile::at(i);
         devices->addGroup(profile.title(), profile.thumb());
-        for (int j = LDPI; j < DPI_COUNT; ++j) {
+        for (short j = LDPI; j < DPI_COUNT; ++j) {
             Dpi DPI = static_cast<Dpi>(j);
             devices->addItem(profile.title(), profile.getDpiTitle(DPI));
         }
