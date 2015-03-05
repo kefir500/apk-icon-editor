@@ -1,8 +1,5 @@
 #include "../../updater.h"
-#include <QString>
 #include <QtTest>
-#include <QCoreApplication>
-#include <QDebug>
 
 class TestVersion : public QObject {
     Q_OBJECT

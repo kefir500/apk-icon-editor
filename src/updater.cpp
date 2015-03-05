@@ -8,6 +8,10 @@
     #include <windows.h>
 #endif
 
+#ifndef VER
+    #define VER "0.0"
+#endif
+
 Updater::Updater(QObject *parent) : QObject(parent)
 {
     http = new QNetworkAccessManager(this);
