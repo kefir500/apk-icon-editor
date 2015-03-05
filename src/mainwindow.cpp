@@ -698,8 +698,8 @@ void MainWindow::applyAppName()
 {
     QString name = editAppName->text();
     if (!name.isEmpty()) {
-        if (QMessageBox::question(this, NULL, tr("Apply current application name to all translations?"))
-        == QMessageBox::Yes) {
+        if (QMessageBox::question(this, NULL, tr("Apply the current application name to all translations?"))
+         == QMessageBox::Yes) {
             for (int i = 0; i < tableStrings->rowCount(); ++i) {
                 tableStrings->item(i, 1)->setText(name);
             }
