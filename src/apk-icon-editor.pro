@@ -72,7 +72,6 @@ macx {
     ICON = ../res/icons/icon.icns
     QMAKE_MAC_SDK = macosx10.7
     QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.7
-    LIBS += -L../lib/bin/macosx
     LIBS += -lz
 }
 
