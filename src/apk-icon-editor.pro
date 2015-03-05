@@ -69,6 +69,11 @@ win32 {
 
 macx {
     DESTDIR = ../bin/macosx
+    ICON = ../res/icons/icon.icns
+    QMAKE_MAC_SDK = macosx10.7
+    QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.7
+    LIBS += -L../lib/bin/macosx
+    LIBS += -lz
 }
 
 unix:!macx {
