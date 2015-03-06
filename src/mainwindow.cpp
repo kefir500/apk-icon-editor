@@ -200,7 +200,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     tableStrings->setSelectionMode(QTableWidget::SingleSelection);
     labelApktool = new QLabel(this);
     labelApktool->setWordWrap(true);
+#ifndef Q_OS_UNIX
     labelApktool->setFont(QFont("Open Sans Light", 10));
+#endif
     labelApktool->setAlignment(Qt::AlignCenter);
     labelApktool->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::MinimumExpanding);
     btnRepacking = new QPushButton(this);

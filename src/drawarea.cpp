@@ -12,7 +12,11 @@ const QString STYLE_DEFAULT =
 
 DrawArea::DrawArea(QWidget *parent) : QLabel(parent)
 {
+#ifndef Q_OS_UNIX
     setFont(QFont("Open Sans Light", 13));
+#else
+    setFont(QFont("Open Sans", 15, QFont::Light));
+#endif
     setAlignment(Qt::AlignCenter);
     setStyleSheet(STYLE_DEFAULT + "DrawArea::hover {background-color: white;}");
 
