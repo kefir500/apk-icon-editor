@@ -4,7 +4,6 @@
 #include <QDirIterator>
 #include <QProcess>
 #include <QRegExp>
-#include <QDir>
 #include <QTime>
 #include <QtConcurrent/QtConcurrentRun>
 #include <QuaZIP/JlCompress.h>
@@ -128,10 +127,11 @@ bool Apk::doUnpack(PackOptions options)
 
 bool Apk::readManifest()
 {
+    const QString APPDIR(QCoreApplication::applicationDirPath());
     const QString AAPT_ERROR(tr(STR_ERROR).arg("Aapt"));
 
     QProcess p;
-    p.start(QString("aapt dump badging \"%1\"").arg(filename));
+    p.start(QString("\"%1/aapt\" dump badging \"%2\"").arg(APPDIR, filename));
     if (!p.waitForStarted(-1)) {
         qDebug() << qPrintable(LOG_ERRORSTART.arg("aapt"));
         return die(AAPT_ERROR, tr(STR_ERRORSTART).arg("aapt"));
@@ -181,7 +181,7 @@ bool Apk::unzip() const
     QProcess p;
     QTime sw;
     sw.start();
-    p.start(QString("7za x \"%1\" -y -o\"%2apk\"").arg(filename, TEMPDIR));
+    p.start(QString("\"%1/7za\" x \"%2\" -y -o\"%3apk\"").arg(APPDIR, filename, TEMPDIR));
     if (!p.waitForStarted(-1)) {
         qDebug() << qPrintable(LOG_ERRORSTART.arg("7za"));
         return die(tr(STR_ERROR).arg("7ZA"), tr(STR_ERRORSTART).arg("7za"));
@@ -195,11 +195,12 @@ bool Apk::unzip() const
 
 bool Apk::unzip_apktool(bool smali) const
 {
+    const QString APPDIR(QCoreApplication::applicationDirPath());
     QProcess p;
     QTime sw;
     sw.start();
     p.start(QString("java -jar \"%1/apktool.jar\" d \"%2\" -f %3 -o \"%4apk\"")
-            .arg(QApplication::applicationDirPath(), filename, (smali ? "" : "-s"), TEMPDIR));
+            .arg(APPDIR, filename, (smali ? "" : "-s"), TEMPDIR));
     if (!p.waitForStarted(-1)) {
         if (isJavaInstalled()) {
             qDebug() << qPrintable(LOG_ERRORSTART.arg("apktool"));
@@ -504,9 +505,10 @@ bool Apk::zip(short ratio) const
 
 bool Apk::zip_apktool() const
 {
+    const QString APPDIR(QCoreApplication::applicationDirPath());
     QProcess p;
     p.start(QString("java -jar \"%1/apktool.jar\" b \"%2\" -f -o \"%4temp.zip\"")
-            .arg(QApplication::applicationDirPath(), TEMPDIR_APK, TEMPDIR));
+            .arg(APPDIR, TEMPDIR_APK, TEMPDIR));
     if (!p.waitForStarted(-1)) {
         if (isJavaInstalled()) {
             qDebug() << qPrintable(LOG_ERRORSTART.arg("apktool"));
@@ -563,9 +565,10 @@ bool Apk::isJavaInstalled(Java type, bool debug)
 
 bool Apk::sign(const QString PEM, const QString PK8) const
 {
+    const QString APPDIR(QCoreApplication::applicationDirPath());
     const QString APK_SRC(TEMPDIR + "temp-1.apk");
     const QString APK_DST(TEMPDIR + "temp-2.apk");
-    const QString SIGNAPK(QApplication::applicationDirPath() + "/signer/");
+    const QString SIGNAPK(APPDIR + "/signer/");
 
     if (!QFile::exists(PEM) || !QFile::exists(PEM)) {
         emit warning(NULL, tr("PEM/PK8 not found."));
@@ -644,11 +647,12 @@ bool Apk::sign(const QString KEY, const QString ALIAS,
 
 bool Apk::optimize() const
 {
+    const QString APPDIR(QCoreApplication::applicationDirPath());
     const QString APK_SRC(TEMPDIR + "temp-2.apk");
     const QString APK_DST(TEMPDIR + "temp-3.apk");
 
     QProcess p;
-    p.start(QString("zipalign -f 4 \"%1\" \"%2\"").arg(APK_SRC, APK_DST));
+    p.start(QString("\"%1/zipalign\" -f 4 \"%2\" \"%3\"").arg(APPDIR, APK_SRC, APK_DST));
 
     if (p.waitForStarted(-1)) {
         p.waitForFinished(-1);
