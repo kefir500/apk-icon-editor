@@ -8,23 +8,6 @@
 #include <QPushButton>
 #include <QSpinBox>
 
-// LineEditLabel
-
-class LineEditLabel : public QWidget {
-    Q_OBJECT
-
-public:
-    explicit LineEditLabel(QWidget *parent = 0);
-    void setTitle(QString title);
-    void setValue(QString value);
-    void setPassword(bool value);
-    QString getValue() const { return edit->text(); }
-
-private:
-    QLabel *label;
-    QLineEdit *edit;
-};
-
 // KeyParams
 
 struct KeyParams {
@@ -98,9 +81,9 @@ public:
     QString getFilePk8() const { return filePk8; }
     QString getFileKey() const { return fileKey; }
     bool getIsKeystore() const { return isKeystore; }
-    QString getAlias() const { return editAlias->getValue(); }
-    QString getPassStore() const { return editStorePass->getValue(); }
-    QString getPassAlias() const { return editAliasPass->getValue(); }
+    QString getAlias() const { return editAlias->text(); }
+    QString getPassStore() const { return editStorePass->text(); }
+    QString getPassAlias() const { return editAliasPass->text(); }
 
     void retranslate();
 
@@ -122,9 +105,12 @@ private:
     QGroupBox *groupPem;
     QGroupBox *groupKey;
     QPushButton *btnNew;
-    LineEditLabel *editAlias;
-    LineEditLabel *editAliasPass;
-    LineEditLabel *editStorePass;
+    QLabel *labelAlias;
+    QLabel *labelAliasPass;
+    QLabel *labelStorePass;
+    QLineEdit *editAlias;
+    QLineEdit *editAliasPass;
+    QLineEdit *editStorePass;
 
 signals:
     void success(QString title, QString text);

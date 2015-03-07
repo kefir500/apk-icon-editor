@@ -35,12 +35,15 @@ KeyManager::KeyManager(QWidget *parent) : QDialog(parent)
     btnNew = new QPushButton(this);
     QDialogButtonBox *buttons = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, this);
 
-    editAlias = new LineEditLabel(this);
-    editAliasPass = new LineEditLabel(this);
-    editStorePass = new LineEditLabel(this);
+    labelAlias = new QLabel(this);
+    labelAliasPass = new QLabel(this);
+    labelStorePass = new QLabel(this);
+    editAlias = new QLineEdit(this);
+    editAliasPass = new QLineEdit(this);
+    editStorePass = new QLineEdit(this);
 
-    editAliasPass->setPassword(true);
-    editStorePass->setPassword(true);
+    editAliasPass->setEchoMode(QLineEdit::Password);
+    editStorePass->setEchoMode(QLineEdit::Password);
 
     groupPem = new QGroupBox(this);
     QVBoxLayout *layoutPem = new QVBoxLayout;
@@ -51,10 +54,13 @@ KeyManager::KeyManager(QWidget *parent) : QDialog(parent)
     groupKey = new QGroupBox(this);
     QGridLayout *layoutKey = new QGridLayout;
     layoutKey->addWidget(boxKey, 0, 0, 1, 0);
-    layoutKey->addWidget(editStorePass, 1, 0, 1, 0);
-    layoutKey->addWidget(btnNew, 2, 0, 1, 0);
-    layoutKey->addWidget(editAlias, 3, 0);
+    layoutKey->addWidget(labelStorePass, 1, 0);
+    layoutKey->addWidget(editStorePass, 1, 1);
+    layoutKey->addWidget(labelAlias, 2, 0, Qt::AlignLeft);
+    layoutKey->addWidget(editAlias, 2, 1);
+    layoutKey->addWidget(labelAliasPass, 3, 0, Qt::AlignLeft);
     layoutKey->addWidget(editAliasPass, 3, 1);
+    layoutKey->addWidget(btnNew, 4, 0, 1, 0);
     groupKey->setLayout(layoutKey);
 
     QVBoxLayout *layout = new QVBoxLayout(this);
@@ -81,9 +87,9 @@ void KeyManager::retranslate()
     radioKey->setText(QString("KeyStore (%1)").arg(tr("Requires JDK")));
     boxKey->setTitle(QString("%1:").arg(tr("KeyStore")));
     btnNew->setText(tr("Create &New KeyStore or Alias"));
-    editAlias->setTitle(QString("%1:").arg(tr("Alias")));
-    editAliasPass->setTitle(QString("%1:").arg(tr("Alias Password")));
-    editStorePass->setTitle(QString("%1:").arg(tr("KeyStore Password")));
+    labelAlias->setText(QString("%1:").arg(tr("Alias")));
+    labelAliasPass->setText(QString("%1:").arg(tr("Alias Password")));
+    labelStorePass->setText(QString("%1:").arg(tr("KeyStore Password")));
     keyCreator->retranslate();
 }
 
@@ -121,19 +127,19 @@ void KeyManager::setIsKeyStore(bool value)
 void KeyManager::setAlias(QString value)
 {
     alias = value;
-    editAlias->setValue(alias);
+    editAlias->setText(alias);
 }
 
 void KeyManager::setPassStore(QString password)
 {
     passStore = password;
-    editStorePass->setValue(password);
+    editStorePass->setText(password);
 }
 
 void KeyManager::setPassAlias(QString password)
 {
     passAlias = password;
-    editAliasPass->setValue(password);
+    editAliasPass->setText(password);
 }
 
 void KeyManager::setOptionPem()
@@ -154,9 +160,9 @@ void KeyManager::accept()
     setFilePk8(boxPk8->value());
     setFileKey(boxKey->value());
     setIsKeyStore(radioKey->isChecked());
-    setAlias(editAlias->getValue());
-    setPassStore(editStorePass->getValue());
-    setPassAlias(editAliasPass->getValue());
+    setAlias(editAlias->text());
+    setPassStore(editStorePass->text());
+    setPassAlias(editAliasPass->text());
     QDialog::accept();
 }
 
@@ -381,31 +387,4 @@ void KeyCreator::reject()
 
 void KeyCreator::createKey(KeyParams)
 {
-}
-
-// LineEditLabel
-
-LineEditLabel::LineEditLabel(QWidget *parent) : QWidget(parent)
-{
-    label = new QLabel(this);
-    edit = new QLineEdit(this);
-    QHBoxLayout *layout = new QHBoxLayout(this);
-    layout->setMargin(0);
-    layout->addWidget(label);
-    layout->addWidget(edit);
-}
-
-void LineEditLabel::setTitle(QString title)
-{
-    label->setText(title);
-}
-
-void LineEditLabel::setValue(QString value)
-{
-    edit->setText(value);
-}
-
-void LineEditLabel::setPassword(bool value)
-{
-    edit->setEchoMode(value ? QLineEdit::Password : QLineEdit::Normal);
 }
