@@ -680,7 +680,9 @@ void MainWindow::cloneIcons()
             for (short i = LDPI; i < DPI_COUNT; ++i) {
                 const Dpi DPI = static_cast<Dpi>(i);
                 Icon *oldIcon = apk->getIcon(DPI);
-                oldIcon->replace(newIcon->getPixmap());
+                if (!oldIcon->isNull()) {
+                    oldIcon->replace(newIcon->getPixmap());
+                }
             }
         }
         setWindowModified(true);
