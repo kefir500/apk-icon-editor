@@ -21,5 +21,5 @@ Written in C++ and Qt framework.
 * **GNU General Public License v3.0**
 
 ## Notice
-* You may not use **APK Icon Editor** for any illegal purpose;
+* You may not use **APK Icon Editor** for any illegal intentions;
 * Repacked APKs should not be used for purposes violating the original licenses.
