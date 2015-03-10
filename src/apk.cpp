@@ -146,13 +146,13 @@ bool Apk::readManifest()
         warnText = tr("AndroidManifest.xml contains uncritical errors.");
         // Continue reading AndroidManifest.xml:
     case 0:
-        manifest = p.readAllStandardOutput();
+        manifest = p.readAllStandardOutput().replace("\r\n", "\n");
         qDebug() << "Application name:" << getApplicationLabel();
         qDebug() << "Application version code:" << getVersionCode();
         qDebug() << "Application version name:" << getVersionName();
         return true;
     default:
-        qDebug() << p.readAllStandardError().trimmed();
+        qDebug() << p.readAllStandardError().replace("\r\n", "\n");
         return die(AAPT_ERROR, tr("Error reading APK."));
     }
 }
@@ -220,7 +220,7 @@ bool Apk::unzip_apktool(bool smali) const
         return true;
     }
     else {
-        qDebug() << p.readAllStandardError();
+        qDebug() << p.readAllStandardError().replace("\r\n", "\n");
         const QString ERROR_APKTOOL = tr(STR_ERROR).arg("Apktool");
         return die(ERROR_APKTOOL, ERROR_APKTOOL);
     }
@@ -528,7 +528,7 @@ bool Apk::zip_apktool() const
         return true;
     }
     else {
-        qDebug() << p.readAllStandardError();
+        qDebug() << p.readAllStandardError().replace("\r\n", "\n");
         return die(tr(STR_ERROR).arg("Apktool"), tr(STR_ERROR).arg("Apktool"));
     }
 }
@@ -551,7 +551,7 @@ bool Apk::isJavaInstalled(Java type, bool debug)
         p.waitForFinished(-1);
         if (debug) {
             qDebug() << prefix << "32-bit found:";
-            qDebug() << p.readAllStandardError().trimmed();
+            qDebug() << p.readAllStandardError().replace("\r\n", "\n").trimmed();
         }
         return true;
     }
@@ -587,8 +587,8 @@ bool Apk::sign(const QString PEM, const QString PK8) const
             return true;
         }
         else {
-            QString error_text = p.readAllStandardError().trimmed();
-            if (error_text.isEmpty()) error_text = p.readAllStandardOutput().trimmed();
+            QString error_text = p.readAllStandardError().replace("\r\n", "\n");
+            if (error_text.isEmpty()) error_text = p.readAllStandardOutput().replace("\r\n", "\n");
             qDebug() << qPrintable(LOG_EXITCODE.arg("Java").arg(p.exitCode()));
             qDebug() << error_text;
         }
@@ -630,8 +630,8 @@ bool Apk::sign(const QString KEY, const QString ALIAS,
             return true;
         }
         else {
-            QString error_text = p.readAllStandardError().trimmed();
-            if (error_text.isEmpty()) error_text = p.readAllStandardOutput().trimmed();
+            QString error_text = p.readAllStandardError().replace("\r\n", "\n");
+            if (error_text.isEmpty()) error_text = p.readAllStandardOutput().replace("\r\n", "\n");
             qDebug() << qPrintable(LOG_EXITCODE.arg("Jarsigner").arg(p.exitCode()));
             qDebug() << error_text;
         }
@@ -662,7 +662,7 @@ bool Apk::optimize() const
         }
         else {
             qDebug() << qPrintable(LOG_EXITCODE.arg("zipalign").arg(p.exitCode()));
-            qDebug() << p.readAllStandardError().trimmed();
+            qDebug() << p.readAllStandardError().replace("\r\n", "\n");
         }
     }
     else {
