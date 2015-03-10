@@ -147,6 +147,9 @@ bool Apk::readManifest()
         // Continue reading AndroidManifest.xml:
     case 0:
         manifest = p.readAllStandardOutput().replace("\r\n", "\n");
+        qDebug() << "--- MANIFEST START ---\n"
+                 << qPrintable(manifest)
+                 << "--- MANIFEST END ---\n";
         qDebug() << "Application name:" << getApplicationLabel();
         qDebug() << "Application version code:" << getVersionCode();
         qDebug() << "Application version name:" << getVersionName();
