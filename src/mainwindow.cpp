@@ -259,7 +259,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     splitter->setCollapsible(0, false);
     splitter->setCollapsible(1, false);
     splitter->setStretchFactor(0, 3);
+#ifndef Q_OS_UNIX
     splitter->setStretchFactor(1, 2);
+#else
+    // TODO Figure out why this stretch factor is invalid for OS X
+#endif
     splitter->setStyleSheet("QSplitter {padding: 8px;}");
 
     mapRecent = new QSignalMapper(this);
@@ -479,7 +483,7 @@ void MainWindow::restoreSettings()
 
     currentPath = sLastDir;
     restoreGeometry(sGeometry);
-    splitter->restoreState(sSplitter);
+    splitter->restoreState(sSplitter); // TODO Splitter is not restored on "Reset Settings"
     setLanguage(sLanguage);
     toolDialog->setUseApktool(sApktool);
     toolDialog->setRatio(sRatio);
@@ -530,6 +534,7 @@ void MainWindow::setLanguage(QString lang)
     QApplication::removeTranslator(translator);
     QApplication::removeTranslator(translatorQt);
     if (translator->load(QString("apk-icon-editor.%1").arg(lang), LANGPATH)) {
+        // TODO Crashes when setting any language different from English
         translatorQt->load(QString("qt.%1").arg(lang), LANGPATH);
         QApplication::installTranslator(translator);
         QApplication::installTranslator(translatorQt);
