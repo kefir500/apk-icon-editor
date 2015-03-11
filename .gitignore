@@ -4,7 +4,10 @@
 /lang/
 !/lang/README
 /lib/bin/
+/.qmake.cache
+/.qmake.stash
 *.autosave
+*.o
 *.obj
 *.pdb
 *.pro.user
