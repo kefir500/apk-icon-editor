@@ -14,8 +14,8 @@ Written in C++ and Qt framework.
 * Multilingual extensible interface.
 
 ## Requirements
-* **Java Runtime Environment (JRE)** - for signing APKs.
-* **Java Development Kit (JRK)** - for signing APKs with KeyStore.
+* **Java Runtime Environment (JRE)** – for signing APKs.
+* **Java Development Kit (JDK)** – for signing APKs with KeyStore.
 
 ## License
 * **GNU General Public License v3.0**
