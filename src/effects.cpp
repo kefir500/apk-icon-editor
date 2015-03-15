@@ -1,7 +1,7 @@
 #include "effects.h"
 #include <QBoxLayout>
 
-// TODO Blur and Colorize not working on OS X
+// Blur and Colorize (QWidget::grab()) not working on Qt > 5.3.0 (QTBUG-43968)
 
 EffectsDialog::EffectsDialog(QWidget *parent) : QDialog(parent)
 {
