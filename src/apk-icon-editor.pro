@@ -22,7 +22,7 @@ DEFINES += VER=\\\"$$VERSION\\\"
 win32 {
     isEqual(QT_MAJOR_VERSION, 5) {
         greaterThan(QT_MINOR_VERSION, 1): QT += winextras
-    } else {
+    } else:greaterThan(QT_MAJOR_VERSION, 5) {
         QT += winextras
     }
 }
@@ -62,14 +62,14 @@ INCLUDEPATH += ../lib/include
 INCLUDEPATH += $$[QT_INSTALL_HEADERS]/QtZlib
 
 win32 {
-    DESTDIR = ../bin/win32
+    DESTDIR  = ../bin/win32
     RC_ICONS = ../res/icons/icon.ico \
                ../res/icons/icon-apk.ico
 }
 
 macx {
     DESTDIR = ../bin/macosx
-    ICON = ../res/icons/icon.icns
+    ICON =    ../res/icons/icon.icns
     QMAKE_MAC_SDK = macosx10.7
     QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.7
     LIBS += -lz
@@ -86,4 +86,4 @@ LIBS += -lquazip \
 DEFINES += QUAZIP_STATIC
 
 TRANSLATIONS += ../lang/apk-icon-editor.en.ts
-RESOURCES += ../res/resources.qrc
+RESOURCES    += ../res/resources.qrc
