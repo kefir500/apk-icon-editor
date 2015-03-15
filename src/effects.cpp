@@ -1,6 +1,8 @@
 #include "effects.h"
 #include <QBoxLayout>
 
+// TODO Blur and Colorize not working on OS X
+
 EffectsDialog::EffectsDialog(QWidget *parent) : QDialog(parent)
 {
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
@@ -52,7 +54,6 @@ EffectsDialog::EffectsDialog(QWidget *parent) : QDialog(parent)
 
     layout->addWidget(groupRotate);
     layout->addWidget(groupColor);
-    //layout->addWidget(groupBlur);
     layout->addWidget(slideCorners);
     layout->addLayout(layoutEffects);
     layoutRotate->addWidget(btnRotate0, 0, 0);
