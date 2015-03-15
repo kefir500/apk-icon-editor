@@ -1,5 +1,8 @@
 # APK Icon Editor
 
+[![GitHub release](https://img.shields.io/github/release/kefir500/apk-icon-editor.svg)](https://github.com/kefir500/apk-icon-editor/releases/latest)
+[![GitHub license](https://img.shields.io/badge/license-GPLv3-blue.svg)](https://raw.githubusercontent.com/kefir500/apk-icon-editor/master/LICENSE)
+
 ## Description
 **APK Icon Editor** is the tool designed to easily edit and replace APK (Android Package) icons.
 Written in C++ and Qt framework.
@@ -16,9 +19,6 @@ Written in C++ and Qt framework.
 ## Requirements
 * **Java Runtime Environment (JRE)** – for signing APKs.
 * **Java Development Kit (JDK)** – for signing APKs with KeyStore.
-
-## License
-* **GNU General Public License v3.0**
 
 ## Notice
 * You may not use **APK Icon Editor** for any illegal intentions;
