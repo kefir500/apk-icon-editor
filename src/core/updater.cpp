@@ -1,12 +1,6 @@
 #include "updater.h"
 #include "main.h"
-#include <QApplication>
 #include <QDesktopServices>
-#include <QProcess>
-
-#ifdef Q_OS_WIN32
-    #include <windows.h>
-#endif
 
 #ifndef VER
     #define VER "0.0"

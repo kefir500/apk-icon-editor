@@ -4,7 +4,6 @@
 #ifndef DIALOGS_H
 #define DIALOGS_H
 
-#include "main.h"
 #include <QInputDialog>
 #include <QLineEdit>
 #include <QProgressBar>

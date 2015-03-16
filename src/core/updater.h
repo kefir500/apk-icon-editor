@@ -5,7 +5,6 @@
 #define UPDATER_H
 
 #include <QNetworkReply>
-#include <QUrl>
 
 /// \brief Application update checker.
 ///

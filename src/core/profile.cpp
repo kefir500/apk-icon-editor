@@ -1,5 +1,4 @@
 #include "profile.h"
-#include <QVBoxLayout>
 
 QList<Profile> Profile::profiles;
 

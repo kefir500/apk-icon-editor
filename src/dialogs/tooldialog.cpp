@@ -1,5 +1,4 @@
 #include "tooldialog.h"
-#include <QSlider>
 #include <QDialogButtonBox>
 
 const char *ToolDialog::STR_QUAZIP = QT_TR_NOOP(

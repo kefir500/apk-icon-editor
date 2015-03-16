@@ -4,7 +4,6 @@
 #include "keys.h"
 #include <QNetworkReply>
 #include <QTimer>
-#include <QFile>
 #include <QIcon>
 
 /// \brief Cloud storage uploader.

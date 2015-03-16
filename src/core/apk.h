@@ -6,7 +6,6 @@
 
 #include "icon.h"
 #include "profile.h" // for Dpi enum
-#include <QDebug>
 
 class Resource {
 private:

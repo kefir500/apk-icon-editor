@@ -1,13 +1,9 @@
 #include "mainwindow.h"
 #include "main.h"
-#include <QHBoxLayout>
 #include <QHeaderView>
 #include <QMenuBar>
 #include <QMessageBox>
-#include <QProgressDialog>
-#include <QColorDialog>
 #include <QFileDialog>
-#include <QInputDialog>
 #include <QMimeData>
 #include <QTextCodec>
 #include <QDesktopServices>

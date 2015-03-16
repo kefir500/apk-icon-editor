@@ -7,13 +7,7 @@
 #include <QMainWindow>
 #include <QSplitter>
 #include <QTableWidget>
-#include <QCheckBox>
-#include <QPushButton>
-#include <QToolButton>
-#include <QSpinBox>
-#include <QProgressDialog>
 #include <QSignalMapper>
-#include <QActionGroup>
 #include <QTranslator>
 #include <QSettings>
 #include <QCloseEvent>

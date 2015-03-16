@@ -1,9 +1,6 @@
 #include "cloud.h"
 #include "main.h"
 #include <QHttpMultiPart>
-#include <QRegExp>
-#include <QFile>
-#include <QFileInfo>
 #include <QDesktopServices>
 
 // Dropbox:

@@ -1,10 +1,7 @@
 #include "apk.h"
 #include "main.h"
 #include <QApplication>
-#include <QDirIterator>
 #include <QProcess>
-#include <QRegExp>
-#include <QTime>
 #include <QtConcurrent/QtConcurrentRun>
 #include <QuaZIP/JlCompress.h>
 

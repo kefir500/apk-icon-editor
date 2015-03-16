@@ -4,9 +4,7 @@
 #ifndef ICON_H
 #define ICON_H
 
-#include <QPixmap>
 #include <QGraphicsEffect>
-#include <QDir>
 
 /// \brief QPixmap wrapper.
 ///
