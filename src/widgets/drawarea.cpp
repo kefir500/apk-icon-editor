@@ -12,7 +12,7 @@ const QString STYLE_DEFAULT =
 
 DrawArea::DrawArea(QWidget *parent) : QLabel(parent)
 {
-#ifndef Q_OS_UNIX
+#ifndef Q_OS_OSX
     setFont(QFont("Open Sans Light", 13));
 #else
     setFont(QFont("Open Sans", 15, QFont::Light));
