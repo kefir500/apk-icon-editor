@@ -1,13 +1,10 @@
-#include "../../updater.h"
+#include "../../core/updater.h"
 #include <QtTest>
 
 class TestVersion : public QObject {
     Q_OBJECT
 
-public:
-    TestVersion() { }
-
-private Q_SLOTS:
+private slots:
     void test();
 };
 
