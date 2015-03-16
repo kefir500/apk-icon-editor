@@ -21,7 +21,7 @@
 #include "apk.h"
 #include "combolist.h"
 #include "drawarea.h"
-#include "effects.h"
+#include "effectsdialog.h"
 #include "tooldialog.h"
 #include "keymanager.h"
 #include "dialogs.h"

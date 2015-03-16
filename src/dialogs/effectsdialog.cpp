@@ -1,4 +1,4 @@
-#include "effects.h"
+#include "effectsdialog.h"
 #include <QBoxLayout>
 
 // Blur and Colorize (QWidget::grab()) not working on Qt > 5.3.0 (QTBUG-43968)

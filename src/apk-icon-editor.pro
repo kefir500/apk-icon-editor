@@ -1,7 +1,7 @@
 QT += core widgets network
 TEMPLATE = app
 
-VERSION = 1.2.0
+VERSION = 1.3.0
 QMAKE_TARGET_COMPANY = Qwerty Minds
 QMAKE_TARGET_DESCRIPTION = A tool designed to easily edit and replace APK icons
 QMAKE_TARGET_COPYRIGHT = Copyright (C) 2014-2015
@@ -27,36 +27,9 @@ win32 {
     }
 }
 
-SOURCES += main.cpp \
-           mainwindow.cpp \
-           dialogs.cpp \
-           combolist.cpp \
-           drawarea.cpp \
-           filebox.cpp \
-           effects.cpp \
-           tooldialog.cpp \
-           keymanager.cpp \
-           apk.cpp \
-           cloud.cpp \
-           icon.cpp \
-           profile.cpp \
-           updater.cpp
-
-HEADERS += main.h \
-           mainwindow.h \
-           dialogs.h \
-           combolist.h \
-           drawarea.h \
-           filebox.h \
-           effects.h \
-           tooldialog.h \
-           keymanager.h \
-           apk.h \
-           cloud.h \
-           icon.h \
-           profile.h \
-           updater.h \
-           keys.h
+include(core/core.pri)
+include(widgets/widgets.pri)
+include(dialogs/dialogs.pri)
 
 INCLUDEPATH += ../lib/include
 INCLUDEPATH += $$[QT_INSTALL_HEADERS]/QtZlib
