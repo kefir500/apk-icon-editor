@@ -10,6 +10,8 @@
 #include <QNetworkInterface>
 #include <QApplication>
 
+#define APPDIR QCoreApplication::applicationDirPath()
+
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
     resize(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -354,7 +356,7 @@ void MainWindow::initLanguages()
     langs << "apk-icon-editor.en";
 
     // Loading language list:
-    const QDir LANGPATH(QApplication::applicationDirPath() + "/lang");
+    const QDir LANGPATH(APPDIR + "/lang");
     langs << LANGPATH.entryList(QStringList() << "apk-icon-editor.*");
 
     for (int i = 0; i < langs.size(); ++i) {
@@ -418,7 +420,7 @@ void MainWindow::initCrypt()
 void MainWindow::restoreSettings()
 {
     const QString LOCALE = QLocale::system().name();
-    const QString KEYS_DIR = QApplication::applicationDirPath() + "/signer/";
+    const QString KEYS_DIR = APPDIR + "/signer/";
 
     // Read settings:
     QString sProfile = settings->value("Profile", "").toString();
@@ -526,7 +528,7 @@ void MainWindow::resetSettings()
 void MainWindow::setLanguage(QString lang)
 {
     qDebug() << "Language set to" << lang;
-    QString LANGPATH(QApplication::applicationDirPath() + "/lang");
+    QString LANGPATH(APPDIR + "/lang");
     QApplication::removeTranslator(translator);
     QApplication::removeTranslator(translatorQt);
     if (translator->load(QString("apk-icon-editor.%1").arg(lang), LANGPATH)) {
@@ -1221,13 +1223,11 @@ void MainWindow::browseBugs() const
 
 void MainWindow::browseFaq() const
 {
-    const QString APPDIR(QApplication::applicationDirPath());
     QDesktopServices::openUrl(QUrl::fromLocalFile(QString("%1/faq.txt").arg(APPDIR)));
 }
 
 void MainWindow::about()
 {
-    const QString APPDIR(QApplication::applicationDirPath());
     const QString LINK("<a href=\"%1\">%2</a> &ndash; %3");
 
     QMessageBox aboutBox(this);
@@ -1263,7 +1263,7 @@ void MainWindow::aboutAuthors()
 
     QString strAuthors;
     bool newline = true;
-    QFile inputFile(QApplication::applicationDirPath() + "/authors.txt");
+    QFile inputFile(APPDIR + "/authors.txt");
     if (inputFile.open(QIODevice::ReadOnly)) {
         QTextStream in(&inputFile);
         in.setCodec(QTextCodec::codecForName("UTF-8"));

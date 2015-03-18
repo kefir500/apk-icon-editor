@@ -5,6 +5,8 @@
 #include <QtConcurrent/QtConcurrentRun>
 #include <QuaZIP/JlCompress.h>
 
+#define APPDIR QCoreApplication::applicationDirPath()
+
 const char *Apk::STR_ERROR = QT_TR_NOOP("%1 Error");
 const char *Apk::STR_ERRORSTART = QT_TR_NOOP("Error starting <b>%1</b>");
 const char *Apk::STR_CHECKPATH = QT_TR_NOOP("(check the PATH variable if JRE is already installed)");
@@ -124,7 +126,6 @@ bool Apk::doUnpack(PackOptions options)
 
 bool Apk::readManifest()
 {
-    const QString APPDIR(QCoreApplication::applicationDirPath());
     const QString AAPT_ERROR(tr(STR_ERROR).arg("Aapt"));
 
     QProcess p;
@@ -195,7 +196,6 @@ bool Apk::unzip() const
 
 bool Apk::unzip_apktool(bool smali) const
 {
-    const QString APPDIR(QCoreApplication::applicationDirPath());
     QProcess p;
     QTime sw;
     sw.start();
@@ -505,7 +505,6 @@ bool Apk::zip(short ratio) const
 
 bool Apk::zip_apktool() const
 {
-    const QString APPDIR(QCoreApplication::applicationDirPath());
     QProcess p;
     p.start(QString("java -jar \"%1/apktool.jar\" b \"%2\" -f -o \"%4temp.zip\"")
             .arg(APPDIR, TEMPDIR_APK, TEMPDIR));
@@ -565,7 +564,6 @@ bool Apk::isJavaInstalled(Java type, bool debug)
 
 bool Apk::sign(const QString PEM, const QString PK8) const
 {
-    const QString APPDIR(QCoreApplication::applicationDirPath());
     const QString APK_SRC(TEMPDIR + "temp-1.apk");
     const QString APK_DST(TEMPDIR + "temp-2.apk");
     const QString SIGNAPK(APPDIR + "/signer/");
@@ -647,7 +645,6 @@ bool Apk::sign(const QString KEY, const QString ALIAS,
 
 bool Apk::optimize() const
 {
-    const QString APPDIR(QCoreApplication::applicationDirPath());
     const QString APK_SRC(TEMPDIR + "temp-2.apk");
     const QString APK_DST(TEMPDIR + "temp-3.apk");
 
