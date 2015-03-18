@@ -2,10 +2,10 @@
 #include <QtTest>
 
 // Set these defines to match the corresponding paths:
-#define APK_PATH (QCoreApplication::applicationDirPath() + "/apk/")              // Directory containing APK files to test
-#define APKTOOL  (QCoreApplication::applicationDirPath() + "/apktool-4-new.jar") // Path to apktool
-#define AAPT     (QCoreApplication::applicationDirPath() + "/aapt-new.exe")      // Path to aapt
-#define TEMP     (QCoreApplication::applicationDirPath() + "/apktool-temp/")     // Directory to store temporary apktool files
+#define APK_PATH (QCoreApplication::applicationDirPath() + "/apk/")             // Directory containing APK files to test
+#define APKTOOL  (QCoreApplication::applicationDirPath() + "/apktool.jar")      // Path to apktool
+#define AAPT     (QCoreApplication::applicationDirPath() + "/aapt.exe")         // Path to aapt
+#define TEMP     (QCoreApplication::applicationDirPath() + "/apktool-temp/")    // Directory to store temporary apktool files
 
 bool Apktool::unpack(const QString FILENAME)
 {
