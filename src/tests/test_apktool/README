@@ -1,0 +1,1 @@
+Set APK_PATH, APKTOOL, AAPT and TEMP defines to match your own paths (see "test_apktool.cpp").
