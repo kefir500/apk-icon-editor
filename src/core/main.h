@@ -28,6 +28,7 @@
 #define MAIN_H
 
 #include <QDir>
+#include <QStandardPaths>
 
 #if defined(Q_OS_WIN) && (QT_VERSION >= QT_VERSION_CHECK(5, 2, 0))
     #define WINEXTRAS 1
@@ -47,5 +48,7 @@ const QString URL_BUGS      = URL_WEBSITE + "#contact";
 const QString URL_JAVA      = "http://java.com/download";
 const QString URL_TRANSLATE = "https://www.transifex.com/projects/p/apk-icon-editor/";
 const QString TEMPDIR       = QDir::toNativeSeparators(QDir::tempPath() + "/apk-icon-editor/");
+const QString LOG_PATH      = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/apk-icon-editor/";
+const QString LOG_FILE      = LOG_PATH + "apk-icon-editor.log";
 
 #endif // MAIN_H

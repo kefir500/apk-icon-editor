@@ -5,8 +5,7 @@
 #include <QFontDatabase>
 #include <QStandardPaths>
 
-const QString LOG_PATH(QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/apk-icon-editor/");
-QFile logfile(LOG_PATH + "apk-icon-editor.log");
+QFile logfile(LOG_FILE);
 
 void msgHandler(QtMsgType type, const QMessageLogContext &, const QString &msg)
 {
