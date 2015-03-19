@@ -1227,6 +1227,7 @@ void MainWindow::about()
     const QString LINK("<a href=\"%1\">%2</a> &ndash; %3");
 
     QMessageBox aboutBox(this);
+    aboutBox.setStyleSheet("font-weight: normal");
     aboutBox.setWindowTitle(tr("About"));
     aboutBox.setText(
         QString("<h3>%1 v%2</h3>").arg(APP, VER) +
