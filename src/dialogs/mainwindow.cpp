@@ -260,7 +260,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 #ifndef Q_OS_UNIX
     splitter->setStretchFactor(1, 2);
 #else
-    // TODO Figure out why this stretch factor is invalid for OS X
+    // TODO Figure out why this stretch factor is invalid for Unix
 #endif
     splitter->setStyleSheet("QSplitter {padding: 8px;}");
 
@@ -528,7 +528,7 @@ void MainWindow::setLanguage(QString lang)
     QApplication::removeTranslator(translator);
     QApplication::removeTranslator(translatorQt);
     if (translator->load(QString("apk-icon-editor.%1").arg(lang), LANGPATH)) {
-        // TODO Crashes when setting any language different from English
+        // TODO (OS X) Crashes when setting any language different from English
         translatorQt->load(QString("qt.%1").arg(lang), LANGPATH);
         QApplication::installTranslator(translator);
         QApplication::installTranslator(translatorQt);
