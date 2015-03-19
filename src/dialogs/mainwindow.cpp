@@ -841,11 +841,27 @@ void MainWindow::apkUnpacked(QString filename)
     loadingDialog->finish();
     setActiveApk(filename);
 
-    int id = devices->currentItemIndex();
-    if (id == -1) {
-        id = 0;
+    // Automatically select DPI from list:
+    const int ID = devices->currentItemIndex();
+    if (ID != -1
+        && apk->getIcon(static_cast<Dpi>(ID))
+        && !apk->getIcon(static_cast<Dpi>(ID))->isNull())
+    {
+        devices->setCurrentItem(ID);
     }
-    devices->setCurrentItem(id);
+    else {
+        for (short i = LDPI; i < DPI_COUNT; ++i) {
+            const Dpi DPI = static_cast<Dpi>(i);
+            if (Icon *icon = apk->getIcon(DPI)) {
+                if (!icon->isNull()) {
+                    devices->setCurrentItem(i);
+                    break;
+                }
+            }
+            devices->setCurrentItem(0);
+        }
+    }
+
     hideEmptyDpi();
 
     // Load strings to table:
