@@ -340,10 +340,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     if (actAutoUpdate->isChecked()) {
         updater->check();
     }
-
-    if (QCoreApplication::arguments().size() > 1) {
-        apkLoad(QCoreApplication::arguments()[1]);
-    }
 }
 
 void MainWindow::initLanguages()
