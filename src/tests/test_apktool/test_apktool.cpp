@@ -41,8 +41,6 @@ bool Apktool::unpack(const QString FILENAME)
 
 bool Apktool::get_icons(const QString MANIFEST, bool critical)
 {
-    const QString DIR(QCoreApplication::applicationDirPath() + "/apktool/");
-
     // Load png filenames:
     QStringList icons;
     icons.push_back(parse("application-icon-120:'(.+)'", MANIFEST));
@@ -58,7 +56,7 @@ bool Apktool::get_icons(const QString MANIFEST, bool critical)
             continue;
         }
 
-        if (QFile::exists(DIR + '/' + icon)) {
+        if (QFile::exists(TEMP + '/' + icon)) {
             qDebug() << icon << "exists:" << "true";
         }
         else {
