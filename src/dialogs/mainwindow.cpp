@@ -121,7 +121,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     actIconOpen->setEnabled(false);
     actIconSave->setEnabled(false);
     actIconScale->setEnabled(false);
-    actIconScale->setVisible(false); // not sure about its necessity
     actIconResize->setEnabled(false);
     actIconRevert->setEnabled(false);
     actIconEffect->setEnabled(false);
@@ -133,6 +132,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     actApkExplore->setShortcut(QKeySequence("Ctrl+D"));
     actIconOpen->setShortcut(QKeySequence("Ctrl+R"));
     actIconSave->setShortcut(QKeySequence("Ctrl+S"));
+    actIconScale->setShortcut(QKeySequence("Ctrl+W"));
     actIconResize->setShortcut(QKeySequence("Ctrl+I"));
     actIconRevert->setShortcut(QKeySequence("Ctrl+Z"));
     actIconEffect->setShortcut(QKeySequence("Ctrl+F"));
