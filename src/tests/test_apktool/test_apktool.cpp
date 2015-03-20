@@ -131,6 +131,13 @@ void TestApktool::test()
     QVERIFY(QFile::exists(AAPT));
     QVERIFY(Apktool::is_java_installed());
 
+    if (QFile::remove(QDir::homePath() + "/apktool/framework/1.apk")) {
+        qDebug() << "Apktool \"1.apk\" framework removed";
+    }
+    else {
+        qWarning() << "Apktool \"1.apk\" framework NOT removed";
+    }
+
     const QString DIR(APK_PATH);
     const QStringList APKS = QDir(DIR).entryList(QStringList("*.apk"));
     foreach (const QString APK, APKS) {
