@@ -1240,25 +1240,24 @@ void MainWindow::browseFaq() const
 
 void MainWindow::about()
 {
-    const QString LINK("<a href=\"%1\">%2</a> &ndash; %3");
+    const QString LINK("<tr><td style=\"padding-right: 4px\" align=\"right\">"
+                       "<a href=\"%1\">%2</a></td><td>%3</td></tr>");
 
     QMessageBox aboutBox(this);
-    aboutBox.setStyleSheet("font-weight: normal");
     aboutBox.setWindowTitle(tr("About"));
+    aboutBox.setStyleSheet("font-weight: normal");
     aboutBox.setText(
         QString("<h3>%1 v%2</h3>").arg(APP, VER) +
         "<p>" +
             tr("Built on: %1 - %2").arg(__DATE__, __TIME__) + "<br>" +
             tr("Author: %1").arg("Alexander Gorishnyak") + "<br>" +
             tr("License") + ": <a href=\"http://www.gnu.org/licenses/gpl-3.0.html\">GNU GPL v3.0</a>" +
-        "</p><p>" +
-            tr("APK Icon Editor is the tool designed to easily edit and replace APK (Android Package) icons. Written in C++ and Qt framework.") +
-        "</p><p>" +
-            LINK.arg(URL_WEBSITE, tr("Visit Website"), tr("Visit our official website.")) + "<br>" +
-            LINK.arg(URL_BUGS, tr("Report a Bug"), tr("Found a bug? Let us know so we can fix it!")) + "<br>" +
-            LINK.arg(URL_TRANSLATE, tr("Help Translate"), tr("Join our translation team on Transifex.")) + "<br>" +
+        "</p><p><table>" +
+            LINK.arg(URL_WEBSITE, tr("Visit Website"), tr("Visit our official website.")) +
+            LINK.arg(URL_BUGS, tr("Report a Bug"), tr("Found a bug? Let us know so we can fix it!")) +
+            LINK.arg(URL_TRANSLATE, tr("Help Translate"), tr("Join our translation team on Transifex.")) +
             LINK.arg(QString("file:///%1/versions.txt").arg(APPDIR), tr("Version History"), tr("List of changes made to the project.")) +
-        "</p>"
+        "</table></p>"
     );
     aboutBox.setIconPixmap(QPixmap(":/gfx/logo.png"));
     QPushButton btnAuthors(tr("Authors"));
