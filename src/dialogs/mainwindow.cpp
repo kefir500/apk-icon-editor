@@ -419,6 +419,7 @@ void MainWindow::restoreSettings()
     const QString KEYS_DIR = APPDIR + "/signer/";
 
     // Read settings:
+    QString sVersion = settings->value("Version", "").toString();
     QString sProfile = settings->value("Profile", "").toString();
     QString sLanguage = settings->value("Language", LOCALE).toString();
     QString sLastDir = settings->value("Directory", "").toString();
@@ -462,6 +463,10 @@ void MainWindow::restoreSettings()
     settings->endGroup();
 
     // Restore settings:
+
+    if (sVersion != VER) {
+        resetApktool();
+    }
 
     devices->setCurrentGroup(sProfile);
 
@@ -509,6 +514,14 @@ void MainWindow::restoreSettings()
     if (sApktool != tempUseApktool) {
         askReloadApk();
     }
+}
+
+void MainWindow::resetApktool()
+{
+    QDir apktool;
+    QFile::remove(QDir::homePath() + "/apktool/framework/1.apk");
+    apktool.rmdir(QDir::homePath() + "/apktool/framework");
+    apktool.rmdir(QDir::homePath() + "/apktool");
 }
 
 void MainWindow::resetSettings()
@@ -1430,6 +1443,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
     }
 
     // Save settings:
+    settings->setValue("Version", VER);
     settings->setValue("Profile", devices->currentGroupText());
     settings->setValue("Language", currentLang);
     settings->setValue("Update", actAutoUpdate->isChecked());

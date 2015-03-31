@@ -113,6 +113,7 @@ private:
     void addToRecent(QString filename);     ///< Add \c filename to recent list.
     void refreshRecent();                   ///< Refresh recent list.
     void restoreSettings();                 ///< Restore settings from INI.
+    void resetApktool();                    ///< Remove Apktool "1.apk" framework
     bool confirmExit();                     ///< Ask user to confim exit.
     void invalidDpi();                      ///< Show "Invalid DPI" message.
     void connectRepaintSignals();           ///< Create signal-slot connections to repaint windows.
