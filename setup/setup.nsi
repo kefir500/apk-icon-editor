@@ -67,7 +67,7 @@ Section
 	SetOutPath "$INSTDIR"
 	File /r "..\bin\win32\"
 	SetOutPath "$INSTDIR\gfx"
-	File "gfx\icon.ico"
+	File "..\res\icons\icon.ico"
 	WriteUninstaller "$INSTDIR\uninstall.exe"
 	CreateShortCut "$SMPROGRAMS\${APPNAME}.lnk" ${EXE}
 	WriteRegStr HKCU "Software\apk-icon-editor" "InstallDir" "$INSTDIR"
