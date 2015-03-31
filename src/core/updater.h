@@ -23,8 +23,9 @@ private slots:
     void catchReply(QNetworkReply *reply);  ///< Catch HTTP reply.
 
 public slots:
-    void check();       ///< Check for updates.
-    void download();    ///< Download the latest version.
+    void check();               ///< Check for updates.
+    void parse(QString json);   ///< Parse version JSON info.
+    void download() const;      ///< Download the latest version.
 
     /// \brief Compare which version number is greater.
     ///

@@ -1,5 +1,7 @@
 #include "updater.h"
 #include "main.h"
+#include <QJsonDocument>
+#include <QJsonObject>
 #include <QDesktopServices>
 
 Updater::Updater(QObject *parent) : QObject(parent)
@@ -14,7 +16,7 @@ void Updater::check()
     http->get(request);
 }
 
-void Updater::download()
+void Updater::download() const
 {
     QDesktopServices::openUrl(QUrl(URL_UPDATE));
 }
@@ -43,6 +45,23 @@ bool Updater::compare(QString v1, QString v2)
     return false;
 }
 
+void Updater::parse(QString json)
+{
+#if defined(Q_OS_WIN)
+    const QString OS_JSON = "windows";
+#elif defined(Q_OS_OSX)
+    const QString OS_JSON = "osx";
+#endif
+    QString v = QJsonDocument::fromJson(json.toUtf8())
+                .object()["1.3.0"]
+                .toObject()[OS_JSON]
+                .toObject()["version"].toString();
+
+    if (compare(v, VER)) {
+        emit version(v);
+    }
+}
+
 void Updater::catchReply(QNetworkReply *reply)
 {
     reply->deleteLater();
@@ -55,11 +74,8 @@ void Updater::catchReply(QNetworkReply *reply)
 
             QString url = reply->url().toString();
             if (url.indexOf(URL_VERSION) != -1) {
-
-                QString v(reply->readAll().trimmed());
-                if (compare(v, VER)) {
-                    emit version(v);
-                }
+                QString json(reply->readAll().trimmed());
+                parse(json);
             }
         }
     }
