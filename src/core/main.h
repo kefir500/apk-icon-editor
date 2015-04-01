@@ -30,12 +30,6 @@
 #include <QDir>
 #include <QStandardPaths>
 
-#if defined(Q_OS_WIN) && (QT_VERSION >= QT_VERSION_CHECK(5, 2, 0))
-    #define WINEXTRAS 1
-#else
-    #define WINEXTRAS 0
-#endif
-
 const int WINDOW_WIDTH      = 800;
 const int WINDOW_HEIGHT     = 480;
 

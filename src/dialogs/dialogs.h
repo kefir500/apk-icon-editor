@@ -11,7 +11,11 @@
 #include <QDialogButtonBox>
 #include <QPushButton>
 
-#if WINEXTRAS
+#if defined(Q_OS_WIN) && (QT_VERSION >= QT_VERSION_CHECK(5, 2, 0))
+    #define WINEXTRAS
+#endif
+
+#ifdef WINEXTRAS
     #include <QtWinExtras/QtWinExtras>
 #endif
 
@@ -60,7 +64,7 @@ private:
     QLabel *icon;                   ///< Dialog pixmap.
     QProgressBar *progress;         ///< Dialog progress bar.
     QDialogButtonBox *buttons;      ///< Dialog buttons.
-#if WINEXTRAS
+#ifdef WINEXTRAS
     QWinTaskbarButton *taskbar;     ///< Represents taskbar button.
 #endif
 
