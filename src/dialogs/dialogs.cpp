@@ -30,7 +30,7 @@ InputDialog::InputDialog(QString title, QString text, bool password, QPixmap _ic
     layout->addWidget(input);
     layout->addWidget(buttons);
 
-    checkInput(NULL);
+    checkInput("");
 
     connect(input, SIGNAL(textChanged(QString)), this, SLOT(checkInput(QString)));
     connect(buttons, SIGNAL(accepted()), this, SLOT(accept()));
