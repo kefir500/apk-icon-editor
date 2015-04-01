@@ -72,7 +72,7 @@ void InputDialog::checkInput(QString text)
 
 ProgressDialog::ProgressDialog(QWidget *parent) : QDialog(parent)
 {
-    setFixedSize(220, 100);
+    resize(220, 100);
     setModal(true);
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
