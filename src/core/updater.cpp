@@ -51,6 +51,8 @@ void Updater::parse(QString json)
     const QString OS_JSON = "windows";
 #elif defined(Q_OS_OSX)
     const QString OS_JSON = "osx";
+#else
+    const QString OS_JSON = "windows";
 #endif
     QString v = QJsonDocument::fromJson(json.toUtf8())
                 .object()["1.3.0"]
