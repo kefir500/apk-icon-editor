@@ -519,9 +519,14 @@ void MainWindow::restoreSettings()
 void MainWindow::resetApktool()
 {
     QDir apktool;
-    QFile::remove(QDir::homePath() + "/apktool/framework/1.apk");
-    apktool.rmdir(QDir::homePath() + "/apktool/framework");
-    apktool.rmdir(QDir::homePath() + "/apktool");
+#ifndef Q_OS_OSX
+    const QString FRAMEWORK_PATH = QDir::homePath();
+#else
+    const QString FRAMEWORK_PATH = QDir::homePath() + "/library";
+#endif
+    QFile::remove(FRAMEWORK_PATH + "/apktool/framework/1.apk");
+    apktool.rmdir(FRAMEWORK_PATH + "/apktool/framework");
+    apktool.rmdir(FRAMEWORK_PATH + "/apktool");
 }
 
 void MainWindow::resetSettings()
