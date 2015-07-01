@@ -23,9 +23,9 @@ void Profile::init()
     const QIcon KINDLE(":/gfx/icon-kindle.png");
 
     Profile android("Android Default", ANDROID, 36, 48, 72, 96, 144, 192);
-    Profile bb_q10("BlackBerry Q10", BLACKBERRY, 90, 90, 90, 90, 90, 90);
+    Profile bb_q10("BlackBerry Q10", BLACKBERRY, 90, 90, 90, 90, 90, 90); // Q10, Q5, Q10
     Profile bb_z10("BlackBerry Z10", BLACKBERRY, 110, 110, 110, 110, 110, 110);
-    Profile bb_z30("BlackBerry Z30", BLACKBERRY, 96, 96, 96, 96, 96, 96);
+    Profile bb_z30("BlackBerry Z30", BLACKBERRY, 96, 96, 96, 96, 96, 96); // Z30, Z3, Z30
     Profile bb_passport("BlackBerry Passport", BLACKBERRY, 144, 144, 144, 144, 144, 144);
     Profile kindle1("Kindle Fire (1st Gen)", KINDLE, 36, 322, 72, 96, 144, 192);
     Profile kindle2("Kindle Fire (2nd Gen)", KINDLE, 36, 365, 72, 96, 144, 192);
