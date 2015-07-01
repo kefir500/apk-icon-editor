@@ -132,6 +132,7 @@ bool Apk::readManifest()
     p.start(QString("\"%1/aapt\" dump badging \"%2\"").arg(APPDIR, filename));
     if (!p.waitForStarted(-1)) {
         qDebug() << qPrintable(LOG_ERRORSTART.arg("aapt"));
+        qDebug() << "Error:" << p.errorString();
         return die(AAPT_ERROR, tr(STR_ERRORSTART).arg("aapt"));
     }
     p.waitForFinished(-1);
@@ -185,6 +186,7 @@ bool Apk::unzip() const
     p.start(QString("\"%1/7za\" x \"%2\" -y -o\"%3apk\"").arg(APPDIR, filename, TEMPDIR));
     if (!p.waitForStarted(-1)) {
         qDebug() << qPrintable(LOG_ERRORSTART.arg("7za"));
+        qDebug() << "Error:" << p.errorString();
         return die(tr(STR_ERROR).arg("7ZA"), tr(STR_ERRORSTART).arg("7za"));
     }
     p.waitForFinished(-1);
@@ -203,7 +205,8 @@ bool Apk::unzip_apktool(bool smali) const
             .arg(APPDIR, filename, (smali ? "" : "-s"), TEMPDIR));
     if (!p.waitForStarted(-1)) {
         if (isJavaInstalled()) {
-            qDebug() << qPrintable(LOG_ERRORSTART.arg("apktool"));
+            qDebug() << qPrintable(LOG_ERRORSTART.arg("Apktool"));
+            qDebug() << "Error:" << p.errorString();
             return die(tr(STR_ERROR).arg("Apktool"), tr(STR_ERRORSTART).arg("apktool"));
         }
         else {
@@ -491,6 +494,7 @@ bool Apk::zip(short ratio) const
     p.start(QString("7za a -tzip -mx%1 \"%2temp.zip\" \"%3*\"").arg(QString::number(ratio), TEMPDIR, TEMPDIR_APK));
     if (!p.waitForStarted(-1)) {
         qDebug() << qPrintable(LOG_ERRORSTART.arg("7za"));
+        qDebug() << "Error:" << p.errorString();
         return die(tr(STR_ERROR).arg("7ZA"), tr(STR_ERRORSTART).arg("7za"));
     }
     p.waitForFinished(-1);
@@ -510,7 +514,8 @@ bool Apk::zip_apktool() const
             .arg(APPDIR, TEMPDIR_APK, TEMPDIR));
     if (!p.waitForStarted(-1)) {
         if (isJavaInstalled()) {
-            qDebug() << qPrintable(LOG_ERRORSTART.arg("apktool"));
+            qDebug() << qPrintable(LOG_ERRORSTART.arg("Apktool"));
+            qDebug() << "Error:" << p.errorString();
             return die(tr(STR_ERROR).arg("Apktool"), tr(STR_ERRORSTART).arg("apktool"));
         }
         else {
@@ -593,6 +598,7 @@ bool Apk::sign(const QString PEM, const QString PK8) const
     }
     else {
         qDebug() << qPrintable(LOG_ERRORSTART.arg("Java"));
+        qDebug() << "Error:" << p.errorString();
     }
 
     // Something went wrong:
@@ -663,7 +669,8 @@ bool Apk::optimize() const
         }
     }
     else {
-        qDebug() << qPrintable(LOG_ERRORSTART.arg("zipalign"));
+        qDebug() << qPrintable(LOG_ERRORSTART.arg("Zipalign"));
+        qDebug() << "Error:" << p.errorString();
     }
 
     // Something went wrong:
