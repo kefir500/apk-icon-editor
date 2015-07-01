@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "main.h"
+#include "settings.h"
 #include <QHeaderView>
 #include <QMenuBar>
 #include <QMessageBox>
@@ -7,7 +8,6 @@
 #include <QMimeData>
 #include <QTextCodec>
 #include <QDesktopServices>
-#include <QNetworkInterface>
 #include <QApplication>
 
 #define APPDIR QCoreApplication::applicationDirPath()
@@ -17,6 +17,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     resize(WINDOW_WIDTH, WINDOW_HEIGHT);
     setAcceptDrops(true);
 
+    Settings::init();
+
     apk = new Apk(this);
     effects = new EffectsDialog(this);
     toolDialog = new ToolDialog(this);
@@ -24,7 +26,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     updater = new Updater(this);
     translator = new QTranslator(this);
     translatorQt = new QTranslator(this);
-    settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, "apk-icon-editor", "config", this);
 
     dropbox = new Dropbox(this);
     dropbox->setIcon(QPixmap(":/gfx/icon-dropbox.png"));
@@ -268,7 +269,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
     initLanguages();
     initProfiles();
-    initCrypt();
     hideEmptyDpi();
 
     connect(drawArea, SIGNAL(clicked()), this, SLOT(apkLoad()));
@@ -306,9 +306,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     connect(editVersionName, SIGNAL(textEdited(QString)), this, SLOT(setModified()));
     connect(btnApplyAppName, SIGNAL(clicked()), this, SLOT(applyAppName()));
     connect(btnRepacking, SIGNAL(clicked()), toolDialog, SLOT(open()));
-    connect(btnTool, SIGNAL(clicked()), this, SLOT(switchTool()));
-    connect(toolDialog, SIGNAL(apktoolChecked(bool)), this, SLOT(enableApktool(bool)));
-    connect(toolDialog, SIGNAL(toolChanged()), this, SLOT(askReloadApk()));
+    connect(btnTool, SIGNAL(clicked()), toolDialog, SLOT(switch_mode()));
+    connect(btnTool, SIGNAL(clicked()), this, SLOT(askReloadApk()));
+    connect(toolDialog, SIGNAL(apktool_checked(bool)), this, SLOT(enableApktool(bool)));
+    connect(toolDialog, SIGNAL(tool_changed()), this, SLOT(askReloadApk()));
     connect(apk, SIGNAL(loading(short, QString)), loadingDialog, SLOT(setProgress(short, QString)), Qt::BlockingQueuedConnection);
     connect(apk, SIGNAL(error(QString, QString)), this, SLOT(error(QString, QString)));
     connect(apk, SIGNAL(error(QString, QString)), loadingDialog, SLOT(finish()));
@@ -391,129 +392,46 @@ void MainWindow::initProfiles()
     }
 }
 
-void MainWindow::initCrypt()
-{
-    crypt = new SimpleCrypt();
-    QString strKeyMac;
-    foreach (QNetworkInterface net, QNetworkInterface::allInterfaces()) {
-        if (!(net.flags() & QNetworkInterface::IsLoopBack)) {
-            QStringList mac = net.hardwareAddress().split(':');
-            if (mac.size() >= 6) {
-                strKeyMac = "0x" + mac[0] + mac[1] + mac[2]
-                                 + mac[3] + mac[4] + mac[5]
-                                 + mac[0] + mac[1];
-                break;
-            }
-        }
-    }
-    bool ok;
-    keyMac = strKeyMac.toULongLong(&ok, 16);
-    if (!ok) {
-        keyMac = SIMPLECRYPT_KEY;
-    }
-}
-
 void MainWindow::restoreSettings()
 {
-    const QString LOCALE = QLocale::system().name();
-    const QString KEYS_DIR = APPDIR + "/signer/";
+    // Global:
 
-    // Read settings:
-    QString sVersion = settings->value("Version", "").toString();
-    QString sProfile = settings->value("Profile", "").toString();
-    QString sLanguage = settings->value("Language", LOCALE).toString();
-    QString sLastDir = settings->value("Directory", "").toString();
-    QByteArray sGeometry = settings->value("Geometry", 0).toByteArray();
-    QByteArray sSplitter = settings->value("Splitter", 0).toByteArray();
-    QStringList sRecent = settings->value("Recent", 0).toStringList();
-    bool sUpdate = settings->value("Update", true).toBool();
+    if (Settings::get_version() != VER) { resetApktool(); }
+    setLanguage(Settings::get_language());
+    currentPath = Settings::get_last_path();
+    devices->setCurrentGroup(Settings::get_profile());
+    actAutoUpdate->setChecked(Settings::get_update());
+    restoreGeometry(Settings::get_geometry());
+    splitter->restoreState(Settings::get_splitter()); // TODO Splitter is not restored on "Reset Settings"
 
-    settings->beginGroup("APK");
-        bool sApktool = settings->value("Apktool", false).toBool();
-        short sRatio = settings->value("Compression", 9).toInt();
-        bool sSmali = settings->value("Smali", false).toBool();
-        bool sSign = settings->value("Sign", true).toBool();
-        bool sOptimize = settings->value("Optimize", true).toBool();
-        bool sUpload = settings->value("Upload", true).toBool();
-    settings->endGroup();
+    // Recent List:
 
-    settings->beginGroup("Key");
-        QString sFilePem = settings->value("PEM", "").toString();
-        QString sFilePk8 = settings->value("PK8", "").toString();
-        QString sFileKey = settings->value("KeyStore", "").toString();
-        QString sAlias = settings->value("Alias", "").toString();
-        QString sPassStore = settings->value("PassStore", "").toString();
-        QString sPassAlias = settings->value("PassAlias", "").toString();
-        bool bIsKeystore = settings->value("Method", false).toBool();
-    settings->endGroup();
-
-    settings->beginGroup("Dropbox");
-        QString sDropbox = settings->value("Token", "").toString();
-        bool bDropbox = settings->value("Enable", false).toBool();
-    settings->endGroup();
-
-    settings->beginGroup("GDrive");
-        QString sGDrive = settings->value("Token", "").toString();
-        bool bGDrive = settings->value("Enable", false).toBool();
-    settings->endGroup();
-
-    settings->beginGroup("OneDrive");
-        QString sOneDrive = settings->value("Token", "").toString();
-        bool bOneDrive = settings->value("Enable", false).toBool();
-    settings->endGroup();
-
-    // Restore settings:
-
-    if (sVersion != VER) {
-        resetApktool();
-    }
-
-    devices->setCurrentGroup(sProfile);
-
-    if (!sRecent.isEmpty()) {
-        recent = sRecent;
+    const QStringList RECENT = Settings::get_recent();
+    if (!RECENT.isEmpty()) {
+        recent = RECENT;
         refreshRecent();
     }
     else {
         clearRecent();
     }
 
-    bool tempUseApktool = toolDialog->getUseApktool();
+    // APK:
 
-    currentPath = sLastDir;
-    restoreGeometry(sGeometry);
-    splitter->restoreState(sSplitter); // TODO Splitter is not restored on "Reset Settings"
-    setLanguage(sLanguage);
-    toolDialog->setUseApktool(sApktool);
-    toolDialog->setRatio(sRatio);
-    toolDialog->setSmali(sSmali);
-    toolDialog->setSign(sSign);
-    toolDialog->setOptimize(sOptimize);
-    keyManager->setFilePem(QFile::exists(sFilePem) ? sFilePem : KEYS_DIR + "certificate.pem");
-    keyManager->setFilePk8(QFile::exists(sFilePk8) ? sFilePk8 : KEYS_DIR + "key.pk8");
-    keyManager->setFileKey(sFileKey);
-    keyManager->setAlias(sAlias);
-    crypt->setKey(SIMPLECRYPT_KEY);
-    sPassStore = crypt->decryptToString(sPassStore);
-    sPassAlias = crypt->decryptToString(sPassAlias);
-    crypt->setKey(keyMac);
-    sPassStore = crypt->decryptToString(sPassStore);
-    sPassAlias = crypt->decryptToString(sPassAlias);
-    keyManager->setPassStore(sPassStore);
-    keyManager->setPassAlias(sPassAlias);
-    keyManager->setIsKeyStore(bIsKeystore);
-    actAutoUpdate->setChecked(sUpdate);
-    dropbox->setToken(sDropbox);
-    gdrive->setToken(sGDrive);
-    onedrive->setToken(sOneDrive);
-    checkUpload->setChecked(sUpload);
-    checkDropbox->setChecked(bDropbox);
-    checkGDrive->setChecked(bGDrive);
-    checkOneDrive->setChecked(bOneDrive);
+    toolDialog->reset();
 
-    if (sApktool != tempUseApktool) {
-        askReloadApk();
-    }
+    // Keys:
+
+    keyManager->reset();
+
+    // Cloud Services:
+
+    checkUpload->setChecked(Settings::get_upload());
+    checkDropbox->setChecked(Settings::get_dropbox());
+    checkGDrive->setChecked(Settings::get_gdrive());
+    checkOneDrive->setChecked(Settings::get_onedrive());
+    dropbox->setToken(Settings::get_dropbox_token());
+    gdrive->setToken(Settings::get_gdrive_token());
+    onedrive->setToken(Settings::get_onedrive_token());
 }
 
 void MainWindow::resetApktool()
@@ -531,9 +449,8 @@ void MainWindow::resetApktool()
 
 void MainWindow::resetSettings()
 {
-    if (QMessageBox::question(this, tr("Reset?"), tr("Reset settings to default?"))
-            == QMessageBox::Yes) {
-        settings->clear();
+    if (QMessageBox::question(this, tr("Reset?"), tr("Reset settings to default?")) == QMessageBox::Yes) {
+        Settings::reset();
         restoreSettings();
         resize(WINDOW_WIDTH, WINDOW_HEIGHT);
     }
@@ -616,7 +533,7 @@ void MainWindow::setLanguage(QString lang)
     labelTool->setText(tr("Current Mode:"));
     loadingDialog->setWindowTitle(tr("Processing"));
     uploadDialog->setWindowTitle(tr("Uploading"));
-    btnTool->setToolTip(toolDialog->getUseApktool() ? toolDialog->hint_apktool() : toolDialog->hint_quazip());
+    btnTool->setToolTip(Settings::get_use_apktool() ? toolDialog->hint_apktool() : toolDialog->hint_quazip());
     menuBar()->resize(0, 0); // "Repaint" menu bar
 
     effects->retranslate();
@@ -728,15 +645,9 @@ void MainWindow::applyAppName()
     }
 }
 
-void MainWindow::switchTool()
-{
-    toolDialog->setUseApktool(!toolDialog->getUseApktool());
-    askReloadApk();
-}
-
 void MainWindow::enableApktool(bool value)
 {
-    btnTool->setText(value ? "Apktool" : "QuaZIP");
+    btnTool->setText(value ? "Apktool" : "ZIP");
     btnTool->setToolTip(value ? toolDialog->hint_apktool() : toolDialog->hint_quazip());
 
     menuBar()->resize(0, 0); // "Repaint" menu bar
@@ -770,7 +681,7 @@ void MainWindow::askReloadApk()
                                        QMessageBox::Yes, QMessageBox::No);
 
     if (result != QMessageBox::Yes || !apkLoad(currentApk)) {
-        toolDialog->setUseApktool(!toolDialog->getUseApktool());
+        toolDialog->switch_mode();
     }
 }
 
@@ -935,7 +846,7 @@ void MainWindow::apkUnpacked(QString filename)
     actIconResize->setEnabled(true);
     actIconScale->setEnabled(true);
     btnApplyIcons->setEnabled(true);
-    if (toolDialog->getUseApktool()) {
+    if (Settings::get_use_apktool()) {
         editAppName->setEnabled(true);
         editVersionCode->setEnabled(true);
         editVersionName->setEnabled(true);
@@ -1118,8 +1029,7 @@ bool MainWindow::apkLoad(QString filename)
     }
 
     // Opening file:
-    QFile file(filename);
-    if (!file.exists()) {
+    if (!QFile::exists(filename)) {
         error(tr("File not found"), tr("Could not find APK:\n%1").arg(filename));
         recent.removeOne(filename);
         refreshRecent();
@@ -1132,8 +1042,9 @@ bool MainWindow::apkLoad(QString filename)
     loadingDialog->setProgress(0);
     PackOptions opts;
     opts.filename = filename;
-    opts.isApktool = toolDialog->getUseApktool();
-    opts.isSmali = toolDialog->getSmali();
+    opts.temp = Settings::get_temp();
+    opts.isApktool = Settings::get_use_apktool();
+    opts.isSmali = Settings::get_smali();
     apk->unpack(opts);
     return true;
 }
@@ -1166,11 +1077,11 @@ void MainWindow::apkSave()
 
         const QPixmap PIXMAP_KEY(":/gfx/key.png");
 
-        QString alias = keyManager->getAlias();
-        QString pass_store = keyManager->getPassStore();
-        QString pass_alias = keyManager->getPassAlias();
+        QString alias = Settings::get_alias();
+        QString pass_store = Settings::get_keystore_pass();
+        QString pass_alias = Settings::get_alias_pass();
 
-        const bool USING_KEYSTORE = keyManager->getIsKeystore();
+        const bool USING_KEYSTORE = Settings::get_use_keystore();
         if (USING_KEYSTORE) {
             if (pass_store.isEmpty()) {
                 pass_store = InputDialog::getString(NULL, tr("Enter the KeyStore password:"),
@@ -1197,14 +1108,15 @@ void MainWindow::apkSave()
 
         PackOptions opts;
         opts.filename = filename;
-        opts.isApktool = toolDialog->getUseApktool();
-        opts.ratio = toolDialog->getRatio();
-        opts.isSmali = toolDialog->getSmali();
-        opts.isSign = toolDialog->getSign();
-        opts.isOptimize = toolDialog->getOptimize();
-        opts.filePem = keyManager->getFilePem();
-        opts.filePk8 = keyManager->getFilePk8();
-        opts.fileKey = keyManager->getFileKey();
+        opts.temp = Settings::get_temp();
+        opts.isApktool = Settings::get_use_apktool();
+        opts.ratio = Settings::get_compression();
+        opts.isSmali = Settings::get_smali();
+        opts.isSign = Settings::get_sign();
+        opts.isOptimize = Settings::get_zipalign();
+        opts.filePem = Settings::get_pem();
+        opts.filePk8 = Settings::get_pk8();
+        opts.fileKey = Settings::get_keystore();
         opts.isKeystore = USING_KEYSTORE;
         opts.alias = alias;
         opts.passStore = pass_store;
@@ -1442,64 +1354,35 @@ void MainWindow::dropEvent(QDropEvent *event)
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     // Confirm exit:
+
     if (confirmExit()) {
         event->ignore();
         return;
     }
 
-    // Save settings:
-    settings->setValue("Version", VER);
-    settings->setValue("Profile", devices->currentGroupText());
-    settings->setValue("Language", currentLang);
-    settings->setValue("Update", actAutoUpdate->isChecked());
-    settings->setValue("Directory", currentPath);
-    settings->setValue("Geometry", saveGeometry());
-    settings->setValue("Splitter", splitter->saveState());
-    settings->setValue("Recent", recent);
+    // Save Settings:
 
-    settings->beginGroup("APK");
-        settings->setValue("Apktool", toolDialog->getUseApktool());
-        settings->setValue("Compression", toolDialog->getRatio());
-        settings->setValue("Smali", toolDialog->getSmali());
-        settings->setValue("Sign", toolDialog->getSign());
-        settings->setValue("Optimize", toolDialog->getOptimize());
-        settings->setValue("Upload", checkUpload->isChecked());
-    settings->endGroup();
+    Settings::set_version(VER);
+    Settings::set_profile(devices->currentGroupText());
+    Settings::set_language(currentLang);
+    Settings::set_update(actAutoUpdate->isChecked());
+    Settings::set_path(currentPath);
+    Settings::set_geometry(saveGeometry());
+    Settings::set_splitter(splitter->saveState());
+    Settings::set_recent(recent);
 
-    settings->beginGroup("Key");
-        settings->setValue("PK8", keyManager->getFilePk8());
-        settings->setValue("PEM", keyManager->getFilePem());
-        settings->setValue("KeyStore", keyManager->getFileKey());
-        settings->setValue("Alias", keyManager->getAlias());
-        QString passStore = keyManager->getPassStore();
-        QString passAlias = keyManager->getPassAlias();
-        crypt->setKey(keyMac);
-        passStore = crypt->encryptToString(passStore);
-        passAlias = crypt->encryptToString(passAlias);
-        crypt->setKey(SIMPLECRYPT_KEY);
-        passStore = crypt->encryptToString(passStore);
-        passAlias = crypt->encryptToString(passAlias);
-        settings->setValue("PassStore", passStore);
-        settings->setValue("PassAlias", passAlias);
-        settings->setValue("Method", keyManager->getIsKeystore());
-    settings->endGroup();
+    Settings::set_upload(checkUpload->isChecked());
+    Settings::set_dropbox(checkDropbox->isChecked());
+    Settings::set_gdrive(checkGDrive->isChecked());
+    Settings::set_onedrive(checkOneDrive->isChecked());
+    Settings::set_dropbox_token(dropbox->getToken());
+    Settings::set_gdrive_token(gdrive->getToken());
+    Settings::set_onedrive_token(onedrive->getToken());
 
-    settings->beginGroup("Dropbox");
-        settings->setValue("Token", dropbox->getToken());
-        settings->setValue("Enable", checkDropbox->isChecked());
-    settings->endGroup();
-
-    settings->beginGroup("GDrive");
-        settings->setValue("Token", gdrive->getToken());
-        settings->setValue("Enable", checkGDrive->isChecked());
-    settings->endGroup();
-
-    settings->beginGroup("OneDrive");
-        settings->setValue("Token", onedrive->getToken());
-        settings->setValue("Enable", checkOneDrive->isChecked());
-    settings->endGroup();
+    Settings::kill();
 
     // Close window:
+
     event->accept();
 }
 

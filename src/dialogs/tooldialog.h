@@ -15,11 +15,6 @@ class ToolDialog : public QDialog
 
 public:
     explicit ToolDialog(QWidget *parent = 0);
-    short getRatio() const { return slideRatio->value(); }
-    bool getUseApktool() const { return radioApktool->isChecked(); }
-    bool getSmali() const {return checkSmali->isChecked(); }
-    bool getSign() const { return checkSign->isChecked(); }
-    bool getOptimize() const { return checkOptimize->isChecked(); }
     QString hint_quazip() { return tr(STR_QUAZIP); }
     QString hint_apktool() { return tr(STR_APKTOOL); }
     void retranslate();
@@ -38,31 +33,23 @@ private:
     QCheckBox *checkOptimize;
     QGroupBox *groupZip;
     QGroupBox *groupApktool;
-    short tempRatio;
-    bool tempIsApktool;
-    bool tempSmali;
-    bool tempSign;
-    bool tempOptimize;
-    void saveTemp();
+    FileBox *tempDir;
 
 signals:
-    void apktoolChecked(bool);
-    void toolChanged();
+    void apktool_checked(bool);
+    void tool_changed();
 
 public slots:
-    void setRatio(short value);
-    void setSmali(bool unpack);
-    void setUseApktool(bool use);
-    void setSign(bool sign);
-    void setOptimize(bool optimize);
+    void switch_mode();
+    void reset();
 
 protected slots:
     virtual void accept();
     virtual void reject();
 
 private slots:
-    void setOptionZip();
-    void setOptionApktool();
+    void setModeZip();
+    void setModeApktool();
 };
 
 #endif // TOOLDIALOG_H

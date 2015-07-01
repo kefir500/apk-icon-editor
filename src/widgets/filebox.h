@@ -27,11 +27,6 @@ public:
 
     QString value() const { return edit->text(); }
 
-    void setValue(QString value);
-    void setTitle(QString title);
-    void setTitleWidth(int width);
-    void setFormats(QString _formats);
-
 private:
     QLabel *label;
     LineEditDrop *edit;
@@ -40,6 +35,12 @@ private:
 
 signals:
     void opened(QString);
+
+public slots:
+    void setValue(QString value);
+    void setTitle(QString title);
+    void setTitleWidth(int width);
+    void setFormats(QString _formats);
 
 private slots:
     void openFile(QString filename = NULL);

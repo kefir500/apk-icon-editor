@@ -1,4 +1,5 @@
 #include "keymanager.h"
+#include "settings.h"
 #include <QBoxLayout>
 #include <QDialogButtonBox>
 #include <QFileDialog>
@@ -73,7 +74,7 @@ KeyManager::KeyManager(QWidget *parent) : QDialog(parent)
     connect(radioPem, SIGNAL(clicked()), this, SLOT(setOptionPem()));
     connect(radioKey, SIGNAL(clicked()), this, SLOT(setOptionKey()));
     connect(btnNew, SIGNAL(clicked()), keyCreator, SLOT(open()));
-    connect(keyCreator, SIGNAL(created(QString)), this, SLOT(setFileKey(QString)));
+    connect(keyCreator, SIGNAL(created(QString)), boxKey, SLOT(setValue(QString)));
     connect(keyCreator, SIGNAL(success(QString, QString)), this, SIGNAL(success(QString, QString)));
     connect(keyCreator, SIGNAL(warning(QString, QString)), this, SIGNAL(warning(QString, QString)));
     connect(keyCreator, SIGNAL(error(QString, QString)), this, SIGNAL(error(QString, QString)));
@@ -93,55 +94,6 @@ void KeyManager::retranslate()
     keyCreator->retranslate();
 }
 
-void KeyManager::setFilePem(QString value)
-{
-    filePem = value;
-    boxPem->setValue(value);
-}
-
-void KeyManager::setFilePk8(QString value)
-{
-    filePk8 = value;
-    boxPk8->setValue(value);
-}
-
-void KeyManager::setFileKey(QString value)
-{
-    fileKey = value;
-    boxKey->setValue(value);
-}
-
-void KeyManager::setIsKeyStore(bool value)
-{
-    isKeystore = value;
-    if (isKeystore) {
-        setOptionKey();
-        radioKey->setChecked(true);
-    }
-    else {
-        setOptionPem();
-        radioPem->setChecked(true);
-    }
-}
-
-void KeyManager::setAlias(QString value)
-{
-    alias = value;
-    editAlias->setText(alias);
-}
-
-void KeyManager::setPassStore(QString password)
-{
-    passStore = password;
-    editStorePass->setText(password);
-}
-
-void KeyManager::setPassAlias(QString password)
-{
-    passAlias = password;
-    editAliasPass->setText(password);
-}
-
 void KeyManager::setOptionPem()
 {
     groupPem->setEnabled(true);
@@ -156,26 +108,39 @@ void KeyManager::setOptionKey()
 
 void KeyManager::accept()
 {
-    setFilePem(boxPem->value());
-    setFilePk8(boxPk8->value());
-    setFileKey(boxKey->value());
-    setIsKeyStore(radioKey->isChecked());
-    setAlias(editAlias->text());
-    setPassStore(editStorePass->text());
-    setPassAlias(editAliasPass->text());
+    Settings::set_use_keystore(radioKey->isChecked());
+    Settings::set_pem(boxPem->value());
+    Settings::set_pk8(boxPk8->value());
+    Settings::set_keystore(boxKey->value());
+    Settings::set_alias(editAlias->text());
+    Settings::set_keystore_pass(editStorePass->text());
+    Settings::set_alias_pass(editAliasPass->text());
+    reset();
     QDialog::accept();
 }
 
 void KeyManager::reject()
 {
-    setFilePem(filePem);
-    setFilePk8(filePk8);
-    setFileKey(fileKey);
-    setIsKeyStore(isKeystore);
-    setAlias(alias);
-    setPassStore(passStore);
-    setPassAlias(passAlias);
+    reset();
     QDialog::reject();
+}
+
+void KeyManager::reset()
+{
+    if (Settings::get_use_keystore()) {
+        radioKey->setChecked(true);
+        setOptionKey();
+    }
+    else {
+        radioPem->setChecked(true);
+        setOptionPem();
+    }
+    boxPem->setValue(Settings::get_pem());
+    boxPk8->setValue(Settings::get_pk8());
+    boxKey->setValue(Settings::get_keystore());
+    editAlias->setText(Settings::get_alias());
+    editStorePass->setText(Settings::get_keystore_pass());
+    editAliasPass->setText(Settings::get_alias_pass());
 }
 
 // KeyCreator
@@ -383,8 +348,4 @@ void KeyCreator::reject()
 {
     clear();
     QDialog::reject();
-}
-
-void KeyCreator::createKey(KeyParams)
-{
 }

@@ -1,5 +1,6 @@
 #include "apk.h"
 #include "main.h"
+#include "settings.h"
 #include <QApplication>
 #include <QProcess>
 #include <QtConcurrent/QtConcurrentRun>
@@ -41,7 +42,6 @@ void removeRecursively(QString dir)
     QDir meta(dir);
     meta.removeRecursively();
 #else
-    // TODO: This code needs to be reviewed:
     QDir d(dir);
     if (d.exists(dir)) {
         Q_FOREACH(QFileInfo info, d.entryInfoList(QDir::NoDotAndDotDot | QDir::System | QDir::Hidden  | QDir::AllDirs | QDir::Files, QDir::DirsFirst)) {

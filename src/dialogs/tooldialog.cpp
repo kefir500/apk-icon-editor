@@ -1,4 +1,5 @@
 #include "tooldialog.h"
+#include "settings.h"
 #include <QDialogButtonBox>
 
 const char *ToolDialog::STR_QUAZIP = QT_TR_NOOP(
@@ -55,8 +56,8 @@ ToolDialog::ToolDialog(QWidget *parent) : QDialog(parent)
     layoutZip->addWidget(labelMax);
     layoutApktool->addWidget(checkSmali);
 
-    connect(radioZip, SIGNAL(clicked()), this, SLOT(setOptionZip()));
-    connect(radioApktool, SIGNAL(clicked()), this, SLOT(setOptionApktool()));
+    connect(radioZip, SIGNAL(clicked()), this, SLOT(setModeZip()));
+    connect(radioApktool, SIGNAL(clicked()), this, SLOT(setModeApktool()));
     connect(buttons, SIGNAL(accepted()), this, SLOT(accept()));
     connect(buttons, SIGNAL(rejected()), this, SLOT(reject()));
 
@@ -65,76 +66,68 @@ ToolDialog::ToolDialog(QWidget *parent) : QDialog(parent)
 
 void ToolDialog::accept()
 {
-    if (tempIsApktool != getUseApktool()) {
-        tempIsApktool = getUseApktool();
-        emit toolChanged();
+    const bool APKTOOL = radioApktool->isChecked();
+    const bool SMALI = checkSmali->isChecked();
+    const bool SIGN = checkSign->isChecked();
+    const bool ZIPALIGN = checkOptimize->isChecked();
+    const int COMPRESSION = slideRatio->value();
+    const QString TEMP = tempDir->value();
+
+    if (APKTOOL != Settings::get_use_apktool()) {
+        Settings::set_use_apktool(APKTOOL);
+        emit tool_changed();
     }
-    tempRatio = getRatio();
-    tempSmali = getSmali();
-    tempSign = getSign();
-    tempOptimize = getOptimize();
+    else {
+        Settings::set_use_apktool(APKTOOL);
+    }
+
+    Settings::set_smali(SMALI);
+    Settings::set_compression(COMPRESSION);
+    Settings::set_sign(SIGN);
+    Settings::set_zipalign(ZIPALIGN);
+    Settings::set_temp(TEMP);
+
+    reset();
     QDialog::accept();
 }
 
 void ToolDialog::reject()
 {
-    setUseApktool(tempIsApktool);
-    setRatio(tempRatio);
-    setSmali(tempSmali);
-    setSign(tempSign);
-    setOptimize(tempOptimize);
+    reset();
     QDialog::reject();
 }
 
-void ToolDialog::setOptionZip()
+void ToolDialog::reset()
 {
-    groupApktool->hide();
+    slideRatio->setValue(Settings::get_compression());
+    checkSmali->setChecked(Settings::get_smali());
+    checkSign->setChecked(Settings::get_sign());
+    checkOptimize->setChecked(Settings::get_zipalign());
+    tempDir->setValue(Settings::get_temp());
+    Settings::get_use_apktool() ? setModeApktool() : setModeZip();
+}
+
+void ToolDialog::switch_mode()
+{
+    Settings::set_use_apktool(!Settings::get_use_apktool());
+    emit apktool_checked(Settings::get_use_apktool());
+    reset();
+}
+
+void ToolDialog::setModeZip()
+{
+    radioZip->setChecked(true);
     groupZip->show();
-    emit apktoolChecked(false);
+    groupApktool->hide();
+    emit apktool_checked(false);
 }
 
-void ToolDialog::setOptionApktool()
+void ToolDialog::setModeApktool()
 {
-    groupZip->hide();
+    radioApktool->setChecked(true);
     groupApktool->show();
-    emit apktoolChecked(true);
-}
-
-void ToolDialog::setRatio(short value)
-{
-    tempRatio = value;
-    slideRatio->setValue(value);
-}
-
-void ToolDialog::setSmali(bool unpack)
-{
-    tempSmali = unpack;
-    checkSmali->setChecked(unpack);
-}
-
-void ToolDialog::setUseApktool(bool use)
-{
-    tempIsApktool = use;
-    if (use) {
-        radioApktool->setChecked(true);
-        setOptionApktool();
-    }
-    else {
-        radioZip->setChecked(true);
-        setOptionZip();
-    }
-}
-
-void ToolDialog::setSign(bool sign)
-{
-    tempSign = sign;
-    checkSign->setChecked(sign);
-}
-
-void ToolDialog::setOptimize(bool optimize)
-{
-    tempOptimize = optimize;
-    checkOptimize->setChecked(optimize);
+    groupZip->hide();
+    emit apktool_checked(true);
 }
 
 void ToolDialog::retranslate()
