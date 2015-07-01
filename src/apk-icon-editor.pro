@@ -3,7 +3,7 @@ TEMPLATE = app
 
 VERSION = 1.3.0
 QMAKE_TARGET_COMPANY = Qwerty Minds
-QMAKE_TARGET_DESCRIPTION = A tool designed to easily edit and replace APK icons
+QMAKE_TARGET_DESCRIPTION = APK Icon Editor v$$VERSION
 QMAKE_TARGET_COPYRIGHT = Copyright (C) 2014-2015
 
 CONFIG(release, debug|release) {
