@@ -80,6 +80,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     actFaq = new QAction(this);
     actWebsite = new QAction(this);
     actReport = new QAction(this);
+    menuLogs = new QMenu(this);
+    actLogFile = new QAction(this);
+    actLogPath = new QAction(this);
     actUpdate = new QAction(this);
     actAboutQt = new QAction(this);
     actAbout = new QAction(this);
@@ -105,12 +108,18 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     menuSett->addMenu(menuLang);
     menuSett->addAction(actAutoUpdate);
     menuSett->addSeparator();
+#ifndef Q_OS_UNIX
     menuSett->addAction(actAssoc);
+#endif
     menuSett->addAction(actReset);
     menuHelp->addAction(actFaq);
     menuHelp->addSeparator();
     menuHelp->addAction(actWebsite);
     menuHelp->addAction(actReport);
+    menuHelp->addSeparator();
+    menuHelp->addMenu(menuLogs);
+    menuLogs->addAction(actLogFile);
+    menuLogs->addAction(actLogPath);
     menuHelp->addSeparator();
     menuHelp->addAction(actUpdate);
     menuHelp->addSeparator();
@@ -140,11 +149,15 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     actPacking->setShortcut(QKeySequence("Ctrl+P"));
     actKeys->setShortcut(QKeySequence("Ctrl+K"));
     actFaq->setShortcut(QKeySequence("F1"));
+    actLogPath->setShortcut(QKeySequence("Ctrl+L"));
     actIconEffect->setIcon(QIcon(":/gfx/effects.png"));
     actPacking->setIcon(QIcon(":/gfx/task-pack.png"));
     actKeys->setIcon(QIcon(":/gfx/key.png"));
     actFaq->setIcon(QIcon(":/gfx/help.png"));
     actReport->setIcon(QIcon(":/gfx/bug.png"));
+    menuLogs->setIcon(QIcon(":/gfx/file.png"));
+    actLogFile->setIcon(QIcon(":/gfx/file.png"));
+    actLogPath->setIcon(QIcon(":/gfx/open.png"));
     actAbout->setIcon(QIcon(":/gfx/apk-icon-editor.png"));
     actExit->setShortcut(QKeySequence("Ctrl+Q"));
 
@@ -294,6 +307,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     connect(actWebsite, SIGNAL(triggered()), this, SLOT(browseSite()));
     connect(actReport, SIGNAL(triggered()), this, SLOT(browseBugs()));
     connect(actFaq, SIGNAL(triggered()), this, SLOT(browseFaq()));
+    connect(actLogFile, SIGNAL(triggered()), this, SLOT(openLogFile()));
+    connect(actLogPath, SIGNAL(triggered()), this, SLOT(openLogPath()));
     connect(actUpdate, SIGNAL(triggered()), updater, SLOT(check()));
     connect(actAboutQt, SIGNAL(triggered()), this, SLOT(aboutQt()));
     connect(actAbout, SIGNAL(triggered()), this, SLOT(about()));
@@ -527,6 +542,9 @@ void MainWindow::setLanguage(QString lang)
     actFaq->setText(tr("FAQ"));
     actWebsite->setText(tr("Visit Website"));
     actReport->setText(tr("Report a Bug"));
+    menuLogs->setTitle(tr("Logs"));
+    actLogFile->setText(tr("Open Log File"));
+    actLogPath->setText(tr("Open Log Directory"));
     actUpdate->setText(tr("Check for &Updates"));
     actAboutQt->setText(tr("About Qt"));
     actAbout->setText(tr("About %1").arg(APP));
@@ -1166,6 +1184,16 @@ void MainWindow::browseBugs() const
 void MainWindow::browseFaq() const
 {
     QDesktopServices::openUrl(QUrl::fromLocalFile(QString("%1/faq.txt").arg(APPDIR)));
+}
+
+void MainWindow::openLogFile() const
+{
+    QDesktopServices::openUrl(LOG_FILE);
+}
+
+void MainWindow::openLogPath() const
+{
+    QDesktopServices::openUrl(LOG_PATH);
 }
 
 void MainWindow::about()
