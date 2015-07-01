@@ -465,9 +465,13 @@ void MainWindow::resetApktool()
 void MainWindow::resetSettings()
 {
     if (QMessageBox::question(this, tr("Reset?"), tr("Reset settings to default?")) == QMessageBox::Yes) {
+        const bool APKTOOL = Settings::get_use_apktool();
         Settings::reset();
         restoreSettings();
         resize(WINDOW_WIDTH, WINDOW_HEIGHT);
+        if (APKTOOL != Settings::get_use_apktool()) {
+            askReloadApk();
+        }
     }
 }
 
