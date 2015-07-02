@@ -44,7 +44,7 @@ ToolDialog::ToolDialog(QWidget *parent) : QDialog(parent)
     checkOptimize = new QCheckBox(this);
     tempDir = new FileBox(this, true);
 
-    tempDir->setTitle(tr("Temporary Directory"));
+    tempDir->setTitle(tr("Temporary Directory") + ":");
 
     layout->addWidget(radioZip);
     layout->addWidget(radioApktool);

@@ -186,7 +186,6 @@ private slots:
     void showEffectsDialog();       ///< Show "Effects" dialog.
     void hideEmptyDpi();            ///< Hide unused (empty) icons from \c profiles widget.
     void cloneIcons();              ///< Apply current icon to all DPI sizes.
-    void switchTool();              ///< Switch current repacking tool ("7za"/"apktool").
     void enableApktool(bool value); ///< Enable or disable application name/version editing.
     void stringChanged(int, int);   ///< Handle translation cell changes.
     void applyAppName();            ///< Apply global application name to all translations.
