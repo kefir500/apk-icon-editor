@@ -55,11 +55,11 @@ QByteArray Settings::get_geometry() { return settings->value("Geometry", 0).toBy
 QByteArray Settings::get_splitter() { return settings->value("Splitter", 0).toByteArray(); }
 QStringList Settings::get_recent()  { return settings->value("Recent", 0).toStringList(); }
 
-QString Settings::get_temp()
+QString Settings::get_temp(bool fallback)
 {
-    const QString TEMP = QDir::toNativeSeparators(QDir::tempPath() + "/apk-icon-editor/");
+    const QString TEMP = QDir::toNativeSeparators(QDir::tempPath());
     const QString PATH = settings->value("Temp", TEMP).toString();
-    return (QDir(PATH).exists() && !PATH.isEmpty()) ? PATH : TEMP;
+    return (fallback && (!QDir(PATH).exists() || PATH.isEmpty())) ? TEMP : PATH;
 }
 
 bool Settings::get_use_apktool() { return settings->value("APK/Apktool", false).toBool(); }

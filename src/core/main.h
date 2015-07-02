@@ -41,7 +41,6 @@ const QString URL_UPDATE    = URL_WEBSITE + "download/#update";
 const QString URL_BUGS      = URL_WEBSITE + "#contact";
 const QString URL_JAVA      = "http://java.com/download";
 const QString URL_TRANSLATE = "https://www.transifex.com/projects/p/apk-icon-editor/";
-const QString TEMPDIR       = QDir::toNativeSeparators(QDir::tempPath() + "/apk-icon-editor/");
 const QString LOG_PATH      = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/apk-icon-editor/";
 const QString LOG_FILE      = LOG_PATH + "apk-icon-editor.log";
 

@@ -4,7 +4,7 @@
 #include <QDropEvent>
 #include <QMimeData>
 
-FileBox::FileBox(QWidget *parent) : QWidget(parent)
+FileBox::FileBox(QWidget *parent, bool isDirectory) : QWidget(parent)
 {
     QHBoxLayout *layout = new QHBoxLayout(this);
     layout->setMargin(0);
@@ -21,9 +21,18 @@ FileBox::FileBox(QWidget *parent) : QWidget(parent)
     layout->addWidget(edit);
     layout->addWidget(button);
 
-    connect(button, SIGNAL(clicked()), this, SLOT(openFile()));
-    connect(edit, SIGNAL(fileDropped(QString)), this, SLOT(openFile(QString)));
-    connect(edit, SIGNAL(textChanged(QString)), this, SLOT(isFileExist(QString)));
+    isDir = isDirectory;
+
+    if (!isDir) {
+        connect(button, SIGNAL(clicked()), this, SLOT(openFile()));
+        connect(edit, SIGNAL(fileDropped(QString)), this, SLOT(openFile(QString)));
+    }
+    else {
+        connect(button, SIGNAL(clicked()), this, SLOT(openDir()));
+        connect(edit, SIGNAL(fileDropped(QString)), this, SLOT(openDir(QString)));
+    }
+
+    connect(edit, SIGNAL(textChanged(QString)), this, SLOT(exists(QString)));
 }
 
 void FileBox::setValue(QString value)
@@ -57,9 +66,21 @@ void FileBox::openFile(QString filename)
     }
 }
 
-void FileBox::isFileExist(QString filename)
+void FileBox::openDir(QString dir)
 {
-    if (QFile::exists(filename) || filename.isEmpty()) {
+    if (dir.isNull()) {
+        dir = QFileDialog::getExistingDirectory(this, NULL, NULL);
+    }
+    if (!dir.isNull()) {
+        edit->setText(dir);
+        emit opened(dir);
+    }
+}
+
+void FileBox::exists(QString path)
+{
+    bool exists = isDir ? QDir(path).exists() : QFile::exists(path);
+    if (exists || path.isEmpty()) {
         label->setStyleSheet("color: #000");
     }
     else {

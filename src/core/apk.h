@@ -20,6 +20,7 @@ public:
 
 struct PackOptions {
     QString filename;           ///< Output APK filename.
+    QString temp;               ///< Directory for temporary files.
     bool isApktool;             ///< If \c TRUE, use "apktool". If \c FALSE, use "7za".
     short ratio;                ///< 7za compression ratio [0-9] (only in "7za" mode).
     bool isSmali;               ///< If \c TRUE, decompile "classes.dex" (only in "apktool" mode).
@@ -50,6 +51,7 @@ class Apk : public QObject {
 
 private:
     QString filename;                       ///< Current APK filename.
+    QString temp;                           ///< Temporary directory for repacking.
     QString manifest;                       ///< Stores AndroidManifest.xml.
     QString var_androidLabel;               ///< Stores the name of "android:label" variable (AndroidManifest.xml).
     QString warnText;                       ///< Stores warning text.
@@ -61,7 +63,6 @@ private:
     static const char *STR_CHECKPATH;       ///< "Check the PATH variable" string.
     static const QString LOG_ERRORSTART;    ///< Error log text template.
     static const QString LOG_EXITCODE;      ///< Error log text template.
-    static const QString TEMPDIR_APK;       ///< Temporary directory for unpacked resources.
 
     /// \brief This function has to be called on fatal error.
     /// Emits #error signal and returns \c FALSE.

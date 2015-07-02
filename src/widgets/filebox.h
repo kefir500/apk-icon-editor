@@ -23,7 +23,7 @@ class FileBox : public QWidget {
     Q_OBJECT
 
 public:
-    explicit FileBox(QWidget *parent = 0);
+    explicit FileBox(QWidget *parent = 0, bool isDirectory = false);
 
     QString value() const { return edit->text(); }
 
@@ -31,6 +31,7 @@ private:
     QLabel *label;
     LineEditDrop *edit;
 
+    bool isDir;
     QString formats;
 
 signals:
@@ -44,7 +45,8 @@ public slots:
 
 private slots:
     void openFile(QString filename = NULL);
-    void isFileExist(QString filename);
+    void openDir(QString dir = NULL);
+    void exists(QString path);
 
 };
 

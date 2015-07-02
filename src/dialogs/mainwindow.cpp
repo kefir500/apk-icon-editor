@@ -451,15 +451,8 @@ void MainWindow::restoreSettings()
 
 void MainWindow::resetApktool()
 {
-    QDir apktool;
-#ifndef Q_OS_OSX
-    const QString FRAMEWORK_PATH = QDir::homePath();
-#else
-    const QString FRAMEWORK_PATH = QDir::homePath() + "/library";
-#endif
-    QFile::remove(FRAMEWORK_PATH + "/apktool/framework/1.apk");
-    apktool.rmdir(FRAMEWORK_PATH + "/apktool/framework");
-    apktool.rmdir(FRAMEWORK_PATH + "/apktool");
+    const QString FRAMEWORK = Settings::get_temp() + "/apk-icon-editor/framework/1.apk";
+    QFile::remove(FRAMEWORK);
 }
 
 void MainWindow::resetSettings()
@@ -468,6 +461,7 @@ void MainWindow::resetSettings()
         const bool APKTOOL = Settings::get_use_apktool();
         Settings::reset();
         restoreSettings();
+        resetApktool();
         resize(WINDOW_WIDTH, WINDOW_HEIGHT);
         if (APKTOOL != Settings::get_use_apktool()) {
             askReloadApk();
@@ -1161,7 +1155,8 @@ void MainWindow::apkSave()
 
 void MainWindow::apkExplore()
 {
-    QDesktopServices::openUrl(QUrl::fromLocalFile(TEMPDIR + "apk"));
+    const QString TEMPDIR = Settings::get_temp() + "/apk-icon-editor/apk";
+    QDesktopServices::openUrl(QUrl::fromLocalFile(TEMPDIR));
 }
 
 void MainWindow::associate() const

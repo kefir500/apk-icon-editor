@@ -13,7 +13,6 @@ const char *Apk::STR_ERRORSTART = QT_TR_NOOP("Error starting <b>%1</b>");
 const char *Apk::STR_CHECKPATH = QT_TR_NOOP("(check the PATH variable if JRE is already installed)");
 const QString Apk::LOG_ERRORSTART("%1: could not start");
 const QString Apk::LOG_EXITCODE("%1 exit code: %2");
-const QString Apk::TEMPDIR_APK = QDir::toNativeSeparators(TEMPDIR + "apk/");
 
 QDebug operator<<(QDebug d, const PackOptions &o) {
     d << "Packing APK...";
@@ -21,6 +20,7 @@ QDebug operator<<(QDebug d, const PackOptions &o) {
     d << "\n\tApplication name:" << o.appName;
     d << "\n\tApplication version code:" << o.appVersionCode;
     d << "\n\tApplication version name:" << o.appVersionName;
+    d << "\n\tTemporary directory:" << o.temp;
     d << "\n\tUsing Apktool:" << o.isApktool;
     d << "\n\tRatio:" << o.ratio;
     d << "\n\tSmali:" << o.isSmali;
@@ -72,7 +72,10 @@ QString parse(QString regexp, QString str)
 void Apk::unpack(PackOptions options)
 {
     qDebug() << "Unpacking" << options.filename;
+    qDebug() << "Using Apktool:" << options.isApktool;
+    qDebug() << "Temporary directory:" << options.temp;
     filename = options.filename;
+    temp = QDir::fromNativeSeparators(options.temp + "/apk-icon-editor");
     strings.clear();
     var_androidLabel.clear();
     warnText.clear();
@@ -83,6 +86,7 @@ void Apk::pack(PackOptions options)
 {
     qDebug() << options;
     filename = options.filename;
+    temp = QDir::fromNativeSeparators(options.temp + "/apk-icon-editor");
     QtConcurrent::run(this, &Apk::doPack, options);
 }
 
@@ -98,7 +102,7 @@ bool Apk::doUnpack(PackOptions options)
     }
 
     emit loading(60, tr("Unpacking APK..."));
-    clearTemp();
+    removeRecursively(temp + "/apk");
     if (!options.isApktool) {
         if (!unzip()) {
             return false;
@@ -161,14 +165,14 @@ bool Apk::readManifest()
 
 bool Apk::unzip() const
 {
-    QDir dir(TEMPDIR);
+    QDir dir(temp);
     dir.mkpath(".");
 
 #ifndef USE_7ZIP
 
     QTime sw;
     sw.start();
-    QStringList result = JlCompress::extractDir(filename, TEMPDIR + "apk");
+    QStringList result = JlCompress::extractDir(filename, temp + "/apk/");
     qDebug() << qPrintable(QString("Unpacked in %1s").arg(sw.elapsed() / 1000.0));
     if (!result.isEmpty()) {
         return true;
@@ -183,7 +187,7 @@ bool Apk::unzip() const
     QProcess p;
     QTime sw;
     sw.start();
-    p.start(QString("\"%1/7za\" x \"%2\" -y -o\"%3apk\"").arg(APPDIR, filename, TEMPDIR));
+    p.start(QString("\"%1/7za\" x \"%2\" -y -o\"%3/apk\"").arg(APPDIR, filename, temp));
     if (!p.waitForStarted(-1)) {
         qDebug() << qPrintable(LOG_ERRORSTART.arg("7za"));
         qDebug() << "Error:" << p.errorString();
@@ -201,8 +205,8 @@ bool Apk::unzip_apktool(bool smali) const
     QProcess p;
     QTime sw;
     sw.start();
-    p.start(QString("java -jar \"%1/apktool.jar\" d \"%2\" -f %3 -o \"%4apk\"")
-            .arg(APPDIR, filename, (smali ? "" : "-s"), TEMPDIR));
+    p.start(QString("java -jar \"%1/apktool.jar\" d \"%2\" -f %3 -o \"%4/apk\" -p \"%4/framework\"")
+            .arg(APPDIR, filename, (smali ? "" : "-s"), temp));
     if (!p.waitForStarted(-1)) {
         if (isJavaInstalled()) {
             qDebug() << qPrintable(LOG_ERRORSTART.arg("Apktool"));
@@ -251,7 +255,7 @@ void Apk::loadIcons()
         }
         int id;
         if (i == 0 || (id = pngs.lastIndexOf(pngFile, i - 1)) == -1) {
-            icons.push_back(QSharedPointer<Icon>(new Icon(TEMPDIR_APK + pngFile)));
+            icons.push_back(QSharedPointer<Icon>(new Icon(temp + "/apk/" + pngFile)));
         }
         else {
             icons.push_back(icons[id]);
@@ -264,7 +268,7 @@ void Apk::loadStrings()
     QString manifest_text;
 
     // Get application label variable name:
-    QFile f(TEMPDIR_APK + "AndroidManifest.xml");
+    QFile f(temp + "/apk/AndroidManifest.xml");
     if (f.open(QFile::ReadOnly | QFile::Text)) {
         manifest_text = f.readAll();
         f.close();
@@ -282,7 +286,7 @@ void Apk::loadStrings()
     }
 
     // Get application label translations:
-    QDir dir(TEMPDIR_APK + "res");
+    QDir dir(temp + "/apk/res");
     QStringList langs = dir.entryList(QStringList("values*"), QDir::Dirs);
     for (int i = 0; i < langs.size(); ++i) {
         QFile f(dir.absolutePath() + '/' + langs[i] + "/strings.xml");
@@ -308,13 +312,14 @@ bool Apk::doPack(PackOptions opts)
     bool isSigned = false;
     bool isOptimized = false;
 
-    removeRecursively(TEMPDIR_APK + "META-INF");
+    removeRecursively(temp + "/apk/META-INF");
 
     emit loading(20, tr("Saving PNG icons..."));
     if (!saveIcons()) {
         return false;
     }
 
+    clearTemp();
     if (!opts.isApktool) {
         emit loading(40, tr("Packing APK..."));
         if (!zip(opts.ratio)) {
@@ -347,7 +352,7 @@ bool Apk::doPack(PackOptions opts)
     }
     else {
         isSigned = true;
-        QFile::rename(TEMPDIR + "temp-1.apk", TEMPDIR + "temp-2.apk");
+        QFile::rename(temp + "/temp-1.apk", temp + "/temp-2.apk");
     }
 
     // Optimize:
@@ -359,7 +364,7 @@ bool Apk::doPack(PackOptions opts)
     }
     else {
         isOptimized = true;
-        QFile::rename(TEMPDIR + "temp-2.apk", TEMPDIR + "temp-3.apk");
+        QFile::rename(temp + "/temp-2.apk", temp + "/temp-3.apk");
     }
 
     // Finalize:
@@ -412,7 +417,7 @@ void Apk::saveXmlChanges(QString appName, QString versionName, QString versionCo
     // Set application name strings:
     if (!var_androidLabel.isEmpty()) {
 
-        resources.push_front(Resource(TEMPDIR_APK + "res/values/strings.xml", appName));
+        resources.push_front(Resource(temp + "/apk/res/values/strings.xml", appName));
 
         for (int i = 0; i < resources.size(); ++i) {
 
@@ -441,7 +446,7 @@ void Apk::saveXmlChanges(QString appName, QString versionName, QString versionCo
         }
     }
     else {
-        QFile f(TEMPDIR_APK + "AndroidManifest.xml");
+        QFile f(temp + "/apk/AndroidManifest.xml");
         if (f.open(QFile::ReadWrite | QFile::Text)) {
             QTextStream in(&f);
             QString xml = in.readAll();
@@ -458,7 +463,7 @@ void Apk::saveXmlChanges(QString appName, QString versionName, QString versionCo
     if (versionCode != getVersionCode() || versionName != getVersionName()) {
         qDebug() << "versionCode:" << getVersionCode() << "=>" << versionCode;
         qDebug() << "versionName:" << getVersionName() << "=>" << versionName;
-        QFile f(TEMPDIR_APK + "apktool.yml");
+        QFile f(temp + "/apk/apktool.yml");
         if (f.open(QFile::ReadWrite | QFile::Text)) {
             QString yml = f.readAll();
             QRegExp rxCode, rxName;
@@ -478,9 +483,9 @@ bool Apk::zip(short ratio) const
 {
 #ifndef USE_7ZIP
 
-    bool result = JlCompress::compressDir(TEMPDIR + "temp.zip", TEMPDIR_APK, ratio);
+    bool result = JlCompress::compressDir(temp + "/temp.zip", temp + "/apk", ratio);
     if (result) {
-        QFile::rename(TEMPDIR + "temp.zip", TEMPDIR + "temp-1.apk");
+        QFile::rename(temp + "/temp.zip", temp + "/temp-1.apk");
         return true;
     }
     else {
@@ -491,7 +496,7 @@ bool Apk::zip(short ratio) const
 #else
 
     QProcess p;
-    p.start(QString("7za a -tzip -mx%1 \"%2temp.zip\" \"%3*\"").arg(QString::number(ratio), TEMPDIR, TEMPDIR_APK));
+    p.start(QString("7za a -tzip -mx%1 \"%2/temp.zip\" \"%2/apk/*\"").arg(QString::number(ratio), temp));
     if (!p.waitForStarted(-1)) {
         qDebug() << qPrintable(LOG_ERRORSTART.arg("7za"));
         qDebug() << "Error:" << p.errorString();
@@ -500,7 +505,7 @@ bool Apk::zip(short ratio) const
     p.waitForFinished(-1);
     bool success;
     if (success = getZipSuccess(p.exitCode())) {
-        QFile::rename(TEMPDIR + "temp.zip", TEMPDIR + "temp-1.apk");
+        QFile::rename(temp + "/temp.zip", temp + "/temp-1.apk");
     }
     return success;
 
@@ -510,8 +515,7 @@ bool Apk::zip(short ratio) const
 bool Apk::zip_apktool() const
 {
     QProcess p;
-    p.start(QString("java -jar \"%1/apktool.jar\" b \"%2\" -f -o \"%4temp.zip\"")
-            .arg(APPDIR, TEMPDIR_APK, TEMPDIR));
+    p.start(QString("java -jar \"%1/apktool.jar\" b \"%2/apk\" -f -o \"%2/temp.zip\" -p \"%2/framework\"").arg(APPDIR, temp));
     if (!p.waitForStarted(-1)) {
         if (isJavaInstalled()) {
             qDebug() << qPrintable(LOG_ERRORSTART.arg("Apktool"));
@@ -528,7 +532,7 @@ bool Apk::zip_apktool() const
     }
     p.waitForFinished(-1);
     if (!p.exitCode()) {
-        QFile::rename(TEMPDIR + "temp.zip", TEMPDIR + "temp-1.apk");
+        QFile::rename(temp + "/temp.zip", temp + "/temp-1.apk");
         return true;
     }
     else {
@@ -569,8 +573,8 @@ bool Apk::isJavaInstalled(Java type, bool debug)
 
 bool Apk::sign(const QString PEM, const QString PK8) const
 {
-    const QString APK_SRC(TEMPDIR + "temp-1.apk");
-    const QString APK_DST(TEMPDIR + "temp-2.apk");
+    const QString APK_SRC(temp + "/temp-1.apk");
+    const QString APK_DST(temp + "/temp-2.apk");
     const QString SIGNAPK(APPDIR + "/signer/");
 
     if (!QFile::exists(PEM) || !QFile::exists(PEM)) {
@@ -609,8 +613,8 @@ bool Apk::sign(const QString PEM, const QString PK8) const
 bool Apk::sign(const QString KEY, const QString ALIAS,
                const QString PASS_STORE, const QString PASS_KEY) const
 {
-    const QString APK_SRC(TEMPDIR + "temp-1.apk");
-    const QString APK_DST(TEMPDIR + "temp-2.apk");
+    const QString APK_SRC(temp + "/temp-1.apk");
+    const QString APK_DST(temp + "/temp-2.apk");
 
     if (!QFile::exists(KEY)) {
         emit warning(NULL, tr("KeyStore not found."));
@@ -651,8 +655,8 @@ bool Apk::sign(const QString KEY, const QString ALIAS,
 
 bool Apk::optimize() const
 {
-    const QString APK_SRC(TEMPDIR + "temp-2.apk");
-    const QString APK_DST(TEMPDIR + "temp-3.apk");
+    const QString APK_SRC(temp + "/temp-2.apk");
+    const QString APK_DST(temp + "/temp-3.apk");
 
     QProcess p;
     p.start(QString("\"%1/zipalign\" -f 4 \"%2\" \"%3\"").arg(APPDIR, APK_SRC, APK_DST));
@@ -686,7 +690,7 @@ bool Apk::finalize()
         filename += ".apk";
     }
     QFile::remove(filename);
-    return QFile::rename(TEMPDIR + "temp-3.apk", filename);
+    return QFile::rename(temp + "/temp-3.apk", filename);
 }
 
 bool Apk::die(QString title, QString text) const
@@ -763,5 +767,8 @@ QString Apk::getTargetSdk() const
 
 void Apk::clearTemp()
 {
-    removeRecursively(TEMPDIR);
+    QFile::remove(temp + "/temp.zip");
+    QFile::remove(temp + "/temp-1.apk");
+    QFile::remove(temp + "/temp-2.apk");
+    QFile::remove(temp + "/temp-3.apk");
 }

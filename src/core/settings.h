@@ -22,7 +22,7 @@ public:
     static QString get_last_path();
     static QByteArray get_geometry();
     static QByteArray get_splitter();
-    static QString get_temp();
+    static QString get_temp(bool fallback = true);
     static QStringList get_recent();
 
     static bool get_use_apktool();

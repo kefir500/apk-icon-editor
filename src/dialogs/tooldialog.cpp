@@ -17,7 +17,7 @@ ToolDialog::ToolDialog(QWidget *parent) : QDialog(parent)
 {
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
     setWindowIcon(QIcon(":/gfx/task-pack.png"));
-    resize(200, 0);
+    resize(440, 0);
 
     QVBoxLayout *layout = new QVBoxLayout(this);
     QHBoxLayout *layoutZip = new QHBoxLayout();
@@ -42,6 +42,9 @@ ToolDialog::ToolDialog(QWidget *parent) : QDialog(parent)
 
     checkSign = new QCheckBox(this);
     checkOptimize = new QCheckBox(this);
+    tempDir = new FileBox(this, true);
+
+    tempDir->setTitle(tr("Temporary Directory"));
 
     layout->addWidget(radioZip);
     layout->addWidget(radioApktool);
@@ -49,6 +52,7 @@ ToolDialog::ToolDialog(QWidget *parent) : QDialog(parent)
     layout->addWidget(groupApktool);
     layout->addWidget(checkSign);
     layout->addWidget(checkOptimize);
+    layout->addWidget(tempDir);
     layout->addWidget(buttons);
     layoutZip->addWidget(labelComp);
     layoutZip->addWidget(labelMin);
@@ -103,7 +107,7 @@ void ToolDialog::reset()
     checkSmali->setChecked(Settings::get_smali());
     checkSign->setChecked(Settings::get_sign());
     checkOptimize->setChecked(Settings::get_zipalign());
-    tempDir->setValue(Settings::get_temp());
+    tempDir->setValue(Settings::get_temp(false));
     Settings::get_use_apktool() ? setModeApktool() : setModeZip();
 }
 

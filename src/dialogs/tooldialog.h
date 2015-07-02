@@ -1,6 +1,7 @@
 #ifndef TOOLDIALOG_H
 #define TOOLDIALOG_H
 
+#include "filebox.h"
 #include <QDialog>
 #include <QBoxLayout>
 #include <QGroupBox>
