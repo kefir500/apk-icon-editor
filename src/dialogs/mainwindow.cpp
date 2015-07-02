@@ -1192,12 +1192,12 @@ void MainWindow::browseFaq() const
 
 void MainWindow::openLogFile() const
 {
-    QDesktopServices::openUrl(LOG_FILE);
+    QDesktopServices::openUrl(QUrl::fromLocalFile(LOG_FILE));
 }
 
 void MainWindow::openLogPath() const
 {
-    QDesktopServices::openUrl(LOG_PATH);
+    QDesktopServices::openUrl(QUrl::fromLocalFile(LOG_PATH));
 }
 
 void MainWindow::about()
