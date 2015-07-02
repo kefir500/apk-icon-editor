@@ -168,8 +168,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     drawArea->addAction(actApkOpen);
     drawArea->addAction(separator);
     drawArea->addActions(menuIcon->actions());
-    drawArea->setSizePolicy(QSizePolicy::MinimumExpanding,
-                            QSizePolicy::MinimumExpanding);
 
     loadingDialog = new ProgressDialog(this);
     loadingDialog->setIcon(QPixmap(":/gfx/task-pack.png"));
@@ -270,12 +268,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     splitter->addWidget(sidebar);
     splitter->setCollapsible(0, false);
     splitter->setCollapsible(1, false);
-    splitter->setStretchFactor(0, 3);
-#ifndef Q_OS_UNIX
-    splitter->setStretchFactor(1, 2);
-#else
-    // TODO Figure out why this stretch factor is invalid for Unix
-#endif
+    splitter->setStretchFactor(0, 2);
+    splitter->setStretchFactor(1, 1);
     splitter->setStyleSheet("QSplitter {padding: 8px;}");
 
     mapRecent = new QSignalMapper(this);
@@ -412,12 +406,13 @@ void MainWindow::restoreSettings()
     // Global:
 
     if (Settings::get_version() != VER) { resetApktool(); }
+    restoreGeometry(Settings::get_geometry());
+    splitter->setSizes(QList<int>() << 492 << 280);
+    splitter->restoreState(Settings::get_splitter());
     setLanguage(Settings::get_language());
     currentPath = Settings::get_last_path();
     devices->setCurrentGroup(Settings::get_profile());
     actAutoUpdate->setChecked(Settings::get_update());
-    restoreGeometry(Settings::get_geometry());
-    splitter->restoreState(Settings::get_splitter()); // TODO Splitter is not restored on "Reset Settings"
 
     // Recent List:
 

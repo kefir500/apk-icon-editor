@@ -31,7 +31,7 @@
 #include <QStandardPaths>
 
 const int WINDOW_WIDTH      = 800;
-const int WINDOW_HEIGHT     = 480;
+const int WINDOW_HEIGHT     = 530;
 
 // Application:
 const QString URL_WEBSITE   = "http://kefir500.github.io/apk-icon-editor/";
