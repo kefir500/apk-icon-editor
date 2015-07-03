@@ -10,8 +10,6 @@
 #include <QDesktopServices>
 #include <QApplication>
 
-#define APPDIR QCoreApplication::applicationDirPath()
-
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
     resize(WINDOW_WIDTH, WINDOW_HEIGHT);

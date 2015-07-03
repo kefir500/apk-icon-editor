@@ -6,8 +6,6 @@
 #include <QtConcurrent/QtConcurrentRun>
 #include <QuaZIP/JlCompress.h>
 
-#define APPDIR QCoreApplication::applicationDirPath()
-
 const char *Apk::STR_ERROR = QT_TR_NOOP("%1 Error");
 const char *Apk::STR_ERRORSTART = QT_TR_NOOP("Error starting <b>%1</b>");
 const char *Apk::STR_CHECKPATH = QT_TR_NOOP("(check the PATH variable if JRE is already installed)");
