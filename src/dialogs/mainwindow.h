@@ -91,6 +91,7 @@ private:
     QAction *actFaq;
     QAction *actWebsite;
     QAction *actReport;
+    QAction *actDonate;
     QAction *actLogFile;
     QAction *actLogPath;
     QAction *actUpdate;
@@ -176,6 +177,7 @@ private slots:
     void browseFaq() const;         ///< Open FAQ text document.
     void openLogFile() const;       ///< Open log file.
     void openLogPath() const;       ///< Open log directory.
+    void donate();                  ///< Show donation dialog.
     void about();                   ///< Show "About APK Icon Editor" dialog.
     void aboutAuthors();            ///< Show the list of authors dialog.
     void aboutQt() const;           ///< Show "About Qt" dialog.

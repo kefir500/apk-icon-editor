@@ -78,6 +78,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     actFaq = new QAction(this);
     actWebsite = new QAction(this);
     actReport = new QAction(this);
+    actDonate = new QAction(this);
     menuLogs = new QMenu(this);
     actLogFile = new QAction(this);
     actLogPath = new QAction(this);
@@ -114,6 +115,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     menuHelp->addSeparator();
     menuHelp->addAction(actWebsite);
     menuHelp->addAction(actReport);
+    menuHelp->addAction(actDonate);
     menuHelp->addSeparator();
     menuHelp->addMenu(menuLogs);
     menuLogs->addAction(actLogFile);
@@ -153,6 +155,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     actKeys->setIcon(QIcon(":/gfx/key.png"));
     actFaq->setIcon(QIcon(":/gfx/help.png"));
     actReport->setIcon(QIcon(":/gfx/bug.png"));
+    actDonate->setIcon(QIcon(":/gfx/donate.png"));
     menuLogs->setIcon(QIcon(":/gfx/file.png"));
     actLogFile->setIcon(QIcon(":/gfx/file.png"));
     actLogPath->setIcon(QIcon(":/gfx/open.png"));
@@ -298,6 +301,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     connect(actReset, SIGNAL(triggered()), this, SLOT(resetSettings()));
     connect(actWebsite, SIGNAL(triggered()), this, SLOT(browseSite()));
     connect(actReport, SIGNAL(triggered()), this, SLOT(browseBugs()));
+    connect(actDonate, SIGNAL(triggered()), this, SLOT(donate()));
     connect(actFaq, SIGNAL(triggered()), this, SLOT(browseFaq()));
     connect(actLogFile, SIGNAL(triggered()), this, SLOT(openLogFile()));
     connect(actLogPath, SIGNAL(triggered()), this, SLOT(openLogPath()));
@@ -533,6 +537,7 @@ void MainWindow::setLanguage(QString lang)
     actFaq->setText(tr("FAQ"));
     actWebsite->setText(tr("Visit Website"));
     actReport->setText(tr("Report a Bug"));
+    actDonate->setText(tr("Donate"));
     menuLogs->setTitle(tr("Logs"));
     actLogFile->setText(tr("Open Log File"));
     actLogPath->setText(tr("Open Log Directory"));
@@ -1223,18 +1228,22 @@ void MainWindow::aboutAuthors()
     authors.setWindowTitle(tr("Authors"));
     authors.setIconPixmap(QPixmap(":/gfx/logo.png"));
 
+    QRegExp rx("\\(www.(.+)\\)");
+    rx.setMinimal(true);
+
     QString strAuthors;
-    bool newline = true;
     QFile inputFile(APPDIR + "/authors.txt");
     if (inputFile.open(QIODevice::ReadOnly)) {
         QTextStream in(&inputFile);
         in.setCodec(QTextCodec::codecForName("UTF-8"));
+        bool newline = true;
         while (!in.atEnd()) {
             QString line = in.readLine();
             if (line == "Testers:") {
                 strAuthors.chop(4); // Chop the last "<br>" tag.
                 break;
             }
+            line = line.replace(rx, "(<a href=\"http://www.\\1\">www.\\1</a>)");
             strAuthors += !newline ? line + "<br>" : QString("<b>%1</b><br>").arg(line);
             newline = line.isEmpty();
         }
@@ -1248,6 +1257,12 @@ void MainWindow::aboutAuthors()
 void MainWindow::aboutQt() const
 {
     QApplication::aboutQt();
+}
+
+void MainWindow::donate()
+{
+    Donate dialog(this);
+    dialog.exec();
 }
 
 void MainWindow::invalidDpi()

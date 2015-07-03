@@ -1,5 +1,12 @@
 #include "dialogs.h"
+#include "main.h"
 #include <QBoxLayout>
+#include <QToolButton>
+#include <QClipboard>
+#include <QApplication>
+
+#define PAYPAL "kefir500@gmail.com"
+#define BITCOIN "1M299bkCjSQL1TDbTzD38a7YyN96NvSo2k"
 
 // Input Dialog
 
@@ -152,3 +159,84 @@ void ProgressDialog::cancel()
     finish();
     emit rejected();
 }
+
+// Donate Dialog
+
+Donate::Donate(QWidget *parent) : QDialog(parent)
+{
+    resize(400, 0);
+    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
+
+    // Initialize "Thanks" section:
+
+    QString thanks = tr("<hr>%1:<br>").arg("Thank you for your support");
+
+    QRegExp rx("\\((.+)\\)");
+    rx.setMinimal(true);
+
+    QFile inputFile(APPDIR + "/authors.txt");
+    if (inputFile.open(QIODevice::ReadOnly)) {
+
+        QTextStream stream(&inputFile);
+
+        while (!stream.atEnd()) {
+
+            QString line = stream.readLine();
+
+            if (line == "Supported by:") {
+                while (!line.isEmpty() && !stream.atEnd()) {
+                    line = stream.readLine();
+                    line = line.replace(rx, "(<a href=\"\\1\">\\1</a>)");
+                    thanks += line + "<br>";
+                }
+                thanks.chop(8);
+                break;
+            }
+        }
+
+        inputFile.close();
+    }
+
+    // Create GUI:
+
+    QGridLayout *grid = new QGridLayout(this);
+    QLabel *donators = new QLabel(this);
+    donators->setAlignment(Qt::AlignCenter);
+    donators->setTextFormat(Qt::RichText);
+    donators->setOpenExternalLinks(true);
+    donators->setText(thanks);
+
+    QLabel *titlePayPal = new QLabel("PayPal", this);
+    QLabel *titleBitCoin = new QLabel("BitCoin", this);
+    QLineEdit *fieldPayPal = new QLineEdit(PAYPAL, this);
+    QLineEdit *fieldBitCoin = new QLineEdit(BITCOIN, this);
+    fieldPayPal->setReadOnly(true);
+    fieldBitCoin->setReadOnly(true);
+    fieldPayPal->setCursor(Qt::IBeamCursor);
+    fieldBitCoin->setCursor(Qt::IBeamCursor);
+
+    QToolButton *btnPayPal = new QToolButton(this);
+    QToolButton *btnBitCoin = new QToolButton(this);
+    btnPayPal->setIcon(QIcon(":/gfx/file.png"));
+    btnBitCoin->setIcon(QIcon(":/gfx/file.png"));
+    btnPayPal->setToolTip(tr("Copy to Clipboard"));
+    btnBitCoin->setToolTip(tr("Copy to Clipboard"));
+
+    QPushButton *btnOk = new QPushButton("OK", this);
+
+    grid->addWidget(titlePayPal, 0, 0);
+    grid->addWidget(fieldPayPal, 0, 1);
+    grid->addWidget(btnPayPal, 0, 2);
+    grid->addWidget(titleBitCoin, 1, 0);
+    grid->addWidget(fieldBitCoin, 1, 1);
+    grid->addWidget(btnBitCoin, 1, 2);
+    grid->addWidget(btnOk, 2, 1);
+    grid->addWidget(donators, 3, 1);
+
+    connect(btnPayPal, SIGNAL(clicked()), this, SLOT(copyPayPal()));
+    connect(btnBitCoin, SIGNAL(clicked()), this, SLOT(copyBitCoin()));
+    connect(btnOk, SIGNAL(clicked()), this, SLOT(accept()));
+}
+
+void Donate::copyPayPal() { QApplication::clipboard()->setText(PAYPAL); }
+void Donate::copyBitCoin() { QApplication::clipboard()->setText(BITCOIN); }

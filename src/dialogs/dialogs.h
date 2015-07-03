@@ -95,4 +95,16 @@ public slots:
 
 };
 
+class Donate : public QDialog
+{
+    Q_OBJECT
+
+public:
+    explicit Donate(QWidget *parent = 0);
+
+private slots:
+    void copyPayPal();
+    void copyBitCoin();
+};
+
 #endif // DIALOGS_H
