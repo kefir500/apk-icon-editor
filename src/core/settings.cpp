@@ -1,10 +1,9 @@
 #include "settings.h"
 #include "keys.h"
+#include "main.h"
 #include <QDir>
 #include <QNetworkInterface>
 #include <QApplication>
-
-#define APPDIR QCoreApplication::applicationDirPath()
 
 QSettings *Settings::settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, "apk-icon-editor", "config");
 SimpleCrypt *Settings::crypt = new SimpleCrypt();
