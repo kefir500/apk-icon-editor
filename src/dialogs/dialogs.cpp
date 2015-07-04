@@ -169,7 +169,7 @@ Donate::Donate(QWidget *parent) : QDialog(parent)
 
     // Initialize "Thanks" section:
 
-    QString thanks = tr("<hr>%1:<br>").arg("Thank you for your support");
+    QString thanks = QString("<hr>%1:<br>").arg(tr("Thank you for your support"));
 
     QRegExp rx("\\((.+)\\)");
     rx.setMinimal(true);
