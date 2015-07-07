@@ -5,7 +5,7 @@
 #include <QDir>
 
 const QString STYLE_DEFAULT =
-    "DrawArea {background: url(:/gfx/bg.png)"
+    "DrawArea {background: url(:/gfx/background.png)"
     "no-repeat bottom left;"
     "border: 1px solid gray;}"
 ;

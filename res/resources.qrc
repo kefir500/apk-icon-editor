@@ -1,23 +1,38 @@
 <RCC>
     <qresource prefix="/">
-        <file>gfx/bg.png</file>
-        <file>gfx/bug.png</file>
-        <file>gfx/effects.png</file>
-        <file>gfx/icon-android.png</file>
-        <file>gfx/icon-kindle.png</file>
-        <file>gfx/icon-dropbox.png</file>
-        <file>gfx/icon-gdrive.png</file>
-        <file>gfx/icon-onedrive.png</file>
-        <file>gfx/logo.png</file>
-        <file>gfx/task-pack.png</file>
         <file>fonts/OpenSans-Light.ttf</file>
-        <file>gfx/icon-upload.png</file>
-        <file>gfx/key.png</file>
-        <file>gfx/help.png</file>
-        <file>gfx/apk-icon-editor.png</file>
-        <file>gfx/open.png</file>
-        <file>gfx/icon-blackberry.png</file>
-        <file>gfx/file.png</file>
-        <file>gfx/donate.png</file>
+        <file>gfx/background.png</file>
+        <file>gfx/logo-about.png</file>
+        <file>gfx/actions/associate.png</file>
+        <file>gfx/actions/box.png</file>
+        <file>gfx/actions/bug.png</file>
+        <file>gfx/actions/close.png</file>
+        <file>gfx/actions/copy.png</file>
+        <file>gfx/actions/donate.png</file>
+        <file>gfx/actions/effects.png</file>
+        <file>gfx/actions/explore.png</file>
+        <file>gfx/actions/file.png</file>
+        <file>gfx/actions/help.png</file>
+        <file>gfx/actions/key.png</file>
+        <file>gfx/actions/logo.png</file>
+        <file>gfx/actions/open.png</file>
+        <file>gfx/actions/open-icon.png</file>
+        <file>gfx/actions/pack.png</file>
+        <file>gfx/actions/qt.png</file>
+        <file>gfx/actions/recent.png</file>
+        <file>gfx/actions/reset.png</file>
+        <file>gfx/actions/resize.png</file>
+        <file>gfx/actions/save.png</file>
+        <file>gfx/actions/scale.png</file>
+        <file>gfx/actions/undo.png</file>
+        <file>gfx/actions/update.png</file>
+        <file>gfx/actions/world.png</file>
+        <file>gfx/clouds/dropbox.png</file>
+        <file>gfx/clouds/gdrive.png</file>
+        <file>gfx/clouds/onedrive.png</file>
+        <file>gfx/clouds/upload.png</file>
+        <file>gfx/profiles/android.png</file>
+        <file>gfx/profiles/blackberry.png</file>
+        <file>gfx/profiles/kindle.png</file>
     </qresource>
 </RCC>

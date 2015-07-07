@@ -218,8 +218,8 @@ Donate::Donate(QWidget *parent) : QDialog(parent)
 
     QToolButton *btnPayPal = new QToolButton(this);
     QToolButton *btnBitCoin = new QToolButton(this);
-    btnPayPal->setIcon(QIcon(":/gfx/file.png"));
-    btnBitCoin->setIcon(QIcon(":/gfx/file.png"));
+    btnPayPal->setIcon(QIcon(":/gfx/actions/copy.png"));
+    btnBitCoin->setIcon(QIcon(":/gfx/actions/copy.png"));
     btnPayPal->setToolTip(tr("Copy to Clipboard"));
     btnBitCoin->setToolTip(tr("Copy to Clipboard"));
 

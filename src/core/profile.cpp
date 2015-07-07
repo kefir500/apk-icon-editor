@@ -18,9 +18,9 @@ Profile::Profile(QString title, QIcon icon,
 
 void Profile::init()
 {
-    const QIcon ANDROID(":/gfx/icon-android.png");
-    const QIcon BLACKBERRY(":/gfx/icon-blackberry.png");
-    const QIcon KINDLE(":/gfx/icon-kindle.png");
+    const QIcon ANDROID(":/gfx/profiles/android.png");
+    const QIcon BLACKBERRY(":/gfx/profiles/blackberry.png");
+    const QIcon KINDLE(":/gfx/profiles/kindle.png");
 
     Profile android("Android Default", ANDROID, 36, 48, 72, 96, 144, 192);
     Profile bb_q10("BlackBerry Q10", BLACKBERRY, 90, 90, 90, 90, 90, 90); // Q10, Q5, Q10

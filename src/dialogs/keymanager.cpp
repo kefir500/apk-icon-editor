@@ -9,7 +9,7 @@
 KeyManager::KeyManager(QWidget *parent) : QDialog(parent)
 {
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
-    setWindowIcon(QIcon(":/gfx/key.png"));
+    setWindowIcon(QIcon(":/gfx/actions/key.png"));
     resize(540, 0);
 
     keyCreator = new KeyCreator(this);

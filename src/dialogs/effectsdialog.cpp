@@ -6,7 +6,7 @@
 EffectsDialog::EffectsDialog(QWidget *parent) : QDialog(parent)
 {
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
-    setWindowIcon(QIcon(":/gfx/effects.png"));
+    setWindowIcon(QIcon(":/gfx/actions/effects.png"));
     resize(260, 300);
 
     QVBoxLayout *layout = new QVBoxLayout(this);

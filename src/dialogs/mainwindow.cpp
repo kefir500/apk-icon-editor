@@ -26,11 +26,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     translatorQt = new QTranslator(this);
 
     dropbox = new Dropbox(this);
-    dropbox->setIcon(QPixmap(":/gfx/icon-dropbox.png"));
+    dropbox->setIcon(QPixmap(":/gfx/clouds/dropbox.png"));
     gdrive = new GoogleDrive(this);
-    gdrive->setIcon(QPixmap(":/gfx/icon-gdrive.png"));
+    gdrive->setIcon(QPixmap(":/gfx/clouds/gdrive.png"));
     onedrive = new OneDrive(this);
-    onedrive->setIcon(QPixmap(":/gfx/icon-onedrive.png"));
+    onedrive->setIcon(QPixmap(":/gfx/clouds/onedrive.png"));
 
     splitter = new QSplitter(this);
     setCentralWidget(splitter);
@@ -85,6 +85,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     actUpdate = new QAction(this);
     actAboutQt = new QAction(this);
     actAbout = new QAction(this);
+
     menuFile->addAction(actApkOpen);
     menuFile->addMenu(menuRecent);
     menuFile->addSeparator();
@@ -135,11 +136,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     actIconRevert->setEnabled(false);
     actIconEffect->setEnabled(false);
     actAutoUpdate->setCheckable(true);
-    actApkOpen->setIcon(QIcon(":/gfx/open.png"));
-    actApkSave->setIcon(QIcon(":/gfx/task-pack.png"));
+
     actApkOpen->setShortcut(QKeySequence("Ctrl+O"));
-    actApkSave->setShortcut(QKeySequence("Ctrl+E"));
     actApkExplore->setShortcut(QKeySequence("Ctrl+D"));
+    actApkSave->setShortcut(QKeySequence("Ctrl+E"));
     actIconOpen->setShortcut(QKeySequence("Ctrl+R"));
     actIconSave->setShortcut(QKeySequence("Ctrl+S"));
     actIconScale->setShortcut(QKeySequence("Ctrl+W"));
@@ -150,17 +150,33 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     actKeys->setShortcut(QKeySequence("Ctrl+K"));
     actFaq->setShortcut(QKeySequence("F1"));
     actLogPath->setShortcut(QKeySequence("Ctrl+L"));
-    actIconEffect->setIcon(QIcon(":/gfx/effects.png"));
-    actPacking->setIcon(QIcon(":/gfx/task-pack.png"));
-    actKeys->setIcon(QIcon(":/gfx/key.png"));
-    actFaq->setIcon(QIcon(":/gfx/help.png"));
-    actReport->setIcon(QIcon(":/gfx/bug.png"));
-    actDonate->setIcon(QIcon(":/gfx/donate.png"));
-    menuLogs->setIcon(QIcon(":/gfx/file.png"));
-    actLogFile->setIcon(QIcon(":/gfx/file.png"));
-    actLogPath->setIcon(QIcon(":/gfx/open.png"));
-    actAbout->setIcon(QIcon(":/gfx/apk-icon-editor.png"));
     actExit->setShortcut(QKeySequence("Ctrl+Q"));
+
+    actApkOpen->setIcon(QIcon(":/gfx/actions/open.png"));
+    menuRecent->setIcon(QIcon(":/gfx/actions/recent.png"));
+    actApkExplore->setIcon(QIcon(":/gfx/actions/explore.png"));
+    actApkSave->setIcon(QIcon(":/gfx/actions/pack.png"));
+    actIconOpen->setIcon(QIcon(":/gfx/actions/open-icon.png"));
+    actIconSave->setIcon(QIcon(":/gfx/actions/save.png"));
+    actIconScale->setIcon(QIcon(":/gfx/actions/scale.png"));
+    actIconResize->setIcon(QIcon(":/gfx/actions/resize.png"));
+    actIconRevert->setIcon(QIcon(":/gfx/actions/undo.png"));
+    actIconEffect->setIcon(QIcon(":/gfx/actions/effects.png"));
+    actPacking->setIcon(QIcon(":/gfx/actions/box.png"));
+    actKeys->setIcon(QIcon(":/gfx/actions/key.png"));
+    actAssoc->setIcon(QIcon(":/gfx/actions/associate.png"));
+    actReset->setIcon(QIcon(":/gfx/actions/reset.png"));
+    actFaq->setIcon(QIcon(":/gfx/actions/help.png"));
+    actWebsite->setIcon(QIcon(":/gfx/actions/world.png"));
+    actReport->setIcon(QIcon(":/gfx/actions/bug.png"));
+    actDonate->setIcon(QIcon(":/gfx/actions/donate.png"));
+    menuLogs->setIcon(QIcon(":/gfx/actions/file.png"));
+    actLogFile->setIcon(QIcon(":/gfx/actions/file.png"));
+    actLogPath->setIcon(QIcon(":/gfx/actions/open.png"));
+    actUpdate->setIcon(QIcon(":/gfx/actions/update.png"));
+    actAbout->setIcon(QIcon(":/gfx/actions/logo.png"));
+    actAboutQt->setIcon(QIcon(":/gfx/actions/qt.png"));
+    actExit->setIcon(QIcon(":/gfx/actions/close.png"));
 
     drawArea = new DrawArea(this);
     QAction *separator = new QAction(this);
@@ -171,7 +187,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     drawArea->addActions(menuIcon->actions());
 
     loadingDialog = new ProgressDialog(this);
-    loadingDialog->setIcon(QPixmap(":/gfx/task-pack.png"));
+    loadingDialog->setIcon(QPixmap(":/gfx/actions/box.png"));
     loadingDialog->setAllowCancel(false);
 
     uploadDialog = new ProgressDialog(this);
@@ -250,7 +266,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     checkOneDrive->setIcon(onedrive->getIcon());
     checkUpload = new QCheckBox(this);
     checkUpload->setChecked(true);
-    checkUpload->setIcon(QPixmap(":/gfx/icon-upload.png"));
+    checkUpload->setIcon(QPixmap(":/gfx/clouds/upload.png"));
     btnPack = new QPushButton(this);
     btnPack->setEnabled(false);
     btnPack->setFixedHeight(64);
@@ -386,6 +402,7 @@ void MainWindow::initLanguages()
     // Add "Help Translate" action:
     menuLang->addSeparator();
     actTranslate = new QAction(this);
+    actTranslate->setIcon(QPixmap(":/gfx/actions/world.png"));
     connect(actTranslate, SIGNAL(triggered()), this, SLOT(browseTranslate()));
     menuLang->addAction(actTranslate);
 }
@@ -1089,7 +1106,7 @@ void MainWindow::apkSave()
     QString filename = QFileDialog::getSaveFileName(this, tr("Pack APK"), currentPath, "APK (*.apk)");
     if (!filename.isEmpty()) {
 
-        const QPixmap PIXMAP_KEY(":/gfx/key.png");
+        const QPixmap PIXMAP_KEY(":/gfx/actions/key.png");
 
         QString alias = Settings::get_alias();
         QString pass_store = Settings::get_keystore_pass();
@@ -1098,22 +1115,13 @@ void MainWindow::apkSave()
         const bool USING_KEYSTORE = Settings::get_use_keystore();
         if (USING_KEYSTORE) {
             if (pass_store.isEmpty()) {
-                pass_store = InputDialog::getString(NULL, tr("Enter the KeyStore password:"),
-                                                    true, PIXMAP_KEY.scaled(16, 16,
-                                                                            Qt::IgnoreAspectRatio,
-                                                                            Qt::SmoothTransformation), this);
+                pass_store = InputDialog::getString(NULL, tr("Enter the KeyStore password:"), true, PIXMAP_KEY, this);
             }
             if (alias.isEmpty()) {
-                alias = InputDialog::getString(NULL, tr("Enter the alias:"),
-                                               false, PIXMAP_KEY.scaled(16, 16,
-                                                                        Qt::IgnoreAspectRatio,
-                                                                        Qt::SmoothTransformation), this);
+                alias = InputDialog::getString(NULL, tr("Enter the alias:"), false, PIXMAP_KEY, this);
             }
             if (pass_alias.isEmpty()) {
-                pass_alias = InputDialog::getString(NULL, tr("Enter the alias password:"),
-                                                    true, PIXMAP_KEY.scaled(16, 16,
-                                                                            Qt::IgnoreAspectRatio,
-                                                                            Qt::SmoothTransformation), this);
+                pass_alias = InputDialog::getString(NULL, tr("Enter the alias password:"), true, PIXMAP_KEY, this);
             }
         }
 
@@ -1214,7 +1222,7 @@ void MainWindow::about()
             LINK.arg(QString("file:///%1/versions.txt").arg(APPDIR), tr("Version History"), tr("List of changes made to the project.")) +
         "</table></p>"
     );
-    aboutBox.setIconPixmap(QPixmap(":/gfx/logo.png"));
+    aboutBox.setIconPixmap(QPixmap(":/gfx/logo-about.png"));
     QPushButton btnAuthors(tr("Authors"));
     connect(&btnAuthors, SIGNAL(clicked()), this, SLOT(aboutAuthors()), Qt::QueuedConnection);
     aboutBox.addButton(QMessageBox::Ok);
@@ -1226,7 +1234,7 @@ void MainWindow::aboutAuthors()
 {
     QMessageBox authors(this);
     authors.setWindowTitle(tr("Authors"));
-    authors.setIconPixmap(QPixmap(":/gfx/logo.png"));
+    authors.setIconPixmap(QPixmap(":/gfx/logo-about.png"));
 
     QRegExp rx("\\(www.(.+)\\)");
     rx.setMinimal(true);
