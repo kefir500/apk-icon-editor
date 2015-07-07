@@ -3,6 +3,7 @@
 #include <QBoxLayout>
 #include <QToolButton>
 #include <QClipboard>
+#include <QTextStream>
 #include <QApplication>
 
 #define PAYPAL "kefir500@gmail.com"
