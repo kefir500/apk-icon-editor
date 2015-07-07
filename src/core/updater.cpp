@@ -59,6 +59,8 @@ void Updater::parse(QString json)
                 .toObject()[OS_JSON]
                 .toObject()["version"].toString();
 
+    qDebug() << "Latest version:" << v;
+
     if (compare(v, VER)) {
         emit version(v);
     }
