@@ -153,7 +153,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     actExit->setShortcut(QKeySequence("Ctrl+Q"));
 
     actApkOpen->setIcon(QIcon(":/gfx/actions/open.png"));
-    menuRecent->setIcon(QIcon(":/gfx/actions/recent.png"));
+    menuRecent->setIcon(QIcon(":/gfx/actions/open-list.png"));
     actApkExplore->setIcon(QIcon(":/gfx/actions/explore.png"));
     actApkSave->setIcon(QIcon(":/gfx/actions/pack.png"));
     actIconOpen->setIcon(QIcon(":/gfx/actions/open-icon.png"));
@@ -164,6 +164,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     actIconEffect->setIcon(QIcon(":/gfx/actions/effects.png"));
     actPacking->setIcon(QIcon(":/gfx/actions/box.png"));
     actKeys->setIcon(QIcon(":/gfx/actions/key.png"));
+    actAutoUpdate->setIcon(QIcon(":/gfx/actions/update.png"));
     actAssoc->setIcon(QIcon(":/gfx/actions/associate.png"));
     actReset->setIcon(QIcon(":/gfx/actions/reset.png"));
     actFaq->setIcon(QIcon(":/gfx/actions/help.png"));
@@ -172,7 +173,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     actDonate->setIcon(QIcon(":/gfx/actions/donate.png"));
     menuLogs->setIcon(QIcon(":/gfx/actions/file.png"));
     actLogFile->setIcon(QIcon(":/gfx/actions/file.png"));
-    actLogPath->setIcon(QIcon(":/gfx/actions/open.png"));
+    actLogPath->setIcon(QIcon(":/gfx/actions/open-list.png"));
     actUpdate->setIcon(QIcon(":/gfx/actions/update.png"));
     actAbout->setIcon(QIcon(":/gfx/actions/logo.png"));
     actAboutQt->setIcon(QIcon(":/gfx/actions/qt.png"));
