@@ -3,6 +3,7 @@
 #include "settings.h"
 #include <QApplication>
 #include <QProcess>
+#include <QtXml/QDomDocument>
 #include <QtConcurrent/QtConcurrentRun>
 #include <QuaZIP/JlCompress.h>
 
@@ -234,6 +235,7 @@ bool Apk::unzip_apktool(bool smali) const
 void Apk::loadIcons()
 {
     // Load png filenames:
+
     QStringList pngs;
     pngs.push_back(parse("application-icon-120:'(.+)'", manifest));
     pngs.push_back(parse("application-icon-160:'(.+)'", manifest));
@@ -241,9 +243,32 @@ void Apk::loadIcons()
     pngs.push_back(parse("application-icon-320:'(.+)'", manifest));
     pngs.push_back(parse("application-icon-480:'(.+)'", manifest));
     pngs.push_back(parse("application-icon-640:'(.+)'", manifest));
+
+    // Handle Apktool version qualifier bug:
+
+    for (int i = 0; i < pngs.size(); ++i) {
+        const QString ROOT = temp + "/apk/";
+
+        if (!QFile::exists(ROOT + pngs[i])) {
+
+            QFileInfo fi(pngs[i]);
+            QString path = fi.path();
+            QString name = fi.fileName();
+
+            if (path.endsWith("-v4")) {
+                path.chop(3); // Chop version qualifier
+                const QString FILE = QString("%1/%2").arg(path, name);
+                if (QFile::exists(ROOT + FILE)) {
+                    pngs[i] = FILE;
+                }
+            }
+        }
+    }
+
     qDebug() << "Icons:" << pngs;
 
     // Load icons themselves:
+
     icons.clear();
     for (short i = LDPI; i < DPI_COUNT; ++i) {
         QString pngFile(pngs[i]);
@@ -265,7 +290,6 @@ void Apk::loadStrings()
 {
     QString manifest_text;
 
-    // Get application label variable name:
     QFile f(temp + "/apk/AndroidManifest.xml");
     if (f.open(QFile::ReadOnly | QFile::Text)) {
         manifest_text = f.readAll();
@@ -275,15 +299,28 @@ void Apk::loadStrings()
         return;
     }
 
-    QString label = parse("android:label=\"(.+)\"", manifest_text);
-    if (label.startsWith("@string/")) {
-        var_androidLabel = label.mid(8);
+    // Get application label variable name:
+
+    QDomDocument dom;
+    dom.setContent(manifest_text);
+
+    QDomNodeList list = dom.elementsByTagName("application");
+    if (!list.isEmpty()) {
+        QDomNamedNodeMap attr = list.at(0).attributes();
+        const QString LABEL = attr.namedItem("android:label").nodeValue();
+        if (LABEL.startsWith("@string/")) {
+             var_androidLabel = LABEL.mid(8);
+        }
+        else {
+            return;
+        }
     }
     else {
         return;
     }
 
     // Get application label translations:
+
     QDir dir(temp + "/apk/res");
     QStringList langs = dir.entryList(QStringList("values*"), QDir::Dirs);
     for (int i = 0; i < langs.size(); ++i) {
@@ -449,10 +486,18 @@ void Apk::saveXmlChanges(QString appName, QString versionName, QString versionCo
             QTextStream in(&f);
             QString xml = in.readAll();
             f.resize(0);
-            QRegExp rx("android:label=\"[^\"]+");
-            xml.replace(rx, QString("android:label=\"%1").arg(appName));
+
+            QDomDocument dom;
+            dom.setContent(xml);
+
+            QDomNodeList list = dom.elementsByTagName("application");
+            if (!list.isEmpty()) {
+                QDomNamedNodeMap attr = list.at(0).attributes();
+                attr.namedItem("android:label").setNodeValue(appName);
+            }
+
             QTextStream out(&f);
-            out << xml;
+            dom.save(out, 4);
             f.close();
         }
     }

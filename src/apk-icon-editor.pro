@@ -1,4 +1,4 @@
-QT += core widgets network
+QT += core widgets xml network
 TEMPLATE = app
 
 VERSION = 1.5.0
