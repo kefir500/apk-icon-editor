@@ -5,8 +5,8 @@
 - [Ben Gruver](https://github.com/JesusFreke) – [smali/baksmali](https://github.com/JesusFreke/smali)
 
 ## Translations
-- Chinese (China) – [QQ775405984](https://www.transifex.com/accounts/profile/775405984), [YFdyh000](https://www.transifex.com/accounts/profile/yfdyh000)
-- Dutch (Netherlands) – [Heimen Stoffels](https://www.transifex.com/accounts/profile/Vistaus)
+- Chinese (China) – [YFdyh000](https://www.transifex.com/accounts/profile/yfdyh000), [QQ775405984](https://www.transifex.com/accounts/profile/775405984)
+- Dutch (Netherlands) – [Heimen Stoffels](https://www.transifex.com/accounts/profile/Vistaus), [Roder van Arkel](https://www.transifex.com/accounts/profile/Roder)
 - French – [Stold](https://www.transifex.com/accounts/profile/Stold), [AzRock](https://www.transifex.com/accounts/profile/AzRock)
 - German – [Sebastian Herrmann](https://www.transifex.com/accounts/profile/herrherrmann), [Wasilis Mandratzis-Walz](https://www.transifex.com/accounts/profile/beonex)
 - Greek – [Wasilis Mandratzis-Walz](https://www.transifex.com/accounts/profile/beonex), [Manos Santos](https://www.transifex.com/accounts/profile/goldensacrum)
@@ -17,6 +17,7 @@
 - Turkish – [Çağdaş Tatar](https://www.transifex.com/accounts/profile/echelon)
 
 ## Contributors
+- Roder van Arkel
 - [Ameen Ali](https://github.com/AmeenAli)
 
 ## Donators
