@@ -1,7 +1,7 @@
 QT += core widgets network
 TEMPLATE = app
 
-VERSION = 1.4.0
+VERSION = 1.5.0
 QMAKE_TARGET_COMPANY = Qwerty Minds
 QMAKE_TARGET_DESCRIPTION = APK Icon Editor v$$VERSION
 QMAKE_TARGET_COPYRIGHT = Copyright (C) 2014-2015
