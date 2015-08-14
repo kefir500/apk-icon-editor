@@ -12,7 +12,7 @@ public:
     static void kill();
     static void reset();
 
-    // Load;
+    // Load:
 
     static QString get_version();
     static QString get_profile();
