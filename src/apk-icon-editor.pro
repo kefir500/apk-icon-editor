@@ -31,32 +31,32 @@ include(core/core.pri)
 include(widgets/widgets.pri)
 include(dialogs/dialogs.pri)
 
-INCLUDEPATH += ../lib/include
+INCLUDEPATH += $$PWD/../lib/include
 INCLUDEPATH += $$[QT_INSTALL_HEADERS]/QtZlib
 
 win32 {
-    DESTDIR  = ../bin/win32
-    RC_ICONS = ../res/icons/icon.ico \
-               ../res/icons/icon-apk.ico
+    DESTDIR  = $$PWD/../bin/win32
+    RC_ICONS = $$PWD/../res/icons/icon.ico \
+               $$PWD/../res/icons/icon-apk.ico
 }
 
 macx {
-    DESTDIR = ../bin/macosx
-    ICON    = ../res/icons/icon.icns
+    DESTDIR = $$PWD/../bin/macosx
+    ICON    = $$PWD/../res/icons/icon.icns
     QMAKE_MAC_SDK = macosx10.7
     QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.7
     LIBS += -lz
 }
 
 unix:!macx {
-    DESTDIR = ../bin/linux
+    DESTDIR = $$PWD/../bin/linux
 }
 
-LIBS += -L../lib/bin
+LIBS += -L$$PWD/../lib/bin
 LIBS += -lquazip \
         -lsimplecrypt
 
 DEFINES += QUAZIP_STATIC
 
-TRANSLATIONS += ../lang/apk-icon-editor.en.ts
-RESOURCES    += ../res/resources.qrc
+TRANSLATIONS += $$PWD/../lang/apk-icon-editor.en.ts
+RESOURCES    += $$PWD/../res/resources.qrc
