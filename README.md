@@ -1,5 +1,6 @@
 # APK Icon Editor
 
+[![Build Status](https://travis-ci.org/kefir500/apk-icon-editor.svg)](https://travis-ci.org/kefir500/apk-icon-editor)
 [![GitHub release](https://img.shields.io/github/release/kefir500/apk-icon-editor.svg)](https://github.com/kefir500/apk-icon-editor/releases/latest)
 [![GitHub license](https://img.shields.io/badge/license-GPLv3-blue.svg)](https://raw.githubusercontent.com/kefir500/apk-icon-editor/master/LICENSE)
 
