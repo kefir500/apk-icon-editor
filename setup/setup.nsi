@@ -14,7 +14,7 @@ InstallDirRegKey HKCU "Software\apk-icon-editor" "InstallDir"
 RequestExecutionLevel admin
 
 !include MUI2.nsh
-!include nsProcess\nsProcess.nsh
+!include nsProcess.nsh
 
 !define MUI_ICON "..\res\icons\icon.ico"
 !define MUI_WELCOMEFINISHPAGE_BITMAP "gfx\welcome.bmp"
