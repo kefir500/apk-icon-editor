@@ -83,4 +83,4 @@ symbian {
 
 # APK Icon Editor destination directory:
 
-DESTDIR = ../../../bin
+DESTDIR = $$PWD/../../../bin

@@ -9,7 +9,9 @@
 
 #include <QString>
 
-#error "[keys.h] The following variables are dummies. Set your own values and/or remove this line."
+#ifndef CI
+#error The following variables are dummies. Set your own values and/or remove this line.
+#endif
 
 const quint64 SIMPLECRYPT_KEY   = Q_UINT64_C(0x0000000000000000);
 

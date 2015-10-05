@@ -9,7 +9,16 @@ Application::Application(int &argc, char **argv) : QApplication(argc, argv)
 {
     setApplicationName(APP);
     setApplicationVersion(VER);
+
+#if defined(Q_OS_WIN)
     setApplicationDisplayName(QString("%1 v%2").arg(APP, VER));
+#elif defined(Q_OS_LINUX)
+    setApplicationDisplayName(QString("%1 v%2 for Linux (Beta)").arg(APP, VER));
+#elif defined(Q_OS_OSX)
+    setApplicationDisplayName(QString("%1 v%2 for OS X (Beta)").arg(APP, VER));
+#else
+    setApplicationDisplayName(QString("%1 v%2").arg(APP, VER));
+#endif
 
     initLog();
 
