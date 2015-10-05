@@ -23,11 +23,7 @@ SetCompressor /SOLID lzma
 !define MUI_HEADERIMAGE_RIGHT
 !define MUI_HEADERIMAGE_BITMAP "gfx\header.bmp"
 
-### NSIS runs application with admin privileges, so drag-n-drop won't work ###
-#!define MUI_FINISHPAGE_RUN ${EXE}
-###
-
-Function Kill
+Function .onInit
 	${nsProcess::FindProcess} "apk-icon-editor.exe" $R0
 	${If} $R0 == 0
 		MessageBox MB_YESNO "${APPNAME} is currently running. Close?" IDYES close IDNO abort
@@ -42,13 +38,20 @@ close:
 continue:
 FunctionEnd
 
-Function .onInit
-	Call Kill
+Function un.onInit
+	${nsProcess::FindProcess} "apk-icon-editor.exe" $R0
+	${If} $R0 == 0
+		MessageBox MB_YESNO "${APPNAME} is currently running. Close?" IDYES close IDNO abort
+	${Else}
+		Goto continue
+	${EndIf}
+abort:
+	MessageBox MB_OK "${APPNAME} needs to be closed before uninstalling."
+	Abort
+close:
+	${nsProcess::KillProcess} "apk-icon-editor.exe" $R5
+continue:
 FunctionEnd
-
-#Function un.onInit
-	#Call Kill
-#FunctionEnd
 
 !insertmacro MUI_PAGE_WELCOME
 !insertmacro MUI_PAGE_DIRECTORY
