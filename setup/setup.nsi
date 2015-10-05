@@ -79,7 +79,7 @@ FunctionEnd
 
 Section
 	SetOutPath "$INSTDIR"
-	File /r "..\bin\win32\"
+	File /r /x "*.manifest" "..\bin\win32\"
 	SetOutPath "$INSTDIR\gfx"
 	File "..\res\icons\icon.ico"
 	WriteUninstaller "$INSTDIR\uninstall.exe"
