@@ -1,3 +1,6 @@
+!include MUI2.nsh
+!include nsProcess.nsh
+
 !define APPNAME "APK Icon Editor"
 !define COMPANYNAME "Qwerty Minds"
 !define VERSIONMAJOR 1
@@ -14,14 +17,13 @@ InstallDirRegKey HKCU "Software\apk-icon-editor" "InstallDir"
 RequestExecutionLevel admin
 SetCompressor /SOLID lzma
 
-!include MUI2.nsh
-!include nsProcess.nsh
-
 !define MUI_ICON "..\res\icons\icon.ico"
 !define MUI_WELCOMEFINISHPAGE_BITMAP "gfx\welcome.bmp"
 !define MUI_HEADERIMAGE
 !define MUI_HEADERIMAGE_RIGHT
 !define MUI_HEADERIMAGE_BITMAP "gfx\header.bmp"
+
+# Before Install:
 
 Function .onInit
 	${nsProcess::FindProcess} "apk-icon-editor.exe" $R0
@@ -38,6 +40,8 @@ close:
 continue:
 FunctionEnd
 
+# Before Uninstall:
+
 Function un.onInit
 	${nsProcess::FindProcess} "apk-icon-editor.exe" $R0
 	${If} $R0 == 0
@@ -53,15 +57,21 @@ close:
 continue:
 FunctionEnd
 
+# Installer Pages:
+
 !insertmacro MUI_PAGE_WELCOME
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_COMPONENTS
 !insertmacro MUI_PAGE_INSTFILES
 !insertmacro MUI_PAGE_FINISH
 
+# Uninstaller Pages:
+
 !insertmacro MUI_UNPAGE_CONFIRM
 !insertmacro MUI_UNPAGE_COMPONENTS
 !insertmacro MUI_UNPAGE_INSTFILES
+
+# Setup Language:
 
 !insertmacro MUI_LANGUAGE "English"
 
