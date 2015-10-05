@@ -12,6 +12,7 @@ OutFile "apk-icon-editor-setup.exe"
 InstallDir "$PROGRAMFILES\${APPNAME}"
 InstallDirRegKey HKCU "Software\apk-icon-editor" "InstallDir"
 RequestExecutionLevel admin
+SetCompressor /SOLID lzma
 
 !include MUI2.nsh
 !include nsProcess.nsh
