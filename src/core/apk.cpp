@@ -35,27 +35,6 @@ QDebug operator<<(QDebug d, const PackOptions &o) {
     return d;
 }
 
-void removeRecursively(QString dir)
-{
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))
-    QDir meta(dir);
-    meta.removeRecursively();
-#else
-    QDir d(dir);
-    if (d.exists(dir)) {
-        Q_FOREACH(QFileInfo info, d.entryInfoList(QDir::NoDotAndDotDot | QDir::System | QDir::Hidden  | QDir::AllDirs | QDir::Files, QDir::DirsFirst)) {
-            if (info.isDir()) {
-                removeRecursively(info.absoluteFilePath());
-            }
-            else {
-                QFile::remove(info.absoluteFilePath());
-            }
-        }
-        d.rmdir(dir);
-    }
-#endif
-}
-
 QString parse(QString regexp, QString str)
 {
     QRegExp rx;
@@ -101,7 +80,7 @@ bool Apk::doUnpack(PackOptions options)
     }
 
     emit loading(60, tr("Unpacking APK..."));
-    removeRecursively(temp + "/apk");
+    QDir(temp + "/apk").removeRecursively();
     if (!options.isApktool) {
         if (!unzip()) {
             return false;
@@ -347,7 +326,7 @@ bool Apk::doPack(PackOptions opts)
     bool isSigned = false;
     bool isOptimized = false;
 
-    removeRecursively(temp + "/apk/META-INF");
+    QDir(temp + "/apk/META-INF").removeRecursively();
 
     emit loading(20, tr("Saving PNG icons..."));
     if (!saveIcons()) {
