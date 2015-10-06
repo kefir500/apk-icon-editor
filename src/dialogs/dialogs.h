@@ -89,7 +89,7 @@ public slots:
     /// Show Progress dialog with the given parameters.
     /// \param[in] percentage Loading progress (0-100).
     /// \param[in] text Additional loading text.
-    void setProgress(short percentage, QString text = NULL);
+    void setProgress(short percentage, QString text = QString());
 
     /// Close and reset Progress dialog.
     void finish();
