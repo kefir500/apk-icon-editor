@@ -1433,5 +1433,4 @@ void MainWindow::closeEvent(QCloseEvent *event)
 MainWindow::~MainWindow()
 {
     qDebug() << "Exiting...";
-    delete apk;
 }
