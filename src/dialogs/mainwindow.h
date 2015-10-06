@@ -134,7 +134,7 @@ public slots:
     /// \brief Open APK from the \c filename. If \c filename is NULL, show "Open" dialog.
     /// \param[in] filename  Name of the APK file to unpack.
     /// \return \c FALSE, if \c filename not found or "Open" dialog is closed.
-    bool apkLoad(QString filename = NULL);
+    bool apkLoad(QString filename = QString());
 
 private slots:
     void apkSave();                         ///< Save APK (calls "Save" dialog).
@@ -144,7 +144,7 @@ private slots:
     /// \param[in] filename  Name of the packed APK file.
     /// \param[in] isSuccess \c FALSE if APK is packed with warnings.
     /// \param[in] text      Additional message text.
-    void apkPacked(QString filename, bool isSuccess = true, QString text = NULL);
+    void apkPacked(QString filename, bool isSuccess = true, QString text = QString());
 
     void apkUnpacked(QString filename);             ///< Handle APK unpacked from the \c filename.
     void resetSettings();                           ///< Reset settings to default.
@@ -153,11 +153,11 @@ private slots:
 
     /// Load icon from the file with the given \c filename.
     /// \param[in] filename Name of the file to load image from. If \c NULL, shows "Open" dialog.
-    bool iconOpen(QString filename = NULL);
+    bool iconOpen(QString filename = QString());
 
     /// Save icon to the file with the given \c filename.
     /// \param[in] filename Name of the file to save image to. If \c NULL, shows "Save" dialog.
-    bool iconSave(QString filename = NULL);
+    bool iconSave(QString filename = QString());
 
     /// Deprecated.
     void iconScale();

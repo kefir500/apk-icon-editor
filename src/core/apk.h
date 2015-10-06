@@ -145,7 +145,7 @@ signals:
     /// \brief This signal represents current loading state.
     /// \param[in] percentage Loading percentage (0-100).
     /// \param[in] text       Loading text.
-    void loading(short percentage, QString text = NULL) const;
+    void loading(short percentage, QString text = QString()) const;
 
     /// \brief This signal is emitted to send error message.
     /// \param[in] title Message brief title.
@@ -165,7 +165,7 @@ signals:
     /// \param[in] filename Filename (with full path) of just packed APK.
     /// \param[in] success  \c FALSE if APK is packed with warnings.
     /// \param[in] text     Additional message text.
-    void packed(QString filename, bool success = true, QString text = NULL) const;
+    void packed(QString filename, bool success = true, QString text = QString()) const;
 
 public slots:
     /// \brief Delete temporary files.

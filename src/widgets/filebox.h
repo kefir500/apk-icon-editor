@@ -44,8 +44,8 @@ public slots:
     void setFormats(QString _formats);
 
 private slots:
-    void openFile(QString filename = NULL);
-    void openDir(QString dir = NULL);
+    void openFile(QString filename = QString());
+    void openDir(QString dir = QString());
     void exists(QString path);
 
 };

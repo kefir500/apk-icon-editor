@@ -38,7 +38,7 @@ public:
     /// \retval \c TRUE on success.
     /// \retval \c FALSE on error.
     /// \todo Empty #pixmap is currently handled by a dirty workaround.
-    bool save(QString filename = NULL);
+    bool save(QString filename = QString());
 
     /// \brief Replace #pixmap with the specified one.
     /// \param[in] pixmap Pixmap to replace with.

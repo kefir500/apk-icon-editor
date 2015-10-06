@@ -44,7 +44,7 @@ QString parse(QString regexp, QString str)
     if (rx.capturedTexts().size() > 1)
         return rx.capturedTexts().at(1);
     else
-        return NULL;
+        return QString();
 }
 
 void Apk::unpack(PackOptions options)
@@ -600,7 +600,7 @@ bool Apk::sign(const QString PEM, const QString PK8) const
     const QString SIGNAPK(APPDIR + "/signer/");
 
     if (!QFile::exists(PEM) || !QFile::exists(PEM)) {
-        emit warning(NULL, tr("PEM/PK8 not found."));
+        emit warning("", tr("PEM/PK8 not found."));
         QFile::rename(APK_SRC, APK_DST);
         return false;
     }
@@ -639,7 +639,7 @@ bool Apk::sign(const QString KEY, const QString ALIAS,
     const QString APK_DST(temp + "/temp-2.apk");
 
     if (!QFile::exists(KEY)) {
-        emit warning(NULL, tr("KeyStore not found."));
+        emit warning("", tr("KeyStore not found."));
         QFile::rename(APK_SRC, APK_DST);
         return false;
     }

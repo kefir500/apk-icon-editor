@@ -90,7 +90,7 @@ public slots:
 
 private slots:
     void catchReply(QNetworkReply *reply);
-    void catchError(QNetworkReply::NetworkError code, QString text = NULL);
+    void catchError(QNetworkReply::NetworkError code, QString text = QString());
     void uploadProgress(qint64 sent, qint64 total);
     void timeout();
 
