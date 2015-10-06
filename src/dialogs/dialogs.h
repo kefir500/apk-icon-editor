@@ -64,6 +64,7 @@ private:
     QLabel *icon;                   ///< Dialog pixmap.
     QProgressBar *progress;         ///< Dialog progress bar.
     QDialogButtonBox *buttons;      ///< Dialog buttons.
+    bool isWinExtras;               ///< If \c TRUE, allows using QtWinExtras.
 #ifdef WINEXTRAS
     QWinTaskbarButton *taskbar;     ///< Represents taskbar button.
 #endif

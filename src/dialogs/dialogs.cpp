@@ -104,7 +104,10 @@ ProgressDialog::ProgressDialog(QWidget *parent) : QDialog(parent)
     layout->addWidget(buttons);
 
 #ifdef WINEXTRAS
-    taskbar = new QWinTaskbarButton(this);
+    isWinExtras = QSysInfo::windowsVersion() >= QSysInfo::WV_VISTA;
+    if (isWinExtras) {
+        taskbar = new QWinTaskbarButton(this);
+    }
 #endif
 
     connect(buttons, SIGNAL(rejected()), this, SLOT(cancel()));
@@ -116,11 +119,13 @@ void ProgressDialog::setProgress(short percentage, QString text)
     progress->setValue(percentage);
 
 #ifdef WINEXTRAS
-    taskbar->setWindow(static_cast<QWidget*>(parent())->windowHandle());
-    taskbar->setOverlayIcon(*icon->pixmap());
-    QWinTaskbarProgress *taskProgress = taskbar->progress();
-    taskProgress->setValue(percentage);
-    taskProgress->setVisible(true);
+    if (isWinExtras) {
+        taskbar->setWindow(static_cast<QWidget*>(parent())->windowHandle());
+        taskbar->setOverlayIcon(*icon->pixmap());
+        QWinTaskbarProgress *taskProgress = taskbar->progress();
+        taskProgress->setValue(percentage);
+        taskProgress->setVisible(true);
+    }
 #endif
 
     show();
@@ -148,10 +153,12 @@ void ProgressDialog::finish()
     accept();
     progress->setValue(0);
 #ifdef WINEXTRAS
-    taskbar->clearOverlayIcon();
-    QWinTaskbarProgress *taskProgress = taskbar->progress();
-    taskProgress->setVisible(false);
-    taskProgress->reset();
+    if (isWinExtras) {
+        taskbar->clearOverlayIcon();
+        QWinTaskbarProgress *taskProgress = taskbar->progress();
+        taskProgress->setVisible(false);
+        taskProgress->reset();
+    }
 #endif
 }
 
