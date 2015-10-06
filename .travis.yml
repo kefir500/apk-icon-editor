@@ -10,11 +10,11 @@ before_install:
  - sudo apt-get -qq update
 
 install:
- - sudo apt-get -qq install g++-4.8 gcc-4.8
+ - sudo apt-get -qq install g++-4.6 gcc-4.6
  - sudo apt-get -qq install qt52base
 
 before_script:
- - export CXX="g++-4.8" CC="gcc-4.8"
+ - export CXX="g++-4.6" CC="gcc-4.6"
  - source /opt/qt52/bin/qt52-env.sh
 
 script:
