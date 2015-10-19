@@ -105,7 +105,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     menuSett->addAction(actPacking);
     menuSett->addAction(actKeys);
     menuSett->addSeparator();
+#ifndef Q_OS_OSX
     menuSett->addMenu(menuLang);
+#endif
     menuSett->addAction(actAutoUpdate);
     menuSett->addSeparator();
 #ifndef Q_OS_UNIX
