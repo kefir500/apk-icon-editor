@@ -21,8 +21,8 @@
 - [Ameen Ali](https://github.com/AmeenAli)
 
 ## Donators
-- [Cyclos](www.cyclos.org)
-- [Julien Veuillet](www.wakdev.com)
+- [Cyclos](http://www.cyclos.org)
+- [Julien Veuillet](http://www.wakdev.com)
 
 ## Special Thanks
 - Sergey Tachenov – [QuaZIP](http://quazip.sourceforge.net)
