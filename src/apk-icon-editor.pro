@@ -1,20 +1,13 @@
-QT += core widgets xml network
+QT += widgets xml network
 TEMPLATE = app
 
+TARGET = apk-icon-editor
 VERSION = 1.5.0
+
+QMAKE_TARGET_PRODUCT = APK Icon Editor
 QMAKE_TARGET_COMPANY = Qwerty Minds
 QMAKE_TARGET_DESCRIPTION = APK Icon Editor v$$VERSION
 QMAKE_TARGET_COPYRIGHT = Copyright (C) 2014-2015
-
-CONFIG(release, debug|release) {
-    TARGET = apk-icon-editor
-    QMAKE_TARGET_PRODUCT = APK Icon Editor
-}
-
-CONFIG(debug, debug|release) {
-    TARGET = apk-icon-editor-debug
-    QMAKE_TARGET_PRODUCT = APK Icon Editor (Debug)
-}
 
 DEFINES += APP='"\\\"$$QMAKE_TARGET_PRODUCT\\\""'
 DEFINES += VER=\\\"$$VERSION\\\"
