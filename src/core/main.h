@@ -30,7 +30,7 @@
 #include <QDir>
 #include <QStandardPaths>
 
-#define APPDIR QCoreApplication::applicationDirPath()
+#define APPDIR QApplication::applicationDirPath()
 
 const int WINDOW_WIDTH      = 800;
 const int WINDOW_HEIGHT     = 530;

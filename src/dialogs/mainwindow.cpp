@@ -498,7 +498,7 @@ void MainWindow::resetSettings()
 
 void MainWindow::setLanguage(QString lang)
 {
-    qDebug() << "Language set to" << lang;
+    qDebug() << "Language set to" << lang << "\n";
     QString LANGPATH(APPDIR + "/lang");
     QApplication::removeTranslator(translator);
     QApplication::removeTranslator(translatorQt);
@@ -1302,8 +1302,7 @@ bool MainWindow::newVersion(QString version)
     QMessageBox msgBox(
                 QMessageBox::Information,
                 tr("Update"),
-                tr("%1 v%2 is available.\nDownload?")
-                .arg(APP, version),
+                tr("%1 v%2 is available.\nDownload?").arg(APP, version),
                 QMessageBox::Yes | QMessageBox::No,
                 this);
 

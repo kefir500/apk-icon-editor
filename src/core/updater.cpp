@@ -54,15 +54,15 @@ void Updater::parse(QString json)
 #else
     const QString OS_JSON = "windows";
 #endif
-    QString v = QJsonDocument::fromJson(json.toUtf8())
-                .object()["1.3.0"]
-                .toObject()[OS_JSON]
-                .toObject()["version"].toString();
+    QString latest = QJsonDocument::fromJson(json.toUtf8())
+                     .object()["1.3.0"]
+                     .toObject()[OS_JSON]
+                     .toObject()["version"].toString();
 
-    qDebug() << "Latest version:" << v;
+    qDebug() << qPrintable(QString("Updater: APK Icon Editor v%1\n").arg(latest));
 
-    if (compare(v, VER)) {
-        emit version(v);
+    if (compare(latest, VER)) {
+        emit version(latest);
     }
 }
 
