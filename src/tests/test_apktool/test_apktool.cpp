@@ -138,7 +138,7 @@ void TestApktool::test()
         qWarning() << "Apktool \"1.apk\" framework NOT removed";
     }
 
-    const QString DIR(APK_PATH);
+    const QString DIR(APK_PATH + '/');
     const QStringList APKS = QDir(DIR).entryList(QStringList("*.apk"));
     foreach (const QString APK, APKS) {
         qDebug() << "\n\nExtracting" << APK;
