@@ -119,6 +119,7 @@ private:
 
     void initLanguages();                   ///< Initialize available languages.
     void initProfiles();                    ///< Initialize available profiles.
+    void checkJava();                       ///< Check Java and Apktool versions.
 
     /// Upload file to cloud service.
     void upload(Cloud *uploader, QString filename);

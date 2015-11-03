@@ -68,6 +68,49 @@ void Apk::pack(PackOptions options)
     QtConcurrent::run(this, &Apk::doPack, options);
 }
 
+bool Apk::isJavaInstalled(Java type, bool debug)
+{
+    QProcess p;
+    QString prefix;
+    switch (type) {
+    case JRE:
+        p.start("java -version");
+        prefix = "JRE";
+        break;
+    case JDK:
+        p.start("javac -version");
+        prefix = "JDK";
+        break;
+    }
+    if (p.waitForStarted(-1)) {
+        p.waitForFinished(-1);
+        if (debug) {
+            qDebug() << qPrintable(prefix) << "32-bit found:";
+            qDebug() << p.readAllStandardError().replace("\r\n", "\n").trimmed();
+        }
+        return true;
+    }
+    else {
+        if (debug) {
+            qDebug() << qPrintable(prefix) << "32-bit NOT found.";
+        }
+        return false;
+    }
+}
+
+QString Apk::getApktoolVersion()
+{
+    QProcess p;
+    p.start(QString("java -jar \"%1/apktool.jar\" -version").arg(APPDIR));
+    if (p.waitForStarted(-1)) {
+        p.waitForFinished(-1);
+        return p.readAllStandardOutput().trimmed();
+    }
+    else {
+        return "NOT FOUND";
+    }
+}
+
 // --- UNPACKING APK ---
 
 bool Apk::doUnpack(PackOptions options)
@@ -560,36 +603,6 @@ bool Apk::zip_apktool() const
     else {
         qDebug() << p.readAllStandardError().replace("\r\n", "\n");
         return die(tr(STR_ERROR).arg("Apktool"), tr(STR_ERROR).arg("Apktool"));
-    }
-}
-
-bool Apk::isJavaInstalled(Java type, bool debug)
-{
-    QProcess p;
-    QString prefix;
-    switch (type) {
-    case JRE:
-        p.start("java -version");
-        prefix = "JRE";
-        break;
-    case JDK:
-        p.start("javac -version");
-        prefix = "JDK";
-        break;
-    }
-    if (p.waitForStarted(-1)) {
-        p.waitForFinished(-1);
-        if (debug) {
-            qDebug() << prefix << "32-bit found:";
-            qDebug() << p.readAllStandardError().replace("\r\n", "\n").trimmed();
-        }
-        return true;
-    }
-    else {
-        if (debug) {
-            qDebug() << prefix << "32-bit not found!";
-        }
-        return false;
     }
 }
 

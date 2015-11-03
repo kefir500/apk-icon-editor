@@ -136,6 +136,8 @@ public:
     /// \return \c TRUE if Java Runtime Environment is installed.
     static bool isJavaInstalled(Java type = JRE, bool debug = false);
 
+    static QString getApktoolVersion();     ///< Returns Apktool version.
+
     void unpack(PackOptions options);       ///< Unpack APK by calling private #doUnpack method in a separate #thread.
     void pack(PackOptions options);         ///< Pack APK by calling private #doPack method in a separate #thread.
 

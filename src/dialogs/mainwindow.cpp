@@ -8,6 +8,7 @@
 #include <QMimeData>
 #include <QTextCodec>
 #include <QDesktopServices>
+#include <QtConcurrent/QtConcurrentRun>
 #include <QApplication>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
@@ -364,12 +365,21 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     connect(updater, SIGNAL(version(QString)), this, SLOT(newVersion(QString)));
     connect(this, SIGNAL(destroyed()), apk, SLOT(clearTemp()));
 
-    Apk::isJavaInstalled(Apk::JRE, true);
-    Apk::isJavaInstalled(Apk::JDK, true);
+    QtConcurrent::run(this, &MainWindow::checkJava);
     restoreSettings();
 
     if (actAutoUpdate->isChecked()) {
         updater->check();
+    }
+}
+
+void MainWindow::checkJava()
+{
+    const bool JRE = Apk::isJavaInstalled(Apk::JRE, true);
+    const bool JDK = Apk::isJavaInstalled(Apk::JDK, true);
+    if (JRE || JDK) {
+        QString apktool = Apk::getApktoolVersion();
+        qDebug() << "Apktool version:" << qPrintable(apktool) << '\n';
     }
 }
 
