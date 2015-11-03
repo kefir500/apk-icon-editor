@@ -11,7 +11,7 @@
 !define EXE "$INSTDIR\apk-icon-editor.exe"
 
 Name "${APPNAME} v${VERSION}"
-OutFile "apk-icon-editor-setup.exe"
+OutFile "apk-icon-editor-${VERSION}.exe"
 InstallDir "$PROGRAMFILES\${APPNAME}"
 InstallDirRegKey HKCU "Software\apk-icon-editor" "InstallDir"
 RequestExecutionLevel admin
