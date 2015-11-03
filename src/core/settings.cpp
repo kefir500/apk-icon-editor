@@ -5,12 +5,14 @@
 #include <QNetworkInterface>
 #include <QApplication>
 
-QSettings *Settings::settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, "apk-icon-editor", "config");
+QSettings *Settings::settings;
 SimpleCrypt *Settings::crypt = new SimpleCrypt();
 quint64 Settings::key_mac = 0;
 
 void Settings::init()
 {
+    settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, "apk-icon-editor", "config");
+
     // Init encryption / decryption:
 
     QString strKeyMac;
