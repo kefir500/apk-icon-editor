@@ -80,44 +80,6 @@ public:
     static void set_gdrive_token(QString value);
     static void set_onedrive_token(QString value);
 
-protected:
-
-    // Root Section:
-    QString s_version;
-    QString s_profile;
-    QString s_language;
-    bool s_update;
-    QString s_last_path;
-    QByteArray s_window_geometry;
-    QByteArray s_window_splitter;
-    QStringList s_recent_list;
-    QString s_temp_path;
-
-    // "APK" Section:
-    bool s_use_apktool;
-    int s_compression;
-    bool s_smali;
-    bool s_sign;
-    bool s_zipalign;
-    bool s_upload;
-
-    // "Key" Section:
-    bool s_use_keystore;
-    QString s_pem;
-    QString s_pk8;
-    QString s_keystore;
-    QString s_keystore_pass;
-    QString s_alias;
-    QString s_alias_pass;
-
-    // Cloud Services Section:
-    bool s_dropbox;
-    bool s_gdrive;
-    bool s_onedrive;
-    QString s_dropbox_token;
-    QString s_gdrive_token;
-    QString s_onedrive_token;
-
 private:
 
     Settings() {}
