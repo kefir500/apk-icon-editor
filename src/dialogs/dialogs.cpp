@@ -81,7 +81,6 @@ void InputDialog::checkInput(QString text)
 ProgressDialog::ProgressDialog(QWidget *parent) : QDialog(parent)
 {
     resize(220, 100);
-    setFixedHeight(100);
     setModal(true);
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
@@ -102,6 +101,8 @@ ProgressDialog::ProgressDialog(QWidget *parent) : QDialog(parent)
     layout->addLayout(row1);
     layout->addWidget(progress);
     layout->addWidget(buttons);
+
+    setFixedHeight((sizeHint().height() < 100) ? 100 : sizeHint().height());
 
 #ifdef WINEXTRAS
     isWinExtras = QSysInfo::windowsVersion() >= QSysInfo::WV_VISTA;
