@@ -44,8 +44,6 @@ ToolDialog::ToolDialog(QWidget *parent) : QDialog(parent)
     checkOptimize = new QCheckBox(this);
     tempDir = new FileBox(this, true);
 
-    tempDir->setTitle(tr("Temporary Directory") + ":");
-
     layout->addWidget(radioZip);
     layout->addWidget(radioApktool);
     layout->addWidget(groupZip);
@@ -145,4 +143,5 @@ void ToolDialog::retranslate()
     checkSmali->setText(tr("Decompile %1").arg("CLASSES.DEX"));
     checkSign->setText(tr("Sign APK"));
     checkOptimize->setText(tr("Optimize APK"));
+    tempDir->setTitle(tr("Temporary Directory") + ":");
 }
