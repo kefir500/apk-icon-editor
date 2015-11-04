@@ -2,7 +2,7 @@ QT += widgets xml network
 TEMPLATE = app
 
 TARGET = apk-icon-editor
-VERSION = 1.5.0
+VERSION = 1.6.0
 
 QMAKE_TARGET_PRODUCT = APK Icon Editor
 QMAKE_TARGET_COMPANY = Qwerty Minds
