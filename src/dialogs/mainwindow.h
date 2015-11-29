@@ -18,6 +18,7 @@
 #include "keymanager.h"
 #include "dialogs.h"
 #include "updater.h"
+#include "recent.h"
 #include "cloud.h"
 
 class MainWindow : public QMainWindow {
@@ -99,6 +100,7 @@ private:
     QAction *actAbout;
 
     Apk *apk;
+    Recent recent;
     Updater *updater;
     Dropbox *dropbox;
     GoogleDrive *gdrive;
@@ -106,11 +108,8 @@ private:
     QString currentApk;
     QString currentLang;
     QString currentPath;
-    QStringList recent;
 
     void setActiveApk(QString filename);    ///< Mark \c filename as currently active.
-    void addToRecent(QString filename);     ///< Add \c filename to recent list.
-    void refreshRecent();                   ///< Refresh recent list.
     void restoreSettings();                 ///< Restore settings from INI.
     void resetApktool();                    ///< Remove Apktool "1.apk" framework
     bool confirmExit();                     ///< Ask user to confim exit.
@@ -172,29 +171,32 @@ private slots:
 
 //------------------------------------------------------------------------------
 
-    void associate() const;         ///< Associate .apk extension with "APK Icon Editor"
-    void browseSite() const;        ///< Open website URL in the default browser.
-    void browseBugs() const;        ///< Open bugs webpage in the default browser.
-    void browseFaq() const;         ///< Open FAQ text document.
-    void openLogFile() const;       ///< Open log file.
-    void openLogPath() const;       ///< Open log directory.
-    void donate();                  ///< Show donation dialog.
-    void about();                   ///< Show "About APK Icon Editor" dialog.
-    void aboutAuthors();            ///< Show the list of authors dialog.
-    void aboutQt() const;           ///< Show "About Qt" dialog.
+    void associate() const;            ///< Associate .apk extension with "APK Icon Editor"
+    void browseSite() const;           ///< Open website URL in the default browser.
+    void browseBugs() const;           ///< Open bugs webpage in the default browser.
+    void browseFaq() const;            ///< Open FAQ text document.
+    void openLogFile() const;          ///< Open log file.
+    void openLogPath() const;          ///< Open log directory.
+    void donate();                     ///< Show donation dialog.
+    void about();                      ///< Show "About APK Icon Editor" dialog.
+    void aboutAuthors();               ///< Show the list of authors dialog.
+    void aboutQt() const;              ///< Show "About Qt" dialog.
 
-    void setLanguage(QString lang); ///< Set GUI language.
-    void setCurrentIcon(int id);    ///< Set icon to draw in \c drawArea widget.
-    void setPreviewColor();         ///< Show dialog to select background preview color.
-    void showEffectsDialog();       ///< Show "Effects" dialog.
-    void hideEmptyDpi();            ///< Hide unused (empty) icons from \c profiles widget.
-    void cloneIcons();              ///< Apply current icon to all DPI sizes.
-    void enableApktool(bool value); ///< Enable or disable application name/version editing.
-    void stringChanged(int, int);   ///< Handle translation cell changes.
-    void applyAppName();            ///< Apply global application name to all translations.
-    void askReloadApk();            ///< Ask to repack APK if the tool ("7za" or "apktool") was changed.
-    void enableUpload(bool enable); ///< Enable or disable upload to cloud services.
-    void clearRecent();             ///< Clear list of recently opened APKs.
+    void setLanguage(QString lang);    ///< Set GUI language.
+    void setCurrentIcon(int id);       ///< Set icon to draw in \c drawArea widget.
+    void setPreviewColor();            ///< Show dialog to select background preview color.
+    void showEffectsDialog();          ///< Show "Effects" dialog.
+    void hideEmptyDpi();               ///< Hide unused (empty) icons from \c profiles widget.
+    void cloneIcons();                 ///< Apply current icon to all DPI sizes.
+    void enableApktool(bool value);    ///< Enable or disable application name/version editing.
+    void stringChanged(int, int);      ///< Handle translation cell changes.
+    void applyAppName();               ///< Apply global application name to all translations.
+    void askReloadApk();               ///< Ask to repack APK if the tool ("7za" or "apktool") was changed.
+    void enableUpload(bool enable);    ///< Enable or disable upload to cloud services.
+
+    void recent_add(QString filename); ///< Add \c filename to recent list.
+    void recent_update();              ///< Refresh recent menu.
+    void recent_clear();               ///< Clear list of recently opened APKs.
 
 //------------------------------------------------------------------------------
 

@@ -7,7 +7,8 @@ SOURCES += $$PWD/main.cpp \
            $$PWD/icon.cpp \
            $$PWD/profile.cpp \
            $$PWD/updater.cpp \
-           $$PWD/cloud.cpp
+           $$PWD/cloud.cpp \
+           $$PWD/recent.cpp
 
 HEADERS += $$PWD/main.h \
            $$PWD/application.h \
@@ -17,4 +18,5 @@ HEADERS += $$PWD/main.h \
            $$PWD/profile.h \
            $$PWD/updater.h \
            $$PWD/cloud.h \
-           $$PWD/keys.h
+           $$PWD/keys.h \
+           $$PWD/recent.h

@@ -157,6 +157,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
     actApkOpen->setIcon(QIcon(":/gfx/actions/open.png"));
     menuRecent->setIcon(QIcon(":/gfx/actions/open-list.png"));
+    actRecentClear->setIcon(QIcon(":/gfx/actions/close.png"));
     actApkExplore->setIcon(QIcon(":/gfx/actions/explore.png"));
     actApkSave->setIcon(QIcon(":/gfx/actions/pack.png"));
     actIconOpen->setIcon(QIcon(":/gfx/actions/open-icon.png"));
@@ -307,7 +308,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     connect(actApkSave, SIGNAL(triggered()), this, SLOT(apkSave()));
     connect(actApkExplore, SIGNAL(triggered()), this, SLOT(apkExplore()));
     connect(actExit, SIGNAL(triggered()), this, SLOT(close()));
-    connect(actRecentClear, SIGNAL(triggered()), this, SLOT(clearRecent()));
+    connect(actRecentClear, SIGNAL(triggered()), this, SLOT(recent_clear()));
     connect(actIconOpen, SIGNAL(triggered()), this, SLOT(iconOpen()));
     connect(actIconSave, SIGNAL(triggered()), this, SLOT(iconSave()));
     connect(actIconScale, SIGNAL(triggered()), this, SLOT(iconScale()));
@@ -448,14 +449,8 @@ void MainWindow::restoreSettings()
 
     // Recent List:
 
-    const QStringList RECENT = Settings::get_recent();
-    if (!RECENT.isEmpty()) {
-        recent = RECENT;
-        refreshRecent();
-    }
-    else {
-        clearRecent();
-    }
+    recent.init(Settings::get_recent());
+    recent_update();
 
     // APK:
 
@@ -585,43 +580,49 @@ void MainWindow::setLanguage(QString lang)
     keyManager->retranslate();
 }
 
-void MainWindow::addToRecent(QString filename)
+void MainWindow::recent_add(QString filename)
 {
-    if (!filename.isNull()) {
-        filename = QDir::toNativeSeparators(filename);
-        recent.push_front(filename);
-        recent.removeDuplicates();
-        if (recent.size() > 10) {
-            recent.pop_back();
+    Dpi DPI = LDPI;
+
+    for (short i = LDPI; i < DPI_COUNT; ++i) {
+        //const Dpi DPI = static_cast<Dpi>(i);
+        if (Icon *icon = apk->getIcon(static_cast<Dpi>(i))) {
+            if (!icon->isNull()) {
+                DPI = static_cast<Dpi>(i);
+                break;
+            }
         }
     }
-    refreshRecent();
+
+    recent.add(filename, apk->getIcon(DPI)->getPixmap());
+    recent_update();
 }
 
-void MainWindow::refreshRecent()
+void MainWindow::recent_update()
 {
-    if (!recent.isEmpty()) {
-        menuRecent->clear();
+    menuRecent->clear();
+
+    if (!recent.empty()) {
         for (short i = 0; i < recent.size(); ++i) {
-            QAction *actRecent = new QAction(recent[i], menuRecent);
+            const RecentEntry RECENT = recent[i];
+            QAction *actRecent = new QAction(RECENT.file, menuRecent);
+            actRecent->setIcon(RECENT.icon);
             menuRecent->addAction(actRecent);
             connect(actRecent, SIGNAL(triggered()), mapRecent, SLOT(map()));
-            mapRecent->setMapping(actRecent, recent[i]);
+            mapRecent->setMapping(actRecent, RECENT.file);
         }
         menuRecent->addSeparator();
         menuRecent->addAction(actRecentClear);
     }
     else {
-        clearRecent();
+        menuRecent->addAction(actNoRecent);
     }
 }
 
-void MainWindow::clearRecent()
+void MainWindow::recent_clear()
 {
     recent.clear();
-    menuRecent->clear();
-    menuRecent->addSeparator();
-    menuRecent->addAction(actNoRecent);
+    recent_update();
 }
 
 void MainWindow::hideEmptyDpi()
@@ -761,7 +762,7 @@ void MainWindow::setActiveApk(QString filename)
     currentApk = filename;
     setWindowModified(false);
     setWindowTitle(QFileInfo(filename).fileName() + "[*]");
-    addToRecent(filename);
+    recent_add(filename);
 }
 
 void MainWindow::enableUpload(bool enable)
@@ -1075,8 +1076,8 @@ bool MainWindow::apkLoad(QString filename)
     // Opening file:
     if (!QFile::exists(filename)) {
         error(tr("File not found"), tr("Could not find APK:\n%1").arg(filename));
-        recent.removeOne(filename);
-        refreshRecent();
+        recent.remove(filename);
+        recent_update();
         return false;
     }
 
@@ -1424,7 +1425,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
     Settings::set_path(currentPath);
     Settings::set_geometry(saveGeometry());
     Settings::set_splitter(splitter->saveState());
-    Settings::set_recent(recent);
+    Settings::set_recent(recent.files());
 
     Settings::set_upload(checkUpload->isChecked());
     Settings::set_dropbox(checkDropbox->isChecked());
