@@ -125,17 +125,17 @@ void Settings::set_splitter(QByteArray value) { settings->setValue("Splitter", v
 void Settings::set_recent(QStringList value)  { settings->setValue("Recent", value); }
 void Settings::set_temp(QString value)        { settings->setValue("Temp", value); }
 
-void Settings::set_use_apktool(bool value) { settings->setValue("APK/Apktool", value); }
-void Settings::set_compression(int value)  { settings->setValue("APK/Compression", value); }
-void Settings::set_smali(bool value)       { settings->setValue("APK/Smali", value); }
-void Settings::set_sign(bool value)        { settings->setValue("APK/Sign", value); }
-void Settings::set_zipalign(bool value)    { settings->setValue("APK/Optimize", value); }
+void Settings::set_use_apktool(bool value)    { settings->setValue("APK/Apktool", value); }
+void Settings::set_compression(int value)     { settings->setValue("APK/Compression", value); }
+void Settings::set_smali(bool value)          { settings->setValue("APK/Smali", value); }
+void Settings::set_sign(bool value)           { settings->setValue("APK/Sign", value); }
+void Settings::set_zipalign(bool value)       { settings->setValue("APK/Optimize", value); }
 
-void Settings::set_use_keystore(bool value)     { settings->setValue("Key/Method", value); }
-void Settings::set_keystore(QString value)      { settings->setValue("Key/KeyStore", value); }
-void Settings::set_alias(QString value)         { settings->setValue("Key/Alias", value); }
-void Settings::set_pem(QString value)           { settings->setValue("Key/PEM", value); }
-void Settings::set_pk8(QString value)           { settings->setValue("Key/PK8", value); }
+void Settings::set_use_keystore(bool value)   { settings->setValue("Key/Method", value); }
+void Settings::set_keystore(QString value)    { settings->setValue("Key/KeyStore", value); }
+void Settings::set_alias(QString value)       { settings->setValue("Key/Alias", value); }
+void Settings::set_pem(QString value)         { settings->setValue("Key/PEM", value); }
+void Settings::set_pk8(QString value)         { settings->setValue("Key/PK8", value); }
 
 void Settings::set_keystore_pass(QString value)
 {

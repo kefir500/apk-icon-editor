@@ -52,7 +52,7 @@ public:
     /// \retval \c FALSE on error.
     bool resize(int side);
 
-    bool revert();                                          ///< Revert the original #pixmap (loaded fron #filename_original).
+    bool revert();                                          ///< Revert the original #pixmap (loaded from #filename_original).
     bool isNull() const { return pixmap.isNull(); }         ///< Check if #pixmap is null.
     int width() const { return pixmap.width(); }            ///< Get #pixmap width.
     int height() const { return pixmap.height(); }          ///< Get #pixmap height.

@@ -90,7 +90,7 @@ private:
     // Unpacking APK:
     bool readManifest();                    ///< Read AndroidManifest.xml and save it to #manifest variable.
     bool unzip() const;                     ///< Unpack APK to temporary directory using "7za" tool.
-    bool unzip_apktool(bool smali) const;   ///< Unpack APK to temporary directory using "apktool" tool. Is \c smali is \c TRUE, decompile source.
+    bool unzip_apktool(bool smali) const;   ///< Unpack APK to temporary directory using "apktool" tool. If \c smali is \c TRUE, decompile source.
     void loadIcons();                       ///< Load APK icons.
     void loadStrings();                     ///< Load APK string resources (only in "apktool" mode).
 
