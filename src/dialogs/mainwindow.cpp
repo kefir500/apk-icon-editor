@@ -1112,7 +1112,8 @@ bool MainWindow::apk_open(QString filename)
     // "Open" dialog:
 
     if (filename.isEmpty()) {
-        if ((filename = QFileDialog::getOpenFileName(this, tr("Open APK"), currentPath, "APK (*.apk);;" + tr("All Files"))).isEmpty()) {
+        filename = QFileDialog::getOpenFileName(this, tr("Open APK"), currentPath, "APK (*.apk);;" + tr("All Files"));
+        if (filename.isEmpty()) {
             return false;
         }
     }
@@ -1167,7 +1168,7 @@ bool MainWindow::apk_save(QString filename)
 
     // "Save" dialog:
 
-    if (!filename.isEmpty()) {
+    if (filename.isEmpty()) {
         filename = QFileDialog::getSaveFileName(this, tr("Pack APK"), currentPath, "APK (*.apk)");
         if (filename.isEmpty()) {
             return false;
