@@ -114,6 +114,8 @@ private:
     bool optimize() const;              ///< Optimize APK using "zipalign" tool.
     bool finalize();                    ///< Move the final APK from temporary to user-specified directory.
 
+    enum JavaType { JRE, JDK };
+
 public:
     /// \brief Get APK icon from #icons list.
     /// \param[in] id DPI of the required icon.
@@ -128,15 +130,11 @@ public:
     QString getMinimumSdk() const;          ///< Returns APK minimum SDK version.
     QString getTargetSdk() const;           ///< Returns APK target SDK version.
 
-    enum Java { JRE, JDK };
-
-    /// \brief Check if Java Runtime Environment is installed.
-    /// \param[in] type JRE/JDK.
-    /// \param[in] debug If \c TRUE, writes info to the log file.
-    /// \return \c TRUE if Java Runtime Environment is installed.
-    static bool isJavaInstalled(Java type = JRE, bool debug = false);
-
-    static QString getApktoolVersion();     ///< Returns Apktool version.
+    static bool isJavaInstalled();                ///< Returns \c TRUE if Java (JRE or JDK) is installed.
+    static QString getJavaVersion(JavaType java); ///< Returns Java version.
+    static QString getJreVersion();               ///< Returns JRE version.
+    static QString getJdkVersion();               ///< Returns JDK version.
+    static QString getApktoolVersion();           ///< Returns Apktool version.
 
     void unpack(PackOptions options);       ///< Unpack APK by calling private #doUnpack method in a separate #thread.
     void pack(PackOptions options);         ///< Pack APK by calling private #doPack method in a separate #thread.

@@ -109,6 +109,11 @@ private:
     QString currentLang;
     QString currentPath;
 
+    QString version_apktool;                ///< Holds Apktool version.
+    QString version_jre;                    ///< Holds JRE version.
+    QString version_jdk;                    ///< Holds JDK version.
+
+    void checkDeps();                       ///< Check Java and Apktool versions.
     void setActiveApk(QString filename);    ///< Mark \c filename as currently active.
     void restoreSettings();                 ///< Restore settings from INI.
     void resetApktool();                    ///< Remove Apktool "1.apk" framework
@@ -118,8 +123,6 @@ private:
 
     void initLanguages();                   ///< Initialize available languages.
     void initProfiles();                    ///< Initialize available profiles.
-    void checkJava();                       ///< Check Java and Apktool versions.
-
     /// Upload file to cloud service.
     void upload(Cloud *uploader, QString filename);
 

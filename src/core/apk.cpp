@@ -68,36 +68,6 @@ void Apk::pack(PackOptions options)
     QtConcurrent::run(this, &Apk::doPack, options);
 }
 
-bool Apk::isJavaInstalled(Java type, bool debug)
-{
-    QProcess p;
-    QString prefix;
-    switch (type) {
-    case JRE:
-        p.start("java -version");
-        prefix = "JRE";
-        break;
-    case JDK:
-        p.start("javac -version");
-        prefix = "JDK";
-        break;
-    }
-    if (p.waitForStarted(-1)) {
-        p.waitForFinished(-1);
-        if (debug) {
-            qDebug() << qPrintable(prefix) << "32-bit found:";
-            qDebug() << p.readAllStandardError().replace("\r\n", "\n").trimmed();
-        }
-        return true;
-    }
-    else {
-        if (debug) {
-            qDebug() << qPrintable(prefix) << "32-bit NOT found.";
-        }
-        return false;
-    }
-}
-
 QString Apk::getApktoolVersion()
 {
     QProcess p;
@@ -107,9 +77,27 @@ QString Apk::getApktoolVersion()
         return p.readAllStandardOutput().trimmed();
     }
     else {
-        return "NOT FOUND";
+        return QString();
     }
 }
+
+QString Apk::getJavaVersion(JavaType java)
+{
+    QProcess p;
+    p.start(QString("%1 -version").arg(java == JRE ? "java" : "javac"));
+    if (p.waitForStarted(-1)) {
+        p.waitForFinished(-1);
+        const QString VERSION = p.readAllStandardError().replace("\r\n", "\n").trimmed();
+        return VERSION;
+    }
+    else {
+        return QString();
+    }
+}
+
+QString Apk::getJreVersion() { return getJavaVersion(JRE); }
+QString Apk::getJdkVersion() { return getJavaVersion(JDK); }
+bool Apk::isJavaInstalled()  { return !(getJreVersion().isNull() && getJdkVersion().isNull()); }
 
 // --- UNPACKING APK ---
 
@@ -238,7 +226,7 @@ bool Apk::unzip_apktool(bool smali) const
             return die(tr(STR_ERROR).arg("Apktool"),
                        tr("\"Apktool\" requires Java Runtime Environment.") +
                           QString("<br><a href=\"%1\">%2</a> %3.<br>%4").arg(
-                                  URL_JAVA, tr("Download"), tr(STR_CHECKPATH),
+                                  URL_JRE, tr("Download"), tr(STR_CHECKPATH),
                                   tr("You may also change repacking method (Settings -> Repacking).")));
         }
     }
@@ -450,7 +438,7 @@ bool Apk::doPack(PackOptions opts)
             warning += "<hr>" +
                     tr("Signing APK requires Java Runtime Environment.") +
                     QString("<br><a href=\"%1\">%2</a> %3.")
-                    .arg(URL_JAVA, tr("Download"), tr(STR_CHECKPATH));
+                    .arg(URL_JRE, tr("Download"), tr(STR_CHECKPATH));
         }
         emit packed(filename, false, warning);
     }
@@ -591,7 +579,7 @@ bool Apk::zip_apktool() const
             return die(tr(STR_ERROR).arg("Apktool"),
                        tr("\"Apktool\" requires Java Runtime Environment.") +
                           QString("<br><a href=\"%1\">%2</a> %3.<br>%4").arg(
-                                  URL_JAVA, tr("Download"), tr(STR_CHECKPATH),
+                                  URL_JRE, tr("Download"), tr(STR_CHECKPATH),
                                   tr("You may also change repacking method (Settings -> Repacking).")));
         }
     }

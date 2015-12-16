@@ -16,7 +16,35 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     resize(WINDOW_WIDTH, WINDOW_HEIGHT);
     setAcceptDrops(true);
 
+    QtConcurrent::run(this, &MainWindow::checkDeps);
     Settings::init();
+
+void MainWindow::checkDeps()
+{
+    const QString JRE     = Apk::getJreVersion();
+    const QString JDK     = Apk::getJdkVersion();
+    version_apktool       = Apk::getApktoolVersion();
+
+    QRegExp rx;
+    QStringList cap;
+
+    rx.setPattern("java version \"(.+)\"");
+    rx.indexIn(JRE);
+    cap = rx.capturedTexts();
+    if (cap.size() > 1) version_jre = cap[1];
+
+    rx.setPattern("javac version \"(.+)\"");
+    rx.indexIn(JDK);
+    cap = rx.capturedTexts();
+    if (cap.size() > 1) version_jdk = cap[1];
+
+    qDebug() << "JRE (32-bit) version:" << qPrintable(!JRE.isNull() ? version_jre : "---");
+    qDebug() << "JDK (32-bit) version:" << qPrintable(!JDK.isNull() ? version_jdk : "---");
+    qDebug() << "Apktool version:" << qPrintable(!version_apktool.isNull() ? version_apktool : "---") << '\n';
+
+    if (!JRE.isNull()) qDebug().nospace() << "java -version\n" << qPrintable(JRE) << '\n';
+    if (!JDK.isNull()) qDebug().nospace() << "javac -version\n" << qPrintable(JDK) << '\n';
+}
 
     apk = new Apk(this);
     effects = new EffectsDialog(this);
@@ -1217,8 +1245,10 @@ void MainWindow::openLogPath() const
 
 void MainWindow::about()
 {
-    const QString LINK("<tr><td style=\"padding-right: 4px\" align=\"right\">"
-                       "<a href=\"%1\">%2</a></td><td>%3</td></tr>");
+    const QString TD = "<td style='padding-right: 8px'>%1</td>";
+    const QString JRE = !version_jre.isEmpty() ? version_jre : QString("<a href='%1'>%2</a>").arg(URL_JRE, QApplication::translate("Apk", "Download"));
+    const QString JDK = !version_jdk.isEmpty() ? version_jdk : QString("<a href='%1'>%2</a>").arg(URL_JDK, QApplication::translate("Apk", "Download"));
+    const QString LINK = "<tr><td style='padding-right: 4px' align='right'><a href='%1'>%2</a></td><td>%3</td></tr>";
 
     QMessageBox aboutBox(this);
     aboutBox.setWindowTitle(tr("About"));
@@ -1228,19 +1258,29 @@ void MainWindow::about()
         "<p>" +
             tr("Built on: %1 - %2").arg(__DATE__, __TIME__) + "<br>" +
             tr("Author: %1").arg("Alexander Gorishnyak") + "<br>" +
-            tr("License") + ": <a href=\"http://www.gnu.org/licenses/gpl-3.0.html\">GNU GPL v3.0</a>" +
-        "</p><p><table>" +
+            tr("License") + ": <a href='http://www.gnu.org/licenses/gpl-3.0.html'>GNU GPL v3.0</a>" +
+        "</p>"
+        "<p><table>" +
             LINK.arg(URL_WEBSITE, tr("Visit Website"), tr("Visit our official website.")) +
             LINK.arg(URL_BUGS, tr("Report a Bug"), tr("Found a bug? Let us know so we can fix it!")) +
             LINK.arg(URL_TRANSLATE, tr("Help Translate"), tr("Join our translation team on Transifex.")) +
             LINK.arg(QString("file:///%1/versions.txt").arg(APPDIR), tr("Version History"), tr("List of changes made to the project.")) +
         "</table></p>"
+        "<hr style='margin-top: 6px'>"
+        "<p style='margin-top: 4px'><table width='100%'><tr>" +
+            TD.arg("Qt: %1").arg(qVersion()) +
+            TD.arg("Apktool: %1").arg(version_apktool) +
+            TD.arg("JRE: %1").arg(JRE) +
+            TD.arg("JDK: %1").arg(JDK) +
+        "</tr></table></p>"
     );
     aboutBox.setIconPixmap(QPixmap(":/gfx/logo-about.png"));
     QPushButton btnAuthors(tr("Authors"));
-    connect(&btnAuthors, SIGNAL(clicked()), this, SLOT(aboutAuthors()), Qt::QueuedConnection);
+    connect(&btnAuthors, SIGNAL(clicked()), &aboutBox, SLOT(close()));
+    connect(&btnAuthors, SIGNAL(clicked()), this, SLOT(aboutAuthors()));
     aboutBox.addButton(QMessageBox::Ok);
-    aboutBox.addButton(&btnAuthors, QMessageBox::RejectRole);
+    aboutBox.addButton(&btnAuthors, QMessageBox::ActionRole);
+    aboutBox.setEscapeButton(aboutBox.button(QMessageBox::Ok));
     aboutBox.exec();
 }
 
