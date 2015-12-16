@@ -134,15 +134,11 @@ protected:
     void closeEvent(QCloseEvent *event);
 
 public slots:
-    /// \brief Open APK from the \c filename. If \c filename is NULL, show "Open" dialog.
-    /// \param[in] filename  Name of the APK file to unpack.
-    /// \return \c FALSE, if \c filename not found or "Open" dialog is closed.
-    bool apkLoad(QString filename = QString());
+    bool apk_open(QString filename = ""); ///< Open APK (calls "Open" dialog if parameter is empty).
+    bool apk_save(QString filename = ""); ///< Save APK (calls "Save" dialog if parameter is empty).
+    void apk_explore();                   ///< Open the folder with APK contents.
 
 private slots:
-    void apkSave();                         ///< Save APK (calls "Save" dialog).
-    void apkExplore();                      ///< Open the folder with APK contents.
-
     /// Handle packed APK.
     /// \param[in] filename  Name of the packed APK file.
     /// \param[in] isSuccess \c FALSE if APK is packed with warnings.

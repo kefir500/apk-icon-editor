@@ -328,13 +328,13 @@ void MainWindow::checkDeps()
     initProfiles();
     hideEmptyDpi();
 
-    connect(drawArea, SIGNAL(clicked()), this, SLOT(apkLoad()));
+    connect(drawArea, SIGNAL(clicked()), this, SLOT(apk_open()));
     connect(devices, SIGNAL(groupChanged(int)), this, SLOT(hideEmptyDpi()));
     connect(devices, SIGNAL(itemChanged(int)), this, SLOT(setCurrentIcon(int)));
     connect(checkUpload, SIGNAL(toggled(bool)), this, SLOT(enableUpload(bool)));
-    connect(actApkOpen, SIGNAL(triggered()), this, SLOT(apkLoad()));
-    connect(actApkSave, SIGNAL(triggered()), this, SLOT(apkSave()));
-    connect(actApkExplore, SIGNAL(triggered()), this, SLOT(apkExplore()));
+    connect(actApkOpen, SIGNAL(triggered()), this, SLOT(apk_open()));
+    connect(actApkSave, SIGNAL(triggered()), this, SLOT(apk_save()));
+    connect(actApkExplore, SIGNAL(triggered()), this, SLOT(apk_explore()));
     connect(actExit, SIGNAL(triggered()), this, SLOT(close()));
     connect(actRecentClear, SIGNAL(triggered()), this, SLOT(recent_clear()));
     connect(actIconOpen, SIGNAL(triggered()), this, SLOT(iconOpen()));
@@ -357,8 +357,8 @@ void MainWindow::checkDeps()
     connect(actUpdate, SIGNAL(triggered()), updater, SLOT(check()));
     connect(actAboutQt, SIGNAL(triggered()), this, SLOT(aboutQt()));
     connect(actAbout, SIGNAL(triggered()), this, SLOT(about()));
-    connect(btnPack, SIGNAL(clicked()), this, SLOT(apkSave()));
-    connect(mapRecent, SIGNAL(mapped(QString)), this, SLOT(apkLoad(QString)));
+    connect(btnPack, SIGNAL(clicked()), this, SLOT(apk_save()));
+    connect(mapRecent, SIGNAL(mapped(QString)), this, SLOT(apk_open(QString)));
     connect(btnApplyIcons, SIGNAL(clicked()), this, SLOT(cloneIcons()));
     connect(tableStrings, SIGNAL(cellChanged(int, int)), this, SLOT(stringChanged(int, int)));
     connect(editAppName, SIGNAL(textEdited(QString)), this, SLOT(setModified()));
@@ -753,7 +753,7 @@ void MainWindow::askReloadApk()
                                        tr("Changing tool requires repacking.\nProceed?"),
                                        QMessageBox::Yes, QMessageBox::No);
 
-    if (result != QMessageBox::Yes || !apkLoad(currentApk)) {
+    if (result != QMessageBox::Yes || !apk_open(currentApk)) {
         toolDialog->switch_mode();
     }
 }
@@ -1088,20 +1088,22 @@ void MainWindow::showEffectsDialog()
     }
 }
 
-bool MainWindow::apkLoad(QString filename)
+bool MainWindow::apk_open(QString filename)
 {
     if (confirmExit()) {
         return false;
     }
 
-    // Open dialog:
+    // "Open" dialog:
+
     if (filename.isEmpty()) {
         if ((filename = QFileDialog::getOpenFileName(this, tr("Open APK"), currentPath, "APK (*.apk);;" + tr("All Files"))).isEmpty()) {
             return false;
         }
     }
 
-    // Opening file:
+    // Open APK:
+
     if (!QFile::exists(filename)) {
         error(tr("File not found"), tr("Could not find APK:\n%1").arg(filename));
         recent.remove(filename);
@@ -1112,6 +1114,7 @@ bool MainWindow::apkLoad(QString filename)
     currentPath = QFileInfo(filename).absolutePath();
 
     // Unpacking:
+
     loadingDialog->setProgress(0);
     PackOptions opts;
     opts.filename = filename;
@@ -1122,86 +1125,99 @@ bool MainWindow::apkLoad(QString filename)
     return true;
 }
 
-void MainWindow::apkSave()
+bool MainWindow::apk_save(QString filename)
 {
-    // Check if required field are empty:
+    // Check if required fields are empty:
+
     if (editAppName->text().isEmpty()) {
         warning(NULL, tr("\"%1\" field cannot be empty.").arg(tr("Application Name")));
         tabs->setCurrentIndex(1);
         editAppName->setFocus();
-        return;
+        return false;
     }
     else if (editVersionName->text().isEmpty()) {
         warning(NULL, tr("\"%1\" field cannot be empty.").arg(tr("Version Name")));
         tabs->setCurrentIndex(1);
         editVersionName->setFocus();
-        return;
+        return false;
     }
 
     // Fill empty translation values:
+
     for (int i = 0; i < tableStrings->rowCount(); ++i) {
         if (tableStrings->item(i, 1)->text().isEmpty()) {
             tableStrings->item(i, 1)->setText(editAppName->text());
         }
     }
 
-    QString filename = QFileDialog::getSaveFileName(this, tr("Pack APK"), currentPath, "APK (*.apk)");
+    // "Save" dialog:
+
     if (!filename.isEmpty()) {
-
-        const QPixmap PIXMAP_KEY(":/gfx/actions/key.png");
-
-        QString alias = Settings::get_alias();
-        QString pass_store = Settings::get_keystore_pass();
-        QString pass_alias = Settings::get_alias_pass();
-
-        const bool USING_KEYSTORE = Settings::get_use_keystore();
-        if (USING_KEYSTORE) {
-            if (pass_store.isEmpty()) {
-                pass_store = InputDialog::getString(NULL, tr("Enter the KeyStore password:"), true, PIXMAP_KEY, this);
-            }
-            if (alias.isEmpty()) {
-                alias = InputDialog::getString(NULL, tr("Enter the alias:"), false, PIXMAP_KEY, this);
-            }
-            if (pass_alias.isEmpty()) {
-                pass_alias = InputDialog::getString(NULL, tr("Enter the alias password:"), true, PIXMAP_KEY, this);
-            }
+        filename = QFileDialog::getSaveFileName(this, tr("Pack APK"), currentPath, "APK (*.apk)");
+        if (filename.isEmpty()) {
+            return false;
         }
-
-        currentPath = QFileInfo(filename).absolutePath();
-        loadingDialog->setProgress(0);
-
-        PackOptions opts;
-        opts.filename = filename;
-        opts.temp = Settings::get_temp();
-        opts.isApktool = Settings::get_use_apktool();
-        opts.ratio = Settings::get_compression();
-        opts.isSmali = Settings::get_smali();
-        opts.isSign = Settings::get_sign();
-        opts.isOptimize = Settings::get_zipalign();
-        opts.filePem = Settings::get_pem();
-        opts.filePk8 = Settings::get_pk8();
-        opts.fileKey = Settings::get_keystore();
-        opts.isKeystore = USING_KEYSTORE;
-        opts.alias = alias;
-        opts.passStore = pass_store;
-        opts.passAlias = pass_alias;
-        opts.appName = editAppName->text();
-        opts.appVersionName = editVersionName->text();
-        opts.appVersionCode = editVersionCode->text();
-        QList<Resource> res;
-        for (int i = 0; i < tableStrings->rowCount(); ++i) {
-            // Save only edited strings:
-            if (tableStrings->item(i, 1)->data(Qt::UserRole) == true) {
-                res.push_back(Resource(tableStrings->item(i, 2)->text(),
-                                       tableStrings->item(i, 1)->text()));
-            }
-        }
-        opts.resources = res;
-        apk->pack(opts);
     }
+
+    // Fetch KeyStore properties:
+
+    QString alias = Settings::get_alias();
+    QString pass_store = Settings::get_keystore_pass();
+    QString pass_alias = Settings::get_alias_pass();
+
+    const bool USING_KEYSTORE = Settings::get_use_keystore();
+    if (USING_KEYSTORE) {
+        const QPixmap PIXMAP_KEY(":/gfx/actions/key.png");
+        if (pass_store.isEmpty()) {
+            pass_store = InputDialog::getString(NULL, tr("Enter the KeyStore password:"), true, PIXMAP_KEY, this);
+        }
+        if (alias.isEmpty()) {
+            alias = InputDialog::getString(NULL, tr("Enter the alias:"), false, PIXMAP_KEY, this);
+        }
+        if (pass_alias.isEmpty()) {
+            pass_alias = InputDialog::getString(NULL, tr("Enter the alias password:"), true, PIXMAP_KEY, this);
+        }
+    }
+
+    // Saving APK:
+
+    currentPath = QFileInfo(filename).absolutePath();
+    loadingDialog->setProgress(0);
+
+    PackOptions opts;
+    opts.filename = filename;
+    opts.temp = Settings::get_temp();
+    opts.isApktool = Settings::get_use_apktool();
+    opts.ratio = Settings::get_compression();
+    opts.isSmali = Settings::get_smali();
+    opts.isSign = Settings::get_sign();
+    opts.isOptimize = Settings::get_zipalign();
+    opts.filePem = Settings::get_pem();
+    opts.filePk8 = Settings::get_pk8();
+    opts.fileKey = Settings::get_keystore();
+    opts.isKeystore = USING_KEYSTORE;
+    opts.alias = alias;
+    opts.passStore = pass_store;
+    opts.passAlias = pass_alias;
+    opts.appName = editAppName->text();
+    opts.appVersionName = editVersionName->text();
+    opts.appVersionCode = editVersionCode->text();
+
+    QList<Resource> res;
+    for (int i = 0; i < tableStrings->rowCount(); ++i) {
+        // Save only edited strings:
+        if (tableStrings->item(i, 1)->data(Qt::UserRole) == true) {
+            res.push_back(Resource(tableStrings->item(i, 2)->text(),
+                                   tableStrings->item(i, 1)->text()));
+        }
+    }
+
+    opts.resources = res;
+    apk->pack(opts);
+    return true;
 }
 
-void MainWindow::apkExplore()
+void MainWindow::apk_explore()
 {
     const QString TEMPDIR = Settings::get_temp() + "/apk-icon-editor/apk";
     QDesktopServices::openUrl(QUrl::fromLocalFile(TEMPDIR));
@@ -1442,7 +1458,7 @@ void MainWindow::dropEvent(QDropEvent *event)
             iconOpen(filename);
         }
         else {
-            apkLoad(filename);
+            apk_open(filename);
         }
     }
 }

@@ -35,7 +35,7 @@ Application::Application(int &argc, char **argv) : QApplication(argc, argv)
     window->show();
 
     if (arguments().size() > 1) {
-        window->apkLoad(arguments()[1]);
+        window->apk_open(arguments()[1]);
     }
 }
 
@@ -88,7 +88,7 @@ bool Application::event(QEvent *event)
 {
     switch (event->type()) {
     case QEvent::FileOpen:
-        window->apkLoad(static_cast<QFileOpenEvent *>(event)->file());
+        window->apk_open(static_cast<QFileOpenEvent *>(event)->file());
         return true;
     default:
         return QApplication::event(event);
