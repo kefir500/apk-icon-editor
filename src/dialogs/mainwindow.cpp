@@ -13,11 +13,21 @@
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
-    resize(WINDOW_WIDTH, WINDOW_HEIGHT);
-    setAcceptDrops(true);
+    init_core();
+    init_gui();
+    init_languages();
+    init_profiles();
+    init_slots();
 
     QtConcurrent::run(this, &MainWindow::checkDeps);
     Settings::init();
+
+    settings_load();
+
+    if (actAutoUpdate->isChecked()) {
+        updater->check();
+    }
+}
 
 void MainWindow::checkDeps()
 {
@@ -46,20 +56,32 @@ void MainWindow::checkDeps()
     if (!JDK.isNull()) qDebug().nospace() << "javac -version\n" << qPrintable(JDK) << '\n';
 }
 
+void MainWindow::init_core()
+{
     apk = new Apk(this);
+    updater = new Updater(this);
+    mapRecent = new QSignalMapper(this);
+
+    dropbox = new Dropbox(this);
+    gdrive = new GoogleDrive(this);
+    onedrive = new OneDrive(this);
+    dropbox->setIcon(QPixmap(":/gfx/clouds/dropbox.png"));
+    gdrive->setIcon(QPixmap(":/gfx/clouds/gdrive.png"));
+    onedrive->setIcon(QPixmap(":/gfx/clouds/onedrive.png"));
+}
+
+void MainWindow::init_gui()
+{
+    // Dialogs:
+
     effects = new EffectsDialog(this);
     toolDialog = new ToolDialog(this);
     keyManager = new KeyManager(this);
-    updater = new Updater(this);
-    translator = new QTranslator(this);
-    translatorQt = new QTranslator(this);
 
-    dropbox = new Dropbox(this);
-    dropbox->setIcon(QPixmap(":/gfx/clouds/dropbox.png"));
-    gdrive = new GoogleDrive(this);
-    gdrive->setIcon(QPixmap(":/gfx/clouds/gdrive.png"));
-    onedrive = new OneDrive(this);
-    onedrive->setIcon(QPixmap(":/gfx/clouds/onedrive.png"));
+    // Main Window:
+
+    resize(WINDOW_WIDTH, WINDOW_HEIGHT);
+    setAcceptDrops(true);
 
     splitter = new QSplitter(this);
     setCentralWidget(splitter);
@@ -321,13 +343,67 @@ void MainWindow::checkDeps()
     splitter->setStretchFactor(0, 2);
     splitter->setStretchFactor(1, 1);
     splitter->setStyleSheet("QSplitter {padding: 8px;}");
+}
 
-    mapRecent = new QSignalMapper(this);
+void MainWindow::init_languages()
+{
+    translator = new QTranslator(this);
+    translatorQt = new QTranslator(this);
+    mapLang = new QSignalMapper(this);
+    connect(mapLang, SIGNAL(mapped(QString)), this, SLOT(setLanguage(QString)));
 
-    initLanguages();
-    initProfiles();
-    hideEmptyDpi();
+    // Add default English:
 
+    QStringList langs;
+    langs << "apk-icon-editor.en";
+
+    // Load language list:
+
+    const QDir LANGPATH(APPDIR + "/lang");
+    langs << LANGPATH.entryList(QStringList() << "apk-icon-editor.*");
+
+    for (int i = 0; i < langs.size(); ++i) {
+
+        // Get native language title:
+
+        QString locale = langs[i].split('.')[1];
+        QString title = QLocale(locale).nativeLanguageName();
+        if (title.size() > 1) {
+            title[0] = title[0].toUpper();
+        }
+
+        // Set up menu action:
+
+        QAction *actLang = new QAction(QIcon(QString("%1/flag.%2.png").arg(LANGPATH.absolutePath(), locale)), title, this);
+        connect(actLang, SIGNAL(triggered()), mapLang, SLOT(map()));
+        mapLang->setMapping(actLang, locale);
+        menuLang->addAction(actLang);
+    }
+
+    // Add "Help Translate" action:
+
+    menuLang->addSeparator();
+    actTranslate = new QAction(this);
+    actTranslate->setIcon(QPixmap(":/gfx/actions/world.png"));
+    connect(actTranslate, SIGNAL(triggered()), this, SLOT(browseTranslate()));
+    menuLang->addAction(actTranslate);
+}
+
+void MainWindow::init_profiles()
+{
+    Profile::init();
+    for (int i = 0; i < Profile::count(); ++i) {
+        Profile profile = Profile::at(i);
+        devices->addGroup(profile.title(), profile.thumb());
+        for (short j = LDPI; j < DPI_COUNT; ++j) {
+            Dpi DPI = static_cast<Dpi>(j);
+            devices->addItem(profile.title(), profile.getDpiTitle(DPI));
+        }
+    }
+}
+
+void MainWindow::init_slots()
+{
     connect(drawArea, SIGNAL(clicked()), this, SLOT(apk_open()));
     connect(devices, SIGNAL(groupChanged(int)), this, SLOT(hideEmptyDpi()));
     connect(devices, SIGNAL(itemChanged(int)), this, SLOT(setCurrentIcon(int)));
@@ -347,7 +423,7 @@ void MainWindow::checkDeps()
     connect(actPacking, SIGNAL(triggered()), toolDialog, SLOT(open()));
     connect(actKeys, SIGNAL(triggered()), keyManager, SLOT(open()));
     connect(actAssoc, SIGNAL(triggered()), this, SLOT(associate()));
-    connect(actReset, SIGNAL(triggered()), this, SLOT(resetSettings()));
+    connect(actReset, SIGNAL(triggered()), this, SLOT(settings_reset()));
     connect(actWebsite, SIGNAL(triggered()), this, SLOT(browseSite()));
     connect(actReport, SIGNAL(triggered()), this, SLOT(browseBugs()));
     connect(actDonate, SIGNAL(triggered()), this, SLOT(donate()));
@@ -393,76 +469,9 @@ void MainWindow::checkDeps()
     connect(uploadDialog, SIGNAL(rejected()), onedrive, SLOT(cancel()));
     connect(updater, SIGNAL(version(QString)), this, SLOT(newVersion(QString)));
     connect(this, SIGNAL(destroyed()), apk, SLOT(clearTemp()));
-
-    QtConcurrent::run(this, &MainWindow::checkJava);
-    restoreSettings();
-
-    if (actAutoUpdate->isChecked()) {
-        updater->check();
-    }
 }
 
-void MainWindow::checkJava()
-{
-    const bool JRE = Apk::isJavaInstalled(Apk::JRE, true);
-    const bool JDK = Apk::isJavaInstalled(Apk::JDK, true);
-    if (JRE || JDK) {
-        QString apktool = Apk::getApktoolVersion();
-        qDebug() << "Apktool version:" << qPrintable(apktool) << '\n';
-    }
-}
-
-void MainWindow::initLanguages()
-{
-    mapLang = new QSignalMapper(this);
-    connect(mapLang, SIGNAL(mapped(QString)), this, SLOT(setLanguage(QString)));
-
-    // Add default English:
-    QStringList langs;
-    langs << "apk-icon-editor.en";
-
-    // Loading language list:
-    const QDir LANGPATH(APPDIR + "/lang");
-    langs << LANGPATH.entryList(QStringList() << "apk-icon-editor.*");
-
-    for (int i = 0; i < langs.size(); ++i) {
-
-        // Get native language title:
-        QString locale = langs[i].split('.')[1];
-        QString title = QLocale(locale).nativeLanguageName();
-        if (title.size() > 1) {
-            title[0] = title[0].toUpper();
-        }
-
-        // Set up menu action:
-        QAction *actLang = new QAction(QIcon(QString("%1/flag.%2.png").arg(LANGPATH.absolutePath(), locale)), title, this);
-        connect(actLang, SIGNAL(triggered()), mapLang, SLOT(map()));
-        mapLang->setMapping(actLang, locale);
-        menuLang->addAction(actLang);
-    }
-
-    // Add "Help Translate" action:
-    menuLang->addSeparator();
-    actTranslate = new QAction(this);
-    actTranslate->setIcon(QPixmap(":/gfx/actions/world.png"));
-    connect(actTranslate, SIGNAL(triggered()), this, SLOT(browseTranslate()));
-    menuLang->addAction(actTranslate);
-}
-
-void MainWindow::initProfiles()
-{
-    Profile::init();
-    for (int i = 0; i < Profile::count(); ++i) {
-        Profile profile = Profile::at(i);
-        devices->addGroup(profile.title(), profile.thumb());
-        for (short j = LDPI; j < DPI_COUNT; ++j) {
-            Dpi DPI = static_cast<Dpi>(j);
-            devices->addItem(profile.title(), profile.getDpiTitle(DPI));
-        }
-    }
-}
-
-void MainWindow::restoreSettings()
+void MainWindow::settings_load()
 {
     // Global:
 
@@ -505,12 +514,12 @@ void MainWindow::resetApktool()
     QFile::remove(FRAMEWORK);
 }
 
-void MainWindow::resetSettings()
+void MainWindow::settings_reset()
 {
     if (QMessageBox::question(this, tr("Reset?"), tr("Reset settings to default?")) == QMessageBox::Yes) {
         const bool APKTOOL = Settings::get_use_apktool();
         Settings::reset();
-        restoreSettings();
+        settings_load();
         resetApktool();
         resize(WINDOW_WIDTH, WINDOW_HEIGHT);
         if (APKTOOL != Settings::get_use_apktool()) {
@@ -544,6 +553,7 @@ void MainWindow::setLanguage(QString lang)
     menuLang->setIcon(flag);
 
     // Retranslate strings:
+
     drawArea->setText(tr("CLICK HERE\n(or drag APK and icons)"));
     tabs->setTabText(0, tr("Icons"));
     tabs->setTabText(1, tr("Properties"));
@@ -610,10 +620,10 @@ void MainWindow::setLanguage(QString lang)
 
 void MainWindow::recent_add(QString filename)
 {
-    Dpi DPI = LDPI;
+    // Get the smallest icon:
 
+    Dpi DPI = LDPI;
     for (short i = LDPI; i < DPI_COUNT; ++i) {
-        //const Dpi DPI = static_cast<Dpi>(i);
         if (Icon *icon = apk->getIcon(static_cast<Dpi>(i))) {
             if (!icon->isNull()) {
                 DPI = static_cast<Dpi>(i);
@@ -621,6 +631,8 @@ void MainWindow::recent_add(QString filename)
             }
         }
     }
+
+    // Add to recent and refresh the list:
 
     recent.add(filename, apk->getIcon(DPI)->getPixmap());
     recent_update();
@@ -725,7 +737,8 @@ void MainWindow::enableApktool(bool value)
 
     menuBar()->resize(0, 0); // "Repaint" menu bar
 
-    // If any APK is loaded:
+    // If any APK is currently open:
+
     if (!currentApk.isEmpty()) {
         editAppName->setEnabled(value);
         editVersionCode->setEnabled(value);
@@ -843,7 +856,8 @@ void MainWindow::apkUnpacked(QString filename)
     loadingDialog->finish();
     setActiveApk(filename);
 
-    // Automatically select DPI from list:
+    // Automatically select DPI from the list:
+
     const int ID = devices->currentItemIndex();
     if (ID != -1
         && apk->getIcon(static_cast<Dpi>(ID))
@@ -860,13 +874,13 @@ void MainWindow::apkUnpacked(QString filename)
                     break;
                 }
             }
-            devices->setCurrentItem(0);
         }
     }
 
     hideEmptyDpi();
 
-    // Load strings to table:
+    // Load strings to the table:
+
     editAppName->clear();
     editVersionCode->clear();
     editVersionName->clear();
@@ -910,6 +924,7 @@ void MainWindow::apkUnpacked(QString filename)
     editVersionName->setText(apk->getVersionName());
 
     // Enable operations with APK and icons:
+
     actApkSave->setEnabled(true);
     actApkExplore->setEnabled(true);
     actIconOpen->setEnabled(true);

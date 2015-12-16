@@ -59,17 +59,17 @@ private:
     QTranslator *translatorQt;
 
     // Menus:
+
     QMenu *menuFile;
     QMenu *menuIcon;
     QMenu *menuSett;
     QMenu *menuHelp;
-
-    // Sub-menus, sub-actions:
     QMenu *menuRecent;
     QMenu *menuLang;
     QMenu *menuLogs;
 
     // Actions:
+
     QAction *actApkOpen;
     QAction *actApkExplore;
     QAction *actApkSave;
@@ -113,18 +113,20 @@ private:
     QString version_jre;                    ///< Holds JRE version.
     QString version_jdk;                    ///< Holds JDK version.
 
+    void init_core();                       ///< Initialize core objects.
+    void init_gui();                        ///< Initialize dialogs and widgets.
+    void init_languages();                  ///< Initialize available languages.
+    void init_profiles();                   ///< Initialize available profiles.
+    void init_slots();                      ///< Initialize signals/slots.
+
     void checkDeps();                       ///< Check Java and Apktool versions.
     void setActiveApk(QString filename);    ///< Mark \c filename as currently active.
-    void restoreSettings();                 ///< Restore settings from INI.
     void resetApktool();                    ///< Remove Apktool "1.apk" framework
     bool confirmExit();                     ///< Ask user to confim exit.
     void invalidDpi();                      ///< Show "Invalid DPI" message.
     void connectRepaintSignals();           ///< Create signal-slot connections to repaint windows.
 
-    void initLanguages();                   ///< Initialize available languages.
-    void initProfiles();                    ///< Initialize available profiles.
-    /// Upload file to cloud service.
-    void upload(Cloud *uploader, QString filename);
+    void upload(Cloud *uploader, QString filename); ///< Upload file to a cloud service.
 
 protected:
     void dragEnterEvent(QDragEnterEvent *event);
@@ -146,7 +148,9 @@ private slots:
     void apkPacked(QString filename, bool isSuccess = true, QString text = QString());
 
     void apkUnpacked(QString filename);             ///< Handle APK unpacked from the \c filename.
-    void resetSettings();                           ///< Reset settings to default.
+
+    void settings_load();                           ///< Load settings from INI.
+    void settings_reset();                          ///< Reset settings to default.
 
 //------------------------------------------------------------------------------
 
