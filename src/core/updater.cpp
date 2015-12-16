@@ -72,12 +72,11 @@ void Updater::catchReply(QNetworkReply *reply)
 
     if (reply->error() == QNetworkReply::NoError) {
 
-        int code = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+        const int CODE = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
 
-        if (code >= 200 && code < 300) {
-
-            QString url = reply->url().toString();
-            if (url.indexOf(URL_VERSION) != -1) {
+        if (CODE >= 200 && CODE < 300) {
+            const QString URL = reply->url().toString();
+            if (URL.indexOf(URL_VERSION) != -1) {
                 QString json(reply->readAll().trimmed());
                 parse(json);
             }

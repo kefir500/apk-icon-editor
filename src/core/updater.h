@@ -24,7 +24,6 @@ private slots:
 
 public slots:
     void check();               ///< Check for updates.
-    void parse(QString json);   ///< Parse version JSON info.
     void download() const;      ///< Download the latest version.
 
     /// \brief Compare which version number is greater.
@@ -36,6 +35,9 @@ public slots:
     /// \retval \c FALSE if \c v1 <= \c v2.
     /// \note Unit test is available for this function.
     bool compare(QString v1, QString v2);
+
+private slots:
+    void parse(QString json);   ///< Parse version JSON info.
 
 signals:
     /// \brief This signal is emitted after calling #check if new version is available.
