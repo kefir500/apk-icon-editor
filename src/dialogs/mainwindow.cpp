@@ -197,11 +197,11 @@ void MainWindow::init_gui()
     actIconSave->setShortcut(QKeySequence("Ctrl+S"));
     actIconScale->setShortcut(QKeySequence("Ctrl+W"));
     actIconResize->setShortcut(QKeySequence("Ctrl+I"));
-    actIconRevert->setShortcut(QKeySequence("Ctrl+Z"));
+    actIconRevert->setShortcut(QKeySequence::Undo);
     actIconEffect->setShortcut(QKeySequence("Ctrl+F"));
     actPacking->setShortcut(QKeySequence("Ctrl+P"));
     actKeys->setShortcut(QKeySequence("Ctrl+K"));
-    actFaq->setShortcut(QKeySequence("F1"));
+    actFaq->setShortcut(QKeySequence::HelpContents);
     actLogPath->setShortcut(QKeySequence("Ctrl+L"));
     actExit->setShortcut(QKeySequence("Ctrl+Q"));
 
