@@ -65,34 +65,27 @@ private:
     QProgressBar *progress;         ///< Dialog progress bar.
     QDialogButtonBox *buttons;      ///< Dialog buttons.
     bool isWinExtras;               ///< If \c TRUE, allows using QtWinExtras.
+    bool allowCancel;               ///< If \c FALSE, dialog cannot be rejected.
 #ifdef WINEXTRAS
     QWinTaskbarButton *taskbar;     ///< Represents taskbar button.
 #endif
 
 public:
-    /// Set current progress \c text.
-    void setText(QString text) { label->setText(text); }
-
-    /// Set current progress \c pixmap.
-    void setIcon(QPixmap pixmap);
-
-    /// If #allow is \c FALSE, forbid cancelling dialog by user.
-    void setAllowCancel(bool allow);
-
     explicit ProgressDialog(QWidget *parent = 0);
 
-private slots:
-    /// Closes dialog, resets current progress and emits \c rejected signal.
-    void cancel();
+    void setText(QString text);      ///< Set current progress #text.
+    void setIcon(QPixmap pixmap);    ///< Set current progress #pixmap.
+    void setAllowCancel(bool allow); ///< If #allow is \c FALSE, forbid cancelling dialog by user.
 
 public slots:
-    /// Show Progress dialog with the given parameters.
+    virtual void accept(); ///< Accept progress dialog.
+    virtual void reject(); ///< Reject progress dialog. Does nothing if #allowCancel is \c TRUE).
+    void reset();          ///< Reset progress dialog percentage.
+
+    /// Show progress dialog with the given parameters.
     /// \param[in] percentage Loading progress (0-100).
     /// \param[in] text Additional loading text.
     void setProgress(short percentage, QString text = QString());
-
-    /// Close and reset Progress dialog.
-    void finish();
 
 };
 

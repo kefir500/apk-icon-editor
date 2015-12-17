@@ -446,9 +446,9 @@ void MainWindow::init_slots()
     connect(btnTool, SIGNAL(clicked()), this, SLOT(askReloadApk()));
     connect(toolDialog, SIGNAL(apktool_checked(bool)), this, SLOT(enableApktool(bool)));
     connect(toolDialog, SIGNAL(tool_changed()), this, SLOT(askReloadApk()));
-    connect(apk, SIGNAL(loading(short, QString)), loadingDialog, SLOT(setProgress(short, QString)), Qt::BlockingQueuedConnection);
+    connect(apk, SIGNAL(loading(short, QString)), loadingDialog, SLOT(setProgress(short, QString)));
     connect(apk, SIGNAL(error(QString, QString)), this, SLOT(error(QString, QString)));
-    connect(apk, SIGNAL(error(QString, QString)), loadingDialog, SLOT(finish()));
+    connect(apk, SIGNAL(error(QString, QString)), loadingDialog, SLOT(accept()));
     connect(apk, SIGNAL(warning(QString, QString)), this, SLOT(warning(QString, QString)));
     connect(apk, SIGNAL(packed(QString, bool, QString)), this, SLOT(apkPacked(QString, bool, QString)));
     connect(apk, SIGNAL(unpacked(QString)), this, SLOT(apkUnpacked(QString)));
@@ -824,7 +824,7 @@ void MainWindow::upload(Cloud *uploader, QString filename)
 
 void MainWindow::apkPacked(QString filename, bool isSuccess, QString text)
 {
-    loadingDialog->finish();
+    loadingDialog->accept();
     setActiveApk(filename);
 
     const bool UPLOAD_TO_DROPBOX  = checkDropbox->isChecked();
@@ -837,7 +837,7 @@ void MainWindow::apkPacked(QString filename, bool isSuccess, QString text)
             if (UPLOAD_TO_GDRIVE)   upload(gdrive, filename);
             if (UPLOAD_TO_ONEDRIVE) upload(onedrive, filename);
         }
-        uploadDialog->finish();
+        uploadDialog->accept();
         success(NULL, text);
     }
     else {
@@ -847,13 +847,13 @@ void MainWindow::apkPacked(QString filename, bool isSuccess, QString text)
             if (UPLOAD_TO_GDRIVE)   upload(gdrive, filename);
             if (UPLOAD_TO_ONEDRIVE) upload(onedrive, filename);
         }
-        uploadDialog->finish();
+        uploadDialog->accept();
     }
 }
 
 void MainWindow::apkUnpacked(QString filename)
 {
-    loadingDialog->finish();
+    loadingDialog->accept();
     setActiveApk(filename);
 
     // Automatically select DPI from the list:

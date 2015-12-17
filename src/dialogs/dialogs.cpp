@@ -83,6 +83,7 @@ ProgressDialog::ProgressDialog(QWidget *parent) : QDialog(parent)
     resize(220, 100);
     setModal(true);
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
+    allowCancel = true;
 
     QVBoxLayout *layout = new QVBoxLayout(this);
 
@@ -111,14 +112,13 @@ ProgressDialog::ProgressDialog(QWidget *parent) : QDialog(parent)
     }
 #endif
 
-    connect(buttons, SIGNAL(rejected()), this, SLOT(cancel()));
+    connect(buttons, SIGNAL(rejected()), this, SLOT(reject()));
 }
 
 void ProgressDialog::setProgress(short percentage, QString text)
 {
     label->setText(text);
     progress->setValue(percentage);
-
 #ifdef WINEXTRAS
     if (isWinExtras) {
         taskbar->setWindow(static_cast<QWidget*>(parent())->windowHandle());
@@ -128,8 +128,12 @@ void ProgressDialog::setProgress(short percentage, QString text)
         taskProgress->setVisible(true);
     }
 #endif
-
     show();
+}
+
+void ProgressDialog::setText(QString text)
+{
+    label->setText(text);
 }
 
 void ProgressDialog::setIcon(QPixmap pixmap)
@@ -140,18 +144,27 @@ void ProgressDialog::setIcon(QPixmap pixmap)
 
 void ProgressDialog::setAllowCancel(bool allow)
 {
-    if (allow) {
-        setWindowFlags(windowFlags() & Qt::WindowCloseButtonHint);
-    }
-    else {
-        setWindowFlags(windowFlags() & ~Qt::WindowCloseButtonHint);
-    }
+    allowCancel = allow;
+    setWindowFlags(windowFlags() & (allow ? Qt::WindowCloseButtonHint : ~Qt::WindowCloseButtonHint));
     buttons->button(QDialogButtonBox::Cancel)->setEnabled(allow);
 }
 
-void ProgressDialog::finish()
+void ProgressDialog::accept()
 {
-    accept();
+    QDialog::accept();
+    reset();
+}
+
+void ProgressDialog::reject()
+{
+    if (allowCancel) {
+        QDialog::reject();
+        reset();
+    }
+}
+
+void ProgressDialog::reset()
+{
     progress->setValue(0);
 #ifdef WINEXTRAS
     if (isWinExtras) {
@@ -161,12 +174,6 @@ void ProgressDialog::finish()
         taskProgress->reset();
     }
 #endif
-}
-
-void ProgressDialog::cancel()
-{
-    finish();
-    emit rejected();
 }
 
 // Donate Dialog
