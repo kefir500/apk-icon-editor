@@ -819,7 +819,7 @@ void MainWindow::upload(Cloud *uploader, QString filename)
     connect(uploader, SIGNAL(finished(bool)), &loop, SLOT(quit()), Qt::QueuedConnection);
     uploadDialog->setIcon(uploader->getIcon());
     uploader->upload(filename);
-    loop.exec();
+    loop.exec(); // Block execution until cloud upload is finished.
 }
 
 void MainWindow::apkPacked(QString filename, bool isSuccess, QString text)

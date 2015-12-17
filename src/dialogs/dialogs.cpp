@@ -11,8 +11,7 @@
 
 // Input Dialog
 
-InputDialog::InputDialog(QString title, QString text, bool password, QPixmap _icon, QWidget *parent)
-    : QDialog(parent)
+InputDialog::InputDialog(QString title, QString text, bool password, QPixmap _icon, QWidget *parent) : QDialog(parent)
 {
     setWindowTitle(title);
     setModal(true);

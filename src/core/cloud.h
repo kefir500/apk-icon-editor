@@ -80,7 +80,7 @@ signals:
     /// Emitted when upload is finished (successfully or not).
     void finished(bool success);
 
-    /// Emitted to cancel cancel upload.
+    /// Emitted to cancel upload.
     /// \warning For internal purposes. Do not call directly.
     void cancelled();
 
