@@ -51,7 +51,7 @@ QString InputDialog::getString(QString title, QString text, bool password, QPixm
         return dialog.input->text();
     }
     else {
-        return NULL;
+        return QString();
     }
 }
 
@@ -121,7 +121,7 @@ void ProgressDialog::setProgress(short percentage, QString text)
 #ifdef WINEXTRAS
     if (isWinExtras) {
         taskbar->setWindow(static_cast<QWidget*>(parent())->windowHandle());
-        taskbar->setOverlayIcon(*icon->pixmap());
+        if (icon->pixmap()) { taskbar->setOverlayIcon(*icon->pixmap()); }
         QWinTaskbarProgress *taskProgress = taskbar->progress();
         taskProgress->setValue(percentage);
         taskProgress->setVisible(true);
