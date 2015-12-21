@@ -2,7 +2,7 @@
 !include nsProcess.nsh
 
 !define APPNAME "APK Icon Editor"
-!define COMPANYNAME "Qwerty Minds"
+!define COMPANYNAME "Alexander Gorishnyak"
 !define VERSIONMAJOR 1
 !define VERSIONMINOR 6
 !define VERSION "${VERSIONMAJOR}.${VERSIONMINOR}.0"
