@@ -6,9 +6,6 @@
 #include <QTextStream>
 #include <QApplication>
 
-#define PAYPAL "kefir500@gmail.com"
-#define BITCOIN "1M299bkCjSQL1TDbTzD38a7YyN96NvSo2k"
-
 // Input Dialog
 
 InputDialog::InputDialog(QString title, QString text, bool password, QPixmap _icon, QWidget *parent) : QDialog(parent)
@@ -179,8 +176,9 @@ void ProgressDialog::reset()
 
 Donate::Donate(QWidget *parent) : QDialog(parent)
 {
-    resize(400, 0);
+    setWindowTitle(QApplication::translate("MainWindow", "Donate"));
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
+    resize(400, 0);
 
     // Initialize "Thanks" section:
 
@@ -214,44 +212,75 @@ Donate::Donate(QWidget *parent) : QDialog(parent)
 
     // Create GUI:
 
-    QGridLayout *grid = new QGridLayout(this);
+    QVBoxLayout *layout = new QVBoxLayout(this);
+
+    Wallets *wallets = new Wallets(this);
+    wallets->add("PayPal:", "kefir500@gmail.com", URL_WEBSITE + "donate/#paypal");
+    wallets->add("BitCoin:", "1M299bkCjSQL1TDbTzD38a7YyN96NvSo2k", URL_WEBSITE + "donate/#bitcoin");
+    wallets->add("Yandex.Money:", "410011762016796", "https://money.yandex.ru/to/410011762016796");
+
     QLabel *donators = new QLabel(this);
     donators->setAlignment(Qt::AlignCenter);
     donators->setTextFormat(Qt::RichText);
     donators->setOpenExternalLinks(true);
     donators->setText(thanks);
 
-    QLabel *titlePayPal = new QLabel("PayPal", this);
-    QLabel *titleBitCoin = new QLabel("BitCoin", this);
-    QLineEdit *fieldPayPal = new QLineEdit(PAYPAL, this);
-    QLineEdit *fieldBitCoin = new QLineEdit(BITCOIN, this);
-    fieldPayPal->setReadOnly(true);
-    fieldBitCoin->setReadOnly(true);
-    fieldPayPal->setCursor(Qt::IBeamCursor);
-    fieldBitCoin->setCursor(Qt::IBeamCursor);
-
-    QToolButton *btnPayPal = new QToolButton(this);
-    QToolButton *btnBitCoin = new QToolButton(this);
-    btnPayPal->setIcon(QIcon(":/gfx/actions/copy.png"));
-    btnBitCoin->setIcon(QIcon(":/gfx/actions/copy.png"));
-    btnPayPal->setToolTip(tr("Copy to Clipboard"));
-    btnBitCoin->setToolTip(tr("Copy to Clipboard"));
-
     QPushButton *btnOk = new QPushButton("OK", this);
 
-    grid->addWidget(titlePayPal, 0, 0);
-    grid->addWidget(fieldPayPal, 0, 1);
-    grid->addWidget(btnPayPal, 0, 2);
-    grid->addWidget(titleBitCoin, 1, 0);
-    grid->addWidget(fieldBitCoin, 1, 1);
-    grid->addWidget(btnBitCoin, 1, 2);
-    grid->addWidget(btnOk, 2, 1);
-    grid->addWidget(donators, 3, 1);
+    layout->addWidget(wallets);
+    layout->addWidget(btnOk);
+    layout->addWidget(donators);
 
-    connect(btnPayPal, SIGNAL(clicked()), this, SLOT(copyPayPal()));
-    connect(btnBitCoin, SIGNAL(clicked()), this, SLOT(copyBitCoin()));
     connect(btnOk, SIGNAL(clicked()), this, SLOT(accept()));
 }
 
-void Donate::copyPayPal() { QApplication::clipboard()->setText(PAYPAL); }
-void Donate::copyBitCoin() { QApplication::clipboard()->setText(BITCOIN); }
+Wallets::Wallets(QWidget *parent) : QWidget(parent)
+{
+    new QGridLayout(this);
+    wallets = 0;
+}
+
+void Wallets::add(QString title, QString wallet, QString link)
+{
+    QLabel *label_title = new QLabel(title, this);
+    label_title->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    label_title->setMinimumWidth(80);
+
+    QLineEdit *input_wallet = new QLineEdit(wallet, this);
+    input_wallet->setReadOnly(true);
+    input_wallet->setCursor(Qt::IBeamCursor);
+
+    QToolButton *btn_copy = new QToolButton(this);
+    btn_copy->setProperty("wallet", wallet);
+    btn_copy->setIcon(QIcon(":/gfx/actions/copy.png"));
+    btn_copy->setToolTip(QApplication::translate("Donate", "Copy to Clipboard"));
+
+    QToolButton *btn_link = new QToolButton(this);
+    btn_link->setProperty("link", link);
+    btn_link->setIcon(QIcon(":/gfx/actions/coins.png"));
+    btn_link->setToolTip(QApplication::translate("MainWindow", "Donate"));
+    btn_link->setEnabled(!link.isEmpty());
+
+    QGridLayout *grid = qobject_cast<QGridLayout*>(layout());
+    grid->addWidget(label_title,  wallets, 0, Qt::AlignRight);
+    grid->addWidget(input_wallet, wallets, 1);
+    grid->addWidget(btn_copy,     wallets, 2);
+    grid->addWidget(btn_link,     wallets, 3);
+
+    ++wallets;
+
+    connect(btn_copy, SIGNAL(clicked()), this, SLOT(copy()));
+    connect(btn_link, SIGNAL(clicked()), this, SLOT(open()));
+}
+
+void Wallets::copy() const
+{
+    QString wallet = sender()->property("id").toString();
+    QApplication::clipboard()->setText(wallet);
+}
+
+void Wallets::open() const
+{
+    QString link = sender()->property("wallet").toString();
+    QDesktopServices::openUrl(link);
+}

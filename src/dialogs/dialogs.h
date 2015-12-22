@@ -95,10 +95,22 @@ class Donate : public QDialog
 
 public:
     explicit Donate(QWidget *parent = 0);
+};
+
+class Wallets : public QWidget
+{
+    Q_OBJECT
+
+public:
+    Wallets(QWidget *parent = 0);
+    void add(QString title, QString wallet, QString link = QString());
 
 private slots:
-    void copyPayPal();
-    void copyBitCoin();
+    void copy() const; ///< Copy wallet ID to clipboard.
+    void open() const; ///< Open wallet link in browser.
+
+private:
+    unsigned int wallets;
 };
 
 #endif // DIALOGS_H
