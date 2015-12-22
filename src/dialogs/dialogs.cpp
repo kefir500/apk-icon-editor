@@ -1,11 +1,12 @@
 #include "dialogs.h"
 #include "main.h"
+#include <QApplication>
 #include <QBoxLayout>
 #include <QToolButton>
 #include <QClipboard>
 #include <QTextStream>
 #include <QDesktopServices>
-#include <QApplication>
+#include <QUrl>
 
 // Input Dialog
 
@@ -283,5 +284,5 @@ void Wallets::copy() const
 void Wallets::open() const
 {
     QString link = sender()->property("wallet").toString();
-    QDesktopServices::openUrl(QUrl(link));
+    QDesktopServices::openUrl(link);
 }
