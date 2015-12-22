@@ -31,8 +31,8 @@
         <file>gfx/clouds/gdrive.png</file>
         <file>gfx/clouds/onedrive.png</file>
         <file>gfx/clouds/upload.png</file>
-        <file>gfx/profiles/android.png</file>
-        <file>gfx/profiles/blackberry.png</file>
-        <file>gfx/profiles/kindle.png</file>
+        <file>gfx/devices/amazon.png</file>
+        <file>gfx/devices/android.png</file>
+        <file>gfx/devices/blackberry.png</file>
     </qresource>
 </RCC>
