@@ -4,6 +4,7 @@
 #include <QToolButton>
 #include <QClipboard>
 #include <QTextStream>
+#include <QDesktopServices>
 #include <QApplication>
 
 // Input Dialog
