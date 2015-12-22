@@ -1367,7 +1367,7 @@ void MainWindow::invalidDpi()
 
 void MainWindow::browseTranslate()
 {
-    QDesktopServices::openUrl(QUrl(URL_TRANSLATE));
+    QDesktopServices::openUrl(URL_TRANSLATE);
 }
 
 bool MainWindow::newVersion(QString version)

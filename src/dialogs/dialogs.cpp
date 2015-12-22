@@ -283,5 +283,5 @@ void Wallets::copy() const
 void Wallets::open() const
 {
     QString link = sender()->property("wallet").toString();
-    QDesktopServices::openUrl(link);
+    QDesktopServices::openUrl(QUrl(link));
 }
