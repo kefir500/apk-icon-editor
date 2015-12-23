@@ -85,7 +85,7 @@ public:
     /// Add the popup menu \c actions to the #list box.
     void addActions(QList<QAction *> actions) { list->addActions(actions); }
 
-    explicit ComboList(QWidget *parent);
+    explicit ComboList(QWidget *parent = 0);
 
 public slots:
     /// Set the current group and refresh item #list (according to #items bindings).

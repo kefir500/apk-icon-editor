@@ -10,7 +10,7 @@
 
 // Input Dialog
 
-InputDialog::InputDialog(QString title, QString text, bool password, QPixmap _icon, QWidget *parent) : QDialog(parent)
+InputDialog::InputDialog(QString text, QString title, bool password, QPixmap icon, QWidget *parent) : QDialog(parent)
 {
     setWindowTitle(title);
     setModal(true);
@@ -18,34 +18,34 @@ InputDialog::InputDialog(QString title, QString text, bool password, QPixmap _ic
 
     QVBoxLayout *layout = new QVBoxLayout(this);
 
-    label = new QLabel(this);
-    icon = new QLabel(this);
-    icon->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
-    input = new QLineEdit(this);
-    buttons = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, this);
+    this->icon = new QLabel(this);
+    this->label = new QLabel(this);
+    this->input = new QLineEdit(this);
+    this->buttons = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, this);
 
-    label->setText(text);
-    icon->setPixmap(_icon);
-    input->setEchoMode(password ? QLineEdit::Password : QLineEdit::Normal);
+    this->icon->setPixmap(icon);
+    this->icon->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+    this->label->setText(text);
+    this->input->setEchoMode(password ? QLineEdit::Password : QLineEdit::Normal);
 
     QHBoxLayout *row1 = new QHBoxLayout();
-    row1->addWidget(icon);
-    row1->addWidget(label);
+    if (!icon.isNull()) row1->addWidget(this->icon);
+    row1->addWidget(this->label);
 
     layout->addLayout(row1);
-    layout->addWidget(input);
-    layout->addWidget(buttons);
+    layout->addWidget(this->input);
+    layout->addWidget(this->buttons);
 
     checkInput("");
 
-    connect(input, SIGNAL(textChanged(QString)), this, SLOT(checkInput(QString)));
-    connect(buttons, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttons, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(this->input, SIGNAL(textChanged(QString)), this, SLOT(checkInput(QString)));
+    connect(this->buttons, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(this->buttons, SIGNAL(rejected()), this, SLOT(reject()));
 }
 
-QString InputDialog::getString(QString title, QString text, bool password, QPixmap _icon, QWidget *parent)
+QString InputDialog::getString(QString text, QString title, bool password, QPixmap icon, QWidget *parent)
 {
-    InputDialog dialog(title, text, password, _icon, parent);
+    InputDialog dialog(text, title, password, icon, parent);
     if (dialog.exec() == QDialog::Accepted) {
         return dialog.input->text();
     }

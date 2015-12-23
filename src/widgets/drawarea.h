@@ -22,7 +22,7 @@ private:
     bool welcome;       ///< If \c TRUE, welcome text is rendered and #clicked signal is allowed.
 
 public:
-    explicit DrawArea(QWidget *parent);
+    explicit DrawArea(QWidget *parent = 0);
 
     /// Start drawing given pixmap.
     /// \param[in] icon Pointer to icon for drawing.

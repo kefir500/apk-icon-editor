@@ -139,7 +139,7 @@ public:
     void unpack(PackOptions options);       ///< Unpack APK by calling private #doUnpack method in a separate #thread.
     void pack(PackOptions options);         ///< Pack APK by calling private #doPack method in a separate #thread.
 
-    explicit Apk(QObject *parent) : QObject(parent) { }
+    explicit Apk(QObject *parent = 0) : QObject(parent) { }
 
 signals:
     /// \brief This signal represents current loading state.

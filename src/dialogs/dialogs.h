@@ -36,14 +36,22 @@ private:
 
 public:
     /// Static function returning user string input.
-    /// \param[in] title Dialog window title.
     /// \param[in] text Dialog text.
+    /// \param[in] title Dialog window title.
     /// \param[in] password Password mode.
     /// \param[in] _icon Dialog pixmap.
     /// \param[in] parent Parent widget.
-    static QString getString(QString title, QString text, bool password, QPixmap _icon, QWidget *parent);
+    static QString getString(QString text,
+                             QString title = QString(),
+                             bool password = false,
+                             QPixmap icon = QPixmap(),
+                             QWidget *parent = 0);
 
-    InputDialog(QString title, QString text, bool password, QPixmap _icon, QWidget *parent = 0);
+    InputDialog(QString text,
+                QString title = QString(),
+                bool password = false,
+                QPixmap icon = QPixmap(),
+                QWidget *parent = 0);
 
 private slots:
     /// Paste text from clipboard to #input box.
