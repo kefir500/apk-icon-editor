@@ -47,7 +47,7 @@ void Settings::reset()
 // Load:
 
 QString Settings::get_version()     { return settings->value("Version", "").toString(); }
-QString Settings::get_profile()     { return settings->value("Profile", "").toString(); }
+QString Settings::get_device()      { return settings->value("Profile", "").toString(); }
 QString Settings::get_language()    { return settings->value("Language", QLocale::system().name()).toString(); }
 bool Settings::get_update()         { return settings->value("Update", true).toBool(); }
 bool Settings::get_upload()         { return settings->value("Upload", false).toBool(); }
@@ -115,7 +115,7 @@ QString Settings::get_onedrive_token() { return settings->value("OneDrive/Token"
 // Save:
 
 void Settings::set_version(QString value)     { settings->setValue("Version", value); }
-void Settings::set_profile(QString value)     { settings->setValue("Profile", value); }
+void Settings::set_device(QString value)      { settings->setValue("Profile", value); }
 void Settings::set_language(QString value)    { settings->setValue("Language", value); }
 void Settings::set_update(bool value)         { settings->setValue("Update", value); }
 void Settings::set_upload(bool value)         { settings->setValue("Upload", value); }

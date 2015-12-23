@@ -16,7 +16,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     init_core();
     init_gui();
     init_languages();
-    init_profiles();
+    init_devices();
     init_slots();
 
     QtConcurrent::run(this, &MainWindow::checkDeps);
@@ -389,15 +389,15 @@ void MainWindow::init_languages()
     menuLang->addAction(actTranslate);
 }
 
-void MainWindow::init_profiles()
+void MainWindow::init_devices()
 {
-    Profile::init();
-    for (int i = 0; i < Profile::count(); ++i) {
-        Profile profile = Profile::at(i);
-        devices->addGroup(profile.title(), profile.thumb());
-        for (short j = LDPI; j < DPI_COUNT; ++j) {
-            Dpi DPI = static_cast<Dpi>(j);
-            devices->addItem(profile.title(), profile.getDpiTitle(DPI));
+    Devices::init();
+    for (int i = 0; i < Devices::count(); ++i) {
+        Device device = Devices::at(i);
+        devices->addGroup(device.getTitle(), device.getThumb());
+        for (short j = Dpi::LDPI; j < Dpi::COUNT; ++j) {
+            const Dpi::Type DPI = Dpi::cast(j);
+            devices->addItem(device.getTitle(), device.getDpiTitle(DPI));
         }
     }
 }
@@ -481,7 +481,7 @@ void MainWindow::settings_load()
     splitter->restoreState(Settings::get_splitter());
     setLanguage(Settings::get_language());
     currentPath = Settings::get_last_path();
-    devices->setCurrentGroup(Settings::get_profile());
+    devices->setCurrentGroup(Settings::get_device());
     actAutoUpdate->setChecked(Settings::get_update());
 
     // Recent List:
@@ -622,11 +622,11 @@ void MainWindow::recent_add(QString filename)
 {
     // Get the smallest icon:
 
-    Dpi DPI = LDPI;
-    for (short i = LDPI; i < DPI_COUNT; ++i) {
-        if (Icon *icon = apk->getIcon(static_cast<Dpi>(i))) {
+    Dpi::Type dpi = Dpi::LDPI;
+    for (short i = Dpi::LDPI; i < Dpi::COUNT; ++i) {
+        if (Icon *icon = apk->getIcon(Dpi::cast(i))) {
             if (!icon->isNull()) {
-                DPI = static_cast<Dpi>(i);
+                dpi = Dpi::cast(i);
                 break;
             }
         }
@@ -634,7 +634,7 @@ void MainWindow::recent_add(QString filename)
 
     // Add to recent and refresh the list:
 
-    recent.add(filename, apk->getIcon(DPI)->getPixmap());
+    recent.add(filename, apk->getIcon(dpi)->getPixmap());
     recent_update();
 }
 
@@ -667,9 +667,9 @@ void MainWindow::recent_clear()
 
 void MainWindow::hideEmptyDpi()
 {
-    for (short i = LDPI; i < DPI_COUNT; ++i) {
+    for (short i = Dpi::LDPI; i < Dpi::COUNT; ++i) {
         bool visible = false;
-        const Dpi DPI = static_cast<Dpi>(i);
+        const Dpi::Type DPI = Dpi::cast(i);
         if (Icon *icon = apk->getIcon(DPI)) {
             visible = !icon->isNull();
         }
@@ -696,8 +696,8 @@ void MainWindow::cloneIcons()
     if (!newIcon->isNull()) {
         if (QMessageBox::question(this, NULL, tr("Apply the current icon to all sizes?"))
          == QMessageBox::Yes) {
-            for (short i = LDPI; i < DPI_COUNT; ++i) {
-                const Dpi DPI = static_cast<Dpi>(i);
+            for (short i = Dpi::LDPI; i < Dpi::COUNT; ++i) {
+                const Dpi::Type DPI = Dpi::cast(i);
                 Icon *oldIcon = apk->getIcon(DPI);
                 if (!oldIcon->isNull()) {
                     oldIcon->replace(newIcon->getPixmap());
@@ -773,27 +773,29 @@ void MainWindow::askReloadApk()
 
 void MainWindow::setCurrentIcon(int id)
 {
-    if (id == -1) {
-#ifdef QT_DEBUG
-        // currentRowChanged() signal is fired twice. Qt bug?
-        qDebug() << "BUG #001";
-#endif
-        return;
-    }
-    Profile profile = Profile::at(devices->currentGroupIndex());
-    int side = profile.getDpiSide(static_cast<Dpi>(id));
-    drawArea->setRect(side, side);
-    if (Icon *icon = apk->getIcon(static_cast<Dpi>(id))) {
+    if (id == -1) return;
+    const Device PROFILE = Devices::at(devices->currentGroupIndex());
+    const int SIZE = PROFILE.getDpiSize(Dpi::cast(id));
+    drawArea->setRect(SIZE, SIZE);
+    if (Icon *icon = apk->getIcon(Dpi::cast(id))) {
         disconnect(effects, 0, 0, 0);
-        connect(effects, SIGNAL(colorActivated(bool)), icon, SLOT(setColorEnabled(bool)), Qt::DirectConnection);
-        connect(effects, SIGNAL(rotate(int)), icon, SLOT(setAngle(int)), Qt::DirectConnection);
-        connect(effects, SIGNAL(flipX(bool)), icon, SLOT(setFlipX(bool)), Qt::DirectConnection);
-        connect(effects, SIGNAL(flipY(bool)), icon, SLOT(setFlipY(bool)), Qt::DirectConnection);
-        connect(effects, SIGNAL(colorize(QColor)), icon, SLOT(setColor(QColor)), Qt::DirectConnection);
-        connect(effects, SIGNAL(colorDepth(qreal)), icon, SLOT(setDepth(qreal)), Qt::DirectConnection);
-        connect(effects, SIGNAL(blur(qreal)), icon, SLOT(setBlur(qreal)), Qt::DirectConnection);
-        connect(effects, SIGNAL(round(qreal)), icon, SLOT(setCorners(qreal)), Qt::DirectConnection);
-        connectRepaintSignals();
+        connect(effects, SIGNAL(colorActivated(bool)), icon,     SLOT(setColorEnabled(bool)), Qt::DirectConnection);
+        connect(effects, SIGNAL(rotate(int)),          icon,     SLOT(setAngle(int)),         Qt::DirectConnection);
+        connect(effects, SIGNAL(flipX(bool)),          icon,     SLOT(setFlipX(bool)),        Qt::DirectConnection);
+        connect(effects, SIGNAL(flipY(bool)),          icon,     SLOT(setFlipY(bool)),        Qt::DirectConnection);
+        connect(effects, SIGNAL(colorize(QColor)),     icon,     SLOT(setColor(QColor)),      Qt::DirectConnection);
+        connect(effects, SIGNAL(colorDepth(qreal)),    icon,     SLOT(setDepth(qreal)),       Qt::DirectConnection);
+        connect(effects, SIGNAL(blur(qreal)),          icon,     SLOT(setBlur(qreal)),        Qt::DirectConnection);
+        connect(effects, SIGNAL(round(qreal)),         icon,     SLOT(setCorners(qreal)),     Qt::DirectConnection);
+        connect(effects, SIGNAL(colorActivated(bool)), drawArea, SLOT(repaint()));
+        connect(effects, SIGNAL(blurActivated(bool)),  drawArea, SLOT(repaint()));
+        connect(effects, SIGNAL(rotate(int)),          drawArea, SLOT(repaint()));
+        connect(effects, SIGNAL(flipX(bool)),          drawArea, SLOT(repaint()));
+        connect(effects, SIGNAL(flipY(bool)),          drawArea, SLOT(repaint()));
+        connect(effects, SIGNAL(colorize(QColor)),     drawArea, SLOT(repaint()));
+        connect(effects, SIGNAL(colorDepth(qreal)),    drawArea, SLOT(repaint()));
+        connect(effects, SIGNAL(blur(qreal)),          drawArea, SLOT(repaint()));
+        connect(effects, SIGNAL(round(qreal)),         drawArea, SLOT(repaint()));
         drawArea->setIcon(icon);
     }
 }
@@ -860,14 +862,14 @@ void MainWindow::apkUnpacked(QString filename)
 
     const int ID = devices->currentItemIndex();
     if (ID != -1
-        && apk->getIcon(static_cast<Dpi>(ID))
-        && !apk->getIcon(static_cast<Dpi>(ID))->isNull())
+        && apk->getIcon(Dpi::cast(ID))
+        && !apk->getIcon(Dpi::cast(ID))->isNull())
     {
         devices->setCurrentItem(ID);
     }
     else {
-        for (short i = LDPI; i < DPI_COUNT; ++i) {
-            const Dpi DPI = static_cast<Dpi>(i);
+        for (short i = Dpi::LDPI; i < Dpi::COUNT; ++i) {
+            const Dpi::Type DPI = Dpi::cast(i);
             if (Icon *icon = apk->getIcon(DPI)) {
                 if (!icon->isNull()) {
                     devices->setCurrentItem(i);
@@ -968,15 +970,15 @@ bool MainWindow::iconOpen(QString filename)
     QPixmap backup = icon->getPixmap();
 
     if (icon->replace(QPixmap(filename))) {
-        Profile profile = Profile::at(devices->currentGroupIndex());
-        int side = profile.getDpiSide(static_cast<Dpi>(devices->currentItemIndex()));
-        if (icon->width() != side || icon->height() != side) {
+        const Device DEVICE = Devices::at(devices->currentGroupIndex());
+        const int SIZE = DEVICE.getDpiSize(Dpi::cast(devices->currentItemIndex()));
+        if (icon->width() != SIZE || icon->height() != SIZE) {
             int result = QMessageBox::warning(this, tr("Resize?"),
                                       tr("Icon you are trying to load is off-size.\nResize automatically?"),
                                       QMessageBox::Yes, QMessageBox::No, QMessageBox::Cancel);
             switch (result) {
             case QMessageBox::Yes:
-                icon->resize(side);
+                icon->resize(SIZE);
                 break;
             case QMessageBox::No:
                 break;
@@ -1002,11 +1004,10 @@ bool MainWindow::iconSave(QString filename)
         return false;
     }
 
-    if (filename.isEmpty())
-    {
-        Profile profile = Profile::at(devices->currentGroupIndex());
-        int side = profile.getDpiSide(static_cast<Dpi>(devices->currentItemIndex()));
-        filename = QString("%1-%2").arg(QFileInfo(currentApk).baseName()).arg(side);
+    if (filename.isEmpty()) {
+        Device device = Devices::at(devices->currentGroupIndex());
+        int size = device.getDpiSize(Dpi::cast(devices->currentItemIndex()));
+        filename = QString("%1-%2").arg(QFileInfo(currentApk).baseName()).arg(size);
         filename = QFileDialog::getSaveFileName(this, tr("Save Icon"), filename, FILTER_GFX);
         if (filename.isEmpty()) {
             return false;
@@ -1017,9 +1018,9 @@ bool MainWindow::iconSave(QString filename)
 
 void MainWindow::iconScale()
 {
-    Profile profile = Profile::at(devices->currentGroupIndex());
-    int side = profile.getDpiSide(static_cast<Dpi>(devices->currentItemIndex()));
-    iconResize(side);
+    const Device DEVICE = Devices::at(devices->currentGroupIndex());
+    const int SIZE = DEVICE.getDpiSize(Dpi::cast(devices->currentItemIndex()));
+    iconResize(SIZE);
 }
 
 bool MainWindow::iconResize(int side)
@@ -1491,7 +1492,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
     // Save Settings:
 
     Settings::set_version(VER);
-    Settings::set_profile(devices->currentGroupText());
+    Settings::set_device(devices->currentGroupText());
     Settings::set_language(currentLang);
     Settings::set_update(actAutoUpdate->isChecked());
     Settings::set_path(currentPath);

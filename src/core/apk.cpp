@@ -280,7 +280,7 @@ void Apk::loadIcons()
     // Load icons themselves:
 
     icons.clear();
-    for (short i = LDPI; i < DPI_COUNT; ++i) {
+    for (short i = Dpi::LDPI; i < Dpi::COUNT; ++i) {
         QString pngFile(pngs[i]);
         if (pngFile.isEmpty()) {
             icons.push_back(QSharedPointer<Icon>(new Icon)); // Push dummy
@@ -743,7 +743,7 @@ bool Apk::getZipSuccess(int code) const
     }
 }
 
-Icon *Apk::getIcon(Dpi id) const
+Icon *Apk::getIcon(Dpi::Type id) const
 {
     if (icons.size() > id && !icons.at(id).isNull()) {
         return icons.at(id).data();

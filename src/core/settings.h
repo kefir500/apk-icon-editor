@@ -15,7 +15,7 @@ public:
     // Load:
 
     static QString get_version();
-    static QString get_profile();
+    static QString get_device();
     static QString get_language();
     static bool get_update();
     static bool get_upload();
@@ -49,7 +49,7 @@ public:
     // Save:
 
     static void set_version(QString value);
-    static void set_profile(QString value);
+    static void set_device(QString value);
     static void set_language(QString value);
     static void set_update(bool value);
     static void set_upload(bool value);

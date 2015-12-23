@@ -116,7 +116,7 @@ private:
     void init_core();                       ///< Initialize core objects.
     void init_gui();                        ///< Initialize dialogs and widgets.
     void init_languages();                  ///< Initialize available languages.
-    void init_profiles();                   ///< Initialize available profiles.
+    void init_devices();                    ///< Initialize available device presets.
     void init_slots();                      ///< Initialize signals/slots.
 
     void checkDeps();                       ///< Check Java and Apktool versions.

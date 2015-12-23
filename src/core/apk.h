@@ -5,7 +5,7 @@
 #define PACKER_H
 
 #include "icon.h"
-#include "profile.h" // for Dpi enum
+#include "device.h" // for Dpi enum
 
 class Resource {
 private:
@@ -120,7 +120,7 @@ public:
     /// \brief Get APK icon from #icons list.
     /// \param[in] id DPI of the required icon.
     /// \return Requested #icon.
-    Icon *getIcon(Dpi id) const;
+    Icon *getIcon(Dpi::Type id) const;
 
     QList<Resource> getStrings() const;     ///< Returns APK string resource list.
     QString getPackageName() const;         ///< Returns APK package name.
