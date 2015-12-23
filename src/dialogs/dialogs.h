@@ -43,7 +43,7 @@ public:
     /// \param[in] parent Parent widget.
     static QString getString(QString title, QString text, bool password, QPixmap _icon, QWidget *parent);
 
-    explicit InputDialog(QString title, QString text, bool password, QPixmap _icon, QWidget *parent = 0);
+    InputDialog(QString title, QString text, bool password, QPixmap _icon, QWidget *parent = 0);
 
 private slots:
     /// Paste text from clipboard to #input box.

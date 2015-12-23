@@ -27,7 +27,7 @@ private:
 
 public:
     /// \brief Deprecated #Icon constructor creating dummies. Used by shared pointers.
-    explicit Icon() { }
+    Icon() { }
 
     /// \brief Normal #Icon constructor. The only way to load pixmap in it.
     /// \param[in] filename Used to load #pixmap. This parameter is also saved in #filename_original property to #revert original pixmap.
