@@ -124,7 +124,6 @@ private:
     void resetApktool();                    ///< Remove Apktool "1.apk" framework
     bool confirmExit();                     ///< Ask user to confim exit.
     void invalidDpi();                      ///< Show "Invalid DPI" message.
-    void connectRepaintSignals();           ///< Create signal-slot connections to repaint windows.
 
     void upload(Cloud *uploader, QString filename); ///< Upload file to a cloud service.
 

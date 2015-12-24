@@ -677,19 +677,6 @@ void MainWindow::hideEmptyDpi()
     }
 }
 
-void MainWindow::connectRepaintSignals()
-{
-    connect(effects, SIGNAL(colorActivated(bool)), drawArea, SLOT(repaint()));
-    connect(effects, SIGNAL(blurActivated(bool)), drawArea, SLOT(repaint()));
-    connect(effects, SIGNAL(rotate(int)), drawArea, SLOT(repaint()));
-    connect(effects, SIGNAL(flipX(bool)), drawArea, SLOT(repaint()));
-    connect(effects, SIGNAL(flipY(bool)), drawArea, SLOT(repaint()));
-    connect(effects, SIGNAL(colorize(QColor)), drawArea, SLOT(repaint()));
-    connect(effects, SIGNAL(colorDepth(qreal)), drawArea, SLOT(repaint()));
-    connect(effects, SIGNAL(blur(qreal)), drawArea, SLOT(repaint()));
-    connect(effects, SIGNAL(round(qreal)), drawArea, SLOT(repaint()));
-}
-
 void MainWindow::cloneIcons()
 {
     Icon *newIcon = drawArea->getIcon();
