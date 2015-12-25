@@ -5,22 +5,22 @@
 [![GitHub license](https://img.shields.io/badge/license-GPLv3-blue.svg)](https://raw.githubusercontent.com/kefir500/apk-icon-editor/master/LICENSE)
 
 ## Description
-**APK Icon Editor** is the tool designed to easily edit and replace APK (Android applications) resources such as icons, strings, images, application name and version, etc.
-Written in C++ and Qt framework.
+**APK Icon Editor** is a cross-platform APK editor designed to easily edit and replace APK resources such as icons, strings, images, application name and version, etc.
+Written in C++/Qt.
 
 ## Features
-* Edit, replace and extract APK icons;
-* Edit application name, version and resources;
-* Sign and optimize APK;
-* Supported image formats: PNG, ICO, GIF, JPG, BMP;
-* Size presets for devices: *Android*, *BlackBerry*, *Amazon Kindle Fire*;
-* Cloud storage upload: *Dropbox*, *Google Drive*, *Microsoft OneDrive*;
-* Multilingual extensible interface.
+- Edit, replace and extract APK icons;
+- Edit application name, version and resources;
+- Sign and optimize APK;
+- Supported image formats: PNG, ICO, GIF, JPG, BMP;
+- Size presets for devices: *Android*, *BlackBerry*, *Amazon Kindle Fire*;
+- Cloud storage upload: *Dropbox*, *Google Drive*, *Microsoft OneDrive*;
+- Multilingual interface.
 
 ## Requirements
-* **Java Runtime Environment (JRE)** – for signing APKs.
-* **Java Development Kit (JDK)** – for signing APKs with KeyStore.
+- **JRE 32-bit** (for most users) – to sign APK files and use Apktool.
+- **JDK 32-bit** (optional alternative) – to sign APK files with KeyStore.
 
 ## Notice
-* You may not use **APK Icon Editor** for any illegal intentions;
-* Repacked APKs should not be used for purposes violating the original licenses.
+- You may not use **APK Icon Editor** for any illegal intentions;
+- Repacked APKs should not be used for purposes violating the original licenses.
