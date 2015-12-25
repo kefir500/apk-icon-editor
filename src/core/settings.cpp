@@ -5,13 +5,18 @@
 #include <QNetworkInterface>
 #include <QApplication>
 
-QSettings *Settings::settings;
-SimpleCrypt *Settings::crypt = new SimpleCrypt();
+QSettings *Settings::settings = NULL;
+SimpleCrypt *Settings::crypt = NULL;
 quint64 Settings::key_mac = 0;
 
-void Settings::init()
+bool Settings::init()
 {
+    if (settings) {
+        return false;
+    }
+
     settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, "apk-icon-editor", "config");
+    crypt = new SimpleCrypt();
 
     // Init encryption / decryption:
 
@@ -31,17 +36,19 @@ void Settings::init()
     bool ok;
     key_mac = strKeyMac.toULongLong(&ok, 16);
     if (!ok) { key_mac = SIMPLECRYPT_KEY; }
+
+    return true;
 }
 
 void Settings::kill()
 {
-    delete settings;
-    delete crypt;
+    if (settings) delete settings;
+    if (crypt) delete crypt;
 }
 
 void Settings::reset()
 {
-    settings->clear();
+    if (settings) settings->clear();
 }
 
 // Load:
@@ -114,32 +121,31 @@ QString Settings::get_onedrive_token() { return settings->value("OneDrive/Token"
 
 // Save:
 
-void Settings::set_version(QString value)     { settings->setValue("Version", value); }
-void Settings::set_device(QString value)      { settings->setValue("Profile", value); }
-void Settings::set_language(QString value)    { settings->setValue("Language", value); }
-void Settings::set_update(bool value)         { settings->setValue("Update", value); }
-void Settings::set_upload(bool value)         { settings->setValue("Upload", value); }
-void Settings::set_path(QString value)        { settings->setValue("Directory", value); }
+void Settings::set_version(QString version)   { settings->setValue("Version", version); }
+void Settings::set_device(QString device)     { settings->setValue("Profile", device); }
+void Settings::set_language(QString language) { settings->setValue("Language", language); }
+void Settings::set_update(bool state)         { settings->setValue("Update", state); }
+void Settings::set_upload(bool state)         { settings->setValue("Upload", state); }
+void Settings::set_path(QString directory)    { settings->setValue("Directory", directory); }
 void Settings::set_geometry(QByteArray value) { settings->setValue("Geometry", value); }
 void Settings::set_splitter(QByteArray value) { settings->setValue("Splitter", value); }
-void Settings::set_recent(QStringList value)  { settings->setValue("Recent", value); }
-void Settings::set_temp(QString value)        { settings->setValue("Temp", value); }
+void Settings::set_recent(QStringList recent) { settings->setValue("Recent", recent); }
+void Settings::set_temp(QString path)         { settings->setValue("Temp", path); }
 
-void Settings::set_use_apktool(bool value)    { settings->setValue("APK/Apktool", value); }
-void Settings::set_compression(int value)     { settings->setValue("APK/Compression", value); }
-void Settings::set_smali(bool value)          { settings->setValue("APK/Smali", value); }
-void Settings::set_sign(bool value)           { settings->setValue("APK/Sign", value); }
-void Settings::set_zipalign(bool value)       { settings->setValue("APK/Optimize", value); }
+void Settings::set_use_apktool(bool state)    { settings->setValue("APK/Apktool", state); }
+void Settings::set_compression(int ratio)     { settings->setValue("APK/Compression", ratio); }
+void Settings::set_smali(bool state)          { settings->setValue("APK/Smali", state); }
+void Settings::set_sign(bool state)           { settings->setValue("APK/Sign", state); }
+void Settings::set_zipalign(bool state)       { settings->setValue("APK/Optimize", state); }
 
-void Settings::set_use_keystore(bool value)   { settings->setValue("Key/Method", value); }
-void Settings::set_keystore(QString value)    { settings->setValue("Key/KeyStore", value); }
+void Settings::set_use_keystore(bool state)   { settings->setValue("Key/Method", state); }
+void Settings::set_keystore(QString path)     { settings->setValue("Key/KeyStore", path); }
 void Settings::set_alias(QString value)       { settings->setValue("Key/Alias", value); }
-void Settings::set_pem(QString value)         { settings->setValue("Key/PEM", value); }
-void Settings::set_pk8(QString value)         { settings->setValue("Key/PK8", value); }
+void Settings::set_pem(QString path)          { settings->setValue("Key/PEM", path); }
+void Settings::set_pk8(QString path)          { settings->setValue("Key/PK8", path); }
 
-void Settings::set_keystore_pass(QString value)
+void Settings::set_keystore_pass(QString password)
 {
-    QString password = value;
     crypt->setKey(key_mac);
     password = crypt->encryptToString(password);
     crypt->setKey(SIMPLECRYPT_KEY);
@@ -147,9 +153,8 @@ void Settings::set_keystore_pass(QString value)
     settings->setValue("Key/PassStore", password);
 }
 
-void Settings::set_alias_pass(QString value)
+void Settings::set_alias_pass(QString password)
 {
-    QString password = value;
     crypt->setKey(key_mac);
     password = crypt->encryptToString(password);
     crypt->setKey(SIMPLECRYPT_KEY);
@@ -157,9 +162,9 @@ void Settings::set_alias_pass(QString value)
     settings->setValue("Key/PassAlias", password);
 }
 
-void Settings::set_dropbox(bool value)           { settings->setValue("Dropbox/Enable", value); }
-void Settings::set_gdrive(bool value)            { settings->setValue("GDrive/Enable", value); }
-void Settings::set_onedrive(bool value)          { settings->setValue("OneDrive/Enable", value); }
-void Settings::set_dropbox_token(QString value)  { settings->setValue("Dropbox/Token", value); }
-void Settings::set_gdrive_token(QString value)   { settings->setValue("GDrive/Token", value); }
-void Settings::set_onedrive_token(QString value) { settings->setValue("OneDrive/Token", value); }
+void Settings::set_dropbox(bool state)           { settings->setValue("Dropbox/Enable", state); }
+void Settings::set_gdrive(bool state)            { settings->setValue("GDrive/Enable", state); }
+void Settings::set_onedrive(bool state)          { settings->setValue("OneDrive/Enable", state); }
+void Settings::set_dropbox_token(QString token)  { settings->setValue("Dropbox/Token", token); }
+void Settings::set_gdrive_token(QString token)   { settings->setValue("GDrive/Token", token); }
+void Settings::set_onedrive_token(QString token) { settings->setValue("OneDrive/Token", token); }
