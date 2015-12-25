@@ -10,7 +10,7 @@ Updater::Updater(QObject *parent) : QObject(parent)
     connect(http, SIGNAL(finished(QNetworkReply*)), this, SLOT(catchReply(QNetworkReply*)));
 }
 
-void Updater::check()
+void Updater::check() const
 {
     QNetworkRequest request(URL_VERSION);
     http->get(request);
@@ -25,51 +25,48 @@ bool Updater::compare(QString v1, QString v2)
 {
     // Unit test is available for this function.
 
-    QStringList list1 = v1.split('.');
-    QStringList list2 = v2.split('.');
+    QStringList segments1 = v1.split('.');
+    QStringList segments2 = v2.split('.');
+
     for (short i = 0; i < list1.size(); ++i) {
 
-        if (list2.size() <= i) {
-            list2.push_back("0");
+        if (segments2.size() <= i) {
+            segments2.push_back("0");
         }
 
-        int c1 = list1.at(i).toInt();
-        int c2 = list2.at(i).toInt();
+        const int SEGMENT1 = segments1.at(i).toInt();
+        const int SEGMENT2 = segments2.at(i).toInt();
 
-        if (c1 == c2) {
+        if (SEGMENT1 == SEGMENT2) {
             continue;
-        } else {
+        }
+        else {
             return (c1 > c2);
         }
     }
     return false;
 }
 
-void Updater::parse(QString json)
+QString Updater::parse(QString json)
 {
 #if defined(Q_OS_WIN)
-    const QString OS_JSON = "windows";
+    const QString OS = "windows";
 #elif defined(Q_OS_OSX)
-    const QString OS_JSON = "osx";
+    const QString OS = "osx";
 #else
-    const QString OS_JSON = "windows";
+    const QString OS = "windows";
 #endif
-    QString latest = QJsonDocument::fromJson(json.toUtf8())
-                     .object()["1.3.0"]
-                     .toObject()[OS_JSON]
-                     .toObject()["version"].toString();
+    const QString LATEST = QJsonDocument::fromJson(json.toUtf8())
+                           .object()["1.3.0"]
+                           .toObject()[OS]
+                           .toObject()["version"].toString();
 
-    qDebug() << qPrintable(QString("Updater: APK Icon Editor v%1\n").arg(latest));
-
-    if (compare(latest, VER)) {
-        emit version(latest);
-    }
+    qDebug() << qPrintable(QString("Updater: v%1\n").arg(LATEST));
+    return LATEST;
 }
 
 void Updater::catchReply(QNetworkReply *reply)
 {
-    reply->deleteLater();
-
     if (reply->error() == QNetworkReply::NoError) {
 
         const int CODE = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
@@ -77,9 +74,15 @@ void Updater::catchReply(QNetworkReply *reply)
         if (CODE >= 200 && CODE < 300) {
             const QString URL = reply->url().toString();
             if (URL.indexOf(URL_VERSION) != -1) {
-                QString json(reply->readAll().trimmed());
-                parse(json);
+
+                const QString JSON = reply->readAll().trimmed();
+                const QString VERSION = parse(JSON);
+                if (compare(VERSION, VER)) {
+                    emit version(VERSION);
+                }
             }
         }
     }
+
+    reply->deleteLater();
 }

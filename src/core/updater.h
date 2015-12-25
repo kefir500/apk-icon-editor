@@ -1,49 +1,46 @@
-/// \file updater.h
-/// \brief This file contains #Updater class declaration.
+///
+/// \file
+/// This file contains the class to check for updates.
+///
 
 #ifndef UPDATER_H
 #define UPDATER_H
 
 #include <QNetworkReply>
 
-/// \brief Application update checker.
 ///
-/// Class to check for application updates online.
+/// Update check.
+/// This class performs an online check for application updates.
+///
 
 class Updater : public QObject {
     Q_OBJECT
 
-private:
-    QNetworkAccessManager *http;    ///< Used for HTTP GET requests.
-
 public:
     explicit Updater(QObject *parent = 0);
 
-private slots:
-    void catchReply(QNetworkReply *reply);  ///< Catch HTTP reply.
-
 public slots:
-    void check();               ///< Check for updates.
-    void download() const;      ///< Download the latest version.
+    void check() const;    ///< Checks for application updates.
+    void download() const; ///< Opens download URL in the default browser.
 
-    /// \brief Compare which version number is greater.
-    ///
-    /// This function checks if \c v1 is greater then \c v2.
-    /// Note that <b>%1.%2.%3.%N</b> scheme is used to represent application version.
-    /// Only numbers and dots are acceptable.
-    /// \retval \c TRUE if \c v1 > \c v2.
-    /// \retval \c FALSE if \c v1 <= \c v2.
+    /// Compares the application version numbers.
+    /// \return Returns \c true if version \c v1 is newer than version \c v2.
+    /// \retval true if version \c v1 is newer than version \c v2.
+    /// \retval false if version \c v1 is the same or older than version \c v2.
     /// \note Unit test is available for this function.
     bool compare(QString v1, QString v2);
 
+private:
+    QNetworkAccessManager *http;           ///< HTTP request manager.
+    QString parse(QString json);           ///< Returns the version number parsed from the incoming \c json.
+
 private slots:
-    void parse(QString json);   ///< Parse version JSON info.
+    void catchReply(QNetworkReply *reply); ///< Handles HTTP \c reply.
 
 signals:
-    /// \brief This signal is emitted after calling #check if new version is available.
-    /// \param version String representing version number.
+    /// This signal is emitted when the application update is available.
+    /// \param version Version number of the new release.
     void version(QString version);
-
 };
 
 #endif // UPDATER_H
