@@ -486,7 +486,7 @@ void MainWindow::settings_load()
 
     // Recent List:
 
-    recent.init(Settings::get_recent());
+    recent = new Recent(Settings::get_recent());
     recent_update();
 
     // APK:
@@ -634,7 +634,7 @@ void MainWindow::recent_add(QString filename)
 
     // Add to recent and refresh the list:
 
-    recent.add(filename, apk->getIcon(dpi)->getPixmap());
+    recent->add(filename, apk->getIcon(dpi)->getPixmap());
     recent_update();
 }
 
@@ -642,14 +642,14 @@ void MainWindow::recent_update()
 {
     menuRecent->clear();
 
-    if (!recent.empty()) {
-        for (short i = 0; i < recent.size(); ++i) {
-            const RecentEntry RECENT = recent[i];
-            QAction *actRecent = new QAction(RECENT.file, menuRecent);
+    if (!recent->empty()) {
+        for (short i = 0; i < recent->size(); ++i) {
+            const RecentFile RECENT = recent->at(i);
+            QAction *actRecent = new QAction(RECENT.filename, menuRecent);
             actRecent->setIcon(RECENT.icon);
             menuRecent->addAction(actRecent);
             connect(actRecent, SIGNAL(triggered()), mapRecent, SLOT(map()));
-            mapRecent->setMapping(actRecent, RECENT.file);
+            mapRecent->setMapping(actRecent, RECENT.filename);
         }
         menuRecent->addSeparator();
         menuRecent->addAction(actRecentClear);
@@ -661,7 +661,7 @@ void MainWindow::recent_update()
 
 void MainWindow::recent_clear()
 {
-    recent.clear();
+    recent->clear();
     recent_update();
 }
 
@@ -1110,7 +1110,7 @@ bool MainWindow::apk_open(QString filename)
 
     if (!QFile::exists(filename)) {
         error(tr("File not found"), tr("Could not find APK:\n%1").arg(filename));
-        recent.remove(filename);
+        recent->remove(filename);
         recent_update();
         return false;
     }
@@ -1485,7 +1485,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
     Settings::set_path(currentPath);
     Settings::set_geometry(saveGeometry());
     Settings::set_splitter(splitter->saveState());
-    Settings::set_recent(recent.files());
+    Settings::set_recent(recent->files());
 
     Settings::set_upload(checkUpload->isChecked());
     Settings::set_dropbox(checkDropbox->isChecked());
@@ -1505,4 +1505,5 @@ void MainWindow::closeEvent(QCloseEvent *event)
 MainWindow::~MainWindow()
 {
     qDebug() << "Exiting...";
+    delete recent;
 }

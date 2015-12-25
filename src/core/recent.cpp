@@ -8,50 +8,53 @@ const QString CACHE_PATH = QStandardPaths::writableLocation(QStandardPaths::Conf
 
 // Recent
 
-void Recent::init(QStringList files)
+Recent::Recent(QStringList files)
 {
     QDir().mkpath(CACHE_PATH);
     recent.clear();
+    limit = 10;
 
     for (int i = 0; i < files.size(); ++i) {
         const QString FILENAME = files[i];
         const QString ICON = cached(FILENAME);
-        recent.append(RecentEntry(FILENAME, ICON));
+        recent.append(RecentFile(FILENAME, ICON));
     }
 }
 
-void Recent::add(QString filename, QPixmap icon)
+bool Recent::add(QString filename, QPixmap icon)
 {
-    if (!filename.isNull()) {
+    if (filename.isEmpty()) {
+        return false;
+    }
 
-        // Create cached icon:
+    // Create cached icon:
 
-        const QString FILENAME = QDir::toNativeSeparators(filename);
-        const QString ICON = cached(FILENAME);
-        icon.scaled(16, 16, Qt::IgnoreAspectRatio, Qt::SmoothTransformation).save(ICON);
+    const QString FILENAME = QDir::toNativeSeparators(filename);
+    const QString ICON = cached(FILENAME);
+    icon.scaled(16, 16, Qt::IgnoreAspectRatio, Qt::SmoothTransformation).save(ICON);
 
-        // Remove duplicates:
+    // Remove duplicates:
 
-        for (int i = 0; i < recent.size(); ++i) {
-            if (recent[i].file == FILENAME) {
-                recent.removeAt(i);
-            }
-        }
-
-        // Create recent entry:
-
-        const short LIMIT = 10;
-        recent.prepend(RecentEntry(FILENAME, ICON));
-        if (recent.size() > LIMIT) {
-            this->remove(LIMIT);
+    for (int i = 0; i < recent.size(); ++i) {
+        if (recent[i].filename == FILENAME) {
+            recent.removeAt(i);
         }
     }
+
+    // Create recent entry:
+
+    recent.prepend(RecentFile(FILENAME, ICON));
+    if (recent.size() > limit) {
+        this->remove(limit);
+    }
+
+    return true;
 }
 
 bool Recent::remove(int id)
 {
     if (recent.size() > id) {
-        const QString FILENAME = recent[id].file;
+        const QString FILENAME = recent[id].filename;
         QFile::remove(cached(FILENAME));
         recent.removeAt(id);
         return true;
@@ -64,7 +67,7 @@ bool Recent::remove(int id)
 bool Recent::remove(QString filename)
 {
     for (int i = 0; i < recent.size(); ++i) {
-        if (recent[i].file == filename) {
+        if (recent[i].filename == filename) {
             this->remove(i);
             return true;
         }
@@ -79,29 +82,21 @@ void Recent::clear()
     }
 }
 
-QString Recent::hash(QString filename) const
+RecentFile Recent::at(int id) const
 {
-    return QCryptographicHash::hash(filename.toUtf8(), QCryptographicHash::Md5).toHex();
+    return recent.at(id);
 }
 
-QString Recent::cached(QString filename) const
+QList<RecentFile> Recent::all() const
 {
-    return QString("%1/%2.png").arg(CACHE_PATH, hash(filename));
-}
-
-// RecentEntry
-
-RecentEntry::RecentEntry(QString filename, QString iconfile)
-{
-    file = filename;
-    icon = QPixmap(iconfile);
+    return recent;
 }
 
 QStringList Recent::files() const
 {
     QStringList result;
     for (int i = 0; i < recent.size(); ++i) {
-        result << recent[i].file;
+        result << recent[i].filename;
     }
     return result;
 }
@@ -113,4 +108,27 @@ QList<QPixmap> Recent::icons() const
         result << recent[i].icon;
     }
     return result;
+}
+
+void Recent::setLimit(int limit)
+{
+    this->limit = limit;
+}
+
+QString Recent::hash(QString filename) const
+{
+    return QCryptographicHash::hash(filename.toUtf8(), QCryptographicHash::Md5).toHex();
+}
+
+QString Recent::cached(QString filename) const
+{
+    return QString("%1/%2.png").arg(CACHE_PATH, hash(filename));
+}
+
+// RecentFile
+
+RecentFile::RecentFile(QString filename, QString icon)
+{
+    this->filename = filename;
+    this->icon = QPixmap(icon);
 }

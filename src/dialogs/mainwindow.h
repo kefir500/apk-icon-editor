@@ -100,7 +100,7 @@ private:
     QAction *actAbout;
 
     Apk *apk;
-    Recent recent;
+    Recent *recent;
     Updater *updater;
     Dropbox *dropbox;
     GoogleDrive *gdrive;
