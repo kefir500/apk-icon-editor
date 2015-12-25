@@ -28,7 +28,7 @@ bool Updater::compare(QString v1, QString v2)
     QStringList segments1 = v1.split('.');
     QStringList segments2 = v2.split('.');
 
-    for (short i = 0; i < list1.size(); ++i) {
+    for (short i = 0; i < segments1.size(); ++i) {
 
         if (segments2.size() <= i) {
             segments2.push_back("0");
@@ -41,7 +41,7 @@ bool Updater::compare(QString v1, QString v2)
             continue;
         }
         else {
-            return (c1 > c2);
+            return (SEGMENT1 > SEGMENT2);
         }
     }
     return false;
