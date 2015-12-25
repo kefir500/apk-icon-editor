@@ -2,19 +2,7 @@
 
 QList<Device> Devices::devices;
 
-Device::Device(QString title, QIcon thumb,
-               short ldpi, short mdpi, short hdpi,
-               short xhdpi, short xxhdpi, short xxxhdpi)
-{
-    this->title = title;
-    this->thumb = thumb;
-    sizes.push_back(Dpi("LDPI", ldpi));
-    sizes.push_back(Dpi("MDPI", mdpi));
-    sizes.push_back(Dpi("HDPI", hdpi));
-    sizes.push_back(Dpi("XHDPI", xhdpi));
-    sizes.push_back(Dpi("XXHDPI", xxhdpi));
-    sizes.push_back(Dpi("XXXHDPI", xxxhdpi));
-}
+// Devices
 
 void Devices::init()
 {
@@ -59,6 +47,22 @@ void Devices::init()
     devices.push_back(kindle6);
     devices.push_back(kindle7);
     devices.push_back(kindle8);
+}
+
+// Device
+
+Device::Device(QString title, QIcon thumb,
+               short ldpi, short mdpi, short hdpi,
+               short xhdpi, short xxhdpi, short xxxhdpi)
+{
+    this->title = title;
+    this->thumb = thumb;
+    sizes.push_back(Dpi("LDPI", ldpi));
+    sizes.push_back(Dpi("MDPI", mdpi));
+    sizes.push_back(Dpi("HDPI", hdpi));
+    sizes.push_back(Dpi("XHDPI", xhdpi));
+    sizes.push_back(Dpi("XXHDPI", xxhdpi));
+    sizes.push_back(Dpi("XXXHDPI", xxxhdpi));
 }
 
 int Device::getDpiSize(Dpi::Type dpi) const

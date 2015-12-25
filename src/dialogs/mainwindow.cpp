@@ -761,8 +761,8 @@ void MainWindow::askReloadApk()
 void MainWindow::setCurrentIcon(int id)
 {
     if (id == -1) return;
-    const Device PROFILE = Devices::at(devices->currentGroupIndex());
-    const int SIZE = PROFILE.getDpiSize(Dpi::cast(id));
+    const Device DEVICE = Devices::at(devices->currentGroupIndex());
+    const int SIZE = DEVICE.getDpiSize(Dpi::cast(id));
     drawArea->setRect(SIZE, SIZE);
     if (Icon *icon = apk->getIcon(Dpi::cast(id))) {
         disconnect(effects, 0, 0, 0);
