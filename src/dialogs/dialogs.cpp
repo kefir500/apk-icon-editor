@@ -6,6 +6,7 @@
 #include <QClipboard>
 #include <QTextStream>
 #include <QDesktopServices>
+#include <QFile>
 #include <QUrl>
 
 // Input Dialog
