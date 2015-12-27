@@ -12,13 +12,13 @@ Updater::Updater(QObject *parent) : QObject(parent)
 
 void Updater::check() const
 {
-    QNetworkRequest request(URL_VERSION);
+    QNetworkRequest request(Url::VERSION);
     http->get(request);
 }
 
 void Updater::download() const
 {
-    QDesktopServices::openUrl(QUrl(URL_UPDATE));
+    QDesktopServices::openUrl(QUrl(Url::UPDATE));
 }
 
 bool Updater::compare(QString v1, QString v2)
@@ -73,7 +73,7 @@ void Updater::catchReply(QNetworkReply *reply)
 
         if (CODE >= 200 && CODE < 300) {
             const QString URL = reply->url().toString();
-            if (URL.indexOf(URL_VERSION) != -1) {
+            if (URL.indexOf(Url::VERSION) != -1) {
 
                 const QString JSON = reply->readAll().trimmed();
                 const QString VERSION = parse(JSON);

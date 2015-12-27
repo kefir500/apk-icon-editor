@@ -80,8 +80,9 @@ void MainWindow::init_gui()
 
     // Main Window:
 
-    resize(WINDOW_WIDTH, WINDOW_HEIGHT);
     setAcceptDrops(true);
+    resize(Gui::Window::WIDTH,
+           Gui::Window::HEIGHT);
 
     splitter = new QSplitter(this);
     setCentralWidget(splitter);
@@ -359,7 +360,7 @@ void MainWindow::init_languages()
 
     // Load language list:
 
-    const QDir LANGPATH(APPDIR + "/lang");
+    const QDir LANGPATH(Path::App::dir() + "/lang");
     langs << LANGPATH.entryList(QStringList() << "apk-icon-editor.*");
 
     for (int i = 0; i < langs.size(); ++i) {
@@ -521,7 +522,7 @@ void MainWindow::settings_reset()
         Settings::reset();
         settings_load();
         resetApktool();
-        resize(WINDOW_WIDTH, WINDOW_HEIGHT);
+        resize(Gui::Window::WIDTH, Gui::Window::HEIGHT);
         if (APKTOOL != Settings::get_use_apktool()) {
             askReloadApk();
         }
@@ -531,7 +532,7 @@ void MainWindow::settings_reset()
 void MainWindow::setLanguage(QString lang)
 {
     qDebug() << "Language set to" << lang << "\n";
-    QString LANGPATH(APPDIR + "/lang");
+    QString LANGPATH(Path::App::dir() + "/lang");
     QApplication::removeTranslator(translator);
     QApplication::removeTranslator(translatorQt);
     if (translator->load(QString("apk-icon-editor.%1").arg(lang), LANGPATH)) {
@@ -1240,34 +1241,34 @@ void MainWindow::associate() const
 
 void MainWindow::browseSite() const
 {
-    QDesktopServices::openUrl(URL_WEBSITE);
+    QDesktopServices::openUrl(Url::WEBSITE);
 }
 
 void MainWindow::browseBugs() const
 {
-    QDesktopServices::openUrl(URL_BUGS);
+    QDesktopServices::openUrl(Url::CONTACT);
 }
 
 void MainWindow::browseFaq() const
 {
-    QDesktopServices::openUrl(QUrl::fromLocalFile(QString("%1/faq.txt").arg(APPDIR)));
+    QDesktopServices::openUrl(QUrl::fromLocalFile(QString("%1/faq.txt").arg(Path::App::dir())));
 }
 
 void MainWindow::openLogFile() const
 {
-    QDesktopServices::openUrl(QUrl::fromLocalFile(LOG_FILE));
+    QDesktopServices::openUrl(QUrl::fromLocalFile(Path::Log::FILE));
 }
 
 void MainWindow::openLogPath() const
 {
-    QDesktopServices::openUrl(QUrl::fromLocalFile(LOG_PATH));
+    QDesktopServices::openUrl(QUrl::fromLocalFile(Path::Log::DIR));
 }
 
 void MainWindow::about()
 {
     const QString TD = "<td style='padding-right: 8px'>%1</td>";
-    const QString JRE = !version_jre.isEmpty() ? version_jre : QString("<a href='%1'>%2</a>").arg(URL_JRE, QApplication::translate("Apk", "Download"));
-    const QString JDK = !version_jdk.isEmpty() ? version_jdk : QString("<a href='%1'>%2</a>").arg(URL_JDK, QApplication::translate("Apk", "Download"));
+    const QString JRE = !version_jre.isEmpty() ? version_jre : QString("<a href='%1'>%2</a>").arg(Url::JRE, QApplication::translate("Apk", "Download"));
+    const QString JDK = !version_jdk.isEmpty() ? version_jdk : QString("<a href='%1'>%2</a>").arg(Url::JDK, QApplication::translate("Apk", "Download"));
     const QString LINK = "<tr><td style='padding-right: 4px' align='right'><a href='%1'>%2</a></td><td>%3</td></tr>";
 
     QMessageBox aboutBox(this);
@@ -1281,10 +1282,10 @@ void MainWindow::about()
             tr("License") + ": <a href='http://www.gnu.org/licenses/gpl-3.0.html'>GNU GPL v3.0</a>" +
         "</p>"
         "<p><table>" +
-            LINK.arg(URL_WEBSITE, tr("Visit Website"), tr("Visit our official website.")) +
-            LINK.arg(URL_BUGS, tr("Report a Bug"), tr("Found a bug? Let us know so we can fix it!")) +
-            LINK.arg(URL_TRANSLATE, tr("Help Translate"), tr("Join our translation team on Transifex.")) +
-            LINK.arg(QString("file:///%1/versions.txt").arg(APPDIR), tr("Version History"), tr("List of changes made to the project.")) +
+            LINK.arg(Url::WEBSITE, tr("Visit Website"), tr("Visit our official website.")) +
+            LINK.arg(Url::CONTACT, tr("Report a Bug"), tr("Found a bug? Let us know so we can fix it!")) +
+            LINK.arg(Url::TRANSLATE, tr("Help Translate"), tr("Join our translation team on Transifex.")) +
+            LINK.arg(QString("file:///%1/versions.txt").arg(Path::App::dir()), tr("Version History"), tr("List of changes made to the project.")) +
         "</table></p>"
         "<hr style='margin-top: 6px'>"
         "<p style='margin-top: 4px'><table width='100%'><tr>" +
@@ -1314,7 +1315,7 @@ void MainWindow::aboutAuthors()
     rx.setMinimal(true);
 
     QString strAuthors;
-    QFile inputFile(APPDIR + "/authors.txt");
+    QFile inputFile(Path::App::dir() + "/authors.txt");
     if (inputFile.open(QIODevice::ReadOnly)) {
         QTextStream in(&inputFile);
         in.setCodec(QTextCodec::codecForName("UTF-8"));
@@ -1355,7 +1356,7 @@ void MainWindow::invalidDpi()
 
 void MainWindow::browseTranslate()
 {
-    QDesktopServices::openUrl(URL_TRANSLATE);
+    QDesktopServices::openUrl(Url::TRANSLATE);
 }
 
 bool MainWindow::newVersion(QString version)

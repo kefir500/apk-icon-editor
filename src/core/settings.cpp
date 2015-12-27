@@ -83,13 +83,13 @@ QString Settings::get_alias()         { return settings->value("Key/Alias", "").
 QString Settings::get_pem()
 {
     const QString PEM = settings->value("Key/PEM", "").toString();
-    return QFile::exists(PEM) ? PEM : APPDIR + "/signer/certificate.pem";
+    return QFile::exists(PEM) ? PEM : Path::App::dir() + "/signer/certificate.pem";
 }
 
 QString Settings::get_pk8()
 {
     const QString PK8 = settings->value("Key/PK8", "").toString();
-    return QFile::exists(PK8) ? PK8 : APPDIR + "/signer/key.pk8";
+    return QFile::exists(PK8) ? PK8 : Path::App::dir() + "/signer/key.pk8";
 }
 
 QString Settings::get_keystore_pass()

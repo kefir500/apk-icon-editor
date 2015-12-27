@@ -189,7 +189,7 @@ Donate::Donate(QWidget *parent) : QDialog(parent)
     QRegExp rx("\\((.+)\\)");
     rx.setMinimal(true);
 
-    QFile inputFile(APPDIR + "/authors.txt");
+    QFile inputFile(Path::App::dir() + "/authors.txt");
     if (inputFile.open(QIODevice::ReadOnly)) {
 
         QTextStream stream(&inputFile);
@@ -217,8 +217,8 @@ Donate::Donate(QWidget *parent) : QDialog(parent)
     QVBoxLayout *layout = new QVBoxLayout(this);
 
     Wallets *wallets = new Wallets(this);
-    wallets->add("PayPal:", "kefir500@gmail.com", URL_WEBSITE + "donate/#paypal");
-    wallets->add("BitCoin:", "1M299bkCjSQL1TDbTzD38a7YyN96NvSo2k", URL_WEBSITE + "donate/#bitcoin");
+    wallets->add("PayPal:", "kefir500@gmail.com", Url::WEBSITE + "donate/#paypal");
+    wallets->add("BitCoin:", "1M299bkCjSQL1TDbTzD38a7YyN96NvSo2k", Url::WEBSITE + "donate/#bitcoin");
     wallets->add("Yandex.Money:", "410011762016796", "https://money.yandex.ru/to/410011762016796");
 
     QLabel *donators = new QLabel(this);

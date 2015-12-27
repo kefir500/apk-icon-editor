@@ -27,23 +27,35 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-#include <QDir>
+#include <QApplication>
 #include <QStandardPaths>
 
-#define APPDIR QApplication::applicationDirPath()
+namespace Gui {
+    namespace Window {
+        const int WIDTH  = 800;
+        const int HEIGHT = 530;
+    }
+}
 
-const int WINDOW_WIDTH      = 800;
-const int WINDOW_HEIGHT     = 530;
+namespace Path {
+    namespace App {
+        static QString dir() { return QApplication::applicationDirPath(); }
+        static QString file() { return QApplication::applicationFilePath(); }
+    }
+    namespace Log {
+        static const QString DIR = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/apk-icon-editor/";
+        static const QString FILE = DIR + "apk-icon-editor.log";
+    }
+}
 
-const QString URL_WEBSITE   = "http://kefir500.github.io/apk-icon-editor/";
-const QString URL_GITHUB    = "https://github.com/kefir500/apk-icon-editor/";
-const QString URL_VERSION   = URL_WEBSITE + "VERSION-2";
-const QString URL_UPDATE    = URL_WEBSITE + "download/#update";
-const QString URL_BUGS      = URL_WEBSITE + "#contact";
-const QString URL_JRE       = "https://www.java.com/en/download/manual.jsp";
-const QString URL_JDK       = "http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html";
-const QString URL_TRANSLATE = "https://www.transifex.com/projects/p/apk-icon-editor/";
-const QString LOG_PATH      = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/apk-icon-editor/";
-const QString LOG_FILE      = LOG_PATH + "apk-icon-editor.log";
+namespace Url {
+    static const QString WEBSITE   = "http://kefir500.github.io/apk-icon-editor/";
+    static const QString VERSION   = WEBSITE + "VERSION-2";
+    static const QString UPDATE    = WEBSITE + "download/#update";
+    static const QString CONTACT   = WEBSITE + "#contact";
+    static const QString TRANSLATE = "https://www.transifex.com/projects/p/apk-icon-editor/";
+    static const QString JRE       = "https://www.java.com/en/download/manual.jsp";
+    static const QString JDK       = "http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html";
+}
 
 #endif // MAIN_H

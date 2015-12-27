@@ -71,7 +71,7 @@ void Apk::pack(PackOptions options)
 QString Apk::getApktoolVersion()
 {
     QProcess p;
-    p.start(QString("java -jar \"%1/apktool.jar\" -version").arg(APPDIR));
+    p.start(QString("java -jar \"%1/apktool.jar\" -version").arg(Path::App::dir()));
     if (p.waitForStarted(-1)) {
         p.waitForFinished(-1);
         return p.readAllStandardOutput().trimmed();
@@ -142,7 +142,7 @@ bool Apk::readManifest()
     const QString AAPT_ERROR(tr(STR_ERROR).arg("Aapt"));
 
     QProcess p;
-    p.start(QString("\"%1/aapt\" dump badging \"%2\"").arg(APPDIR, filename));
+    p.start(QString("\"%1/aapt\" dump badging \"%2\"").arg(Path::App::dir(), filename));
     if (!p.waitForStarted(-1)) {
         qDebug() << qPrintable(LOG_ERRORSTART.arg("aapt"));
         qDebug() << "Error:" << p.errorString();
@@ -215,7 +215,7 @@ bool Apk::unzip_apktool(bool smali) const
     QTime sw;
     sw.start();
     p.start(QString("java -jar \"%1/apktool.jar\" d \"%2\" -f %3 -o \"%4/apk\" -p \"%4/framework\"")
-            .arg(APPDIR, filename, (smali ? "" : "-s"), temp));
+            .arg(Path::App::dir(), filename, (smali ? "" : "-s"), temp));
     if (!p.waitForStarted(-1)) {
         if (isJavaInstalled()) {
             qDebug() << qPrintable(LOG_ERRORSTART.arg("Apktool"));
@@ -226,7 +226,7 @@ bool Apk::unzip_apktool(bool smali) const
             return die(tr(STR_ERROR).arg("Apktool"),
                        tr("\"Apktool\" requires Java Runtime Environment.") +
                           QString("<br><a href=\"%1\">%2</a> %3.<br>%4").arg(
-                                  URL_JRE, tr("Download"), tr(STR_CHECKPATH),
+                                  Url::JRE, tr("Download"), tr(STR_CHECKPATH),
                                   tr("You may also change repacking method (Settings -> Repacking).")));
         }
     }
@@ -438,7 +438,7 @@ bool Apk::doPack(PackOptions opts)
             warning += "<hr>" +
                     tr("Signing APK requires Java Runtime Environment.") +
                     QString("<br><a href=\"%1\">%2</a> %3.")
-                    .arg(URL_JRE, tr("Download"), tr(STR_CHECKPATH));
+                    .arg(Url::JRE, tr("Download"), tr(STR_CHECKPATH));
         }
         emit packed(filename, false, warning);
     }
@@ -568,7 +568,7 @@ bool Apk::zip(short ratio) const
 bool Apk::zip_apktool() const
 {
     QProcess p;
-    p.start(QString("java -jar \"%1/apktool.jar\" b \"%2/apk\" -f -o \"%2/temp.zip\" -p \"%2/framework\"").arg(APPDIR, temp));
+    p.start(QString("java -jar \"%1/apktool.jar\" b \"%2/apk\" -f -o \"%2/temp.zip\" -p \"%2/framework\"").arg(Path::App::dir(), temp));
     if (!p.waitForStarted(-1)) {
         if (isJavaInstalled()) {
             qDebug() << qPrintable(LOG_ERRORSTART.arg("Apktool"));
@@ -579,7 +579,7 @@ bool Apk::zip_apktool() const
             return die(tr(STR_ERROR).arg("Apktool"),
                        tr("\"Apktool\" requires Java Runtime Environment.") +
                           QString("<br><a href=\"%1\">%2</a> %3.<br>%4").arg(
-                                  URL_JRE, tr("Download"), tr(STR_CHECKPATH),
+                                  Url::JRE, tr("Download"), tr(STR_CHECKPATH),
                                   tr("You may also change repacking method (Settings -> Repacking).")));
         }
     }
@@ -598,7 +598,7 @@ bool Apk::sign(const QString PEM, const QString PK8) const
 {
     const QString APK_SRC(temp + "/temp-1.apk");
     const QString APK_DST(temp + "/temp-2.apk");
-    const QString SIGNAPK(APPDIR + "/signer/");
+    const QString SIGNAPK(Path::App::dir() + "/signer/");
 
     if (!QFile::exists(PEM) || !QFile::exists(PEM)) {
         emit warning("", tr("PEM/PK8 not found."));
@@ -682,7 +682,7 @@ bool Apk::optimize() const
     const QString APK_DST(temp + "/temp-3.apk");
 
     QProcess p;
-    p.start(QString("\"%1/zipalign\" -f 4 \"%2\" \"%3\"").arg(APPDIR, APK_SRC, APK_DST));
+    p.start(QString("\"%1/zipalign\" -f 4 \"%2\" \"%3\"").arg(Path::App::dir(), APK_SRC, APK_DST));
 
     if (p.waitForStarted(-1)) {
         p.waitForFinished(-1);

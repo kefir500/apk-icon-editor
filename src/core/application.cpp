@@ -3,7 +3,7 @@
 #include <QTextCodec>
 #include <QFontDatabase>
 
-QFile logfile(LOG_FILE);
+QFile logfile(Path::Log::FILE);
 
 Application::Application(int &argc, char **argv) : QApplication(argc, argv)
 {
@@ -42,7 +42,7 @@ Application::Application(int &argc, char **argv) : QApplication(argc, argv)
 void Application::initLog()
 {
     QDir dir;
-    dir.mkpath(LOG_PATH);
+    dir.mkpath(Path::Log::DIR);
     logfile.open(QIODevice::WriteOnly | QIODevice::Text);
     qInstallMessageHandler(Application::msgHandler);
 }
