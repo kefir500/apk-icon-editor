@@ -1,5 +1,6 @@
 #include "application.h"
 #include "main.h"
+#include <QDir>
 #include <QTextCodec>
 #include <QFontDatabase>
 
