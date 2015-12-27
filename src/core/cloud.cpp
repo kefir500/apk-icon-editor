@@ -1,5 +1,6 @@
 #include "cloud.h"
 #include "main.h"
+#include <QFileInfo>
 #include <QHttpMultiPart>
 #include <QDesktopServices>
 
