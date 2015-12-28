@@ -1,6 +1,7 @@
 INCLUDEPATH += $$PWD
 
 SOURCES += $$PWD/main.cpp \
+           $$PWD/globals.cpp \
            $$PWD/application.cpp \
            $$PWD/settings.cpp \
            $$PWD/apk.cpp \
@@ -10,7 +11,7 @@ SOURCES += $$PWD/main.cpp \
            $$PWD/cloud.cpp \
            $$PWD/recent.cpp
 
-HEADERS += $$PWD/main.h \
+HEADERS += $$PWD/globals.h \
            $$PWD/application.h \
            $$PWD/settings.h \
            $$PWD/apk.h \

@@ -1,5 +1,5 @@
 #include "updater.h"
-#include "main.h"
+#include "globals.h"
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QDesktopServices>

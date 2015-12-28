@@ -1,5 +1,5 @@
 #include "apk.h"
-#include "main.h"
+#include "globals.h"
 #include "settings.h"
 #include <QApplication>
 #include <QProcess>

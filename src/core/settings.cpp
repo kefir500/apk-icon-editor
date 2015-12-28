@@ -1,6 +1,6 @@
 #include "settings.h"
+#include "globals.h"
 #include "keys.h"
-#include "main.h"
 #include <QDir>
 #include <QNetworkInterface>
 #include <QApplication>

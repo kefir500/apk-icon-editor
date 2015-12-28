@@ -1,5 +1,5 @@
 #include "dialogs.h"
-#include "main.h"
+#include "globals.h"
 #include <QApplication>
 #include <QBoxLayout>
 #include <QToolButton>

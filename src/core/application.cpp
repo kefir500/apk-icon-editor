@@ -1,5 +1,5 @@
 #include "application.h"
-#include "main.h"
+#include "globals.h"
 #include <QDir>
 #include <QTextCodec>
 #include <QFontDatabase>

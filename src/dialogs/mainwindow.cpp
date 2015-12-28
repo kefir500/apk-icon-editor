@@ -1,5 +1,5 @@
 #include "mainwindow.h"
-#include "main.h"
+#include "globals.h"
 #include "settings.h"
 #include <QHeaderView>
 #include <QMenuBar>
