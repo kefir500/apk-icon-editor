@@ -278,12 +278,12 @@ void Wallets::add(QString title, QString wallet, QString link)
 
 void Wallets::copy() const
 {
-    QString wallet = sender()->property("id").toString();
-    QApplication::clipboard()->setText(wallet);
+    const QString WALLET = sender()->property("id").toString();
+    QApplication::clipboard()->setText(WALLET);
 }
 
 void Wallets::open() const
 {
-    QString link = sender()->property("wallet").toString();
-    QDesktopServices::openUrl(link);
+    const QString LINK = sender()->property("wallet").toString();
+    QDesktopServices::openUrl(LINK);
 }
