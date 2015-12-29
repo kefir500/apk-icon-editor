@@ -4,7 +4,7 @@
 #include <QTextCodec>
 #include <QFontDatabase>
 
-QFile logfile(Path::Log::FILE);
+QFile *Application::log;
 
 Application::Application(int &argc, char **argv) : QApplication(argc, argv)
 {
@@ -24,14 +24,9 @@ Application::Application(int &argc, char **argv) : QApplication(argc, argv)
 #endif
 
     initLog();
-
-    qDebug() << qPrintable(QString("%1 v%2").arg(APP, VER));
-    qDebug() << "Initializing...";
-
     initFonts();
 
     qDebug() << "Starting...\n";
-
     window = new MainWindow;
     window->show();
 
@@ -40,15 +35,25 @@ Application::Application(int &argc, char **argv) : QApplication(argc, argv)
     }
 }
 
-void Application::initLog()
+bool Application::initLog() const
 {
-    QDir dir;
-    dir.mkpath(Path::Log::DIR);
-    logfile.open(QIODevice::WriteOnly | QIODevice::Text);
-    qInstallMessageHandler(Application::msgHandler);
+    if (!QDir().mkpath(Path::Log::DIR)) {
+        return false;
+    }
+
+    log = new QFile(Path::Log::FILE);
+    if (log->open(QIODevice::WriteOnly | QIODevice::Text)) {
+        qInstallMessageHandler(Application::msgHandler);
+        qDebug() << qPrintable(QString("%1 v%2").arg(APP, VER));
+        qDebug() << "Initializing...";
+        return true;
+    }
+    else {
+        return false;
+    }
 }
 
-void Application::initFonts()
+void Application::initFonts() const
 {
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
     QFontDatabase::addApplicationFont(":/fonts/OpenSans-Light.ttf");
@@ -56,29 +61,29 @@ void Application::initFonts()
 
 void Application::msgHandler(QtMsgType type, const QMessageLogContext &, const QString &msg)
 {
-    QTextStream ts(&logfile);
-    const QString TIME = QTime::currentTime().toString();
+    QTextStream stream(log);
+    const QString TIME = QTime::currentTime().toString("HH:mm:ss.zzz");
     QString line;
 
     switch (type) {
     case QtDebugMsg:
         line = QString("[%1] %2\n").arg(TIME, msg);
-        ts << line;
+        stream << line;
         fprintf(stderr, "%s", qPrintable(line));
         break;
     case QtWarningMsg:
         line = QString("[%1] Warning: %2\n").arg(TIME, msg);
-        ts << line;
+        stream << line;
         fprintf(stderr, "%s", qPrintable(line));
         break;
     case QtCriticalMsg:
         line = QString("[%1] Critical: %2\n").arg(TIME).arg(msg);
-        ts << line;
+        stream << line;
         fprintf(stderr, "%s", qPrintable(line));
         break;
     case QtFatalMsg:
         line = QString("[%1] Fatal: %2\n").arg(TIME, msg);
-        ts << line;
+        stream << line;
         fprintf(stderr, "%s", qPrintable(line));
         abort();
     }
@@ -99,4 +104,5 @@ bool Application::event(QEvent *event)
 Application::~Application()
 {
     delete window;
+    delete log;
 }
