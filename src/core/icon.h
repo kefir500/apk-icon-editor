@@ -16,18 +16,6 @@
 class Icon : public QObject {
     Q_OBJECT
 
-private:
-    QPixmap pixmap;   ///< Stores the pixmap itself.
-    bool colorize;    ///< Stores the "Colorize" effect state.
-    bool flipX;       ///< Stores the horizontal flipping state.
-    bool flipY;       ///< Stores the vertical flipping state.
-    short angle;      ///< Stores the rotation angle (in degrees).
-    QColor color;     ///< Stores the "Colorize" effect color.
-    qreal depth;      ///< Stores the "Colorize" effect depth.
-    qreal blur;       ///< Stores the "Blur" effect radius.
-    qreal corners;    ///< Stores the rounded corners radius.
-    QString original; ///< Stores the pixmap original filename. Used to revert the original pixmap.
-
 public:
     /// \brief Constructor used by shared pointers to create dummies.
     Icon() { }
@@ -82,6 +70,18 @@ public slots:
     void setDepth(qreal value) { depth = value; }        ///< Sets the "Colorize" effect depth to the specified \c value.
     void setBlur(qreal radius) { blur = radius; }        ///< Sets the "Blur" effect radius to the specified \c radius.
     void setCorners(qreal radius) { corners = radius; }  ///< Sets the radius of the rounded corners to the specified \c radius.
+
+private:
+    QPixmap pixmap;   ///< Stores the pixmap itself.
+    bool colorize;    ///< Stores the "Colorize" effect state.
+    bool flipX;       ///< Stores the horizontal flipping state.
+    bool flipY;       ///< Stores the vertical flipping state.
+    short angle;      ///< Stores the rotation angle (in degrees).
+    QColor color;     ///< Stores the "Colorize" effect color.
+    qreal depth;      ///< Stores the "Colorize" effect depth.
+    qreal blur;       ///< Stores the "Blur" effect radius.
+    qreal corners;    ///< Stores the rounded corners radius.
+    QString original; ///< Stores the pixmap original filename. Used to revert the original pixmap.
 };
 
 /// \brief Filter for open/save dialogs.
