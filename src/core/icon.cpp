@@ -2,9 +2,15 @@
 #include <QLabel>
 #include <QPainter>
 
-Icon::Icon(QString filename) : filename_original(filename)
+Icon::Icon(QString filename)
 {
-    revert();
+    load(filename);
+}
+
+bool Icon::load(QString filename)
+{
+    original = filename;
+    return revert();
 }
 
 bool Icon::save(QString filename)
@@ -13,16 +19,16 @@ bool Icon::save(QString filename)
         // Don't save an empty icon (but don't throw error).
         return true;
     }
-    if (filename.isNull()) {
-        filename = filename_original;
+    if (filename.isEmpty()) {
+        filename = original;
     }
     return getPixmap().save(filename, NULL, 100);
 }
 
-bool Icon::replace(QPixmap _pixmap)
+bool Icon::replace(QPixmap pixmap)
 {
-    if (!_pixmap.isNull()) {
-        pixmap = _pixmap;
+    if (!pixmap.isNull()) {
+        this->pixmap = pixmap;
         return true;
     }
     else {
@@ -37,32 +43,36 @@ bool Icon::resize(int side)
 
 bool Icon::revert()
 {
-    isColor = false;
-    angle = 0;
-    flipX = false;
-    flipY = false;
-    color = Qt::black;
-    depth = 1.0;
-    blur = 1.0;
-    radius = 0;
-    return !(pixmap = QPixmap(filename_original)).isNull();
+    angle    = 0;
+    colorize = false;
+    flipX    = false;
+    flipY    = false;
+    color    = Qt::black;
+    depth    = 1.0;
+    blur     = 1.0;
+    corners  = 0;
+    return !(pixmap = QPixmap(original)).isNull();
 }
 
-QPixmap Icon::applyEffects() const
+QPixmap Icon::getPixmap()
 {
     QPixmap gfx = pixmap;
 
-    if (isColor && !qFuzzyIsNull(depth)) {
-        QLabel w;
+    // Apply color overlay:
+
+    if (colorize && !qFuzzyIsNull(depth)) {
+        QLabel canvas;
         QGraphicsColorizeEffect *effect = new QGraphicsColorizeEffect();
         effect->setColor(color);
         effect->setStrength(depth);
-        w.setPixmap(gfx);
-        w.setGraphicsEffect(effect);
-        gfx = w.grab();
+        canvas.setPixmap(gfx);
+        canvas.setGraphicsEffect(effect);
+        gfx = canvas.grab();
     }
 
-    if (!qFuzzyIsNull(radius)) {
+    // Apply rounded corners:
+
+    if (!qFuzzyIsNull(corners)) {
         QImage canvas(gfx.size(), QImage::Format_ARGB32_Premultiplied);
         QPainter painter(&canvas);
         painter.setCompositionMode(QPainter::CompositionMode_Source);
@@ -70,32 +80,28 @@ QPixmap Icon::applyEffects() const
         painter.setPen(Qt::NoPen);
         painter.setBrush(QBrush(gfx));
         painter.setRenderHint(QPainter::Antialiasing);
-        painter.drawRoundedRect(gfx.rect(), radius, radius);
+        painter.drawRoundedRect(gfx.rect(), corners, corners);
         painter.end();
         gfx = QPixmap::fromImage(canvas);
     }
 
+    // Apply blur:
+
     if (blur > 1.0) {
-        QLabel w;
+        QLabel canvas;
         QGraphicsBlurEffect *effect = new QGraphicsBlurEffect();
         effect->setBlurRadius(blur);
         effect->setBlurHints(QGraphicsBlurEffect::QualityHint);
-        w.setPixmap(gfx);
-        w.setGraphicsEffect(effect);
-        gfx = w.grab();
+        canvas.setPixmap(gfx);
+        canvas.setGraphicsEffect(effect);
+        gfx = canvas.grab();
     }
 
-    if (flipX) {
-        gfx = gfx.transformed(QTransform().scale(-1, 1));
-    }
+    // Apply flipping and rotation:
 
-    if (flipY) {
-        gfx = gfx.transformed(QTransform().scale(1, -1));
-    }
-
-    if (angle != 0) {
-        gfx = gfx.transformed(QTransform().rotate(angle));
-    }
+    if (flipX) { gfx = gfx.transformed(QTransform().scale(-1, 1)); }
+    if (flipY) { gfx = gfx.transformed(QTransform().scale(1, -1)); }
+    if (angle) { gfx = gfx.transformed(QTransform().rotate(angle)); }
 
     return gfx;
 }

@@ -1,82 +1,87 @@
-/// \file icon.h
-/// \brief This file contains #Icon class declaration.
+///
+/// \file
+/// This file contains the class to handle APK icons.
+///
 
 #ifndef ICON_H
 #define ICON_H
 
 #include <QGraphicsEffect>
 
-/// \brief QPixmap wrapper.
 ///
-/// Wrapper for QPixmap used to handle actions with APK icons.
+/// APK icon.
+/// QPixmap wrapper used to handle actions with APK icons.
+///
 
 class Icon : public QObject {
     Q_OBJECT
 
 private:
-    QPixmap pixmap;                     ///< Stores pixmap itself.
-    bool isColor;                       ///< If \c TRUE, renders colorize effect.
-    bool flipX;                         ///< Stores horizontal flipping state.
-    bool flipY;                         ///< Stores vertical flipping state.
-    short angle;                        ///< Stores angle of rotation (in degrees).
-    QColor color;                       ///< Stores "Colorize" effect color.
-    qreal depth;                        ///< Stores "Colorize" effect depth.
-    qreal blur;                         ///< Stores "Blur" effect radius.
-    qreal radius;                       ///< Stores rounded corners radius.
-    const QString filename_original;    ///< Stores pixmap filename specified in constructor. Used to #revert the original one.
+    QPixmap pixmap;   ///< Stores the pixmap itself.
+    bool colorize;    ///< Stores the "Colorize" effect state.
+    bool flipX;       ///< Stores the horizontal flipping state.
+    bool flipY;       ///< Stores the vertical flipping state.
+    short angle;      ///< Stores the rotation angle (in degrees).
+    QColor color;     ///< Stores the "Colorize" effect color.
+    qreal depth;      ///< Stores the "Colorize" effect depth.
+    qreal blur;       ///< Stores the "Blur" effect radius.
+    qreal corners;    ///< Stores the rounded corners radius.
+    QString original; ///< Stores the pixmap original filename. Used to revert the original pixmap.
 
 public:
-    /// \brief Deprecated #Icon constructor creating dummies. Used by shared pointers.
+    /// \brief Constructor used by shared pointers to create dummies.
     Icon() { }
 
-    /// \brief Normal #Icon constructor. The only way to load pixmap in it.
-    /// \param[in] filename Used to load #pixmap. This parameter is also saved in #filename_original property to #revert original pixmap.
+    /// \brief Regular constructor for general use.
+    /// \param filename Name of the icon file. The argument will be set as the original filename.
     explicit Icon(QString filename);
 
-    /// \brief Save pixmap to given filename.
-    /// \param[in] filename File to save pixmap to. If NULL, #filename_original is used.
-    /// \retval \c TRUE on success.
-    /// \retval \c FALSE on error.
-    /// \todo Empty #pixmap is currently handled by a dirty workaround.
+    /// \brief Loads the icon file from the specified \c filename.
+    /// \param filename Name of the icon file. The argument will be set as the original filename.
+    bool load(QString filename);
+
+    /// \brief Saves the icon to the file with the given \c filename.
+    /// \param filename File to save pixmap to. If empty, the original filename is used.
+    /// \retval \c true on success.
+    /// \retval \c false on error.
     bool save(QString filename = QString());
 
-    /// \brief Replace #pixmap with the specified one.
-    /// \param[in] pixmap Pixmap to replace with.
-    /// \retval \c TRUE on success.
-    /// \retval \c FALSE on error.
-    bool replace(QPixmap _pixmap);
+    /// \brief Replaces the icon pixmap with the specified one.
+    /// \param pixmap Pixmap to replace with.
+    /// \retval \c true on success.
+    /// \retval \c false on error.
+    bool replace(QPixmap pixmap);
 
-    /// \brief Resize pixmap to square with the specified side.
-    /// \param[in] side Side in pixels.
-    /// \retval \c TRUE on success.
-    /// \retval \c FALSE on error.
+    /// \brief Resizes the pixmap to square with the specified \c side.
+    /// \param side Side of the square in pixels.
+    /// \retval \c true on success.
+    /// \retval \c false on error.
     bool resize(int side);
 
-    bool revert();                                          ///< Revert the original #pixmap (loaded from #filename_original).
-    bool isNull() const { return pixmap.isNull(); }         ///< Check if #pixmap is null.
-    int width() const { return pixmap.width(); }            ///< Get #pixmap width.
-    int height() const { return pixmap.height(); }          ///< Get #pixmap height.
-    QPixmap getPixmap() { return applyEffects(); }          ///< Get #pixmap.
+    bool revert();                                       ///< Reverts the original icon (loaded from the original filename).
+    bool isNull() const { return pixmap.isNull(); }      ///< Checks if the icon is \c NULL.
+    int width() const { return pixmap.width(); }         ///< Returns the icon width.
+    int height() const { return pixmap.height(); }       ///< Returns the icon height.
+    QPixmap getPixmap();                                 ///< Returns the icon with the applied visual effects.
 
-    QPixmap applyEffects() const;                           ///< Apply graphic effects to #pixmap.
-    bool getColorEnabled() { return isColor; }              ///< Returns \c TRUE if "Colorize" effect is enabled.
-    int getAngle() { return angle; }                        ///< Returns rotation #angle (in degrees).
-    bool getFlipX() { return flipX; }                       ///< Returns \c TRUE if #pixmap is flipped horizontally.
-    bool getFlipY() { return flipY; }                       ///< Returns \c TRUE if #pixmap is flipped vertically.
-    QColor getColor() { return color; }                     ///< Returns "Colorize" effect #color.
-    qreal getDepth() { return depth; }                      ///< Returns "Colorize" effect #depth.
-    qreal getBlur() { return blur; }                        ///< Returns "Blur" effect \c radius.
-    qreal getCorners() { return radius; }                   ///< Returns the #radius of rounded corners.
+    bool getColorEnabled() { return colorize; }          ///< Returns \c true if the "Colorize" effect is enabled.
+    int getAngle() { return angle; }                     ///< Returns the rotation angle (in degrees).
+    bool getFlipX() { return flipX; }                    ///< Returns \c true if the pixmap is flipped horizontally.
+    bool getFlipY() { return flipY; }                    ///< Returns \c true if the pixmap is flipped vertically.
+    QColor getColor() { return color; }                  ///< Returns the "Colorize" effect color.
+    qreal getDepth() { return depth; }                   ///< Returns the "Colorize" effect depth.
+    qreal getBlur() { return blur; }                     ///< Returns the "Blur" effect \c radius.
+    qreal getCorners() { return corners; }               ///< Returns the radius of the rounded corners.
 
 public slots:
-    void setColorEnabled(bool enable) { isColor = enable; } ///< Enable or disable "Colorize" effect.
-    void setAngle(int _angle) { angle = _angle; }           ///< Set rotation #angle (in degrees).
-    void setFlipX(bool value) { flipX = value; }            ///< Set horizontal flipping.
-    void setFlipY(bool value) { flipY = value; }            ///< Set vertical flipping
-    void setColor(QColor _color) { color = _color; }        ///< Set "Colorize" effect #color.
-    void setDepth(qreal _depth) { depth = _depth; }         ///< Set "Colorize" effect color #depth.
-    void setBlur(qreal radius) { blur = radius; }           ///< Set "Blur" effect \c radius.
-    void setCorners(qreal _radius) { radius = _radius; }    ///< Set the #radius of rounded corners.
+    void setAngle(int value) { angle = value; }          ///< Sets the rotation angle to the specified \c value (in degrees).
+    void setColorize(bool enable) { colorize = enable; } ///< Turns the "Colorize" effect on/off.
+    void setFlipX(bool value) { flipX = value; }         ///< Turns the horizontal flipping on/off.
+    void setFlipY(bool value) { flipY = value; }         ///< Turns the vertical flipping on/off.
+    void setColor(QColor value) { color = value; }       ///< Sets the "Colorize" effect color to the specified \c value.
+    void setDepth(qreal value) { depth = value; }        ///< Sets the "Colorize" effect depth to the specified \c value.
+    void setBlur(qreal radius) { blur = radius; }        ///< Sets the "Blur" effect radius to the specified \c radius.
+    void setCorners(qreal radius) { corners = radius; }  ///< Sets the radius of the rounded corners to the specified \c radius.
 };
 
 /// \brief Filter for open/save dialogs.

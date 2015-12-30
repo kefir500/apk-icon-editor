@@ -767,14 +767,14 @@ void MainWindow::setCurrentIcon(int id)
     drawArea->setRect(SIZE, SIZE);
     if (Icon *icon = apk->getIcon(Dpi::cast(id))) {
         disconnect(effects, 0, 0, 0);
-        connect(effects, SIGNAL(colorActivated(bool)), icon,     SLOT(setColorEnabled(bool)), Qt::DirectConnection);
-        connect(effects, SIGNAL(rotate(int)),          icon,     SLOT(setAngle(int)),         Qt::DirectConnection);
-        connect(effects, SIGNAL(flipX(bool)),          icon,     SLOT(setFlipX(bool)),        Qt::DirectConnection);
-        connect(effects, SIGNAL(flipY(bool)),          icon,     SLOT(setFlipY(bool)),        Qt::DirectConnection);
-        connect(effects, SIGNAL(colorize(QColor)),     icon,     SLOT(setColor(QColor)),      Qt::DirectConnection);
-        connect(effects, SIGNAL(colorDepth(qreal)),    icon,     SLOT(setDepth(qreal)),       Qt::DirectConnection);
-        connect(effects, SIGNAL(blur(qreal)),          icon,     SLOT(setBlur(qreal)),        Qt::DirectConnection);
-        connect(effects, SIGNAL(round(qreal)),         icon,     SLOT(setCorners(qreal)),     Qt::DirectConnection);
+        connect(effects, SIGNAL(colorActivated(bool)), icon,     SLOT(setColorize(bool)), Qt::DirectConnection);
+        connect(effects, SIGNAL(rotate(int)),          icon,     SLOT(setAngle(int)),     Qt::DirectConnection);
+        connect(effects, SIGNAL(flipX(bool)),          icon,     SLOT(setFlipX(bool)),    Qt::DirectConnection);
+        connect(effects, SIGNAL(flipY(bool)),          icon,     SLOT(setFlipY(bool)),    Qt::DirectConnection);
+        connect(effects, SIGNAL(colorize(QColor)),     icon,     SLOT(setColor(QColor)),  Qt::DirectConnection);
+        connect(effects, SIGNAL(colorDepth(qreal)),    icon,     SLOT(setDepth(qreal)),   Qt::DirectConnection);
+        connect(effects, SIGNAL(blur(qreal)),          icon,     SLOT(setBlur(qreal)),    Qt::DirectConnection);
+        connect(effects, SIGNAL(round(qreal)),         icon,     SLOT(setCorners(qreal)), Qt::DirectConnection);
         connect(effects, SIGNAL(colorActivated(bool)), drawArea, SLOT(repaint()));
         connect(effects, SIGNAL(blurActivated(bool)),  drawArea, SLOT(repaint()));
         connect(effects, SIGNAL(rotate(int)),          drawArea, SLOT(repaint()));
@@ -1067,7 +1067,7 @@ void MainWindow::showEffectsDialog()
         effects->setRotation(TEMP_ANGLE);
         effects->setFlipX(TEMP_FLIP_X);
         effects->setFlipY(TEMP_FLIP_Y);
-        effects->setColorEnabled(TEMP_IS_COLOR);
+        effects->setColorize(TEMP_IS_COLOR);
         effects->setColor(TEMP_COLOR);
         effects->setColorDepth(TEMP_DEPTH * 100);
         effects->setBlur(TEMP_BLUR * 10);
@@ -1080,7 +1080,7 @@ void MainWindow::showEffectsDialog()
             icon->setAngle(TEMP_ANGLE);
             icon->setFlipX(TEMP_FLIP_X);
             icon->setFlipY(TEMP_FLIP_Y);
-            icon->setColorEnabled(TEMP_IS_COLOR);
+            icon->setColorize(TEMP_IS_COLOR);
             icon->setColor(TEMP_COLOR);
             icon->setDepth(TEMP_DEPTH);
             icon->setBlur(TEMP_BLUR);
