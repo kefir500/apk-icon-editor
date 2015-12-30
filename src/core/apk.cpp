@@ -21,17 +21,25 @@ QDebug operator<<(QDebug d, const PackOptions &o) {
     d << "\n\tApplication version name:" << o.appVersionName;
     d << "\n\tTemporary directory:" << o.temp;
     d << "\n\tUsing Apktool:" << o.isApktool;
-    d << "\n\tRatio:" << o.ratio;
-    d << "\n\tSmali:" << o.isSmali;
+    if (!o.isApktool) {
+        d << "\n\tRatio:" << o.ratio;
+    }
+    else {
+        d << "\n\tSmali:" << o.isSmali;
+    }
     d << "\n\tSign:" << o.isSign;
     d << "\n\tZipalign:" << o.isOptimize;
     d << "\n\tUsing KeyStore:" << o.isKeystore;
-    d << "\n\tPEM" << (QFile::exists(o.filePem) ? "found;" : "NOT found;");
-    d << "\n\tPK8" << (QFile::exists(o.filePk8) ? "found;" : "NOT found;");
-    d << "\n\tKeyStore" << (QFile::exists(o.fileKey) ? "found;" : "NOT found;");
-    d << "\n\tKeyStore Password:" << (!o.passStore.isEmpty() ? "present;" : "NOT present;");
-    d << "\n\tAlias:" << o.alias;
-    d << "\n\tAlias Password:" << (!o.passAlias.isEmpty() ? "present;" : "NOT present;");
+    if (!o.isKeystore) {
+        d << "\n\tPEM" << (QFile::exists(o.filePem) ? "found;" : "NOT found;");
+        d << "\n\tPK8" << (QFile::exists(o.filePk8) ? "found;" : "NOT found;");
+    }
+    else {
+        d << "\n\tKeyStore" << (QFile::exists(o.fileKey) ? "found;" : "NOT found;");
+        d << "\n\tKeyStore Password:" << (!o.passStore.isEmpty() ? "present;" : "NOT present;");
+        d << "\n\tAlias:" << o.alias;
+        d << "\n\tAlias Password:" << (!o.passAlias.isEmpty() ? "present;" : "NOT present;");
+    }
     return d;
 }
 
