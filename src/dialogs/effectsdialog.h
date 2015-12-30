@@ -55,7 +55,7 @@ signals:
 
 public slots:
     /// Turn "Colorize" effect groupbox on/off.
-    void setColorEnabled(bool state) { groupColor->setChecked(state); }
+    void setColorize(bool state) { groupColor->setChecked(state); }
 
     /// Turn "Flip Horizontal" button on/off.
     void setFlipX(bool value) { btnFlipX->setChecked(value); }
