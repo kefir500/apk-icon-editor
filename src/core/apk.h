@@ -1,5 +1,7 @@
-/// \file apk.h
-/// \brief This file contains #Apk class declaration.
+///
+/// \file
+/// This file describes classes intended for handling APK.
+///
 
 #ifndef APK_H
 #define APK_H
@@ -12,10 +14,9 @@ private:
     QString filename;
     QString value;
 public:
+    Resource(QString filename, QString value) : filename(filename), value(value) { }
     QString getFilename() const { return filename; }
     QString getValue() const { return value; }
-    Resource(QString _filename, QString _value)
-        : filename(_filename), value(_value) { }
 };
 
 struct PackOptions {
@@ -33,9 +34,9 @@ struct PackOptions {
     QString alias;              ///< KeyStore alias.
     QString passStore;          ///< KeyStore password.
     QString passAlias;          ///< KeyStore alias password.
-    QString appName;            ///< Output APK name (only in "apktool" mode).
-    QString appVersionName;     ///< Output APK version name (only in "apktool" mode).
-    QString appVersionCode;     ///< Output APK version code (only in "apktool" mode).
+    QString appName;            ///< Output APK name (only in Apktool mode).
+    QString appVersionName;     ///< Output APK version name (only in Apktool mode).
+    QString appVersionCode;     ///< Output APK version code (only in Apktool mode).
     QList<Resource> resources;  ///< List of edited (string) resources.
 };
 
@@ -90,6 +91,7 @@ private:
     void loadStrings();                     ///< Load APK string resources (only in "apktool" mode).
 
     // Packing APK:
+
     /// Save edited XML resources.
     void saveXmlChanges(QString appName,
                         QString versionName,
