@@ -21,9 +21,9 @@ public:
 struct PackOptions {
     QString filename;           ///< Output APK filename.
     QString temp;               ///< Directory for temporary files.
-    bool isApktool;             ///< If \c TRUE, use "apktool". If \c FALSE, use "7za".
-    short ratio;                ///< 7za compression ratio [0-9] (only in "7za" mode).
-    bool isSmali;               ///< If \c TRUE, decompile "classes.dex" (only in "apktool" mode).
+    bool isApktool;             ///< If \c TRUE, use Apktool. If \c FALSE, use ZIP.
+    short ratio;                ///< ZIP compression ratio [0-9] (only in "ZIP" mode).
+    bool isSmali;               ///< If \c TRUE, decompile "classes.dex" (only in Apktool mode).
     bool isSign;                ///< If \c TRUE, sign APK.
     bool isOptimize;            ///< If \c TRUE, optimize (zipalign) APK.
     bool isKeystore;            ///< If \c TRUE, use "KeyStore". If \c FALSE, use "PEM/PK8".
@@ -71,12 +71,6 @@ private:
     /// \return This function always returns \c FALSE.
     bool die(QString title, QString text) const;
 
-    /// \brief Checks if 7za worked successfully by its exit code.
-    /// \param[in] code 7za exit code.
-    /// \retval \c TRUE if 7za succesfully zipped/unzipped APK (#code equals 0).
-    /// \retval \c FALSE if 7za did not finish successfully (#code is non-zero).
-    bool getZipSuccess(int code) const;
-
     /// \brief Start immediate APK unpacking.
     /// \return \c TRUE on success.
     /// \warning This function MUST emit #error or #unpacked signal before exit.
@@ -88,9 +82,10 @@ private:
     bool doPack(PackOptions opts);
 
     // Unpacking APK:
+
     bool readManifest();                    ///< Read AndroidManifest.xml and save it to #manifest variable.
-    bool unzip() const;                     ///< Unpack APK to temporary directory using "7za" tool.
-    bool unzip_apktool(bool smali) const;   ///< Unpack APK to temporary directory using "apktool" tool. If \c smali is \c TRUE, decompile source.
+    bool unzip() const;                     ///< Unpack APK to temporary directory using ZIP.
+    bool unzip_apktool(bool smali) const;   ///< Unpack APK to temporary directory using Apktool. If \c smali is \c TRUE, decompile source.
     void loadIcons();                       ///< Load APK icons.
     void loadStrings();                     ///< Load APK string resources (only in "apktool" mode).
 
@@ -101,8 +96,8 @@ private:
                         QString versionCode,
                         QList<Resource> resources) const;
     bool saveIcons() const;             ///< Save icons from #icons list to PNG images.
-    bool zip(short ratio = 9) const;    ///< Pack APK with specified compression \c ratio using "7za" tool.
-    bool zip_apktool() const;           ///< Pack APK using "apktool" tool.
+    bool zip(short ratio = 9) const;    ///< Pack APK with specified compression \c ratio using ZIP.
+    bool zip_apktool() const;           ///< Pack APK using Apktool.
 
     /// Sign APK using "signapk" tool.
     bool sign(const QString PEM, const QString PK8) const;

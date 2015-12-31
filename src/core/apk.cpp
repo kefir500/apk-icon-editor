@@ -185,8 +185,6 @@ bool Apk::unzip() const
     QDir dir(temp);
     dir.mkpath(".");
 
-#ifndef USE_7ZIP
-
     QTime sw;
     sw.start();
     QStringList result = JlCompress::extractDir(filename, temp + "/apk/");
@@ -198,23 +196,6 @@ bool Apk::unzip() const
         const QString QUAZIP_ERROR = tr(STR_ERROR).arg("QuaZIP");
         return die(QUAZIP_ERROR, QUAZIP_ERROR);
     }
-
-#else
-
-    QProcess p;
-    QTime sw;
-    sw.start();
-    p.start(QString("\"%1/7za\" x \"%2\" -y -o\"%3/apk\"").arg(APPDIR, filename, temp));
-    if (!p.waitForStarted(-1)) {
-        qDebug() << qPrintable(LOG_ERRORSTART.arg("7za"));
-        qDebug() << "Error:" << p.errorString();
-        return die(tr(STR_ERROR).arg("7ZA"), tr(STR_ERRORSTART).arg("7za"));
-    }
-    p.waitForFinished(-1);
-    qDebug() << qPrintable(QString("Unpacked in %1s").arg(sw.elapsed() / 1000.0));
-    return getZipSuccess(p.exitCode());
-
-#endif
 }
 
 bool Apk::unzip_apktool(bool smali) const
@@ -542,8 +523,6 @@ void Apk::saveXmlChanges(QString appName, QString versionName, QString versionCo
 
 bool Apk::zip(short ratio) const
 {
-#ifndef USE_7ZIP
-
     bool result = JlCompress::compressDir(temp + "/temp.zip", temp + "/apk", ratio);
     if (result) {
         QFile::rename(temp + "/temp.zip", temp + "/temp-1.apk");
@@ -553,24 +532,6 @@ bool Apk::zip(short ratio) const
         const QString QUAZIP_ERROR = tr(STR_ERROR).arg("QuaZIP");
         return die(QUAZIP_ERROR, QUAZIP_ERROR);
     }
-
-#else
-
-    QProcess p;
-    p.start(QString("7za a -tzip -mx%1 \"%2/temp.zip\" \"%2/apk/*\"").arg(QString::number(ratio), temp));
-    if (!p.waitForStarted(-1)) {
-        qDebug() << qPrintable(LOG_ERRORSTART.arg("7za"));
-        qDebug() << "Error:" << p.errorString();
-        return die(tr(STR_ERROR).arg("7ZA"), tr(STR_ERRORSTART).arg("7za"));
-    }
-    p.waitForFinished(-1);
-    bool success;
-    if (success = getZipSuccess(p.exitCode())) {
-        QFile::rename(temp + "/temp.zip", temp + "/temp-1.apk");
-    }
-    return success;
-
-#endif
 }
 
 bool Apk::zip_apktool() const
@@ -728,27 +689,6 @@ bool Apk::die(QString title, QString text) const
 {
     emit error(title, text);
     return false;
-}
-
-bool Apk::getZipSuccess(int code) const
-{
-    qDebug() << qPrintable(LOG_EXITCODE.arg("7za").arg(code));
-    const QString error_7za(tr(STR_ERROR).arg("7ZA"));
-
-    switch (code) {
-    case 0:
-        return true;
-    case 1:
-        return die(error_7za, tr("File is probably being used by another process."));
-    case 2:
-        return die(error_7za, tr("Fatal 7-Zip error."));
-    case 7:
-        return die(error_7za, tr("Command line error."));
-    case 8:
-        return die(error_7za, tr("Not enough memory."));
-    default:
-        return die(error_7za, tr("7-Zip error code: %1").arg(code));
-    }
 }
 
 Icon *Apk::getIcon(Dpi::Type id) const
