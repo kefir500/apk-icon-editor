@@ -1,8 +1,8 @@
 /// \file apk.h
 /// \brief This file contains #Apk class declaration.
 
-#ifndef PACKER_H
-#define PACKER_H
+#ifndef APK_H
+#define APK_H
 
 #include "icon.h"
 #include "device.h" // for Dpi enum
@@ -167,4 +167,4 @@ public slots:
     void clearTemp();
 };
 
-#endif // PACKER_H
+#endif // APK_H
