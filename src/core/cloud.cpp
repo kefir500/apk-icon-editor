@@ -93,8 +93,8 @@ bool Cloud::processReply(QNetworkReply *reply)
     const QString URL = reply->url().toString();
 
     if (URL == urlToken) {
-        QString r = reply->readAll();
-        parseToken(r);
+        const QString REPLY = reply->readAll();
+        parseToken(REPLY);
         if (!filename.isEmpty() && !token.isEmpty()) {
             upload(filename);
         }
@@ -148,7 +148,7 @@ void Cloud::uploadProgress(qint64 sent, qint64 total)
 void Cloud::timeout()
 {
     cancel();
-    const QString ERR(tr("Error uploading APK to %1.").arg(title));
+    const QString ERR = tr("Error uploading APK to %1.").arg(title);
     emit error(tr("Upload Error"), QString("%1\n%2").arg(ERR, tr("Timeout expired. Check your Internet connection.")));
 }
 
@@ -206,14 +206,14 @@ QByteArray Cloud::readFile(QString filename)
     }
 }
 
-void Cloud::upload(QString _filename)
+void Cloud::upload(QString filename)
 {
     // This is NOT an actual upload!
     // See Uploader::startUpload()
 
     qDebug() << "Uploading to" << title;
     emit progress(0, tr("Checking if you are logged in..."));
-    filename = _filename;
+    this->filename = filename;
     if (!token.isEmpty()) {
         QNetworkRequest request;
         request.setUrl(QUrl(urlStatus));
@@ -255,21 +255,19 @@ bool Dropbox::processReply(QNetworkReply *reply)
 
 void Dropbox::startUpload()
 {
-    QByteArray bytes = readFile(filename);
-    if (bytes.isEmpty()) {
-        return;
-    }
-    QFileInfo fi(filename);
-    QString title(fi.fileName());
+    const QByteArray FILE = readFile(filename);
+    if (FILE.isEmpty()) return;
+
+    const QString TITLE = QFileInfo(filename).fileName();
 
     QNetworkRequest request;
-    request.setUrl(QUrl(urlUpload + title + "?overwrite=false"));
+    request.setUrl(QUrl(urlUpload + TITLE + "?overwrite=false"));
     request.setHeader(QNetworkRequest::ContentTypeHeader, "multipart/form-data; boundary=-----------------------------1a3189a56701e");
-    request.setHeader(QNetworkRequest::ContentLengthHeader, bytes.size());
+    request.setHeader(QNetworkRequest::ContentLengthHeader, FILE.size());
     request.setRawHeader("Authorization", QString("Bearer " + token).toUtf8());
 
     timer->start();
-    QNetworkReply *reply = http->put(request, bytes);
+    QNetworkReply *reply = http->put(request, FILE);
     connect(reply, SIGNAL(uploadProgress(qint64, qint64)), this, SLOT(uploadProgress(qint64, qint64)));
     connect(this, SIGNAL(cancelled()), reply, SLOT(abort()));
 }
@@ -326,9 +324,9 @@ bool GoogleDrive::processReply(QNetworkReply *reply)
 
 void GoogleDrive::getFolderID()
 {
-    QString query = QString("title = '%1' and mimeType = 'application/vnd.google-apps.folder' and trashed = false").arg(APP);
+    const QString QUERY = QString("title = '%1' and mimeType = 'application/vnd.google-apps.folder' and trashed = false").arg(APP);
     QNetworkRequest request;
-    request.setUrl(QUrl(urlFiles + QString("?q=%1").arg(query)));
+    request.setUrl(QUrl(urlFiles + QString("?q=%1").arg(QUERY)));
     request.setRawHeader("Authorization", QString("Bearer " + token).toUtf8());
     timer->start();
     http->get(request);
@@ -336,34 +334,34 @@ void GoogleDrive::getFolderID()
 
 void GoogleDrive::createFolder()
 {
-    QByteArray json = QString("{\"title\":\"%1\",\"mimeType\":\"application/vnd.google-apps.folder\"}").arg(APP).toUtf8();
+    const QByteArray JSON = QString("{\"title\":\"%1\",\"mimeType\":\"application/vnd.google-apps.folder\"}").arg(APP).toUtf8();
     QNetworkRequest request;
     request.setUrl(QUrl(urlFiles));
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
-    request.setHeader(QNetworkRequest::ContentLengthHeader, json.size());
+    request.setHeader(QNetworkRequest::ContentLengthHeader, JSON.size());
     request.setRawHeader("Authorization", QString("Bearer " + token).toUtf8());
     timer->start();
-    http->post(request, json);
+    http->post(request, JSON);
 }
 
 void GoogleDrive::startUpload()
 {
-    QByteArray bytes = readFile(filename);
-    if (bytes.isEmpty()) {
+    const QByteArray BYTES = readFile(filename);
+    if (BYTES.isEmpty()) {
         return;
     }
     QFileInfo fi(filename);
-    QString title(fi.fileName());
+    const QString TITLE = fi.fileName();
 
-    QString json = QString("{\"title\":\"%1\",\"parents\":[{\"id\":\"%2\"}]}").arg(title, folder);
+    const QString JSON = QString("{\"title\":\"%1\",\"parents\":[{\"id\":\"%2\"}]}").arg(TITLE, folder);
 
     QHttpPart part1;
     part1.setHeader(QNetworkRequest::ContentTypeHeader, "application/json; charset=UTF-8");
-    part1.setBody(json.toStdString().c_str());
+    part1.setBody(JSON.toStdString().c_str());
 
     QHttpPart part2;
     part2.setHeader(QNetworkRequest::ContentTypeHeader, "application/octet-stream");
-    part2.setBody(bytes);
+    part2.setBody(BYTES);
 
     QHttpMultiPart *multi = new QHttpMultiPart(QHttpMultiPart::RelatedType);
     multi->append(part1);
@@ -430,15 +428,15 @@ void OneDrive::createFolder()
 
 void OneDrive::startUpload()
 {
-    QByteArray bytes = readFile(filename);
-    if (bytes.isEmpty()) {
+    const QByteArray BYTES = readFile(filename);
+    if (BYTES.isEmpty()) {
         return;
     }
     QFileInfo fi(filename);
-    QString filename(fi.fileName());
+    const QString FILENAME = fi.fileName();
 
     QNetworkRequest request;
-    request.setUrl(QUrl(urlUpload + filename + "?overwrite=ChooseNewName"));
+    request.setUrl(QUrl(urlUpload + FILENAME + "?overwrite=ChooseNewName"));
     request.setRawHeader("Authorization", QString("Bearer " + token).toUtf8());
 
     timer->start();

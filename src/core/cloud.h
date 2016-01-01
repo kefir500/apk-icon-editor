@@ -47,7 +47,7 @@ public:
 
     /// Checks if user is logged in, then uploads the file to the cloud storage.
     /// \warning This is \b not an actual upload. See #startUpload().
-    void upload(QString _filename);
+    void upload(QString filename);
 
     void setClientID(QString id)     { clientID = id; }      ///< Set application OAuth 2.0 client ID.
     void setSecret(QString _secret)  { secret = _secret; }   ///< Set application OAuth 2.0 client secret.
