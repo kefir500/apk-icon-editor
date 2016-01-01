@@ -352,7 +352,6 @@ void GoogleDrive::startUpload()
     }
     QFileInfo fi(filename);
     const QString TITLE = fi.fileName();
-
     const QString JSON = QString("{\"title\":\"%1\",\"parents\":[{\"id\":\"%2\"}]}").arg(TITLE, folder);
 
     QHttpPart part1;
@@ -440,7 +439,7 @@ void OneDrive::startUpload()
     request.setRawHeader("Authorization", QString("Bearer " + token).toUtf8());
 
     timer->start();
-    QNetworkReply *reply = http->put(request, bytes);
+    QNetworkReply *reply = http->put(request, BYTES);
     connect(reply, SIGNAL(uploadProgress(qint64, qint64)), this, SLOT(uploadProgress(qint64, qint64)));
     connect(this, SIGNAL(cancelled()), reply, SLOT(abort()));
 }
