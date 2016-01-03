@@ -81,8 +81,7 @@ void MainWindow::init_gui()
     // Main Window:
 
     setAcceptDrops(true);
-    resize(Gui::Window::WIDTH,
-           Gui::Window::HEIGHT);
+    resize(Gui::Window::scaledWidth(), Gui::Window::scaledHeight());
 
     splitter = new QSplitter(this);
     setCentralWidget(splitter);
@@ -522,7 +521,7 @@ void MainWindow::settings_reset()
         Settings::reset();
         settings_load();
         resetApktool();
-        resize(Gui::Window::WIDTH, Gui::Window::HEIGHT);
+        resize(Gui::Window::scaledWidth(), Gui::Window::scaledHeight());
         if (APKTOOL != Settings::get_use_apktool()) {
             askReloadApk();
         }

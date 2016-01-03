@@ -11,8 +11,10 @@
 
 namespace Gui {
     namespace Window {
-        const int WIDTH  = 800;
-        const int HEIGHT = 530;
+        const int WIDTH  = 800; ///< Initial main window width.
+        const int HEIGHT = 540; ///< Initial main window height.
+        int scaledWidth();      ///< Returns the main window width suitable for the current DPI.
+        int scaledHeight();     ///< Returns the main window height suitable for the current DPI.
     }
 }
 
