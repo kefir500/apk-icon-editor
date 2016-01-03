@@ -20,11 +20,15 @@ namespace Gui {
 
 namespace Path {
     namespace App {
-        QString dir();
-        QString file();
+        QString dir();          ///< Returns the directory containing the application executable.
+        QString file();         ///< Returns the file path of the application executable.
     }
+
     namespace Log {
+        /// Full path to the log directory.
         const QString DIR = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/apk-icon-editor/";
+
+        /// Full path to the log file.
         const QString FILE = DIR + "apk-icon-editor.log";
     }
 }
