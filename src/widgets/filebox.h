@@ -41,7 +41,7 @@ public slots:
     void setValue(QString value);
     void setTitle(QString title);
     void setTitleWidth(int width);
-    void setFormats(QString _formats);
+    void setFormats(QString formats);
 
 private slots:
     void openFile(QString filename = QString());

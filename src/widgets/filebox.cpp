@@ -50,9 +50,9 @@ void FileBox::setTitleWidth(int width)
     label->setMinimumWidth(width);
 }
 
-void FileBox::setFormats(QString _formats)
+void FileBox::setFormats(QString formats)
 {
-    formats = _formats;
+    this->formats = formats;
 }
 
 void FileBox::openFile(QString filename)

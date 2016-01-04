@@ -693,12 +693,9 @@ bool Apk::die(QString title, QString text) const
 
 Icon *Apk::getIcon(Dpi::Type id) const
 {
-    if (icons.size() > id && !icons.at(id).isNull()) {
-        return icons.at(id).data();
-    }
-    else {
-        return NULL;
-    }
+    return icons.size() > id && !icons.at(id).isNull()
+    ? icons.at(id).data()
+    : NULL;
 }
 
 QList<Resource> Apk::getStrings() const

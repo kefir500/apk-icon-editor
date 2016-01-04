@@ -31,9 +31,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
 void MainWindow::checkDeps()
 {
-    const QString JRE     = Apk::getJreVersion();
-    const QString JDK     = Apk::getJdkVersion();
-    version_apktool       = Apk::getApktoolVersion();
+    const QString JRE = Apk::getJreVersion();
+    const QString JDK = Apk::getJdkVersion();
+    version_apktool   = Apk::getApktoolVersion();
 
     QRegExp rx;
     QStringList cap;
