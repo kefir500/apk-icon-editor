@@ -1,3 +1,8 @@
+///
+/// \file
+/// This file contains classes for uploading files to cloud storage services.
+///
+
 #ifndef CLOUD_H
 #define CLOUD_H
 
@@ -6,9 +11,10 @@
 #include <QTimer>
 #include <QIcon>
 
-/// \brief Cloud storage uploader.
 ///
-/// Class for uploading APK files to cloud storage services using OAuth 2.0.
+/// Cloud storage uploader.
+/// Base class for uploading APK files to cloud storage services.
+///
 
 class Cloud : public QObject
 {
@@ -93,8 +99,12 @@ private slots:
     void catchError(QNetworkReply::NetworkError code, QString text = QString());
     void uploadProgress(qint64 sent, qint64 total);
     void timeout();
-
 };
+
+///
+/// Dropbox uploader.
+/// Class for uploading files to Dropbox cloud storage service.
+///
 
 class Dropbox : public Cloud
 {
@@ -107,6 +117,11 @@ private:
     virtual bool processReply(QNetworkReply *reply);
     virtual void startUpload();
 };
+
+///
+/// Google Drive uploader.
+/// Class for uploading files to Google Drive cloud storage service.
+///
 
 class GoogleDrive : public Cloud
 {
@@ -122,6 +137,11 @@ private:
     void createFolder();        ///< Create "APK Icon Editor" folder at Google Drive.
     QString folder;             ///< "APK Icon Editor" folder ID at Google Drive.
 };
+
+///
+/// OneDrive uploader.
+/// Class for uploading files to Microsoft OneDrive cloud storage service.
+///
 
 class OneDrive : public Cloud
 {
