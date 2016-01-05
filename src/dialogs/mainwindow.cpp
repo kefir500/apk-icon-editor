@@ -1288,7 +1288,7 @@ void MainWindow::about()
         "</table></p>"
         "<hr style='margin-top: 6px'>"
         "<p style='margin-top: 4px'><table width='100%'><tr>" +
-            TD.arg("Qt: %1").arg(qVersion()) +
+            TD.arg("Qt: %1").arg(QT_VERSION_STR) +
             TD.arg("Apktool: %1").arg(version_apktool) +
             TD.arg("JRE: %1").arg(JRE) +
             TD.arg("JDK: %1").arg(JDK) +
