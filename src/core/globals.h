@@ -10,6 +10,11 @@
 #include <QStandardPaths>
 
 namespace Gui {
+
+    namespace Screen {
+        int dpi();              ///< Returns the current screen DPI value.
+    }
+
     namespace Window {
         const int WIDTH  = 800; ///< Initial main window width.
         const int HEIGHT = 540; ///< Initial main window height.
@@ -19,6 +24,7 @@ namespace Gui {
 }
 
 namespace Path {
+
     namespace App {
         QString dir();          ///< Returns the directory containing the application executable.
         QString file();         ///< Returns the file path of the application executable.
