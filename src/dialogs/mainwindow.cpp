@@ -77,6 +77,7 @@ void MainWindow::init_gui()
     effects = new EffectsDialog(this);
     toolDialog = new ToolDialog(this);
     keyManager = new KeyManager(this);
+    about = new About(this);
 
     // Main Window:
 
@@ -431,8 +432,8 @@ void MainWindow::init_slots()
     connect(actLogFile, SIGNAL(triggered()), this, SLOT(openLogFile()));
     connect(actLogPath, SIGNAL(triggered()), this, SLOT(openLogPath()));
     connect(actUpdate, SIGNAL(triggered()), updater, SLOT(check()));
-    connect(actAboutQt, SIGNAL(triggered()), this, SLOT(aboutQt()));
-    connect(actAbout, SIGNAL(triggered()), this, SLOT(about()));
+    connect(actAbout, SIGNAL(triggered()), about, SLOT(exec()));
+    connect(actAboutQt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
     connect(btnPack, SIGNAL(clicked()), this, SLOT(apk_save()));
     connect(mapRecent, SIGNAL(mapped(QString)), this, SLOT(apk_open(QString)));
     connect(btnApplyIcons, SIGNAL(clicked()), this, SLOT(cloneIcons()));
@@ -1261,84 +1262,6 @@ void MainWindow::openLogFile() const
 void MainWindow::openLogPath() const
 {
     QDesktopServices::openUrl(QUrl::fromLocalFile(Path::Log::DIR));
-}
-
-void MainWindow::about()
-{
-    const QString TD = "<td style='padding-right: 8px'>%1</td>";
-    const QString JRE = !version_jre.isEmpty() ? version_jre : QString("<a href='%1'>%2</a>").arg(Url::JRE, QApplication::translate("Apk", "Download"));
-    const QString JDK = !version_jdk.isEmpty() ? version_jdk : QString("<a href='%1'>%2</a>").arg(Url::JDK, QApplication::translate("Apk", "Download"));
-    const QString LINK = "<tr><td style='padding-right: 4px' align='right'><a href='%1'>%2</a></td><td>%3</td></tr>";
-
-    QMessageBox aboutBox(this);
-    aboutBox.setWindowTitle(tr("About"));
-    aboutBox.setStyleSheet("font-weight: normal");
-    aboutBox.setText(
-        QString("<h3>%1 v%2</h3>").arg(APP, VER) +
-        "<p>" +
-            tr("Built on: %1 - %2").arg(__DATE__, __TIME__) + "<br>" +
-            tr("Author: %1").arg("Alexander Gorishnyak") + "<br>" +
-            tr("License") + ": <a href='http://www.gnu.org/licenses/gpl-3.0.html'>GNU GPL v3.0</a>" +
-        "</p>"
-        "<p><table>" +
-            LINK.arg(Url::WEBSITE, tr("Visit Website"), tr("Visit our official website.")) +
-            LINK.arg(Url::CONTACT, tr("Report a Bug"), tr("Found a bug? Let us know so we can fix it!")) +
-            LINK.arg(Url::TRANSLATE, tr("Help Translate"), tr("Join our translation team on Transifex.")) +
-            LINK.arg(QString("file:///%1/versions.txt").arg(Path::App::dir()), tr("Version History"), tr("List of changes made to the project.")) +
-        "</table></p>"
-        "<hr style='margin-top: 6px'>"
-        "<p style='margin-top: 4px'><table width='100%'><tr>" +
-            TD.arg("Qt: %1").arg(QT_VERSION_STR) +
-            TD.arg("Apktool: %1").arg(version_apktool) +
-            TD.arg("JRE: %1").arg(JRE) +
-            TD.arg("JDK: %1").arg(JDK) +
-        "</tr></table></p>"
-    );
-    aboutBox.setIconPixmap(QPixmap(":/gfx/logo-about.png"));
-    QPushButton btnAuthors(tr("Authors"));
-    connect(&btnAuthors, SIGNAL(clicked()), &aboutBox, SLOT(close()));
-    connect(&btnAuthors, SIGNAL(clicked()), this, SLOT(aboutAuthors()));
-    aboutBox.addButton(QMessageBox::Ok);
-    aboutBox.addButton(&btnAuthors, QMessageBox::ActionRole);
-    aboutBox.setEscapeButton(aboutBox.button(QMessageBox::Ok));
-    aboutBox.exec();
-}
-
-void MainWindow::aboutAuthors()
-{
-    QMessageBox authors(this);
-    authors.setWindowTitle(tr("Authors"));
-    authors.setIconPixmap(QPixmap(":/gfx/logo-about.png"));
-
-    QRegExp rx("\\(www.(.+)\\)");
-    rx.setMinimal(true);
-
-    QString strAuthors;
-    QFile inputFile(Path::App::dir() + "/authors.txt");
-    if (inputFile.open(QIODevice::ReadOnly)) {
-        QTextStream in(&inputFile);
-        in.setCodec(QTextCodec::codecForName("UTF-8"));
-        bool newline = true;
-        while (!in.atEnd()) {
-            QString line = in.readLine();
-            if (line == "Testers:") {
-                strAuthors.chop(4); // Chop the last "<br>" tag.
-                break;
-            }
-            line = line.replace(rx, "(<a href=\"http://www.\\1\">www.\\1</a>)");
-            strAuthors += !newline ? line + "<br>" : QString("<b>%1</b><br>").arg(line);
-            newline = line.isEmpty();
-        }
-        strAuthors.chop(4); // Chop the last "<br>" tag.
-        inputFile.close();
-        authors.setText(strAuthors);
-        authors.exec();
-    }
-}
-
-void MainWindow::aboutQt() const
-{
-    QApplication::aboutQt();
 }
 
 void MainWindow::donate()

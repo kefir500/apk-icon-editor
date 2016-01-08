@@ -17,6 +17,7 @@
 #include "tooldialog.h"
 #include "keymanager.h"
 #include "dialogs.h"
+#include "about.h"
 #include "updater.h"
 #include "recent.h"
 #include "cloud.h"
@@ -53,6 +54,7 @@ private:
     KeyManager *keyManager;
     ProgressDialog *loadingDialog;
     ProgressDialog *uploadDialog;
+    About *about;
     QSignalMapper *mapLang;
     QSignalMapper *mapRecent;
     QTranslator *translator;
@@ -180,9 +182,6 @@ private slots:
     void openLogFile() const;          ///< Open log file.
     void openLogPath() const;          ///< Open log directory.
     void donate();                     ///< Show donation dialog.
-    void about();                      ///< Show "About APK Icon Editor" dialog.
-    void aboutAuthors();               ///< Show the list of authors dialog.
-    void aboutQt() const;              ///< Show "About Qt" dialog.
 
     void setLanguage(QString lang);    ///< Set GUI language.
     void setCurrentIcon(int id);       ///< Set icon to draw in \c drawArea widget.
