@@ -111,17 +111,13 @@ private:
     QString currentLang;
     QString currentPath;
 
-    QString version_apktool;                ///< Holds Apktool version.
-    QString version_jre;                    ///< Holds JRE version.
-    QString version_jdk;                    ///< Holds JDK version.
-
     void init_core();                       ///< Initialize core objects.
     void init_gui();                        ///< Initialize dialogs and widgets.
     void init_languages();                  ///< Initialize available languages.
     void init_devices();                    ///< Initialize available device presets.
     void init_slots();                      ///< Initialize signals/slots.
 
-    void checkDeps();                       ///< Check Java and Apktool versions.
+    void checkReqs();                       ///< Check Java and Apktool versions.
     void setActiveApk(QString filename);    ///< Mark \c filename as currently active.
     void resetApktool();                    ///< Remove Apktool "1.apk" framework
     bool confirmExit();                     ///< Ask user to confim exit.
@@ -140,6 +136,9 @@ public slots:
     bool apk_open(QString filename = ""); ///< Open APK (calls "Open" dialog if parameter is empty).
     bool apk_save(QString filename = ""); ///< Save APK (calls "Save" dialog if parameter is empty).
     void apk_explore();                   ///< Open the folder with APK contents.
+
+signals:
+    void reqsChecked(QString jre, QString jdk, QString apktool);
 
 private slots:
     /// Handle packed APK.

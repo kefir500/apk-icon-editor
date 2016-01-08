@@ -19,7 +19,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     init_devices();
     init_slots();
 
-    QtConcurrent::run(this, &MainWindow::checkDeps);
+    QtConcurrent::run(this, &MainWindow::checkReqs);
     Settings::init();
 
     settings_load();
@@ -29,11 +29,13 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     }
 }
 
-void MainWindow::checkDeps()
+void MainWindow::checkReqs()
 {
+    QString version_jre;
+    QString version_jdk;
+    QString version_apktool = Apk::getApktoolVersion();
     const QString JRE = Apk::getJreVersion();
     const QString JDK = Apk::getJdkVersion();
-    version_apktool   = Apk::getApktoolVersion();
 
     QRegExp rx;
     QStringList cap;
@@ -54,6 +56,8 @@ void MainWindow::checkDeps()
 
     if (!JRE.isNull()) qDebug().nospace() << "java -version\n" << qPrintable(JRE) << '\n';
     if (!JDK.isNull()) qDebug().nospace() << "javac -version\n" << qPrintable(JDK) << '\n';
+
+    emit reqsChecked(version_jre, version_jdk, version_apktool);
 }
 
 void MainWindow::init_core()
@@ -469,6 +473,7 @@ void MainWindow::init_slots()
     connect(uploadDialog, SIGNAL(rejected()), gdrive, SLOT(cancel()));
     connect(uploadDialog, SIGNAL(rejected()), onedrive, SLOT(cancel()));
     connect(updater, SIGNAL(version(QString)), this, SLOT(newVersion(QString)));
+    connect(this, SIGNAL(reqsChecked(QString, QString, QString)), about, SLOT(setVersions(QString, QString, QString)));
     connect(this, SIGNAL(destroyed()), apk, SLOT(clearTemp()));
 }
 
