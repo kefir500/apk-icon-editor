@@ -181,7 +181,7 @@ Donate::Donate(QWidget *parent) : QDialog(parent)
 {
     setWindowTitle(QApplication::translate("MainWindow", "Donate"));
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
-    resize(400, 0);
+    resize(450 * Gui::Screen::dpi() / 100.0, 0);
 
     // Initialize "Thanks" section:
 
