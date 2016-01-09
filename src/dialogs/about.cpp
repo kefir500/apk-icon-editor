@@ -60,7 +60,7 @@ About::About(QWidget *parent) : QDialog(parent)
     QHBoxLayout *layout = new QHBoxLayout(this);
     QVBoxLayout *texts = new QVBoxLayout;
     layout->setSizeConstraint(QLayout::SetFixedSize);
-    layout->setSpacing(16);
+    layout->setSpacing(10);
     layout->addWidget(icon);
     layout->addLayout(texts);
     texts->addWidget(textApp);
