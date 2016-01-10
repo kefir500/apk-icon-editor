@@ -1,3 +1,5 @@
+# Translation Guide
+
 ### VARIABLES
 
 Expressions, such as `%1`, `%2`, `%3`, etc. *stand for a certain variable*.
