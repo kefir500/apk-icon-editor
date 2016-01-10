@@ -64,7 +64,6 @@ void Apk::unpack(PackOptions options)
     temp = QDir::fromNativeSeparators(options.temp + "/apk-icon-editor");
     strings.clear();
     var_androidLabel.clear();
-    warnText.clear();
     QtConcurrent::run(this, &Apk::doUnpack, options);
 }
 
@@ -138,10 +137,6 @@ bool Apk::doUnpack(PackOptions options)
     emit unpacked(filename);
     qDebug() << "Done.\n";
 
-    if (!warnText.isEmpty()) {
-        warning(tr("Warning"), warnText);
-    }
-
     return true;
 }
 
@@ -163,7 +158,7 @@ bool Apk::readManifest()
     qDebug() << qPrintable(LOG_EXITCODE.arg("aapt").arg(code));
     switch (code) {
     case 1:
-        warnText = tr("AndroidManifest.xml contains uncritical errors.");
+        qDebug() << tr("AndroidManifest.xml contains uncritical errors.");
         // Continue reading AndroidManifest.xml:
     case 0:
         manifest = p.readAllStandardOutput().replace("\r\n", "\n");
@@ -570,7 +565,7 @@ bool Apk::sign(const QString PEM, const QString PK8) const
     const QString SIGNAPK(Path::App::dir() + "/signer/");
 
     if (!QFile::exists(PEM) || !QFile::exists(PK8)) {
-        emit warning("", tr("PEM/PK8 not found."));
+        qDebug() << "PEM/PK8 not found.";
         QFile::rename(APK_SRC, APK_DST);
         return false;
     }
@@ -609,7 +604,7 @@ bool Apk::sign(const QString KEY, const QString ALIAS,
     const QString APK_DST(temp + "/temp-2.apk");
 
     if (!QFile::exists(KEY)) {
-        emit warning("", tr("KeyStore not found."));
+        qDebug() << "KeyStore not found.";
         QFile::rename(APK_SRC, APK_DST);
         return false;
     }

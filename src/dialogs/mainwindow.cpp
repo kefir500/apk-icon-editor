@@ -454,7 +454,6 @@ void MainWindow::init_slots()
     connect(apk, SIGNAL(loading(short, QString)), loadingDialog, SLOT(setProgress(short, QString)));
     connect(apk, SIGNAL(error(QString, QString)), this, SLOT(error(QString, QString)));
     connect(apk, SIGNAL(error(QString, QString)), loadingDialog, SLOT(accept()));
-    connect(apk, SIGNAL(warning(QString, QString)), this, SLOT(warning(QString, QString)));
     connect(apk, SIGNAL(packed(QString, bool, QString)), this, SLOT(apkPacked(QString, bool, QString)));
     connect(apk, SIGNAL(unpacked(QString)), this, SLOT(apkUnpacked(QString)));
     connect(keyManager, SIGNAL(success(QString, QString)), this, SLOT(success(QString, QString)));

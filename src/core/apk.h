@@ -55,7 +55,6 @@ private:
     QString temp;                           ///< Temporary directory for repacking.
     QString manifest;                       ///< Stores AndroidManifest.xml.
     QString var_androidLabel;               ///< Stores the name of "android:label" variable (AndroidManifest.xml).
-    QString warnText;                       ///< Stores warning text.
     QList<QSharedPointer<Icon> > icons;     ///< Stores [shared pointers to] loaded APK icons.
     QList<Resource> strings;                ///< Stores APK string resources.
 
@@ -148,11 +147,6 @@ signals:
     /// \param[in] title Message brief title.
     /// \param[in] text  Message detailed text.
     void error(QString title, QString text) const;
-
-    /// \brief This signal is emitted to send warning message.
-    /// \param[in] title Message brief title.
-    /// \param[in] text  Message detailed text.
-    void warning(QString title, QString text) const;
 
     /// \brief This signal is emitted when APK is successfully unpacked.
     /// \param[in] filename Filename (with full path) of just unpacked APK.
