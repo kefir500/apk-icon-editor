@@ -569,7 +569,7 @@ bool Apk::sign(const QString PEM, const QString PK8) const
     const QString APK_DST(temp + "/temp-2.apk");
     const QString SIGNAPK(Path::App::dir() + "/signer/");
 
-    if (!QFile::exists(PEM) || !QFile::exists(PEM)) {
+    if (!QFile::exists(PEM) || !QFile::exists(PK8)) {
         emit warning("", tr("PEM/PK8 not found."));
         QFile::rename(APK_SRC, APK_DST);
         return false;
