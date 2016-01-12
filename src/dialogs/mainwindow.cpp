@@ -1046,12 +1046,12 @@ bool MainWindow::iconRevert()
 
 void MainWindow::setPreviewColor()
 {
-    QColor def = drawArea->palette().color(QPalette::Background);
-    QColor color = QColorDialog::getColor(def, this);
-    if (color.isValid()) {
-        drawArea->setBack(color);
+    const QColor DEFAULT = drawArea->palette().color(QPalette::Background);
+    const QColor COLOR = QColorDialog::getColor(DEFAULT, this);
+    if (COLOR.isValid()) {
+        drawArea->setBack(COLOR);
         QPixmap icon(32, 32);
-        icon.fill(color);
+        icon.fill(COLOR);
         actIconBack->setIcon(QIcon(icon));
     }
 }
