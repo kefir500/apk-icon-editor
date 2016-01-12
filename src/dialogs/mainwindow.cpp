@@ -1044,7 +1044,7 @@ bool MainWindow::iconRevert()
     return result;
 }
 
-void MainWindow::setPreviewColor()
+bool MainWindow::setPreviewColor()
 {
     const QColor DEFAULT = drawArea->palette().color(QPalette::Background);
     const QColor COLOR = QColorDialog::getColor(DEFAULT, this);
@@ -1053,6 +1053,10 @@ void MainWindow::setPreviewColor()
         QPixmap icon(32, 32);
         icon.fill(COLOR);
         actIconBack->setIcon(QIcon(icon));
+        return true;
+    }
+    else {
+        return false;
     }
 }
 

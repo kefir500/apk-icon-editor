@@ -184,7 +184,7 @@ private slots:
 
     void setLanguage(QString lang);    ///< Set GUI language.
     void setCurrentIcon(int id);       ///< Set icon to draw in \c drawArea widget.
-    void setPreviewColor();            ///< Show dialog to select background preview color.
+    bool setPreviewColor();            ///< Show dialog to select background preview color.
     void showEffectsDialog();          ///< Show "Effects" dialog.
     void hideEmptyDpi();               ///< Hide unused (empty) icons from \c profiles widget.
     void cloneIcons();                 ///< Apply current icon to all DPI sizes.
