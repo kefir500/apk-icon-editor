@@ -513,10 +513,10 @@ void MainWindow::settings_load()
     onedrive->setToken(Settings::get_onedrive_token());
 }
 
-void MainWindow::resetApktool()
+bool MainWindow::resetApktool()
 {
     const QString FRAMEWORK = Settings::get_temp() + "/apk-icon-editor/framework/1.apk";
-    QFile::remove(FRAMEWORK);
+    return QFile::remove(FRAMEWORK);
 }
 
 void MainWindow::settings_reset()

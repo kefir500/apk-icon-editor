@@ -119,7 +119,7 @@ private:
 
     void checkReqs();                       ///< Check Java and Apktool versions.
     void setActiveApk(QString filename);    ///< Mark \c filename as currently active.
-    void resetApktool();                    ///< Remove Apktool "1.apk" framework
+    bool resetApktool();                    ///< Remove Apktool "1.apk" framework
     bool confirmExit();                     ///< Ask user to confim exit.
     void invalidDpi();                      ///< Show "Invalid DPI" message.
 
