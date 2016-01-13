@@ -1008,11 +1008,11 @@ bool MainWindow::iconSave(QString filename)
     return drawArea->getIcon()->save(filename);
 }
 
-void MainWindow::iconScale()
+bool MainWindow::iconScale()
 {
     const Device DEVICE = Devices::at(devices->currentGroupIndex());
     const int SIZE = DEVICE.getDpiSize(Dpi::cast(devices->currentItemIndex()));
-    iconResize(SIZE);
+    return iconResize(SIZE);
 }
 
 bool MainWindow::iconResize(int side)

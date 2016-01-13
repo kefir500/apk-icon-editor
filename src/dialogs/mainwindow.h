@@ -162,8 +162,8 @@ private slots:
     /// \param[in] filename Name of the file to save image to. If \c NULL, shows "Save" dialog.
     bool iconSave(QString filename = QString());
 
-    /// Deprecated.
-    void iconScale();
+    /// Scales the current icon to the appropriate size.
+    bool iconScale();
 
     /// Resize icon to square to the given \c side.
     /// \param[in] side New side value in pixels. If zero, asks user for a value.
