@@ -94,7 +94,7 @@ bool Application::event(QEvent *event)
 {
     switch (event->type()) {
     case QEvent::FileOpen:
-        window->apk_open(static_cast<QFileOpenEvent *>(event)->file());
+        window->apk_open(static_cast<QFileOpenEvent*>(event)->file());
         return true;
     default:
         return QApplication::event(event);
