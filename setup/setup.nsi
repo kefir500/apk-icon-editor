@@ -84,7 +84,7 @@ Section
 	File "..\res\icons\icon.ico"
 	WriteUninstaller "$INSTDIR\uninstall.exe"
 	SetOutPath "$INSTDIR"
-	CreateShortCut "$SMPROGRAMS\${APPNAME}.lnk" ${EXE}
+	CreateShortCut "$SMPROGRAMS\${APPNAME}.lnk" ${EXE} "" "" "" "" "" "${APPNAME} v${VERSION}"
 	WriteRegStr HKCU "Software\apk-icon-editor" "InstallDir" "$INSTDIR"
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "DisplayName" "${APPNAME}"
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "DisplayVersion" "${VERSION}"
@@ -101,7 +101,7 @@ SectionEnd
 
 Section "Desktop Shortcut" SEC_DESKTOP
 	SetOutPath "$INSTDIR"
-	CreateShortCut "$DESKTOP\${APPNAME}.lnk" ${EXE}
+	CreateShortCut "$DESKTOP\${APPNAME}.lnk" ${EXE} "" "" "" "" "" "${APPNAME} v${VERSION}"
 SectionEnd
 
 Section "Associate APK" SEC_ASSOCIATE
