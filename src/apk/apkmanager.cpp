@@ -75,5 +75,7 @@ void ApkManager::catchError(QString message)
 
 ApkManager::~ApkManager()
 {
-    apk->clear();
+    if (apk) {
+        apk->clear();
+    }
 }
