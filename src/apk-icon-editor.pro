@@ -21,6 +21,7 @@ win32 {
 }
 
 include(core/core.pri)
+include(apk/apk.pri)
 include(widgets/widgets.pri)
 include(dialogs/dialogs.pri)
 

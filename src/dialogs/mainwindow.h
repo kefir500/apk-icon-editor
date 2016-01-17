@@ -10,7 +10,7 @@
 #include <QSignalMapper>
 #include <QTranslator>
 #include <QCloseEvent>
-#include "apk.h"
+#include "apkmanager.h"
 #include "combolist.h"
 #include "drawarea.h"
 #include "effectsdialog.h"
@@ -101,7 +101,8 @@ private:
     QAction *actAboutQt;
     QAction *actAbout;
 
-    Apk *apk;
+    Apk::File *apk;
+    ApkManager *apkManager;
     Recent *recent;
     Updater *updater;
     Dropbox *dropbox;
@@ -145,12 +146,12 @@ private slots:
     /// \param[in] filename  Name of the packed APK file.
     /// \param[in] isSuccess \c FALSE if APK is packed with warnings.
     /// \param[in] text      Additional message text.
-    void apkPacked(QString filename, bool isSuccess = true, QString text = QString());
+    void apkPacked(Apk::File *apk, QString text = QString(), bool isSuccess = true);
 
-    void apkUnpacked(QString filename);             ///< Handle APK unpacked from the \c filename.
+    void apkUnpacked(Apk::File *apk); ///< Handle the unpacked APK.
 
-    void settings_load();                           ///< Load settings from INI.
-    void settings_reset();                          ///< Reset settings to default.
+    void settings_load();             ///< Load settings from INI.
+    void settings_reset();            ///< Reset settings to default.
 
 //------------------------------------------------------------------------------
 

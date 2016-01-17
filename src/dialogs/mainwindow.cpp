@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "globals.h"
 #include "settings.h"
+#include "apkfile.h"
 #include <QHeaderView>
 #include <QMenuBar>
 #include <QMessageBox>
@@ -62,7 +63,8 @@ void MainWindow::checkReqs()
 
 void MainWindow::init_core()
 {
-    apk = new Apk(this);
+    apk = NULL;
+    apkManager = new ApkManager(this);
     updater = new Updater(this);
     mapRecent = new QSignalMapper(this);
 
@@ -279,11 +281,12 @@ void MainWindow::init_gui()
     btnApplyAppName = new QPushButton(this);
     btnApplyAppName->setEnabled(false);
     tableStrings = new QTableWidget(this);
-    tableStrings->setColumnCount(3);
+    tableStrings->setColumnCount(4);
     tableStrings->verticalHeader()->setVisible(false);
     tableStrings->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Interactive);
     tableStrings->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
     tableStrings->horizontalHeader()->setSectionHidden(2, true);
+    tableStrings->horizontalHeader()->setSectionHidden(3, true);
     tableStrings->setSelectionMode(QTableWidget::SingleSelection);
     labelApktool = new QLabel(this);
     labelApktool->setWordWrap(true);
@@ -451,11 +454,11 @@ void MainWindow::init_slots()
     connect(btnTool, SIGNAL(clicked()), this, SLOT(askReloadApk()));
     connect(toolDialog, SIGNAL(apktool_checked(bool)), this, SLOT(enableApktool(bool)));
     connect(toolDialog, SIGNAL(tool_changed()), this, SLOT(askReloadApk()));
-    connect(apk, SIGNAL(loading(short, QString)), loadingDialog, SLOT(setProgress(short, QString)));
-    connect(apk, SIGNAL(error(QString, QString)), this, SLOT(error(QString, QString)));
-    connect(apk, SIGNAL(error(QString, QString)), loadingDialog, SLOT(accept()));
-    connect(apk, SIGNAL(packed(QString, bool, QString)), this, SLOT(apkPacked(QString, bool, QString)));
-    connect(apk, SIGNAL(unpacked(QString)), this, SLOT(apkUnpacked(QString)));
+    connect(apkManager, SIGNAL(loading(short, QString)), loadingDialog, SLOT(setProgress(short, QString)));
+    connect(apkManager, SIGNAL(error(QString, QString)), this, SLOT(error(QString, QString)));
+    connect(apkManager, SIGNAL(error(QString, QString)), loadingDialog, SLOT(accept()));
+    connect(apkManager, SIGNAL(packed(Apk::File*, QString, bool)), this, SLOT(apkPacked(Apk::File*, QString, bool)));
+    connect(apkManager, SIGNAL(unpacked(Apk::File*)), this, SLOT(apkUnpacked(Apk::File*)));
     connect(keyManager, SIGNAL(success(QString, QString)), this, SLOT(success(QString, QString)));
     connect(keyManager, SIGNAL(warning(QString, QString)), this, SLOT(warning(QString, QString)));
     connect(keyManager, SIGNAL(error(QString, QString)), this, SLOT(error(QString, QString)));
@@ -473,7 +476,6 @@ void MainWindow::init_slots()
     connect(uploadDialog, SIGNAL(rejected()), onedrive, SLOT(cancel()));
     connect(updater, SIGNAL(version(QString)), this, SLOT(newVersion(QString)));
     connect(this, SIGNAL(reqsChecked(QString, QString, QString)), about, SLOT(setVersions(QString, QString, QString)));
-    connect(this, SIGNAL(destroyed()), apk, SLOT(clearTemp()));
 }
 
 void MainWindow::settings_load()
@@ -673,9 +675,10 @@ void MainWindow::recent_clear()
 void MainWindow::hideEmptyDpi()
 {
     for (short i = Dpi::LDPI; i < Dpi::COUNT; ++i) {
+        Icon *icon;
         bool visible = false;
         const Dpi::Type DPI = Dpi::cast(i);
-        if (Icon *icon = apk->getIcon(DPI)) {
+        if (apk && (icon = apk->getIcon(DPI))) {
             visible = !icon->isNull();
         }
         devices->setItemVisible(DPI, visible);
@@ -816,10 +819,11 @@ void MainWindow::upload(Cloud *uploader, QString filename)
     loop.exec(); // Block execution until cloud upload is finished.
 }
 
-void MainWindow::apkPacked(QString filename, bool isSuccess, QString text)
+void MainWindow::apkPacked(Apk::File *apk, QString text, bool isSuccess)
 {
     loadingDialog->accept();
-    setActiveApk(filename);
+    const QString FILENAME = apk->getFilePath();
+    setActiveApk(FILENAME);
 
     const bool UPLOAD_TO_DROPBOX  = checkDropbox->isChecked();
     const bool UPLOAD_TO_GDRIVE   = checkGDrive->isChecked();
@@ -827,9 +831,9 @@ void MainWindow::apkPacked(QString filename, bool isSuccess, QString text)
 
     if (isSuccess) {
         if (checkUpload->isChecked()) {
-            if (UPLOAD_TO_DROPBOX)  upload(dropbox, filename);
-            if (UPLOAD_TO_GDRIVE)   upload(gdrive, filename);
-            if (UPLOAD_TO_ONEDRIVE) upload(onedrive, filename);
+            if (UPLOAD_TO_DROPBOX)  upload(dropbox, FILENAME);
+            if (UPLOAD_TO_GDRIVE)   upload(gdrive, FILENAME);
+            if (UPLOAD_TO_ONEDRIVE) upload(onedrive, FILENAME);
         }
         uploadDialog->accept();
         success(NULL, text);
@@ -837,18 +841,19 @@ void MainWindow::apkPacked(QString filename, bool isSuccess, QString text)
     else {
         warning(NULL, text);
         if (checkUpload->isChecked()) {
-            if (UPLOAD_TO_DROPBOX)  upload(dropbox, filename);
-            if (UPLOAD_TO_GDRIVE)   upload(gdrive, filename);
-            if (UPLOAD_TO_ONEDRIVE) upload(onedrive, filename);
+            if (UPLOAD_TO_DROPBOX)  upload(dropbox, FILENAME);
+            if (UPLOAD_TO_GDRIVE)   upload(gdrive, FILENAME);
+            if (UPLOAD_TO_ONEDRIVE) upload(onedrive, FILENAME);
         }
         uploadDialog->accept();
     }
 }
 
-void MainWindow::apkUnpacked(QString filename)
+void MainWindow::apkUnpacked(Apk::File *apk)
 {
+    this->apk = apk;
     loadingDialog->accept();
-    setActiveApk(filename);
+    setActiveApk(apk->getFilePath());
 
     // Automatically select DPI from the list:
 
@@ -880,10 +885,10 @@ void MainWindow::apkUnpacked(QString filename)
     editVersionName->clear();
     tableStrings->clear();
     tableStrings->setHorizontalHeaderLabels(QStringList() << tr("Language") << tr("Application Name"));
-    QList<Resource> res = apk->getStrings();
-    tableStrings->setRowCount(res.size());
-    for (int i = res.size() - 1; i >= 0; --i) {
-        QFileInfo fi(res[i].getFilename());
+    QList<Apk::String> strings = apk->getStrings();
+    tableStrings->setRowCount(strings.size());
+    for (int i = strings.size() - 1; i >= 0; --i) {
+        QFileInfo fi(strings[i].getFilename());
         QString locale = fi.dir().dirName().mid(7);
         QString native = QLocale(locale).nativeLanguageName();
         if (!native.isEmpty()) {
@@ -892,7 +897,7 @@ void MainWindow::apkUnpacked(QString filename)
         }
         else {
             if (locale.isEmpty()) { // This has to be the last iteration
-                editAppName->setText(res[i].getValue());
+                editAppName->setText(strings[i].getValue());
                 tableStrings->removeRow(i);
                 continue;
             }
@@ -901,18 +906,20 @@ void MainWindow::apkUnpacked(QString filename)
             }
         }
         QTableWidgetItem *c1 = new QTableWidgetItem(native);
-        QTableWidgetItem *c2 = new QTableWidgetItem(res[i].getValue());
-        QTableWidgetItem *c3 = new QTableWidgetItem(res[i].getFilename());
+        QTableWidgetItem *c2 = new QTableWidgetItem(strings[i].getValue());
+        QTableWidgetItem *c3 = new QTableWidgetItem(strings[i].getFilename());
+        QTableWidgetItem *c4 = new QTableWidgetItem(strings[i].getKey());
         c1->setFlags(c1->flags() & ~Qt::ItemIsEditable);
         tableStrings->blockSignals(true);
         tableStrings->setItem(i, 0, c1);
         tableStrings->setItem(i, 1, c2);
         tableStrings->setItem(i, 2, c3);
+        tableStrings->setItem(i, 3, c4);
         tableStrings->item(i, 1)->setData(Qt::UserRole, false); // Mark as "not edited"
         tableStrings->blockSignals(false);
     }
     if (editAppName->text().isEmpty()) {
-        editAppName->setText(apk->getApplicationLabel());
+        editAppName->setText(apk->getAppTitle());
     }
     editVersionCode->setValue(apk->getVersionCode().toInt());
     editVersionName->setText(apk->getVersionName());
@@ -1129,12 +1136,12 @@ bool MainWindow::apk_open(QString filename)
     // Unpacking:
 
     loadingDialog->setProgress(0);
-    PackOptions opts;
-    opts.filename = filename;
-    opts.temp = Settings::get_temp();
-    opts.isApktool = Settings::get_use_apktool();
-    opts.isSmali = Settings::get_smali();
-    apk->unpack(opts);
+
+    const QString DEST = Settings::get_temp() + "/apk-icon-editor/";
+    const bool APKTOOL = Settings::get_use_apktool();
+    const bool SMALI = Settings::get_use_apktool();
+    apkManager->unpack(filename, DEST, APKTOOL, SMALI);
+
     return true;
 }
 
@@ -1197,36 +1204,37 @@ bool MainWindow::apk_save(QString filename)
     currentPath = QFileInfo(filename).absolutePath();
     loadingDialog->setProgress(0);
 
-    PackOptions opts;
-    opts.filename = filename;
-    opts.temp = Settings::get_temp();
-    opts.isApktool = Settings::get_use_apktool();
-    opts.ratio = Settings::get_compression();
-    opts.isSmali = Settings::get_smali();
-    opts.isSign = Settings::get_sign();
-    opts.isOptimize = Settings::get_zipalign();
-    opts.filePem = Settings::get_pem();
-    opts.filePk8 = Settings::get_pk8();
-    opts.fileKey = Settings::get_keystore();
-    opts.isKeystore = USING_KEYSTORE;
-    opts.alias = alias;
-    opts.passStore = pass_store;
-    opts.passAlias = pass_alias;
-    opts.appName = editAppName->text();
-    opts.appVersionName = editVersionName->text();
-    opts.appVersionCode = editVersionCode->text();
+    apk->setFilePath(filename);
+    apk->setAppTitle(editAppName->text());
+    apk->setVersionCode(editVersionCode->text());
+    apk->setVersionName(editVersionName->text());
+    apk->setApktool(Settings::get_use_apktool());
+    apk->setRatio(Settings::get_compression());
+    apk->setSmali(Settings::get_smali());
+    apk->setSign(Settings::get_sign());
+    apk->setZipalign(Settings::get_zipalign());
+    apk->setFilePemPk8(Settings::get_pem(), Settings::get_pk8());
+    apk->setFileKeystore(Settings::get_keystore(), alias, pass_store, pass_alias);
+    apk->setKeystore(USING_KEYSTORE);
 
-    QList<Resource> res;
+    QList<Apk::String> strings;
     for (int i = 0; i < tableStrings->rowCount(); ++i) {
-        // Save only edited strings:
+        // Add only edited translations:
         if (tableStrings->item(i, 1)->data(Qt::UserRole) == true) {
-            res.push_back(Resource(tableStrings->item(i, 2)->text(),
-                                   tableStrings->item(i, 1)->text()));
+            const QString KEY = tableStrings->item(i, 3)->text();
+            const QString VALUE = tableStrings->item(i, 1)->text();
+            const QString FILENAME = tableStrings->item(i, 2)->text();
+            strings.push_back(Apk::String(KEY, VALUE, FILENAME));
         }
     }
+    if (!apk->getVarAppTitle().isEmpty()) {
+        // Add default application name:
+        Apk::String DEFAULT(apk->getVarAppTitle(), editAppName->text(), apk->getDirectory() + "/res/values/strings.xml");
+        strings.push_front(DEFAULT);
+    }
 
-    opts.resources = res;
-    apk->pack(opts);
+    apk->setStrings(strings);
+    apkManager->pack(apk, Settings::get_temp() + "/apk-icon-editor/");
     return true;
 }
 
