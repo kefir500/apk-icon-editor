@@ -8,21 +8,6 @@
 #include <QPushButton>
 #include <QSpinBox>
 
-// KeyParams
-
-struct KeyParams {
-    QString password;
-    QString years;
-    QString name;
-    QString unit;
-    QString organization;
-    QString city;
-    QString state;
-    QString country;
-};
-
-// KeyCreator
-
 class KeyCreator : public QDialog {
     Q_OBJECT
 
