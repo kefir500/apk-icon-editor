@@ -65,7 +65,7 @@ void UpdateWorker::catchReply(QNetworkReply *reply)
     emit finished();
 }
 
-bool UpdateWorker::compare(QString v1, QString v2)
+bool UpdateWorker::compare(QString v1, QString v2) const
 {
     // Unit test is available for this function.
 
@@ -91,7 +91,7 @@ bool UpdateWorker::compare(QString v1, QString v2)
     return false;
 }
 
-QString UpdateWorker::parse(QString json)
+QString UpdateWorker::parse(QString json) const
 {
 #if defined(Q_OS_WIN)
     const QString OS = "windows";

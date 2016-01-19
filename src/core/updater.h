@@ -22,7 +22,6 @@ public:
     explicit UpdateWorker(QObject *parent = 0);
 
 public slots:
-
     /// Checks for application updates.
     void check() const;
 
@@ -31,7 +30,7 @@ public slots:
     /// \retval true if version \c v1 is newer than version \c v2.
     /// \retval false if version \c v1 is the same or older than version \c v2.
     /// \note Unit test is available for this function.
-    bool compare(QString v1, QString v2);
+    bool compare(QString v1, QString v2) const;
 
 signals:
     /// This signal is emitted when the application update is available.
@@ -42,11 +41,15 @@ signals:
     void finished();
 
 private:
-    QString parse(QString json); ///< Returns the version number parsed from the incoming \c json.
-    QNetworkAccessManager *http; ///< HTTP request manager.
+    /// Returns the version number parsed from the incoming \c json.
+    QString parse(QString json) const;
+
+    /// HTTP request manager.
+    QNetworkAccessManager *http;
 
 private slots:
-    void catchReply(QNetworkReply *reply); ///< Handles the HTTP \c reply.
+    /// Handles the HTTP \c reply.
+    void catchReply(QNetworkReply *reply);
 };
 
 ///
