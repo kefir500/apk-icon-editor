@@ -1,19 +1,26 @@
 #include "updater.h"
 #include "globals.h"
+#include <QNetworkReply>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QDesktopServices>
+#include <QThread>
 
-Updater::Updater(QObject *parent) : QObject(parent)
-{
-    http = new QNetworkAccessManager(this);
-    connect(http, SIGNAL(finished(QNetworkReply*)), this, SLOT(catchReply(QNetworkReply*)));
-}
+// Updater
 
 void Updater::check() const
 {
-    QNetworkRequest request(Url::VERSION);
-    http->get(request);
+    QThread *thread = new QThread();
+    UpdateWorker *worker = new UpdateWorker();
+    worker->moveToThread(thread);
+
+    connect(thread, SIGNAL(started()), worker, SLOT(check()));
+    connect(worker, SIGNAL(version(QString)), this, SIGNAL(version(QString)));
+    connect(worker, SIGNAL(finished()), thread, SLOT(quit()));
+    connect(worker, SIGNAL(finished()), worker, SLOT(deleteLater()));
+    connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+
+    thread->start();
 }
 
 void Updater::download() const
@@ -21,7 +28,44 @@ void Updater::download() const
     QDesktopServices::openUrl(QUrl(Url::UPDATE));
 }
 
-bool Updater::compare(QString v1, QString v2)
+// UpdateWorker
+
+UpdateWorker::UpdateWorker(QObject *parent) : QObject(parent)
+{
+    http = new QNetworkAccessManager(this);
+    connect(http, SIGNAL(finished(QNetworkReply*)), this, SLOT(catchReply(QNetworkReply*)));
+}
+
+void UpdateWorker::check() const
+{
+    QNetworkRequest request(Url::VERSION);
+    http->get(request);
+}
+
+void UpdateWorker::catchReply(QNetworkReply *reply)
+{
+    if (reply->error() == QNetworkReply::NoError) {
+
+        const int CODE = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+
+        if (CODE >= 200 && CODE < 300) {
+            const QString URL = reply->url().toString();
+            if (URL.indexOf(Url::VERSION) != -1) {
+
+                const QString JSON = reply->readAll().trimmed();
+                const QString VERSION = parse(JSON);
+                if (compare(VERSION, VER)) {
+                    emit version(VERSION);
+                }
+            }
+        }
+    }
+
+    reply->deleteLater();
+    emit finished();
+}
+
+bool UpdateWorker::compare(QString v1, QString v2)
 {
     // Unit test is available for this function.
 
@@ -47,7 +91,7 @@ bool Updater::compare(QString v1, QString v2)
     return false;
 }
 
-QString Updater::parse(QString json)
+QString UpdateWorker::parse(QString json)
 {
 #if defined(Q_OS_WIN)
     const QString OS = "windows";
@@ -63,26 +107,4 @@ QString Updater::parse(QString json)
 
     qDebug() << qPrintable(QString("Updater: v%1\n").arg(LATEST));
     return LATEST;
-}
-
-void Updater::catchReply(QNetworkReply *reply)
-{
-    if (reply->error() == QNetworkReply::NoError) {
-
-        const int CODE = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
-
-        if (CODE >= 200 && CODE < 300) {
-            const QString URL = reply->url().toString();
-            if (URL.indexOf(Url::VERSION) != -1) {
-
-                const QString JSON = reply->readAll().trimmed();
-                const QString VERSION = parse(JSON);
-                if (compare(VERSION, VER)) {
-                    emit version(VERSION);
-                }
-            }
-        }
-    }
-
-    reply->deleteLater();
 }
