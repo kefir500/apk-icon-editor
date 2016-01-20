@@ -26,7 +26,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     settings_load();
 
     if (actAutoUpdate->isChecked()) {
-        updater->check();
+        // Update check is delayed in order to handle uninitialized GUI occuring with some firewalls.
+        QTimer *delay = new QTimer(this);
+        delay->setSingleShot(true);
+        delay->start(1200);
+        connect(delay, SIGNAL(timeout()), updater, SLOT(check()));
+        connect(delay, SIGNAL(timeout()), delay, SLOT(deleteLater()));
     }
 }
 
