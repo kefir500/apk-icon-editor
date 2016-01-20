@@ -94,9 +94,9 @@ void About::setVersions(QString jre, QString jdk, QString apktool)
     );
 }
 
-void About::showAuthors()
+void About::showAuthors() const
 {
-    QMessageBox authors(this);
+    QMessageBox authors;
     authors.setWindowTitle(tr("Authors"));
     authors.setIconPixmap(QPixmap(":/gfx/logo-about.png"));
 

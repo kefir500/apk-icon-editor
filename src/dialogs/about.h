@@ -13,7 +13,7 @@ public:
 
 public slots:
     void setVersions(QString jre, QString jdk, QString apktool);
-    void showAuthors();
+    void showAuthors() const;
 
 private:
     QLabel *textApp;
