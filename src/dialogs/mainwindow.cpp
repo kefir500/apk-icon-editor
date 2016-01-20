@@ -730,23 +730,23 @@ void MainWindow::applyAppName()
     }
 }
 
-void MainWindow::enableApktool(bool value)
+void MainWindow::enableApktool(bool enable)
 {
-    btnTool->setText(value ? "Apktool" : "ZIP");
-    btnTool->setToolTip(value ? toolDialog->hint_apktool() : toolDialog->hint_quazip());
+    btnTool->setText(enable ? "Apktool" : "ZIP");
+    btnTool->setToolTip(enable ? toolDialog->hint_apktool() : toolDialog->hint_quazip());
 
     menuBar()->resize(0, 0); // "Repaint" menu bar
 
     // If any APK is currently open:
 
     if (!currentApk.isEmpty()) {
-        editAppName->setEnabled(value);
-        editVersionCode->setEnabled(value);
-        editVersionName->setEnabled(value);
-        btnApplyAppName->setEnabled(value);
+        editAppName->setEnabled(enable);
+        editVersionCode->setEnabled(enable);
+        editVersionName->setEnabled(enable);
+        btnApplyAppName->setEnabled(enable);
     }
 
-    if (value) {
+    if (enable) {
         tableStrings->setVisible(true);
         panelApktool->setVisible(false);
     }
