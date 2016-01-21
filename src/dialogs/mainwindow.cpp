@@ -773,13 +773,13 @@ bool MainWindow::askReloadApk()
     return result;
 }
 
-void MainWindow::setCurrentIcon(int id)
+void MainWindow::setCurrentIcon(int dpi)
 {
-    if (id == -1) return;
+    if (dpi == -1) return;
     const Device DEVICE = Devices::at(devices->currentGroupIndex());
-    const int SIZE = DEVICE.getDpiSize(Dpi::cast(id));
+    const int SIZE = DEVICE.getDpiSize(Dpi::cast(dpi));
     drawArea->setRect(SIZE, SIZE);
-    if (Icon *icon = apk->getIcon(Dpi::cast(id))) {
+    if (Icon *icon = apk->getIcon(Dpi::cast(dpi))) {
         disconnect(effects, 0, 0, 0);
         connect(effects, SIGNAL(colorActivated(bool)), icon,     SLOT(setColorize(bool)), Qt::DirectConnection);
         connect(effects, SIGNAL(rotate(int)),          icon,     SLOT(setAngle(int)),     Qt::DirectConnection);

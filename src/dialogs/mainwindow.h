@@ -226,8 +226,8 @@ private slots:
     void openLogFile() const;        ///< Opens log file.
     void openLogPath() const;        ///< Opens log directory.
 
-    void setLanguage(QString lang);  ///< Sets GUI language to \c lang.
-    void setCurrentIcon(int id);     ///< Displays the icon with the specified DPI \c id in the icon preview widget.
+    void setLanguage(QString lang);  ///< Sets the GUI language to \c lang.
+    void setCurrentIcon(int dpi);    ///< Displays the icon with the specified \c dpi in the icon preview widget.
     void setModified();              ///< Marks the current APK as containing unsaved changes.
     void hideEmptyDpi();             ///< Hides empty icons from the list.
     void cloneIcons();               ///< Clones the current icon for to all sizes.
