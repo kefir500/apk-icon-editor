@@ -756,10 +756,10 @@ void MainWindow::enableApktool(bool enable)
     }
 }
 
-void MainWindow::askReloadApk()
+bool MainWindow::askReloadApk()
 {
     if (currentApk.isEmpty()) { // Check if any APK is currently loaded
-        return;
+        return false;
     }
 
     int result = QMessageBox::question(this, tr("Repack?"),
@@ -769,6 +769,8 @@ void MainWindow::askReloadApk()
     if (result != QMessageBox::Yes || !apk_open(currentApk)) {
         toolDialog->switch_mode();
     }
+
+    return result;
 }
 
 void MainWindow::setCurrentIcon(int id)

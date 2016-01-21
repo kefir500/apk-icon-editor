@@ -240,7 +240,7 @@ private slots:
 
     void donate();            ///< Displays donation dialog.
     void authCloud();         ///< Displays cloud authentication input dialog.
-    void askReloadApk();      ///< Displays the "Repack APK?" question dialog.
+    bool askReloadApk();      ///< Displays the "Repack APK?" question dialog.
     bool setPreviewColor();   ///< Displays background color selection dialog.
     void showEffectsDialog(); ///< Displays "Effects" dialog.
 
