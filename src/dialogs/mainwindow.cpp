@@ -1013,7 +1013,7 @@ bool MainWindow::iconSave(QString filename)
     if (filename.isEmpty()) {
         Device device = Devices::at(devices->currentGroupIndex());
         int size = device.getDpiSize(Dpi::cast(devices->currentItemIndex()));
-        filename = QString("%1-%2").arg(QFileInfo(currentApk).baseName()).arg(size);
+        filename = QString("%1-%2").arg(QFileInfo(currentApk).completeBaseName()).arg(size);
         filename = QFileDialog::getSaveFileName(this, tr("Save Icon"), filename, FILTER_GFX);
         if (filename.isEmpty()) {
             return false;
