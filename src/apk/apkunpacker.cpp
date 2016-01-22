@@ -161,6 +161,7 @@ QList<QSharedPointer<Icon> > Unpacker::getIcons(QString manifest, QString conten
     files.push_back(parse("application-icon-320:'(.+)'", manifest));
     files.push_back(parse("application-icon-480:'(.+)'", manifest));
     files.push_back(parse("application-icon-640:'(.+)'", manifest));
+    files.push_back(parse("banner='(.+)'", manifest));
     qDebug() << "Icons:" << files;
 
     // Load icons:

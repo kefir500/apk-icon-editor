@@ -40,11 +40,18 @@ public:
     /// \retval \c false on error.
     bool replace(QPixmap pixmap);
 
-    /// \brief Resizes the pixmap to square with the specified \c side.
-    /// \param side Side of the square in pixels.
+    /// \brief Resizes the pixmap to the specified \c size.
+    /// \param size Icon size.
     /// \retval \c true on success.
     /// \retval \c false on error.
-    bool resize(int side);
+    bool resize(QSize size);
+
+    /// \brief Resizes the icon to the specified \c width and \c height.
+    /// \param width  Icon width in pixels.
+    /// \param height Icon height in pixels.
+    /// \retval \c true on success.
+    /// \retval \c false on error.
+    bool resize(int width, int height);
 
     bool revert();                                       ///< Reverts the original icon (loaded from the original filename).
     bool isNull() const { return pixmap.isNull(); }      ///< Checks if the icon is \c NULL.

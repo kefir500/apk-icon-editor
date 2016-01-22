@@ -36,9 +36,15 @@ bool Icon::replace(QPixmap pixmap)
     }
 }
 
-bool Icon::resize(int side)
+bool Icon::resize(QSize size)
 {
-    return !(pixmap = pixmap.scaled(side, side, Qt::IgnoreAspectRatio, Qt::SmoothTransformation)).isNull();
+    // TODO Keep aspect ratio?
+    return !(pixmap = pixmap.scaled(size, Qt::IgnoreAspectRatio, Qt::SmoothTransformation)).isNull();
+}
+
+bool Icon::resize(int width, int height)
+{
+    return resize(QSize(width, height));
 }
 
 bool Icon::revert()

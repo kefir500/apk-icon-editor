@@ -777,8 +777,9 @@ void MainWindow::setCurrentIcon(int dpi)
 {
     if (dpi == -1) return;
     const Device DEVICE = Devices::at(devices->currentGroupIndex());
-    const int SIZE = DEVICE.getDpiSize(Dpi::cast(dpi));
-    drawArea->setRect(SIZE, SIZE);
+    const int W = DEVICE.getDpiSize(Dpi::cast(dpi)).width();
+    const int H = DEVICE.getDpiSize(Dpi::cast(dpi)).height();
+    drawArea->setRect(W, H);
     if (Icon *icon = apk->getIcon(Dpi::cast(dpi))) {
         disconnect(effects, 0, 0, 0);
         connect(effects, SIGNAL(colorActivated(bool)), icon,     SLOT(setColorize(bool)), Qt::DirectConnection);
@@ -977,14 +978,14 @@ bool MainWindow::iconOpen(QString filename)
 
     if (icon->replace(QPixmap(filename))) {
         const Device DEVICE = Devices::at(devices->currentGroupIndex());
-        const int SIZE = DEVICE.getDpiSize(Dpi::cast(devices->currentItemIndex()));
-        if (icon->width() != SIZE || icon->height() != SIZE) {
+        const QSize DPI = DEVICE.getDpiSize(Dpi::cast(devices->currentItemIndex()));
+        if (icon->width() != DPI.width() || icon->height() != DPI.height()) {
             int result = QMessageBox::warning(this, tr("Resize?"),
                                       tr("Icon you are trying to load is off-size.\nResize automatically?"),
                                       QMessageBox::Yes, QMessageBox::No, QMessageBox::Cancel);
             switch (result) {
             case QMessageBox::Yes:
-                icon->resize(SIZE);
+                icon->resize(DPI);
                 break;
             case QMessageBox::No:
                 break;
@@ -1012,8 +1013,8 @@ bool MainWindow::iconSave(QString filename)
 
     if (filename.isEmpty()) {
         Device device = Devices::at(devices->currentGroupIndex());
-        int size = device.getDpiSize(Dpi::cast(devices->currentItemIndex()));
-        filename = QString("%1-%2").arg(QFileInfo(currentApk).completeBaseName()).arg(size);
+        const QSize SIZE = device.getDpiSize(Dpi::cast(devices->currentItemIndex()));
+        filename = QString("%1-%2x%3").arg(QFileInfo(currentApk).completeBaseName()).arg(SIZE.width()).arg(SIZE.height());
         filename = QFileDialog::getSaveFileName(this, tr("Save Icon"), filename, FILTER_GFX);
         if (filename.isEmpty()) {
             return false;
@@ -1025,26 +1026,27 @@ bool MainWindow::iconSave(QString filename)
 bool MainWindow::iconScale()
 {
     const Device DEVICE = Devices::at(devices->currentGroupIndex());
-    const int SIZE = DEVICE.getDpiSize(Dpi::cast(devices->currentItemIndex()));
+    const QSize SIZE = DEVICE.getDpiSize(Dpi::cast(devices->currentItemIndex()));
     return iconResize(SIZE);
 }
 
-bool MainWindow::iconResize(int side)
+bool MainWindow::iconResize(QSize size)
 {
     if (drawArea->getIcon()->isNull()) {
         invalidDpi();
         return false;
     }
 
-    if (side == 0) {
+    if (!size.isValid()) {
+        // TODO Resize dialog for both icon sides
         bool ok;
-        side = QInputDialog::getInt(this, tr("Resize Icon"), tr("Icon side (in pixels):"), drawArea->getIcon()->width(), 1, 4096, 1, &ok);
-        if (!ok) {
-            return false;
-        }
+        int side = QInputDialog::getInt(this, tr("Resize Icon"), tr("Icon side (in pixels):"), drawArea->getIcon()->width(), 1, 4096, 1, &ok);
+        if (!ok) { return false; }
+        size.setWidth(side);
+        size.setHeight(side);
     }
     setWindowModified(true);
-    return drawArea->getIcon()->resize(side);
+    return drawArea->getIcon()->resize(size);
 }
 
 bool MainWindow::iconRevert()

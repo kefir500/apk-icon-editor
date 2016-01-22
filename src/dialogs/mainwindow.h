@@ -200,9 +200,9 @@ private slots:
     /// Displays the "Save Icon" dialog if the \c filename is not specified.
     bool iconSave(QString filename = QString());
 
-    /// Resizes the current icon to a square with the specified \c side.
-    /// \param side New side value in pixels. If zero, asks user for a value.
-    bool iconResize(int side = 0);
+    /// Resizes the current icon to the specified \c size.
+    /// Displays the "Resize Icon" dialog if the \c size is not specified.
+    bool iconResize(QSize size = QSize());
 
     /// Scales the current icon to the appropriate size.
     bool iconScale();

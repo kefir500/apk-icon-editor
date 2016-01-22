@@ -16,18 +16,18 @@
 struct Dpi
 {
     /// Constructs a size preset with the specified \c title and \c size.
-    Dpi(QString title, short size) : title(title), size(size) { }
+    Dpi(QString title, QSize size) : title(title), size(size) { }
 
     QString title; ///< Size title ("LDPI", "MDPI", etc.).
     QString info;  ///< Size additional information.
-    short size;    ///< Expected size of a square icon.
+    QSize size;    ///< Expected icon size.
 
     ///
     /// Supported icon sizes.
     /// This enumeration represents the supported icon sizes.
     ///
 
-    enum Type { LDPI, MDPI, HDPI, XHDPI, XXHDPI, XXXHDPI, COUNT };
+    enum Type { LDPI, MDPI, HDPI, XHDPI, XXHDPI, XXXHDPI, BANNER, COUNT };
 
     /// Casts the integer \c value to a corresponding DPI.
     static Dpi::Type cast(int value) { return static_cast<Dpi::Type>(value); }
@@ -50,28 +50,30 @@ public:
     /// \param xhdpi   Device XHDPI icon size.
     /// \param xxhdpi  Device XXHDPI icon size.
     /// \param xxxhdpi Device XXXHDPI icon size.
+    /// \param banner  Android TV banner size.
     Device(QString title,
            QIcon thumb,
-           short ldpi,
-           short mdpi,
-           short hdpi,
-           short xhdpi,
-           short xxhdpi,
-           short xxxhdpi);
+           short ldpi = 32,
+           short mdpi = 48,
+           short hdpi = 72,
+           short xhdpi = 96,
+           short xxhdpi = 144,
+           short xxxhdpi = 192,
+           QSize banner = QSize(320, 180));
 
     QString getTitle() const { return title; } ///< Returns the device title.
     QIcon getThumb() const { return thumb; }   ///< Returns the device thumbnail icon.
 
     QString getDpiTitle(Dpi::Type dpi) const;  ///< Returns the DPI preset title.
-    int getDpiSize(Dpi::Type dpi) const;       ///< Returns the DPI preset side.
+    QSize getDpiSize(Dpi::Type dpi) const;     ///< Returns the DPI preset size.
 
-    void setSizeLdpi(short size) { sizes[Dpi::LDPI].size = size; }           ///< Sets the LDPI preset size to \c size.
-    void setSizeMdpi(short size) { sizes[Dpi::MDPI].size = size; }           ///< Sets the MDPI preset size to \c size.
-    void setSizeHdpi(short size) { sizes[Dpi::HDPI].size = size; }           ///< Sets the HDPI preset size to \c size.
-    void setSizeXhdpi(short size) { sizes[Dpi::XHDPI].size = size; }         ///< Sets the XHDPI preset size to \c size.
-    void setSizeXxhdpi(short size) { sizes[Dpi::XXHDPI].size = size; }       ///< Sets the XXHDPI preset size to \c size.
-    void setSizeXxxhdpi(short size) { sizes[Dpi::XXXHDPI].size = size; }     ///< Sets the XXXHDPI preset size to \c size.
-    void setSizeDpi(Dpi::Type dpi, short size) { sizes[dpi].size = size; }   ///< Sets the preset size for \c dpi DPI to \c size.
+    void setSizeLdpi(QSize size) { sizes[Dpi::LDPI].size = size; }           ///< Sets the LDPI preset size to \c size.
+    void setSizeMdpi(QSize size) { sizes[Dpi::MDPI].size = size; }           ///< Sets the MDPI preset size to \c size.
+    void setSizeHdpi(QSize size) { sizes[Dpi::HDPI].size = size; }           ///< Sets the HDPI preset size to \c size.
+    void setSizeXhdpi(QSize size) { sizes[Dpi::XHDPI].size = size; }         ///< Sets the XHDPI preset size to \c size.
+    void setSizeXxhdpi(QSize size) { sizes[Dpi::XXHDPI].size = size; }       ///< Sets the XXHDPI preset size to \c size.
+    void setSizeXxxhdpi(QSize size) { sizes[Dpi::XXXHDPI].size = size; }     ///< Sets the XXXHDPI preset size to \c size.
+    void setSizeDpi(Dpi::Type dpi, QSize size) { sizes[dpi].size = size; }   ///< Sets the preset size for \c dpi DPI to \c size.
 
     void setHintLdpi(QString hint) { sizes[Dpi::LDPI].info = hint; }         ///< Sets the additional information for LDPI to \c hint.
     void setHintMdpi(QString hint) { sizes[Dpi::MDPI].info = hint; }         ///< Sets the additional information for MDPI to \c hint.
