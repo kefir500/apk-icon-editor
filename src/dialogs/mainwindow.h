@@ -194,21 +194,21 @@ private slots:
 
     /// Loads icon from the file with the given \c filename.
     /// Displays the "Open Icon" dialog if the \c filename is not specified.
-    bool iconOpen(QString filename = QString());
+    bool icon_open(QString filename = QString());
 
     /// Saves the current icon to the file with the specified \c filename.
     /// Displays the "Save Icon" dialog if the \c filename is not specified.
-    bool iconSave(QString filename = QString());
+    bool icon_save(QString filename = QString());
 
     /// Resizes the current icon to the specified \c size.
     /// Displays the "Resize Icon" dialog if the \c size is not specified.
-    bool iconResize(QSize size = QSize());
+    bool icon_resize(QSize size = QSize());
 
     /// Scales the current icon to the appropriate size.
-    bool iconScale();
+    bool icon_scale();
 
     /// Reverts the original APK icon.
-    bool iconRevert();
+    bool icon_revert();
 
     // Recent:
 

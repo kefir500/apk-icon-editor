@@ -426,11 +426,11 @@ void MainWindow::init_slots()
     connect(actApkExplore, SIGNAL(triggered()), this, SLOT(apk_explore()));
     connect(actExit, SIGNAL(triggered()), this, SLOT(close()));
     connect(actRecentClear, SIGNAL(triggered()), this, SLOT(recent_clear()));
-    connect(actIconOpen, SIGNAL(triggered()), this, SLOT(iconOpen()));
-    connect(actIconSave, SIGNAL(triggered()), this, SLOT(iconSave()));
-    connect(actIconScale, SIGNAL(triggered()), this, SLOT(iconScale()));
-    connect(actIconResize, SIGNAL(triggered()), this, SLOT(iconResize()));
-    connect(actIconRevert, SIGNAL(triggered()), this, SLOT(iconRevert()));
+    connect(actIconOpen, SIGNAL(triggered()), this, SLOT(icon_open()));
+    connect(actIconSave, SIGNAL(triggered()), this, SLOT(icon_save()));
+    connect(actIconScale, SIGNAL(triggered()), this, SLOT(icon_scale()));
+    connect(actIconResize, SIGNAL(triggered()), this, SLOT(icon_resize()));
+    connect(actIconRevert, SIGNAL(triggered()), this, SLOT(icon_revert()));
     connect(actIconEffect, SIGNAL(triggered()), this, SLOT(showEffectsDialog()));
     connect(actIconBack, SIGNAL(triggered()), this, SLOT(setPreviewColor()));
     connect(actPacking, SIGNAL(triggered()), toolDialog, SLOT(open()));
@@ -955,9 +955,11 @@ void MainWindow::apkUnpacked(Apk::File *apk)
     setWindowModified(false);
 }
 
-bool MainWindow::iconOpen(QString filename)
+bool MainWindow::icon_open(QString filename)
 {
-    if (drawArea->getIcon()->isNull()) {
+    Icon *icon = drawArea->getIcon();
+
+    if (icon->isNull()) {
         invalidDpi();
         return false;
     }
@@ -973,7 +975,6 @@ bool MainWindow::iconOpen(QString filename)
         }
     }
 
-    Icon *icon = drawArea->getIcon();
     QPixmap backup = icon->getPixmap();
 
     if (icon->replace(QPixmap(filename))) {
@@ -1004,9 +1005,11 @@ bool MainWindow::iconOpen(QString filename)
     }
 }
 
-bool MainWindow::iconSave(QString filename)
+bool MainWindow::icon_save(QString filename)
 {
-    if (drawArea->getIcon()->isNull()) {
+    Icon *icon = drawArea->getIcon();
+
+    if (icon->isNull()) {
         invalidDpi();
         return false;
     }
@@ -1020,26 +1023,28 @@ bool MainWindow::iconSave(QString filename)
             return false;
         }
     }
-    return drawArea->getIcon()->save(filename);
+    return icon->save(filename);
 }
 
-bool MainWindow::iconScale()
+bool MainWindow::icon_scale()
 {
     const Device DEVICE = Devices::at(devices->currentGroupIndex());
     const QSize SIZE = DEVICE.getDpiSize(Dpi::cast(devices->currentItemIndex()));
-    return iconResize(SIZE);
+    return icon_resize(SIZE);
 }
 
-bool MainWindow::iconResize(QSize size)
+bool MainWindow::icon_resize(QSize size)
 {
-    if (drawArea->getIcon()->isNull()) {
+    Icon *icon = drawArea->getIcon();
+
+    if (icon->isNull()) {
         invalidDpi();
         return false;
     }
 
     if (!size.isValid()) {
-        const int WIDTH = drawArea->getIcon()->width();
-        const int HEIGHT = drawArea->getIcon()->height();
+        const int WIDTH = icon->width();
+        const int HEIGHT = icon->height();
         size = Dialogs::getSize(tr("Resize Icon"), WIDTH, HEIGHT);
         if (!size.isValid()) {
             return false;
@@ -1047,16 +1052,19 @@ bool MainWindow::iconResize(QSize size)
     }
 
     setWindowModified(true);
-    return drawArea->getIcon()->resize(size);
+    return icon->resize(size);
 }
 
-bool MainWindow::iconRevert()
+bool MainWindow::icon_revert()
 {
-    if (drawArea->getIcon()->isNull()) {
+    Icon *icon = drawArea->getIcon();
+
+    if (icon->isNull()) {
         invalidDpi();
         return false;
     }
-    bool result = drawArea->getIcon()->revert();
+
+    bool result = icon->revert();
     drawArea->repaint();
     return result;
 }
@@ -1408,7 +1416,7 @@ void MainWindow::dropEvent(QDropEvent *event)
 
         QString ext = QFileInfo(filename).suffix().toLower();
         if (EXT_GFX.contains(ext)) {
-            iconOpen(filename);
+            icon_open(filename);
         }
         else {
             apk_open(filename);
