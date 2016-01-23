@@ -21,11 +21,43 @@
     #include <QtWinExtras/QtWinExtras>
 #endif
 
-namespace Dialogs {
+///
+/// This namespace incorporates the modal calls for input dialogs.
+///
 
+namespace Dialogs {
+    /// Opens the modal string input dialog.
+    /// \param text   Dialog informative text.
+    /// \param title  Dialog window title.
+    /// \param icon   Dialog icon.
+    /// \param parent Dialog parent.
+    /// \return String entered by user.
+    QString getString(QString text,
+                      QString title = QString(),
+                      QPixmap icon = QPixmap(),
+                      QWidget *parent = 0);
+
+    /// Opens the modal password input dialog.
+    /// \param text   Dialog informative text.
+    /// \param title  Dialog window title.
+    /// \param icon   Dialog icon.
+    /// \param parent Dialog parent.
+    /// \return String entered by user.
+    QString getPassword(QString text,
+                        QString title = QString(),
+                        QPixmap icon = QPixmap(),
+                        QWidget *parent = 0);
+
+    /// Opens the modal size input dialog.
+    /// \param title  Dialog window title.
+    /// \param width  Default width value.
+    /// \param height Default height value.
+    /// \param parent Dialog parent.
+    /// \return Size entered by user.
     QSize getSize(QString title = QString(),
                   int width = 1,
-                  int height = 1);
+                  int height = 1,
+                  QWidget *parent = 0);
 }
 
 /// \brief This dialog receives user input.
@@ -44,23 +76,14 @@ private:
     QDialogButtonBox *buttons;      ///< Dialog buttons.
 
 public:
-    /// Static function returning user string input.
-    /// \param[in] text Dialog text.
-    /// \param[in] title Dialog window title.
-    /// \param[in] password Password mode.
-    /// \param[in] _icon Dialog pixmap.
-    /// \param[in] parent Parent widget.
-    static QString getString(QString text,
-                             QString title = QString(),
-                             bool password = false,
-                             QPixmap icon = QPixmap(),
-                             QWidget *parent = 0);
-
     InputDialog(QString text,
                 QString title = QString(),
                 bool password = false,
                 QPixmap icon = QPixmap(),
                 QWidget *parent = 0);
+
+    /// Returns the string entered by user.
+    QString getString() const { return input->text(); }
 
 private slots:
     /// Paste text from clipboard to #input box.

@@ -8,9 +8,21 @@
 #include <QFile>
 #include <QUrl>
 
-QSize Dialogs::getSize(QString title, int width, int height)
+QString Dialogs::getString(QString text, QString title, QPixmap icon, QWidget *parent)
 {
-    ResizeDialog dialog(title, width, height);
+    InputDialog dialog(text, title, false, icon, parent);
+    return dialog.exec() ? dialog.getString() : QString();
+}
+
+QString Dialogs::getPassword(QString text, QString title, QPixmap icon, QWidget *parent)
+{
+    InputDialog dialog(text, title, true, icon, parent);
+    return dialog.exec() ? dialog.getString() : QString();
+}
+
+QSize Dialogs::getSize(QString title, int width, int height, QWidget *parent)
+{
+    ResizeDialog dialog(title, width, height, parent);
     bool result = dialog.exec();
     const int WIDTH = dialog.getWidth();
     const int HEIGHT = dialog.getHeight();
@@ -50,17 +62,6 @@ InputDialog::InputDialog(QString text, QString title, bool password, QPixmap ico
     connect(this->input, SIGNAL(textChanged(QString)), this, SLOT(checkInput(QString)));
     connect(this->buttons, SIGNAL(accepted()), this, SLOT(accept()));
     connect(this->buttons, SIGNAL(rejected()), this, SLOT(reject()));
-}
-
-QString InputDialog::getString(QString text, QString title, bool password, QPixmap icon, QWidget *parent)
-{
-    InputDialog dialog(text, title, password, icon, parent);
-    if (dialog.exec() == QDialog::Accepted) {
-        return dialog.input->text();
-    }
-    else {
-        return QString();
-    }
 }
 
 void InputDialog::paste()

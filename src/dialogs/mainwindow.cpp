@@ -1045,7 +1045,7 @@ bool MainWindow::icon_resize(QSize size)
     if (!size.isValid()) {
         const int WIDTH = icon->width();
         const int HEIGHT = icon->height();
-        size = Dialogs::getSize(tr("Resize Icon"), WIDTH, HEIGHT);
+        size = Dialogs::getSize(tr("Resize Icon"), WIDTH, HEIGHT, this);
         if (!size.isValid()) {
             return false;
         }
@@ -1207,13 +1207,13 @@ bool MainWindow::apk_save(QString filename)
     if (USING_KEYSTORE) {
         const QPixmap PIXMAP_KEY(":/gfx/actions/key.png");
         if (pass_store.isEmpty()) {
-            pass_store = InputDialog::getString(tr("Enter the KeyStore password:"), "", true, PIXMAP_KEY, this);
+            pass_store = Dialogs::getPassword(tr("Enter the KeyStore password:"), "", PIXMAP_KEY, this);
         }
         if (alias.isEmpty()) {
-            alias = InputDialog::getString(tr("Enter the alias:"), "", false, PIXMAP_KEY, this);
+            alias = Dialogs::getString(tr("Enter the alias:"), "", PIXMAP_KEY, this);
         }
         if (pass_alias.isEmpty()) {
-            pass_alias = InputDialog::getString(tr("Enter the alias password:"), "", true, PIXMAP_KEY, this);
+            pass_alias = Dialogs::getPassword(tr("Enter the alias password:"), "", PIXMAP_KEY, this);
         }
     }
 
@@ -1337,9 +1337,9 @@ void MainWindow::authCloud()
 {
     Cloud *cloud = dynamic_cast<Cloud*>(sender());
     QApplication::alert(this);
-    QString code = InputDialog::getString(tr("Allow access to %1 in your browser and paste the provided code here:").arg(cloud->getTitle()),
-                                          tr("Authorization"),
-                                          true, cloud->getIcon(), this);
+    QString code = Dialogs::getPassword(tr("Allow access to %1 in your browser and paste the provided code here:").arg(cloud->getTitle()),
+                                        tr("Authorization"),
+                                        cloud->getIcon(), this);
     if (!code.isEmpty()) {
         cloud->login(code);
         uploadDialog->activateWindow();
