@@ -174,9 +174,6 @@ public:
 private slots:
     void copy() const; ///< Copy wallet ID to clipboard.
     void open() const; ///< Open wallet link in browser.
-
-private:
-    unsigned int wallets;
 };
 
 #endif // DIALOGS_H

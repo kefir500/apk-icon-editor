@@ -287,7 +287,6 @@ Donate::Donate(QWidget *parent) : QDialog(parent)
 Wallets::Wallets(QWidget *parent) : QWidget(parent)
 {
     new QGridLayout(this);
-    wallets = 0;
 }
 
 void Wallets::add(QString title, QString wallet, QString link)
@@ -312,12 +311,11 @@ void Wallets::add(QString title, QString wallet, QString link)
     btn_link->setEnabled(!link.isEmpty());
 
     QGridLayout *grid = qobject_cast<QGridLayout*>(layout());
-    grid->addWidget(label_title,  wallets, 0, Qt::AlignRight);
-    grid->addWidget(input_wallet, wallets, 1);
-    grid->addWidget(btn_copy,     wallets, 2);
-    grid->addWidget(btn_link,     wallets, 3);
-
-    ++wallets;
+    const int ROW = grid->rowCount();
+    grid->addWidget(label_title,  ROW, 0, Qt::AlignRight);
+    grid->addWidget(input_wallet, ROW, 1);
+    grid->addWidget(btn_copy,     ROW, 2);
+    grid->addWidget(btn_link,     ROW, 3);
 
     connect(btn_copy, SIGNAL(clicked()), this, SLOT(copy()));
     connect(btn_link, SIGNAL(clicked()), this, SLOT(open()));
