@@ -1,6 +1,6 @@
 ///
 /// \file
-/// This file declares global constants.
+/// This file declares global constants and functions.
 ///
 
 #ifndef GLOBALS_H
@@ -9,11 +9,19 @@
 #include <QApplication>
 #include <QStandardPaths>
 
+///
+/// This namespace incorporates the GUI-related constants and functions.
+///
+
 namespace Gui {
+
+    /// This namespace contains the functions related to the screen properties.
 
     namespace Screen {
         int dpi();              ///< Returns the current screen DPI value.
     }
+
+    /// This namespace contains the constants and functions related to the main window.
 
     namespace Window {
         const int WIDTH  = 800; ///< Initial main window width.
@@ -23,12 +31,20 @@ namespace Gui {
     }
 }
 
+///
+/// This namespace incorporates the constants and functions related to the application and system paths.
+///
+
 namespace Path {
 
+    /// This namespace contains the application executable paths.
+
     namespace App {
-        QString dir();          ///< Returns the directory containing the application executable.
-        QString file();         ///< Returns the file path of the application executable.
+        QString dir();  ///< Returns the directory containing the application executable.
+        QString file(); ///< Returns the file path of the application executable.
     }
+
+    /// This namespace contains the log paths.
 
     namespace Log {
         /// Full path to the log directory.
@@ -38,6 +54,10 @@ namespace Path {
         const QString FILE = DIR + "apk-icon-editor.log";
     }
 }
+
+///
+/// This namespace contains the URL constants.
+///
 
 namespace Url {
     const QString WEBSITE   = "http://kefir500.github.io/apk-icon-editor/";
