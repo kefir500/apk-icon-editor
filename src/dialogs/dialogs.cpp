@@ -2,12 +2,20 @@
 #include "globals.h"
 #include <QApplication>
 #include <QBoxLayout>
-#include <QToolButton>
 #include <QClipboard>
 #include <QTextStream>
 #include <QDesktopServices>
 #include <QFile>
 #include <QUrl>
+
+QSize Dialogs::getSize(QString title, int width, int height)
+{
+    ResizeDialog dialog(title, width, height);
+    bool result = dialog.exec();
+    const int WIDTH = dialog.getWidth();
+    const int HEIGHT = dialog.getHeight();
+    return result ? QSize(WIDTH, HEIGHT) : QSize();
+}
 
 // Input Dialog
 
@@ -173,6 +181,44 @@ void ProgressDialog::reset()
         taskProgress->reset();
     }
 #endif
+}
+
+// ResizeDialog
+
+ResizeDialog::ResizeDialog(QString title, int width, int height, QWidget *parent) : QDialog(parent)
+{
+    setWindowTitle(title);
+    setModal(true);
+    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
+
+    QGridLayout *grid = new QGridLayout(this);
+
+    QLabel *wLabel = new QLabel(tr("Width:"), this);
+    QLabel *hLabel = new QLabel(tr("Height:"), this);
+    wInput = new QSpinBox(this);
+    hInput = new QSpinBox(this);
+    btnLock = new QToolButton(this);
+    QDialogButtonBox *buttons = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, this);
+
+    wInput->setRange(1, 4096);
+    hInput->setRange(1, 4096);
+    wInput->setValue(width);
+    hInput->setValue(height);
+    btnLock->setIcon(QIcon(":/gfx/actions/lock.png"));
+    btnLock->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    btnLock->setCheckable(true);
+
+    grid->addWidget(wLabel, 0, 0);
+    grid->addWidget(wInput, 0, 1);
+    grid->addWidget(hLabel, 1, 0);
+    grid->addWidget(hInput, 1, 1);
+    grid->addWidget(btnLock, 0, 2, 2, 1);
+    grid->addWidget(buttons, 4, 1, 2, 1);
+
+    connect(wInput, SIGNAL(valueChanged(int)), this, SLOT(widthChanged(int)));
+    connect(hInput, SIGNAL(valueChanged(int)), this, SLOT(heightChanged(int)));
+    connect(buttons, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttons, SIGNAL(rejected()), this, SLOT(reject()));
 }
 
 // Donate Dialog

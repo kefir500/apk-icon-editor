@@ -1038,13 +1038,14 @@ bool MainWindow::iconResize(QSize size)
     }
 
     if (!size.isValid()) {
-        // TODO Resize dialog for both icon sides
-        bool ok;
-        int side = QInputDialog::getInt(this, tr("Resize Icon"), tr("Icon side (in pixels):"), drawArea->getIcon()->width(), 1, 4096, 1, &ok);
-        if (!ok) { return false; }
-        size.setWidth(side);
-        size.setHeight(side);
+        const int WIDTH = drawArea->getIcon()->width();
+        const int HEIGHT = drawArea->getIcon()->height();
+        size = Dialogs::getSize(tr("Resize Icon"), WIDTH, HEIGHT);
+        if (!size.isValid()) {
+            return false;
+        }
     }
+
     setWindowModified(true);
     return drawArea->getIcon()->resize(size);
 }

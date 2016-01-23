@@ -8,8 +8,10 @@
 #include <QLineEdit>
 #include <QProgressBar>
 #include <QLabel>
+#include <QSpinBox>
 #include <QDialogButtonBox>
 #include <QPushButton>
+#include <QToolButton>
 
 #if defined(Q_OS_WIN) && (QT_VERSION >= QT_VERSION_CHECK(5, 2, 0))
     #define WINEXTRAS
@@ -18,6 +20,13 @@
 #ifdef WINEXTRAS
     #include <QtWinExtras/QtWinExtras>
 #endif
+
+namespace Dialogs {
+
+    QSize getSize(QString title = QString(),
+                  int width = 1,
+                  int height = 1);
+}
 
 /// \brief This dialog receives user input.
 ///
@@ -60,7 +69,34 @@ private slots:
     /// Check text entered by user.
     /// \param text If is empty, "OK" button is replaced by "Paste" button.
     void checkInput(QString text);
+};
 
+class ResizeDialog : public QDialog
+{
+    Q_OBJECT
+
+public:
+    ResizeDialog(QString title = QString(),
+                 int width = 1,
+                 int height = 1,
+                 QWidget *parent = 0);
+
+    int getWidth() const { return wInput->value(); }
+    int getHeight() const { return hInput->value(); }
+
+
+public slots:
+    void setWidth(int width) { wInput->setValue(width); }
+    void setHeight(int height) { hInput->setValue(height); }
+
+private slots:
+    void widthChanged(int width) { if (btnLock->isChecked()) hInput->setValue(width); }
+    void heightChanged(int height) { if (btnLock->isChecked()) wInput->setValue(height); }
+
+private:
+    QSpinBox *wInput;
+    QSpinBox *hInput;
+    QToolButton *btnLock;
 };
 
 class ProgressDialog : public QDialog
@@ -94,7 +130,6 @@ public slots:
     /// \param[in] percentage Loading progress (0-100).
     /// \param[in] text Additional loading text.
     void setProgress(short percentage, QString text = QString());
-
 };
 
 class Donate : public QDialog
