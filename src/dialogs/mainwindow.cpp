@@ -1310,7 +1310,7 @@ void MainWindow::invalidDpi()
             tr("This APK does not support current DPI."));
 }
 
-void MainWindow::browseTranslate()
+void MainWindow::browseTranslate() const
 {
     QDesktopServices::openUrl(Url::TRANSLATE);
 }
