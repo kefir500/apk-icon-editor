@@ -300,12 +300,12 @@ void Wallets::add(QString title, QString wallet, QString link)
     input_wallet->setCursor(Qt::IBeamCursor);
 
     QToolButton *btn_copy = new QToolButton(this);
-    btn_copy->setProperty("wallet", wallet);
+    btn_copy->setProperty("wallet_id", wallet);
     btn_copy->setIcon(QIcon(":/gfx/actions/copy.png"));
     btn_copy->setToolTip(QApplication::translate("Donate", "Copy to Clipboard"));
 
     QToolButton *btn_link = new QToolButton(this);
-    btn_link->setProperty("link", link);
+    btn_link->setProperty("wallet_link", link);
     btn_link->setIcon(QIcon(":/gfx/actions/coins.png"));
     btn_link->setToolTip(QApplication::translate("MainWindow", "Donate"));
     btn_link->setEnabled(!link.isEmpty());
@@ -323,12 +323,12 @@ void Wallets::add(QString title, QString wallet, QString link)
 
 void Wallets::copy() const
 {
-    const QString WALLET = sender()->property("id").toString();
+    const QString WALLET = sender()->property("wallet_id").toString();
     QApplication::clipboard()->setText(WALLET);
 }
 
 void Wallets::open() const
 {
-    const QString LINK = sender()->property("wallet").toString();
+    const QString LINK = sender()->property("wallet_link").toString();
     QDesktopServices::openUrl(LINK);
 }
