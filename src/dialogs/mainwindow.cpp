@@ -462,8 +462,8 @@ void MainWindow::init_slots()
     connect(apkManager, SIGNAL(loading(short, QString)), loadingDialog, SLOT(setProgress(short, QString)));
     connect(apkManager, SIGNAL(error(QString, QString)), this, SLOT(error(QString, QString)));
     connect(apkManager, SIGNAL(error(QString, QString)), loadingDialog, SLOT(accept()));
-    connect(apkManager, SIGNAL(packed(Apk::File*, QString, bool)), this, SLOT(apkPacked(Apk::File*, QString, bool)));
-    connect(apkManager, SIGNAL(unpacked(Apk::File*)), this, SLOT(apkUnpacked(Apk::File*)));
+    connect(apkManager, SIGNAL(packed(Apk::File*, QString, bool)), this, SLOT(apk_packed(Apk::File*, QString, bool)));
+    connect(apkManager, SIGNAL(unpacked(Apk::File*)), this, SLOT(apk_unpacked(Apk::File*)));
     connect(keyManager, SIGNAL(success(QString, QString)), this, SLOT(success(QString, QString)));
     connect(keyManager, SIGNAL(warning(QString, QString)), this, SLOT(warning(QString, QString)));
     connect(keyManager, SIGNAL(error(QString, QString)), this, SLOT(error(QString, QString)));
@@ -827,7 +827,7 @@ void MainWindow::upload(Cloud *uploader, QString filename)
     loop.exec(); // Block execution until cloud upload is finished.
 }
 
-void MainWindow::apkPacked(Apk::File *apk, QString text, bool isSuccess)
+void MainWindow::apk_packed(Apk::File *apk, QString text, bool isSuccess)
 {
     loadingDialog->accept();
     const QString FILENAME = apk->getFilePath();
@@ -857,7 +857,7 @@ void MainWindow::apkPacked(Apk::File *apk, QString text, bool isSuccess)
     }
 }
 
-void MainWindow::apkUnpacked(Apk::File *apk)
+void MainWindow::apk_unpacked(Apk::File *apk)
 {
     this->apk = apk;
     loadingDialog->accept();

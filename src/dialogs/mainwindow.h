@@ -179,11 +179,11 @@ private slots:
     /// \param apk       Object representing the packed APK.
     /// \param text      Additional message text.
     /// \param isSuccess Contains \c false if the APK is packed with warnings.
-    void apkPacked(Apk::File *apk, QString text = QString(), bool isSuccess = true);
+    void apk_packed(Apk::File *apk, QString text = QString(), bool isSuccess = true);
 
     /// Handles the unpacked APK.
     /// \param apk Object representing the unpacked APK.
-    void apkUnpacked(Apk::File *apk);
+    void apk_unpacked(Apk::File *apk);
 
     // Settings:
 
