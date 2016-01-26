@@ -48,7 +48,7 @@ protected:
     virtual void startUpload() = 0;         ///< Upload file from #filename to cloud storage. \warning Abstract method.
 
 public:
-    /// Login using \c code provided by the cloud storage.
+    /// Log in using the \c code provided by the cloud storage.
     void login(QString code);
 
     /// Checks if user is logged in, then uploads the file to the cloud storage.

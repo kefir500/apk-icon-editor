@@ -40,7 +40,7 @@ public slots:
 
     // APK:
 
-    /// Opens APK located with the specified \c filename.
+    /// Opens APK with the specified \c filename.
     /// Displays the "Open APK" dialog if the \c filename is not specified.
     bool apk_open(QString filename = QString());
 

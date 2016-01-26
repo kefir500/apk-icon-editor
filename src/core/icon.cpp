@@ -38,7 +38,7 @@ bool Icon::replace(QPixmap pixmap)
 
 bool Icon::resize(QSize size)
 {
-    // TODO Keep aspect ratio?
+    // TODO Option to keep aspect ratio.
     return !(pixmap = pixmap.scaled(size, Qt::IgnoreAspectRatio, Qt::SmoothTransformation)).isNull();
 }
 
