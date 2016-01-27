@@ -38,6 +38,7 @@ InputDialog::InputDialog(QString text, QString title, bool password, QPixmap ico
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
     QVBoxLayout *layout = new QVBoxLayout(this);
+    layout->setSizeConstraint(QLayout::SetFixedSize);
 
     this->icon = new QLabel(this);
     this->label = new QLabel(this);
