@@ -194,6 +194,7 @@ ResizeDialog::ResizeDialog(QString title, int width, int height, QWidget *parent
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
     QGridLayout *grid = new QGridLayout(this);
+    grid->setSizeConstraint(QLayout::SetFixedSize);
 
     QLabel *wLabel = new QLabel(tr("Width:"), this);
     QLabel *hLabel = new QLabel(tr("Height:"), this);
