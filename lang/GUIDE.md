@@ -24,9 +24,9 @@ The only valid notations are `%1`, `%2` and so on.
 Sometimes you will meet the `&` character.
 This character converts the following letter to a shortcut key, for example:
 
-- `&File`     – "F" keyboard key will open the "File" menu;
-- `&Settings` – "S" keyboard key will open the "Settings" dialog;
-- `E&xit`     – "X" keyboard key will exit the application.
+- `&File`     – <kbd>F</kbd> keyboard key will open the "File" menu;
+- `&Settings` – <kbd>S</kbd> keyboard key will open the "Settings" dialog;
+- `E&xit`     – <kbd>X</kbd> keyboard key will exit the application.
 
 *Defining a shortcut key is up to you*, though there are some standards for any language.
 
