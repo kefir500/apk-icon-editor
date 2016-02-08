@@ -134,7 +134,7 @@ bool Packer::zip(QString contents, QString temp, short ratio) const
         return true;
     }
     else {
-        emit error(tr("%1 Error").arg("QuaZIP"));
+        emit error(Apk::ERROR.arg("QuaZIP"));
         return false;
     }
 }
@@ -148,11 +148,11 @@ bool Packer::zip(QString contents, QString temp, QString frameworks) const
         if (isJavaInstalled()) {
             qDebug() << "Error starting Apktool";
             qDebug() << "Error:" << p.errorString();
-            emit error(tr("Error starting <b>%1</b>").arg("Apktool"));
+            emit error(Apk::ERRORSTART.arg("Apktool"));
             return false;
         }
         else {
-            emit error(tr("\"Apktool\" requires Java Runtime Environment.") + "<br>" + Apk::GETJAVA);
+            emit error(Apk::NOJAVA + "<br>" + Apk::GETJAVA);
             return false;
         }
     }
@@ -163,7 +163,7 @@ bool Packer::zip(QString contents, QString temp, QString frameworks) const
     }
     else {
         qDebug() << p.readAllStandardError().replace("\r\n", "\n");
-        emit error(tr("%1 Error").arg("Apktool"));
+        emit error(Apk::ERROR.arg("Apktool"));
         return false;
     }
 }

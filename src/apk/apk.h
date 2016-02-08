@@ -27,11 +27,14 @@ namespace Apk {
         QString filename;
     };
 
+    const QString ERROR = QT_TRANSLATE_NOOP("Apk", "%1 Error");
+    const QString ERRORSTART = QT_TRANSLATE_NOOP("Apk", "Error starting <b>%1</b>");
+    const QString NOJAVA = QT_TRANSLATE_NOOP("Apk", "\"Apktool\" requires Java Runtime Environment.");
     const QString GETJAVA =
           QString("<a href=\"%1\">%2</a> %3.").arg(
                   Url::JRE,
-                  QT_TR_NOOP("Download"),
-                  QT_TR_NOOP("(check the PATH variable if JRE is already installed)"));
+                  QT_TRANSLATE_NOOP("Apk", "Download"),
+                  QT_TRANSLATE_NOOP("Apk", "(check the PATH variable if JRE is already installed)"));
 }
 
 #endif // APK_H

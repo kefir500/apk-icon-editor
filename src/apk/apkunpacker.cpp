@@ -78,7 +78,7 @@ bool Unpacker::unzip(QString filename, QString destination)
         return true;
     }
     else {
-        emit error(tr("Error unpacking APK."));
+        emit error(Apk::ERROR.arg("QuaZIP"));
         return false;
     }
 }
@@ -94,11 +94,11 @@ bool Unpacker::unzip(QString filename, QString destination, QString frameworks, 
         if (isJavaInstalled()) {
             qDebug() << "Error starting Apktool";
             qDebug() << "Error:" << p.errorString();
-            emit error(tr("Error starting <b>%1</b>").arg("Apktool"));
+            emit error(Apk::ERRORSTART.arg("Apktool"));
             return false;
         }
         else {
-            emit error(tr("\"Apktool\" requires Java Runtime Environment.") + "<br>" + Apk::GETJAVA);
+            emit error(Apk::NOJAVA + "<br>" + Apk::GETJAVA);
             return false;
         }
     }
@@ -109,7 +109,7 @@ bool Unpacker::unzip(QString filename, QString destination, QString frameworks, 
     }
     else {
         qDebug() << p.readAllStandardError().replace("\r\n", "\n");
-        emit error(tr("%1 Error").arg("Apktool"));
+        emit error(Apk::ERROR.arg("Apktool"));
         return false;
     }
 }
@@ -123,7 +123,7 @@ QString Unpacker::getManifest(QString filename) const
     if (!p.waitForStarted(-1)) {
         qDebug() << qPrintable("Could not start aapt");
         qDebug() << "Error:" << p.errorString();
-        emit error(tr("Error starting <b>%1</b>").arg("aapt"));
+        emit error(Apk::ERRORSTART.arg("aapt"));
         return QString();
     }
     p.waitForFinished(-1);
