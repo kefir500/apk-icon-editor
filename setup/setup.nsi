@@ -119,6 +119,7 @@ SectionEnd
 
 Section "-un.Uninstall"
 	Delete "${EXE}"
+	Delete "$INSTDIR\apk-icon-editor.visualelementsmanifest.xml"
 	Delete "$INSTDIR\authors.txt"
 	Delete "$INSTDIR\faq.txt"
 	Delete "$INSTDIR\versions.txt"
