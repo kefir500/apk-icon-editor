@@ -777,7 +777,7 @@ bool MainWindow::askReloadApk()
 
 void MainWindow::setCurrentIcon(int dpi)
 {
-    if (dpi == -1) return;
+    if (!apk || dpi == -1) return;
     const Device DEVICE = Devices::at(devices->currentGroupIndex());
     const int W = DEVICE.getDpiSize(Dpi::cast(dpi)).width();
     const int H = DEVICE.getDpiSize(Dpi::cast(dpi)).height();
