@@ -68,7 +68,7 @@ bool Packer::pack(Apk::File *apk, QString temp)
 
         isSigned = apk->getKeystore()
         ? sign(temp, apk->getFileKeystore(), apk->getAlias(), apk->getPassKeystore(), apk->getPassAlias())
-        : isSigned = sign(temp, apk->getFilePem(), apk->getFilePk8());
+        : sign(temp, apk->getFilePem(), apk->getFilePk8());
     }
     else {
         isSigned = true;
