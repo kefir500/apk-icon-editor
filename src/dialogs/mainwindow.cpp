@@ -867,12 +867,12 @@ void MainWindow::apk_unpacked(Apk::File *apk)
 
     // Automatically select DPI from the list:
 
-    const int ID = devices->currentItemIndex();
-    if (ID != -1
-        && apk->getIcon(Dpi::cast(ID))
-        && !apk->getIcon(Dpi::cast(ID))->isNull())
-    {
-        devices->setCurrentItem(ID);
+    devices->setCurrentItem(0);
+
+    const int LAST = devices->currentItemIndex();
+    const Icon *ICON = apk->getIcon(Dpi::cast(LAST));
+    if (LAST != -1 && ICON && !ICON->isNull()) {
+        devices->setCurrentItem(LAST);
     }
     else {
         for (short i = Dpi::LDPI; i < Dpi::COUNT; ++i) {
