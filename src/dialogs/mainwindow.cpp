@@ -1159,7 +1159,7 @@ bool MainWindow::apk_open(QString filename)
 
     const QString DEST = Settings::get_temp() + "/apk-icon-editor/";
     const bool APKTOOL = Settings::get_use_apktool();
-    const bool SMALI = Settings::get_use_apktool();
+    const bool SMALI = Settings::get_smali();
     apkManager->unpack(filename, DEST, APKTOOL, SMALI);
 
     return true;
