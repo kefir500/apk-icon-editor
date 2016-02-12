@@ -171,6 +171,13 @@ QList<QSharedPointer<Icon> > Unpacker::getIcons(QString manifest, QString conten
     for (short i = Dpi::LDPI; i < Dpi::COUNT; ++i) {
 
         QString filename = files[i];
+        if (!QFile::exists(contents + "/" + files[i])) {
+            // Add "-v4" qualifier to handle Apktool behaviour:
+            const QString V4 = files[i].section('/', 0, 1) + "-v4/" + files[i].section('/', 2);
+            if (QFile::exists(contents + "/" + V4)) {
+                filename = V4;
+            }
+        }
         if (filename.isEmpty()) {
             // Create dummy entry
             icons.push_back(QSharedPointer<Icon>(new Icon));
