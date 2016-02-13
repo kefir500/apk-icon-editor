@@ -28,10 +28,23 @@ include(dialogs/dialogs.pri)
 INCLUDEPATH += $$PWD/../lib/include
 INCLUDEPATH += $$[QT_INSTALL_HEADERS]/QtZlib
 
+defineTest(deploy) {
+    DIRS = $$1
+    for(DIR, DIRS) {
+        SRC = $$PWD\\..\\deploy\\$$DIR
+        DST = $$DESTDIR
+        win32:SRC ~= s,/,\\,g
+        win32:DST ~= s,/,\\,g
+        QMAKE_POST_LINK += $$QMAKE_COPY_DIR $$quote($$SRC) $$quote($$DST) $$escape_expand(\\n\\t)
+    }
+    export(QMAKE_POST_LINK)
+}
+
 win32 {
     DESTDIR  = $$PWD/../bin/win32
     RC_ICONS = $$PWD/../res/icons/icon.ico \
                $$PWD/../res/icons/icon-apk.ico
+    deploy(general win32)
 }
 
 macx {
@@ -40,10 +53,12 @@ macx {
     QMAKE_MAC_SDK = macosx10.7
     QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.7
     LIBS += -lz
+    deploy(general macosx)
 }
 
 unix:!macx {
     DESTDIR = $$PWD/../bin/linux
+    deploy(general linux)
 }
 
 LIBS += -L$$PWD/../lib/bin
