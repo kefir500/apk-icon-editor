@@ -11,6 +11,7 @@
 - German – [Sebastian Herrmann](https://www.transifex.com/accounts/profile/herrherrmann), [Wasilis Mandratzis-Walz](https://www.transifex.com/accounts/profile/beonex)
 - Greek – [Wasilis Mandratzis-Walz](https://www.transifex.com/accounts/profile/beonex), [Manos Santos](https://www.transifex.com/accounts/profile/goldensacrum)
 - Hungarian – [Fodor Kristóf](https://www.transifex.com/accounts/profile/MintiIceCream)
+- Italian – [Luca Fioravanti](https://www.transifex.com/accounts/profile/fioravanti.luka)
 - Portuguese (Brazil) – [Valnei Júnior](https://www.transifex.com/accounts/profile/valneijr)
 - Russian – [Alexander Gorishnyak](https://www.transifex.com/accounts/profile/kefir500)
 - Spanish – [Cristhian Garcia](https://www.transifex.com/accounts/profile/CristhianLP)
