@@ -59,6 +59,8 @@ macx {
 unix:!macx {
     DESTDIR = $$PWD/../bin/linux
     deploy(general linux)
+    QMAKE_POST_LINK += chmod +x $$quote($$DESTDIR/aapt) && \
+                       chmod +x $$quote($$DESTDIR/zipalign)
 }
 
 LIBS += -L$$PWD/../lib/bin
