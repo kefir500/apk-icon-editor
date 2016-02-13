@@ -31,7 +31,7 @@ INCLUDEPATH += $$[QT_INSTALL_HEADERS]/QtZlib
 defineTest(deploy) {
     DIRS = $$1
     for(DIR, DIRS) {
-        SRC = $$PWD\\..\\deploy\\$$DIR
+        SRC = $$PWD/../deploy/$$DIR
         DST = $$DESTDIR
         win32:SRC ~= s,/,\\,g
         win32:DST ~= s,/,\\,g
