@@ -1,0 +1,111 @@
+# Version History
+
+## 1.7.0
+* Upgraded *Apktool* to *v2.0.3*.
+* Improved APK handling.
+* Added *Android TV* banner support.
+* Added support for high-DPI displays.
+* Added icons for recent files.
+* Added *Italian* translation.
+* Reduced startup time.
+* Major improvements and bug fixes.
+* Lots of internal refactoring.
+
+## 1.6.0
+* Upgraded *Apktool* to *v2.0.2*.
+* Minor improvements and bug fixes.
+* First release for *OS X* (beta).
+
+## 1.5.0
+* Improved APK handling.
+* Updated GUI icons.
+
+## 1.4.0
+* Upgraded *Apktool* to *v2.0.0*.
+* Custom temporary paths.
+* Easy access to logs.
+* Added *Hungarian* translation.
+* Added *Spanish* translation.
+* Added *Turkish* translation.
+* Minor improvements and bug fixes.
+
+## 1.3.0
+* Upgraded *Apktool* to *RC4*.
+* Added *BlackBerry* icon support.
+* Added *Dutch* translation.
+* Added *Greek* translation.
+* Added *Portuguese (Brazil)* translation.
+* Major improvements and bug fixes.
+
+## 1.2.0
+* Moved from *7-Zip* to *QuaZIP*.
+* Added *KeyStore* support.
+* Added *KeyStore* creation wizard.
+
+## 1.1.2
+* Downgraded *Apktool* to *RC2*.
+
+## 1.1.1
+* Fixed Unicode paths bug.
+* Fixed *Rounded Corners* bug.
+
+## 1.1.0
+* Added *Rounded Corners* effect.
+* Upgraded *Apktool* to *RC3*.
+* Improved logging system.
+
+## 1.0.0
+* Added *Apktool* support.
+* Added application name and version editor.
+* Added *XXXHDPI* icon support.
+* Added *German* translation.
+* Added logging system.
+* Upgraded license to *GNU GPL v3.0*.
+* Improved GUI.
+
+## 0.6
+* Added *Details* tab.
+* Added *French* translation.
+* Improved GUI.
+
+## 0.5.1
+* Added *Explore APK Contents* function.
+* Improved handling invalid APK files.
+* Minor improvements and bug fixes.
+
+## 0.5
+* Added *Google Drive* support.
+* Added *Microsoft OneDrive* support.
+* Added *Chinese (China)* translation.
+* Minor GUI improvements.
+* Minor bug fixes.
+
+## 0.4.2
+* Fixed forced upload on warnings.
+
+## 0.4.1
+* Added *Dropbox* support.
+* Minor GUI improvements.
+
+## 0.3.1
+* Added *Rotate* effect.
+* Improved *Colorize* effect.
+* Fixed *Blur* transparency.
+* Minor GUI improvements.
+* Minor bug fixes.
+
+## 0.3
+* Added *Colorize* effect.
+* Added *Blur* effect.
+* Changed updates URL.
+* Minor bug fixes.
+
+## 0.2.1
+* Added APK packing options.
+* Added *Reset Settings* function.
+* Improved error/warning handlers.
+* Fixed recent list bug.
+* Minor bug fixes.
+
+## 0.2
+* First public beta.

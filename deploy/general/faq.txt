@@ -1,0 +1,41 @@
+---------------
+
+[Q] How to use "APK Icon Editor"?
+[A] Open the APK file in which you would like to replace icon(s). Select the profile (according to the target device) and the needed DPI. If you are in doubt about the DPI, you may replace all of them. "APK Icon Editor" will ask to scale icons with the wrong size, but note that Android devices are usually able to do it automatically.
+
+---------------
+
+[Q] "APK Icon Editor" cannot pack/unpack some APK files.
+[A] Try switching between "ZIP" and "Apktool" modes. Also, do not use source/destination directories containing Unicode characters. If your user name also consists of non-Latin characters, choose a custom temporary directory ("Settings" -> "Repacking").
+
+---------------
+
+[Q] How to edit other types of resources (strings, images, etc.)?
+[A] You can manually browse and edit internal files ("File -> "Explore APK contents" or "Ctrl+D" keyboard shortcut). Minimal knowledge of APK structure may be needed.
+
+---------------
+
+[Q] Java Runtime Environment is installed, but "APK Icon Editor" keeps showing "JRE not installed" message.
+[A] "APK Icon Editor" is a 32-bit application and requires corresponding x86 (not x64) JRE version. Also, check your %PATH% variable (see instructions at http://www.java.com/en/download/help/path.xml).
+
+---------------
+
+[Q] Does "APK Icon Editor" keep original APK certificate?
+[A] No. Repacking APK also requires its resigning, so the default certificate with no information about the APK developer is used. If you are going to upload your APK to Google Play market, you may want to replace it with your own key ("Settings" -> "Key Manager").
+
+---------------
+
+[Q] Is it safe to save KeyStore passwords?
+[A] "APK Icon Editor" provides some encryption, but the safest way is not to store your passwords (just leave the corresponding "Key Manager" text fields blank) and simply enter your passwords when packing APK.
+
+---------------
+
+[Q] Drag-and-Drop function does not work.
+[A] Run "APK Icon Editor" as a non-administrator user.
+
+---------------
+
+[Q] I have another question or suggestion.
+[A] Feel free to contact developers: http://kefir500.github.io/apk-icon-editor/#contact
+
+---------------

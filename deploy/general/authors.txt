@@ -1,0 +1,39 @@
+Authors:
+Alexander Gorishnyak – APK Icon Editor
+Connor Tumbleson – Apktool
+Ryszard Wiśniewski – Apktool (original)
+Ben Gruver – smali/baksmali
+
+Translations:
+Chinese (China) – YFdyh000, QQ775405984
+Dutch (Netherlands) – Heimen Stoffels, Roder van Arkel
+French – Stold, AzRock
+German – Sebastian Herrmann, Wasilis Mandratzis-Walz
+Greek – Wasilis Mandratzis-Walz, Manos Santos
+Hungarian – Fodor Kristóf
+Italian – Luca Fioravanti
+Portuguese (Brazil) – Valnei Júnior
+Russian – Alexander Gorishnyak
+Spanish – Cristhian Garcia
+Turkish – Çağdaş Tatar
+
+Contributors:
+Roder van Arkel
+Ameen Ali
+
+Supported by:
+Cyclos (www.cyclos.org)
+Julien Veuillet (www.wakdev.com)
+
+Special Thanks:
+Sergey Tachenov – QuaZIP
+Andre Somers – SimpleCrypt
+Mark James – icons (www.famfamfam.com)
+
+Testers:
+Vladimir Gorishnyak
+nhanqv
+Roder van Arkel
+Igor Petrunnikov
+Code War
+Apollo_IV
