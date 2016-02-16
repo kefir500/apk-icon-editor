@@ -1,6 +1,5 @@
 #include "apkfile.h"
 #include <QDir>
-#include <QDebug>
 
 Apk::File::~File()
 {

@@ -26,7 +26,11 @@ void ApkManager::unpack(QString filename, QString temp, bool apktool, bool smali
     qDebug() << "Output directory:" << temp;
 
     QtConcurrent::run(unpacker, &Apk::Unpacker::unpack,
-                      filename, temp + "/apk/", temp + "/framework", apktool, smali);
+                      filename,
+                      temp + "/apk/",
+                      temp + "/framework",
+                      apktool,
+                      smali);
 }
 
 void ApkManager::pack(Apk::File *apk, QString temp)
