@@ -228,7 +228,7 @@ ResizeDialog::ResizeDialog(QString title, int width, int height, QWidget *parent
 
 Donate::Donate(QWidget *parent) : QDialog(parent)
 {
-    setWindowTitle(QApplication::translate("MainWindow", "Donate"));
+    setWindowTitle(tr("Donate"));
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
     resize(450 * Gui::Screen::dpi() / 100.0, 0);
 
@@ -304,12 +304,12 @@ void Wallets::add(QString title, QString wallet, QString link)
     QToolButton *btn_copy = new QToolButton(this);
     btn_copy->setProperty("wallet_id", wallet);
     btn_copy->setIcon(QIcon(":/gfx/actions/copy.png"));
-    btn_copy->setToolTip(QApplication::translate("Donate", "Copy to Clipboard"));
+    btn_copy->setToolTip(tr("Copy to Clipboard"));
 
     QToolButton *btn_link = new QToolButton(this);
     btn_link->setProperty("wallet_link", link);
     btn_link->setIcon(QIcon(":/gfx/actions/coins.png"));
-    btn_link->setToolTip(QApplication::translate("MainWindow", "Donate"));
+    btn_link->setToolTip(tr("Donate"));
     btn_link->setEnabled(!link.isEmpty());
 
     QGridLayout *grid = qobject_cast<QGridLayout*>(layout());

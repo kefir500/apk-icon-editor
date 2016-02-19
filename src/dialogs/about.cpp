@@ -80,8 +80,8 @@ void About::setVersions(QString jre, QString jdk, QString apktool)
 {
     const QString CELL = "<td style='padding-right: 24px'>%1</td>";
     const QString APKTOOL = !apktool.isEmpty() ? apktool : "---";
-    const QString JRE = !jre.isEmpty() ? jre : QString("<a href='%1'>%2</a>").arg(Url::JRE, QApplication::translate("Apk", "Download"));
-    const QString JDK = !jdk.isEmpty() ? jdk : QString("<a href='%1'>%2</a>").arg(Url::JDK, QApplication::translate("Apk", "Download"));
+    const QString JRE = !jre.isEmpty() ? jre : QString("<a href='%1'>%2</a>").arg(Url::JRE, tr("Download"));
+    const QString JDK = !jdk.isEmpty() ? jdk : QString("<a href='%1'>%2</a>").arg(Url::JDK, tr("Download"));
 
     textReqs->setContentsMargins(0, 0, 0, 0);
     textReqs->setText(
