@@ -51,6 +51,23 @@ bool Packer::pack(Apk::File *apk, QString temp)
         saveAppVersion(CONTENTS, apk->getVersionCode(), apk->getVersionName());
         saveStrings(apk->getStrings());
 
+        // Handle Apktool 2.0.3 issue #1122:
+
+        QFile f(CONTENTS + "/apktool.yml");
+        if (f.open(QFile::ReadWrite | QFile::Text)) {
+            QString output;
+            QTextStream stream(&f);
+            while(!stream.atEnd()) {
+                QString line = stream.readLine();
+                if (!line.contains("- ''")) {
+                    output.append(line + "\n");
+                }
+            }
+            f.resize(0);
+            stream << output;
+            f.close();
+        }
+
         // Pack APK (Apktool);
 
         emit loading(40, tr("Packing APK..."));
