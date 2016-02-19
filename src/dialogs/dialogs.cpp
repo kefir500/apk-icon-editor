@@ -89,7 +89,7 @@ void InputDialog::checkInput(QString text)
 
 ProgressDialog::ProgressDialog(QWidget *parent) : QDialog(parent)
 {
-    resize(220, 100);
+    resize(220 * Gui::Screen::dpi() / 100.0, 100);
     setModal(true);
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
     allowCancel = true;

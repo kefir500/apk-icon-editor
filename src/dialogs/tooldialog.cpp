@@ -1,5 +1,6 @@
 #include "tooldialog.h"
 #include "settings.h"
+#include "globals.h"
 #include <QDialogButtonBox>
 
 const char *ToolDialog::STR_QUAZIP = QT_TR_NOOP(
@@ -17,7 +18,7 @@ ToolDialog::ToolDialog(QWidget *parent) : QDialog(parent)
 {
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
     setWindowIcon(QIcon(":/gfx/actions/box.png"));
-    resize(440, 0);
+    resize(440 * Gui::Screen::dpi() / 100.0, 0 * Gui::Screen::dpi() / 100.0);
 
     QVBoxLayout *layout = new QVBoxLayout(this);
     QHBoxLayout *layoutZip = new QHBoxLayout();

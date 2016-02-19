@@ -1,5 +1,6 @@
 #include "keymanager.h"
 #include "settings.h"
+#include "globals.h"
 #include <QBoxLayout>
 #include <QDialogButtonBox>
 #include <QFileDialog>
@@ -10,7 +11,7 @@ KeyManager::KeyManager(QWidget *parent) : QDialog(parent)
 {
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
     setWindowIcon(QIcon(":/gfx/actions/key.png"));
-    resize(540, 0);
+    resize(540 * Gui::Screen::dpi() / 100.0, 0);
 
     keyCreator = new KeyCreator(this);
 
@@ -148,7 +149,7 @@ void KeyManager::reset()
 KeyCreator::KeyCreator(QWidget *parent) : QDialog(parent)
 {
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
-    resize(400, 0);
+    resize(400 * Gui::Screen::dpi() / 100.0, 0);
 
     QGridLayout *layout = new QGridLayout(this);
 

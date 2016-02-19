@@ -1,4 +1,5 @@
 #include "effectsdialog.h"
+#include "globals.h"
 #include <QBoxLayout>
 
 // Blur and Colorize (QWidget::grab()) not working on Qt >= 5.3.0 (QTBUG-43968)
@@ -7,7 +8,8 @@ EffectsDialog::EffectsDialog(QWidget *parent) : QDialog(parent)
 {
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
     setWindowIcon(QIcon(":/gfx/actions/effects.png"));
-    resize(260, 300);
+    resize(260 * Gui::Screen::dpi() / 100.0,
+           300 * Gui::Screen::dpi() / 100.0);
 
     QVBoxLayout *layout = new QVBoxLayout(this);
     QGridLayout *layoutRotate = new QGridLayout();
