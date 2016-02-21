@@ -1420,7 +1420,7 @@ void MainWindow::dropEvent(QDropEvent *event)
         if (EXT_GFX.contains(ext)) {
             icon_open(filename);
         }
-        else {
+        else if (ext == "apk") {
             apk_open(filename);
         }
     }
