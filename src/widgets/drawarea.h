@@ -23,14 +23,18 @@ public:
     /// Draws the specified \c icon in the preview area.
     void setIcon(Icon *icon);
 
-    /// Sets the size of the template rectange which will represent the standard icon size.
-    /// \param w Width of the template rectange.
-    /// \param h Height of the template rectange.
-    void setRect(int w, int h) { rect_w = w; rect_h = h; }
+    /// Sets the size of the border which will represent the default icon size.
+    /// \param bounds Size of the template border.
+    void setBounds(QSize bounds) { this->bounds = bounds; }
+
+    /// Sets the size of the border which will represent the default icon size.
+    /// \param w Width of the template border.
+    /// \param h Height of the template border.
+    void setBounds(int w, int h) { bounds = QSize(w, h); }
 
     /// Sets the background color to \c color.
     /// If the \c color differs from the default one, grid dots are not painted.
-    void setBack(QColor color) { if (color != QColor::Invalid) background = color; }
+    void setBackground(QColor color) { if (color != QColor::Invalid) background = color; }
 
     /// Returns the current icon.
     Icon *getIcon() const { return icon; }
@@ -47,8 +51,7 @@ private:
     Icon *icon;        ///< Currently previewed icon.
     QColor background; ///< Preview area background color.
     bool welcome;      ///< If \c true, prints the welcoming text and allows the \c clicked signal.
-    int rect_w;        ///< Template rectangle width.
-    int rect_h;        ///< Template rectangle height.
+    QSize bounds;      ///< Size of the template border.
 
     /// Enables or disables the mouse hover widget styling.
     void setAllowHover(bool allow);

@@ -18,9 +18,8 @@ DrawArea::DrawArea(QWidget *parent) : QLabel(parent)
     setAutoFillBackground(true);
     setCursor(Qt::PointingHandCursor);
 
-    rect_w = 0;
-    rect_h = 0;
     welcome = true;
+    bounds = QSize(0, 0);
     background = palette().color(QPalette::Background);
 }
 
@@ -45,18 +44,23 @@ void DrawArea::paintEvent(QPaintEvent *event)
 {
     if (!welcome) {
         QPainter painter(this);
-        const int x = width()/2 - rect_w/2;
-        const int y = height()/2 - rect_h/2;
-        painter.fillRect(x+1, y+1, rect_w-1, rect_h-1, background);
+
+        // Border bounds:
+        const int bx = width() / 2 - bounds.width() / 2;
+        const int by = height() / 2 - bounds.height() / 2;
+        const int bw = bounds.width();
+        const int bh = bounds.height();
+
+        painter.fillRect(bx + 1, by + 1, bw - 1, bw - 1, background);
         if (background == palette().color(QPalette::Window)) {
-            painter.fillRect(x+1, y+1, rect_w-1, rect_h-1, Qt::Dense7Pattern);
+            painter.fillRect(bx + 1, by + 1, bw - 1, bh - 1, Qt::Dense7Pattern);
         }
-        painter.drawPixmap(width()/2 - icon->width()/2,
-                           height()/2 - icon->height()/2,
+        painter.drawPixmap(width() / 2 - icon->width() / 2,
+                           height() / 2 - icon->height() / 2,
                            icon->getPixmap());
-        painter.drawRect(x, y, rect_w, rect_h);
+        painter.drawRect(bx, by, bw, bh);
         painter.setPen(Qt::lightGray);
-        painter.drawRect(x-1, y-1, rect_w+2, rect_h+2);
+        painter.drawRect(bx - 1, by - 1, bw + 2, bh + 2);
     }
     else {
         QLabel::paintEvent(event);

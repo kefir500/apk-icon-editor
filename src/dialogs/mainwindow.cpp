@@ -781,7 +781,7 @@ void MainWindow::setCurrentIcon(int dpi)
     const Device DEVICE = Devices::at(devices->currentGroupIndex());
     const int W = DEVICE.getDpiSize(Dpi::cast(dpi)).width();
     const int H = DEVICE.getDpiSize(Dpi::cast(dpi)).height();
-    drawArea->setRect(W, H);
+    drawArea->setBounds(W, H);
     if (Icon *icon = apk->getIcon(Dpi::cast(dpi))) {
         disconnect(effects, 0, 0, 0);
         connect(effects, SIGNAL(colorActivated(bool)), icon,     SLOT(setColorize(bool)), Qt::DirectConnection);
@@ -1076,7 +1076,7 @@ bool MainWindow::setPreviewColor()
     const QColor DEFAULT = drawArea->palette().color(QPalette::Background);
     const QColor COLOR = QColorDialog::getColor(DEFAULT, this);
     if (COLOR.isValid()) {
-        drawArea->setBack(COLOR);
+        drawArea->setBackground(COLOR);
         QPixmap icon(32, 32);
         icon.fill(COLOR);
         actIconBack->setIcon(QIcon(icon));
