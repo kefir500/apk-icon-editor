@@ -4,12 +4,6 @@
 #include <QPainter>
 #include <QDir>
 
-const QString STYLE_DEFAULT =
-    "DrawArea {background: url(:/gfx/background.png)"
-    "no-repeat bottom left;"
-    "border: 1px solid gray;}"
-;
-
 DrawArea::DrawArea(QWidget *parent) : QLabel(parent)
 {
 #ifndef Q_OS_OSX
@@ -18,24 +12,24 @@ DrawArea::DrawArea(QWidget *parent) : QLabel(parent)
     setFont(QFont("Open Sans", 15, QFont::Light));
 #endif
     setAlignment(Qt::AlignCenter);
-    setStyleSheet(STYLE_DEFAULT + "DrawArea::hover {background-color: white;}");
+    setAllowHover(true);
 
     setMouseTracking(true);
     setAutoFillBackground(true);
     setCursor(Qt::PointingHandCursor);
 
-    background = palette().color(QPalette::Background);
     rect_w = 0;
     rect_h = 0;
     welcome = true;
+    background = palette().color(QPalette::Background);
 }
 
-void DrawArea::setIcon(Icon *_icon)
+void DrawArea::setIcon(Icon *icon)
 {
-    icon = _icon;
+    this->icon = icon;
     welcome = false;
     setCursor(Qt::ArrowCursor);
-    setStyleSheet(STYLE_DEFAULT);
+    setAllowHover(false);
     repaint();
 }
 
@@ -67,4 +61,15 @@ void DrawArea::paintEvent(QPaintEvent *event)
     else {
         QLabel::paintEvent(event);
     }
+}
+
+void DrawArea::setAllowHover(bool allow)
+{
+    QString style =
+        "DrawArea { background: url(:/gfx/background.png)"
+        "no-repeat bottom left;"
+        "border: 1px solid gray; }"
+    ;
+    if (allow) style += "DrawArea::hover { background-color: white; }";
+    setStyleSheet(style);
 }

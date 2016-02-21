@@ -14,19 +14,12 @@
 class DrawArea : public QLabel {
     Q_OBJECT
 
-private:
-    Icon *icon;         ///< Current icon to draw.
-    QColor background;  ///< Preview area background color.
-    int rect_w;         ///< Template rectangle width.
-    int rect_h;         ///< Template rectangle height.
-    bool welcome;       ///< If \c TRUE, welcome text is rendered and #clicked signal is allowed.
-
 public:
     explicit DrawArea(QWidget *parent = 0);
 
     /// Start drawing given pixmap.
     /// \param[in] icon Pointer to icon for drawing.
-    void setIcon(Icon *_icon);
+    void setIcon(Icon *icon);
 
     /// Set template rectange which will represent standard icon size (according to selected #Profile).
     /// \param[in] w Width of the template rectange.
@@ -41,14 +34,22 @@ public:
     /// \return Current icon.
     Icon *getIcon() const { return icon; }
 
-protected:
-    void mousePressEvent(QMouseEvent *event);
-    void paintEvent(QPaintEvent *event);
-
 signals:
     /// This signal is emitted when this widget is clicked.
     void clicked() const;
 
+protected:
+    void mousePressEvent(QMouseEvent *event);
+    void paintEvent(QPaintEvent *event);
+
+private:
+    Icon *icon;         ///< Current icon to draw.
+    QColor background;  ///< Preview area background color.
+    bool welcome;       ///< If \c TRUE, welcome text is rendered and #clicked signal is allowed.
+    int rect_w;         ///< Template rectangle width.
+    int rect_h;         ///< Template rectangle height.
+
+    void setAllowHover(bool allow);
 };
 
 #endif // DRAWAREA_H
