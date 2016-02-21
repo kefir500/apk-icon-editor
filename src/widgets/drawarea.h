@@ -1,5 +1,7 @@
-/// \file drawarea.h
-/// \brief This file contains #DrawArea class declaration.
+///
+/// \file
+/// This file contains the icon preview widget declaration.
+///
 
 #ifndef DRAWAREA_H
 #define DRAWAREA_H
@@ -7,9 +9,10 @@
 #include "icon.h"
 #include <QLabel>
 
-/// \brief This widget previews #icon.
 ///
-/// The DrawArea widget paints current #icon.
+/// Icon preview widget.
+/// This widget draws the specified icon in the preview area.
+///
 
 class DrawArea : public QLabel {
     Q_OBJECT
@@ -17,21 +20,19 @@ class DrawArea : public QLabel {
 public:
     explicit DrawArea(QWidget *parent = 0);
 
-    /// Start drawing given pixmap.
-    /// \param[in] icon Pointer to icon for drawing.
+    /// Draws the specified \c icon in the preview area.
     void setIcon(Icon *icon);
 
-    /// Set template rectange which will represent standard icon size (according to selected #Profile).
-    /// \param[in] w Width of the template rectange.
-    /// \param[in] h Height of the template rectange.
+    /// Sets the size of the template rectange which will represent the standard icon size.
+    /// \param w Width of the template rectange.
+    /// \param h Height of the template rectange.
     void setRect(int w, int h) { rect_w = w; rect_h = h; }
 
-    /// Set background color. If it differs from default, grid dots are not painted.
-    /// \param[in] color New background color.
+    /// Sets the background color to \c color.
+    /// If the \c color differs from the default one, grid dots are not painted.
     void setBack(QColor color) { if (color != QColor::Invalid) background = color; }
 
-    /// Get current icon.
-    /// \return Current icon.
+    /// Returns the current icon.
     Icon *getIcon() const { return icon; }
 
 signals:
@@ -43,12 +44,13 @@ protected:
     void paintEvent(QPaintEvent *event);
 
 private:
-    Icon *icon;         ///< Current icon to draw.
-    QColor background;  ///< Preview area background color.
-    bool welcome;       ///< If \c TRUE, welcome text is rendered and #clicked signal is allowed.
-    int rect_w;         ///< Template rectangle width.
-    int rect_h;         ///< Template rectangle height.
+    Icon *icon;        ///< Currently previewed icon.
+    QColor background; ///< Preview area background color.
+    bool welcome;      ///< If \c true, prints the welcoming text and allows the \c clicked signal.
+    int rect_w;        ///< Template rectangle width.
+    int rect_h;        ///< Template rectangle height.
 
+    /// Enables or disables the mouse hover widget styling.
     void setAllowHover(bool allow);
 };
 
