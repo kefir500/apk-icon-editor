@@ -1,6 +1,5 @@
 #include "drawarea.h"
-#include <QDragEnterEvent>
-#include <QMimeData>
+#include <QMouseEvent>
 #include <QPainter>
 #include <QDir>
 
@@ -43,7 +42,6 @@ void DrawArea::mousePressEvent(QMouseEvent *event)
 void DrawArea::paintEvent(QPaintEvent *event)
 {
     if (!welcome) {
-        QPainter painter(this);
 
         // Border bounds:
         const int bx = width() / 2 - bounds.width() / 2;
@@ -51,6 +49,8 @@ void DrawArea::paintEvent(QPaintEvent *event)
         const int bw = bounds.width();
         const int bh = bounds.height();
 
+        // Paint border and icon:
+        QPainter painter(this);
         painter.fillRect(bx + 1, by + 1, bw - 1, bw - 1, background);
         if (background == palette().color(QPalette::Window)) {
             painter.fillRect(bx + 1, by + 1, bw - 1, bh - 1, Qt::Dense7Pattern);

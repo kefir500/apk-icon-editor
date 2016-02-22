@@ -39,8 +39,10 @@ private:
     QSignalMapper *mapRotate;
 
 public:
-    void retranslate(); ///< Retranslate displayed strings.
     explicit EffectsDialog(QWidget *parent = 0);
+
+    ///< Retranslate displayed strings.
+    void retranslate();
 
 signals:
     void colorActivated(bool state);    ///< Switch "Colorize" effect on/off.
