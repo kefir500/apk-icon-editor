@@ -7,7 +7,7 @@
 DrawArea::DrawArea(QWidget *parent) : QLabel(parent)
 {
 #ifndef Q_OS_OSX
-    setFont(QFont("Open Sans Light", 13));
+    setFont(QFont("Open Sans Light", 12));
 #else
     setFont(QFont("Open Sans", 15, QFont::Light));
 #endif
