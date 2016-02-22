@@ -12,7 +12,7 @@ bool Unpacker::unpack(QString filepath, QString destination, QString frameworks,
 {
     // Read APK manifest:
 
-    emit loading(25, tr("Reading AndroidManifest.xml..."));
+    emit loading(20, tr("Reading AndroidManifest.xml..."));
     const QString DEST = QDir::fromNativeSeparators(destination);
     const QString MANIFEST = getManifest(filepath);
     if (MANIFEST.isEmpty()) {
@@ -21,9 +21,12 @@ bool Unpacker::unpack(QString filepath, QString destination, QString frameworks,
 
     // Unpack APK;
 
-    emit loading(50, tr("Unpacking APK..."));
+    // TODO: Loading text is repeated due to avoiding excessive translation values.
+    emit loading(40, tr("Unpacking APK..."));
     QDir(DEST).removeRecursively();
 
+    // TODO: Loading text is repeated due to avoiding excessive translation values.
+    emit loading(60, tr("Unpacking APK..."));
     if (!apktool) {
         if (!unzip(filepath, DEST)) {
             return false;
@@ -38,7 +41,7 @@ bool Unpacker::unpack(QString filepath, QString destination, QString frameworks,
     // Load APK icons and strings:
 
     // TODO: Loading text is repeated due to avoiding excessive translation values.
-    emit loading(75, tr("Unpacking APK..."));
+    emit loading(80, tr("Unpacking APK..."));
     QList<QSharedPointer<Icon> > icons = getIcons(MANIFEST, DEST);
     QList<Apk::String> strings;
     const QString VAR_APPNAME = getVarAppTitle(DEST);
