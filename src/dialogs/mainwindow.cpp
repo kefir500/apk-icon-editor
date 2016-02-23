@@ -51,7 +51,7 @@ void MainWindow::checkReqs()
     cap = rx.capturedTexts();
     if (cap.size() > 1) version_jre = cap[1];
 
-    rx.setPattern("javac version \"(.+)\"");
+    rx.setPattern("javac (.+)");
     rx.indexIn(JDK);
     cap = rx.capturedTexts();
     if (cap.size() > 1) version_jdk = cap[1];
