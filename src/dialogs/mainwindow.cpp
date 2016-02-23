@@ -628,6 +628,7 @@ void MainWindow::setLanguage(QString lang)
     effects->retranslate();
     toolDialog->retranslate();
     keyManager->retranslate();
+    about->retranslate();
 }
 
 void MainWindow::recent_add(QString filename)

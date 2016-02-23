@@ -31,29 +31,12 @@ About::About(QWidget *parent) : QDialog(parent)
     textReqs->setFont(font);
 #endif
 
-    textApp->setText(
-        QString("<h3>%1 v%2</h3>").arg(APP, VER) +
-        tr("Built on: %1 - %2").arg(__DATE__, __TIME__) + "<br>" +
-        tr("Author: %1").arg("Alexander Gorishnyak") + "<br>" +
-        tr("License") + ": <a href='http://www.gnu.org/licenses/gpl-3.0.html'>GNU GPL v3.0</a>"
-    );
-
-    const QString LINK = "<tr><td style='padding-right: 4px' align='right'><a href='%1'>%2</a></td><td>%3</td></tr>";
-    textLinks->setText(
-        "<table>" +
-            LINK.arg(Url::WEBSITE, tr("Visit Website"), tr("Visit our official website.")) +
-            LINK.arg(Url::CONTACT, tr("Report a Bug"), tr("Found a bug? Let us know so we can fix it!")) +
-            LINK.arg(Url::TRANSLATE, tr("Help Translate"), tr("Join our translation team on Transifex.")) +
-            LINK.arg(QString("file:///%1/versions.txt").arg(Path::App::dir()), tr("Version History"), tr("List of changes made to the project.")) +
-        "</table>"
-    );
-
     QFrame *line = new QFrame(this);
     line->setFrameShape(QFrame::HLine);
     line->setFrameShadow(QFrame::Sunken);
 
     QDialogButtonBox *buttons = new QDialogButtonBox(this);
-    QPushButton *btnAuthors = new QPushButton(tr("Authors"), this);
+    btnAuthors = new QPushButton(this);
     buttons->addButton(QDialogButtonBox::Ok);
     buttons->addButton(btnAuthors, QDialogButtonBox::ActionRole);
 
@@ -73,6 +56,7 @@ About::About(QWidget *parent) : QDialog(parent)
     connect(btnAuthors, SIGNAL(clicked()), this, SLOT(accept()));
     connect(btnAuthors, SIGNAL(clicked()), this, SLOT(showAuthors()));
 
+    retranslate();
     setVersions("...", "...", "...");
 }
 
@@ -124,4 +108,26 @@ void About::showAuthors() const
         authors.setText(strAuthors);
         authors.exec();
     }
+}
+
+void About::retranslate()
+{
+    textApp->setText(
+        QString("<h3>%1 v%2</h3>").arg(APP, VER) +
+        tr("Built on: %1 - %2").arg(__DATE__, __TIME__) + "<br>" +
+        tr("Author: %1").arg("Alexander Gorishnyak") + "<br>" +
+        tr("License") + ": <a href='http://www.gnu.org/licenses/gpl-3.0.html'>GNU GPL v3.0</a>"
+    );
+
+    const QString LINK = "<tr><td style='padding-right: 4px' align='right'><a href='%1'>%2</a></td><td>%3</td></tr>";
+    textLinks->setText(
+        "<table>" +
+            LINK.arg(Url::WEBSITE, tr("Visit Website"), tr("Visit our official website.")) +
+            LINK.arg(Url::CONTACT, tr("Report a Bug"), tr("Found a bug? Let us know so we can fix it!")) +
+            LINK.arg(Url::TRANSLATE, tr("Help Translate"), tr("Join our translation team on Transifex.")) +
+            LINK.arg(QString("file:///%1/versions.txt").arg(Path::App::dir()), tr("Version History"), tr("List of changes made to the project.")) +
+        "</table>"
+    );
+
+    btnAuthors->setText(tr("Authors"));
 }

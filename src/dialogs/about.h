@@ -14,11 +14,13 @@ public:
 public slots:
     void setVersions(QString jre, QString jdk, QString apktool);
     void showAuthors() const;
+    void retranslate();
 
 private:
     QLabel *textApp;
     QLabel *textLinks;
     QLabel *textReqs;
+    QPushButton *btnAuthors;
 };
 
 #endif // ABOUT_H
