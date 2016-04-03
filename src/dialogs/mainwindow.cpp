@@ -72,6 +72,7 @@ void MainWindow::init_core()
     apkManager = new ApkManager(this);
     updater = new Updater(this);
     mapRecent = new QSignalMapper(this);
+    recent = NULL;
 
     dropbox = new Dropbox(this);
     gdrive = new GoogleDrive(this);
@@ -498,6 +499,7 @@ void MainWindow::settings_load()
 
     // Recent List:
 
+    if (recent) { delete recent; }
     recent = new Recent(Settings::get_recent());
     recent_update();
 
