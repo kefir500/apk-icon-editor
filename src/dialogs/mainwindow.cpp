@@ -93,11 +93,10 @@ void MainWindow::init_gui()
 
     // Main Window:
 
-    setAcceptDrops(true);
-    resize(Gui::Window::scaledWidth(), Gui::Window::scaledHeight());
-
     splitter = new QSplitter(this);
     setCentralWidget(splitter);
+    setAcceptDrops(true);
+    setInitialSize();
 
     QMenuBar *menu = new QMenuBar(this);
     setMenuBar(menu);
@@ -354,8 +353,6 @@ void MainWindow::init_gui()
     splitter->addWidget(sidebar);
     splitter->setCollapsible(0, false);
     splitter->setCollapsible(1, false);
-    splitter->setStretchFactor(0, 2);
-    splitter->setStretchFactor(1, 1);
     splitter->setStyleSheet("QSplitter {padding: 8px;}");
 }
 
@@ -490,7 +487,6 @@ void MainWindow::settings_load()
 
     if (Settings::get_version() != VER) { resetApktool(); }
     restoreGeometry(Settings::get_geometry());
-    splitter->setSizes(QList<int>() << 492 << 280);
     splitter->restoreState(Settings::get_splitter());
     setLanguage(Settings::get_language());
     currentPath = Settings::get_last_path();
@@ -535,11 +531,18 @@ void MainWindow::settings_reset()
         Settings::reset();
         settings_load();
         resetApktool();
-        resize(Gui::Window::scaledWidth(), Gui::Window::scaledHeight());
+        setInitialSize();
         if (APKTOOL != Settings::get_use_apktool()) {
             askReloadApk();
         }
     }
+}
+
+void MainWindow::setInitialSize()
+{
+    resize(Gui::Window::scaledWidth(), Gui::Window::scaledHeight());
+    splitter->setSizes(QList<int>() << 492 * Gui::Screen::dpi() / 100.0
+                                    << 280 * Gui::Screen::dpi() / 100.0);
 }
 
 void MainWindow::setLanguage(QString lang)
