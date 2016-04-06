@@ -1471,4 +1471,5 @@ MainWindow::~MainWindow()
 {
     qDebug() << "Exiting...";
     delete recent;
+    qInstallMessageHandler(0);
 }
