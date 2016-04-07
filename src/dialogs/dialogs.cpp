@@ -89,7 +89,7 @@ void InputDialog::checkInput(QString text)
 
 ProgressDialog::ProgressDialog(QWidget *parent) : QDialog(parent)
 {
-    resize(220 * Gui::Screen::dpi() / 100.0, 100);
+    resize(Gui::Screen::scaled(220, 100));
     setModal(true);
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
     allowCancel = true;
@@ -230,7 +230,7 @@ Donate::Donate(QWidget *parent) : QDialog(parent)
 {
     setWindowTitle(tr("Donate"));
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
-    resize(450 * Gui::Screen::dpi() / 100.0, 0);
+    resize(Gui::Screen::scaled(450, 0));
 
     // Initialize "Thanks" section:
 

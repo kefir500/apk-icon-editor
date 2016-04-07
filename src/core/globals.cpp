@@ -1,22 +1,29 @@
 #include "globals.h"
 #include <QScreen>
 
-int Gui::Screen::dpi()
-{
+// Path::App
+
+QString Path::App::dir() {
+    return QApplication::applicationDirPath();
+}
+QString Path::App::file() {
+    return QApplication::applicationFilePath();
+}
+
+// Gui::Screen
+
+int Gui::Screen::dpi() {
     return QApplication::primaryScreen()->logicalDotsPerInch();
 }
 
-int Gui::Window::scaledWidth()
-{
-    const qreal DPI = Gui::Screen::dpi();
-    return WIDTH * (DPI / 100.0);
+int Gui::Screen::scaled(int size) {
+    return size * Gui::Screen::dpi() / 100.0;
 }
 
-int Gui::Window::scaledHeight()
-{
-    const qreal DPI = Gui::Screen::dpi();
-    return HEIGHT * (DPI / 100.0);
+QSize Gui::Screen::scaled(int w, int h) {
+    return QSize(w, h) * Gui::Screen::dpi() / 100.0;
 }
 
-QString Path::App::dir() { return QApplication::applicationDirPath(); }
-QString Path::App::file() { return QApplication::applicationFilePath(); }
+QSize Gui::Screen::scaled(QSize size) {
+    return size * Gui::Screen::dpi() / 100.0;
+}

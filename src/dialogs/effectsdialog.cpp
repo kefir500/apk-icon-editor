@@ -8,8 +8,7 @@ EffectsDialog::EffectsDialog(QWidget *parent) : QDialog(parent)
 {
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
     setWindowIcon(QIcon(":/gfx/actions/effects.png"));
-    resize(260 * Gui::Screen::dpi() / 100.0,
-           300 * Gui::Screen::dpi() / 100.0);
+    resize(Gui::Screen::scaled(260, 300));
 
     QVBoxLayout *layout = new QVBoxLayout(this);
     QGridLayout *layoutRotate = new QGridLayout();

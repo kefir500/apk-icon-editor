@@ -540,9 +540,9 @@ void MainWindow::settings_reset()
 
 void MainWindow::setInitialSize()
 {
-    resize(Gui::Window::scaledWidth(), Gui::Window::scaledHeight());
-    splitter->setSizes(QList<int>() << 492 * Gui::Screen::dpi() / 100.0
-                                    << 280 * Gui::Screen::dpi() / 100.0);
+    resize(Gui::Screen::scaled(800, 540));
+    splitter->setSizes(QList<int>() << Gui::Screen::scaled(492)
+                                    << Gui::Screen::scaled(280));
 }
 
 void MainWindow::setLanguage(QString lang)

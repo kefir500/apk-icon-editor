@@ -18,7 +18,7 @@ ToolDialog::ToolDialog(QWidget *parent) : QDialog(parent)
 {
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
     setWindowIcon(QIcon(":/gfx/actions/box.png"));
-    resize(440 * Gui::Screen::dpi() / 100.0, 0 * Gui::Screen::dpi() / 100.0);
+    resize(Gui::Screen::scaled(440, 0));
 
     QVBoxLayout *layout = new QVBoxLayout(this);
     QHBoxLayout *layoutZip = new QHBoxLayout();

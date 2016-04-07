@@ -18,16 +18,10 @@ namespace Gui {
     /// This namespace contains the functions related to the screen properties.
 
     namespace Screen {
-        int dpi();              ///< Returns the current screen DPI value.
-    }
-
-    /// This namespace contains the constants and functions related to the main window.
-
-    namespace Window {
-        const int WIDTH  = 800; ///< Initial main window width.
-        const int HEIGHT = 540; ///< Initial main window height.
-        int scaledWidth();      ///< Returns the main window width suitable for the current DPI.
-        int scaledHeight();     ///< Returns the main window height suitable for the current DPI.
+        int dpi();                  ///< Returns the current screen DPI value.
+        int scaled(int size);       ///< Returns the size scaled to the current screen DPI value.
+        QSize scaled(int w, int h); ///< Returns the size scaled to the current screen DPI value.
+        QSize scaled(QSize size);   ///< Returns the size scaled to the current screen DPI value.
     }
 }
 
