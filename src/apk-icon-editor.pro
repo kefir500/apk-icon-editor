@@ -33,6 +33,7 @@ defineTest(deploy) {
     for(DIR, DIRS) {
         SRC = $$PWD/../deploy/$$DIR/.
         DST = $$DESTDIR
+        macx:DST = $$DESTDIR/apk-icon-editor.app/Contents/MacOS/
         win32:SRC ~= s,/,\\,g
         win32:DST ~= s,/,\\,g
         QMAKE_POST_LINK += $$QMAKE_COPY_DIR $$quote($$SRC) $$quote($$DST) $$escape_expand(\\n\\t)
@@ -59,8 +60,12 @@ macx {
 unix:!macx {
     DESTDIR = $$PWD/../bin/linux
     deploy(general linux)
-    QMAKE_POST_LINK += chmod +x $$quote($$DESTDIR/aapt) && \
-                       chmod +x $$quote($$DESTDIR/zipalign)
+}
+
+unix {
+    !macx:DST = $$DESTDIR
+    macx:DST = $$DESTDIR/apk-icon-editor.app/Contents/MacOS/
+    QMAKE_POST_LINK += chmod +x $$quote($$DST/aapt) && chmod +x $$quote($$DST/zipalign)
 }
 
 LIBS += -L$$PWD/../lib/bin
