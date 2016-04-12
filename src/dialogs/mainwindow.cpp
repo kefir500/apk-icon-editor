@@ -540,7 +540,11 @@ void MainWindow::settings_reset()
 
 void MainWindow::setInitialSize()
 {
+#ifndef Q_OS_OSX
     resize(Gui::Screen::scaled(800, 540));
+#else
+    resize(Gui::Screen::scaled(880, 540));
+#endif
     splitter->setSizes(QList<int>() << Gui::Screen::scaled(492)
                                     << Gui::Screen::scaled(280));
 }

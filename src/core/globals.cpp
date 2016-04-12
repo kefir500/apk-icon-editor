@@ -13,7 +13,11 @@ QString Path::App::file() {
 // Gui::Screen
 
 int Gui::Screen::dpi() {
+#ifndef Q_OS_OSX
     return QApplication::primaryScreen()->logicalDotsPerInch();
+#else
+    return 100;
+#endif
 }
 
 int Gui::Screen::scaled(int size) {
