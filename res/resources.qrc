@@ -3,6 +3,7 @@
         <file>fonts/OpenSans-Light.ttf</file>
         <file>gfx/background.png</file>
         <file>gfx/logo-about.png</file>
+        <file>gfx/actions/add.png</file>
         <file>gfx/actions/associate.png</file>
         <file>gfx/actions/box.png</file>
         <file>gfx/actions/bug.png</file>
@@ -29,6 +30,7 @@
         <file>gfx/actions/undo.png</file>
         <file>gfx/actions/update.png</file>
         <file>gfx/actions/world.png</file>
+        <file>gfx/blank/tv.png</file>
         <file>gfx/clouds/dropbox.png</file>
         <file>gfx/clouds/gdrive.png</file>
         <file>gfx/clouds/onedrive.png</file>
@@ -36,5 +38,6 @@
         <file>gfx/devices/amazon.png</file>
         <file>gfx/devices/android.png</file>
         <file>gfx/devices/blackberry.png</file>
+        <file>gfx/dpi/tv.png</file>
     </qresource>
 </RCC>
