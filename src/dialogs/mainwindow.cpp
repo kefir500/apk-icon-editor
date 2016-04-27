@@ -714,8 +714,8 @@ void MainWindow::hideEmptyDpi()
 void MainWindow::addIconTV()
 {
     if (apk->addAndroidTV()) {
-        QList<QSharedPointer<Icon> > *icons = &apk->getIcons();
-        (*icons)[Dpi::BANNER].data()->replace(QPixmap(":/gfx/blank/tv.png"));
+        QList<QSharedPointer<Icon> > icons = apk->getIcons();
+        icons[Dpi::BANNER].data()->replace(QPixmap(":/gfx/blank/tv.png"));
         setModified();
         hideEmptyDpi();
         devices->setCurrentItem(Dpi::BANNER);
