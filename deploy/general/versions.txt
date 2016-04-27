@@ -2,11 +2,12 @@
 
 ## 1.7.0
 * Upgraded *Apktool* to *v2.1.0*.
-* Improved APK handling.
 * Added *Android TV* banner support.
 * Added support for high-DPI displays.
 * Added icons for recent files.
 * Added *Italian* translation.
+* Added *Romanian* translation.
+* Improved APK handling.
 * Reduced startup time.
 * Major improvements and bug fixes.
 * Lots of internal refactoring.
