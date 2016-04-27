@@ -1,6 +1,8 @@
 #include "icon.h"
-#include <QLabel>
+#include <QDir>
+#include <QFileInfo>
 #include <QPainter>
+#include <QLabel>
 
 Icon::Icon(QString filename)
 {
@@ -22,6 +24,7 @@ bool Icon::save(QString filename)
     if (filename.isEmpty()) {
         filename = original;
     }
+    QDir().mkpath(QFileInfo(filename).absolutePath());
     return getPixmap().save(filename, NULL, 100);
 }
 
