@@ -195,12 +195,9 @@ void Packer::saveAppTitle(QString contents, QString title) const
 
         QDomDocument dom;
         dom.setContent(xml);
-
-        QDomNodeList list = dom.elementsByTagName("application");
-        if (!list.isEmpty()) {
-            QDomNamedNodeMap attr = list.at(0).attributes();
-            attr.namedItem("android:label").setNodeValue(title);
-        }
+        dom.firstChildElement("manifest")
+           .firstChildElement("application")
+           .setAttribute("android:label", title);
 
         QTextStream out(&f);
         dom.save(out, 4);
