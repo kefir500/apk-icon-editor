@@ -4,6 +4,7 @@
 #include "apk.h"
 #include "icon.h"
 #include "device.h"
+#include <QDomDocument>
 
 namespace Apk {
 
@@ -13,6 +14,10 @@ namespace Apk {
         ~File();
 
         void clear();
+
+        // TODO: Move these methods to a seperate class (e.g., Apk::Manifest).
+        bool addAndroidTV();
+        QDomElement findIntentByCategory(QDomElement root, QString category);
 
         QString getFilePath() const;
         QString getDirectory() const;

@@ -1,5 +1,6 @@
 #include "apkfile.h"
 #include <QDir>
+#include <QTextStream>
 
 Apk::File::~File()
 {
@@ -14,6 +15,81 @@ void Apk::File::clear()
     QFileInfo fi(contents);
     if (!contents.isEmpty() && fi.exists() && !fi.isRoot()) {
         QDir(contents).removeRecursively();
+    }
+}
+
+QDomElement Apk::File::findIntentByCategory(QDomElement activity, QString category)
+{
+    QDomElement intent = activity.firstChildElement("intent-filter");
+    while (!intent.isNull()) {
+
+        QDomElement cat = intent.firstChildElement("category");
+        while (!cat.isNull()) {
+
+            if (cat.attribute("android:name") == "android.intent.category." + category) {
+                return intent;
+            }
+            cat = cat.nextSiblingElement();
+        }
+        intent = intent.nextSiblingElement();
+    }
+    return QDomElement();
+}
+
+bool Apk::File::addAndroidTV()
+{
+    QFile f(contents + "/AndroidManifest.xml");
+    if (f.open(QFile::ReadWrite | QFile::Text)) {
+
+        QTextStream in(&f);
+        QString xml = in.readAll();
+        QDomDocument dom;
+        dom.setContent(xml);
+
+        QDomElement application = dom.firstChildElement("manifest")
+                                     .firstChildElement("application");
+
+        application.setAttribute("android:banner", "@drawable/banner");
+
+        QDomElement intent;
+
+        QDomElement activity = application.firstChildElement("activity");
+        while (!activity.isNull()) {
+            intent = findIntentByCategory(activity, "LAUNCHER");
+            if (!intent.isNull()) { break; }
+            activity = activity.nextSiblingElement();
+        }
+
+        // If the "activity" tag was not found, try the "activity-alias" tag:
+        if (intent.isNull()) {
+            QDomElement activity = application.firstChildElement("activity-alias");
+            while (!activity.isNull()) {
+                intent = findIntentByCategory(activity, "LAUNCHER");
+                if (!intent.isNull()) { break; }
+                activity = activity.nextSiblingElement();
+            }
+        }
+
+        if (!intent.isNull()) {
+            // Add Android TV launcher:
+            QDomElement tvlauncher = dom.createElement("category");
+            tvlauncher.setTagName("category");
+            tvlauncher.setAttribute("android:name", "android.intent.category.LEANBACK_LAUNCHER");
+            intent.appendChild(tvlauncher);
+
+            // Write output XML:
+            f.resize(0);
+            QTextStream out(&f);
+            dom.save(out, 4);
+            f.close();
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    else {
+        return false;
     }
 }
 

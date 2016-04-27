@@ -79,6 +79,8 @@ public slots:
     bool setPreviewColor();          ///< Displays background color selection dialog.
     void showEffectsDialog();        ///< Displays "Effects" dialog.
 
+    void addIconTV();
+
     void associate() const;          ///< Sets "APK Icon Editor" as the default application for \c apk files (Windows only).
     void browseSite() const;         ///< Opens website URL in the default browser.
     void browseBugs() const;         ///< Opens bugs webpage in the default browser.
@@ -193,6 +195,7 @@ private:
     DrawArea *drawArea;
     QTabWidget *tabs;
     ComboList *devices;
+    QPushButton *btnAddIcon;
     QPushButton *btnApplyIcons;
     QLabel *labelTool;
     QToolButton *btnTool;
@@ -238,6 +241,7 @@ private:
     QAction *actIconRevert;
     QAction *actIconBack;
     QAction *actIconEffect;
+    QAction *actAddIconTV;
     QAction *actPacking;
     QAction *actKeys;
     QAction *actTranslate;

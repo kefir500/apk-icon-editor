@@ -264,9 +264,18 @@ void MainWindow::init_gui()
     devices = new ComboList(this);
     devices->addActions(menuIcon->actions());
     devices->setEnabled(false);
+    QMenu *menuAdd = new QMenu(this);
+    actAddIconTV = new QAction("TV", this);
+    actAddIconTV->setIcon(QIcon(":/gfx/dpi/tv.png"));
+    menuAdd->addAction(actAddIconTV);
+    btnAddIcon = new QPushButton(this);
+    btnAddIcon->setIcon(QIcon(":/gfx/actions/add.png"));
+    btnAddIcon->setEnabled(false);
+    btnAddIcon->setMenu(menuAdd);
     btnApplyIcons = new QPushButton(this);
     btnApplyIcons->setEnabled(false);
     layoutIcons->addWidget(devices);
+    layoutIcons->addWidget(btnAddIcon);
     layoutIcons->addWidget(btnApplyIcons);
     layoutIcons->setMargin(4);
 
@@ -446,6 +455,7 @@ void MainWindow::init_slots()
     connect(actAboutQt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
     connect(btnPack, SIGNAL(clicked()), this, SLOT(apk_save()));
     connect(mapRecent, SIGNAL(mapped(QString)), this, SLOT(apk_open(QString)));
+    connect(actAddIconTV, SIGNAL(triggered()), this, SLOT(addIconTV()));
     connect(btnApplyIcons, SIGNAL(clicked()), this, SLOT(cloneIcons()));
     connect(tableStrings, SIGNAL(cellChanged(int, int)), this, SLOT(stringChanged(int, int)));
     connect(editAppName, SIGNAL(textEdited(QString)), this, SLOT(setModified()));
@@ -697,6 +707,18 @@ void MainWindow::hideEmptyDpi()
             visible = !icon->isNull();
         }
         devices->setItemVisible(DPI, visible);
+        if (DPI == Dpi::BANNER) { actAddIconTV->setEnabled(!visible); }
+    }
+}
+
+void MainWindow::addIconTV()
+{
+    if (apk->addAndroidTV()) {
+        QList<QSharedPointer<Icon> > *icons = &apk->getIcons();
+        (*icons)[Dpi::BANNER].data()->replace(QPixmap(":/gfx/blank/tv.png"));
+        setModified();
+        hideEmptyDpi();
+        devices->setCurrentItem(Dpi::BANNER);
     }
 }
 
@@ -756,6 +778,7 @@ void MainWindow::enableApktool(bool enable)
         editVersionCode->setEnabled(enable);
         editVersionName->setEnabled(enable);
         btnApplyAppName->setEnabled(enable);
+        btnAddIcon->setEnabled(enable);
     }
 
     if (enable) {
@@ -960,6 +983,7 @@ void MainWindow::apk_unpacked(Apk::File *apk)
         editVersionCode->setEnabled(true);
         editVersionName->setEnabled(true);
         btnApplyAppName->setEnabled(true);
+        btnAddIcon->setEnabled(true);
     }
     devices->setEnabled(true);
     btnPack->setEnabled(true);

@@ -183,7 +183,10 @@ QList<QSharedPointer<Icon> > Unpacker::getIcons(QString manifest, QString conten
         }
         if (filename.isEmpty()) {
             // Create dummy entry
-            icons.push_back(QSharedPointer<Icon>(new Icon));
+            icons.push_back(QSharedPointer<Icon>(
+                            i != Dpi::BANNER
+                            ? new Icon
+                            : new Icon(contents + "/res/drawable-xhdpi-v4/banner.png")));
             continue;
         }
         const int DUPL = files.lastIndexOf(filename, i - 1);
