@@ -5,18 +5,18 @@
 - [Ben Gruver](https://github.com/JesusFreke) – [smali/baksmali](https://github.com/JesusFreke/smali)
 
 ## Translations
-- Chinese (China) – [YFdyh000](https://www.transifex.com/accounts/profile/yfdyh000), [QQ775405984](https://www.transifex.com/accounts/profile/775405984)
-- Dutch (Netherlands) – [Heimen Stoffels](https://www.transifex.com/accounts/profile/Vistaus), [Roder van Arkel](https://www.transifex.com/accounts/profile/Roder)
-- French – [Stold](https://www.transifex.com/accounts/profile/Stold), [AzRock](https://www.transifex.com/accounts/profile/AzRock)
-- German – [Sebastian Herrmann](https://www.transifex.com/accounts/profile/herrherrmann), [Wasilis Mandratzis-Walz](https://www.transifex.com/accounts/profile/beonex)
-- Greek – [Wasilis Mandratzis-Walz](https://www.transifex.com/accounts/profile/beonex), [Manos Santos](https://www.transifex.com/accounts/profile/goldensacrum)
-- Hungarian – [Fodor Kristóf](https://www.transifex.com/accounts/profile/MintiIceCream)
-- Italian – [Luca Fioravanti](https://www.transifex.com/accounts/profile/fioravanti.luka)
-- Portuguese (Brazil) – [Valnei Júnior](https://www.transifex.com/accounts/profile/valneijr)
-- Romanian – [Levente Bandi](https://www.transifex.com/user/profile/RafalWorks)
-- Russian – [Alexander Gorishnyak](https://www.transifex.com/accounts/profile/kefir500)
-- Spanish – [Cristhian Garcia](https://www.transifex.com/accounts/profile/CristhianLP)
-- Turkish – [Çağdaş Tatar](https://www.transifex.com/accounts/profile/echelon)
+- Chinese (China) – [YFdyh000](https://www.transifex.com/user/profile/yfdyh000/), [QQ775405984](https://www.transifex.com/user/profile/775405984/)
+- Dutch (Netherlands) – [Heimen Stoffels](https://www.transifex.com/user/profile/Vistaus/), [Roder van Arkel](https://www.transifex.com/user/profile/Roder/)
+- French – [Stold](https://www.transifex.com/user/profile/Stold/), [AzRock](https://www.transifex.com/user/profile/AzRock/)
+- German – [Sebastian Herrmann](https://www.transifex.com/user/profile/herrherrmann/), [Wasilis Mandratzis-Walz](https://www.transifex.com/user/profile/beonex/)
+- Greek – [Wasilis Mandratzis-Walz](https://www.transifex.com/user/profile/beonex/), [Manos Santos](https://www.transifex.com/user/profile/goldensacrum/)
+- Hungarian – [Fodor Kristóf](https://www.transifex.com/user/profile/MintiIceCream/)
+- Italian – [Luca Fioravanti](https://www.transifex.com/user/profile/fioravanti.luka/)
+- Portuguese (Brazil) – [Valnei Júnior](https://www.transifex.com/user/profile/valneijr/)
+- Romanian – [Levente Bandi](https://www.transifex.com/user/profile/RafalWorks/)
+- Russian – [Alexander Gorishnyak](https://www.transifex.com/user/profile/kefir500/)
+- Spanish – [Cristhian Garcia](https://www.transifex.com/user/profile/CristhianLP/)
+- Turkish – [Çağdaş Tatar](https://www.transifex.com/user/profile/echelon/)
 
 ## Contributors
 - Roder van Arkel
