@@ -10,7 +10,6 @@
 
 About::About(QWidget *parent) : QDialog(parent)
 {
-    setWindowTitle(tr("About"));
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
     QLabel *icon = new QLabel(this);
@@ -112,6 +111,8 @@ void About::showAuthors() const
 
 void About::retranslate()
 {
+    setWindowTitle(tr("About"));
+
     textApp->setText(
         QString("<h3>%1 v%2</h3>").arg(APP, VER) +
         tr("Built on: %1 - %2").arg(__DATE__, __TIME__) + "<br>" +
