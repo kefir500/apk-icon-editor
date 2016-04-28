@@ -13,6 +13,7 @@
 - Hungarian – [Fodor Kristóf](https://www.transifex.com/accounts/profile/MintiIceCream)
 - Italian – [Luca Fioravanti](https://www.transifex.com/accounts/profile/fioravanti.luka)
 - Portuguese (Brazil) – [Valnei Júnior](https://www.transifex.com/accounts/profile/valneijr)
+- Romanian – [Levente Bandi](https://www.transifex.com/user/profile/RafalWorks)
 - Russian – [Alexander Gorishnyak](https://www.transifex.com/accounts/profile/kefir500)
 - Spanish – [Cristhian Garcia](https://www.transifex.com/accounts/profile/CristhianLP)
 - Turkish – [Çağdaş Tatar](https://www.transifex.com/accounts/profile/echelon)
