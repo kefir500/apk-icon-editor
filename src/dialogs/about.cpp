@@ -1,12 +1,9 @@
 #include "about.h"
+#include "authors.h"
 #include "globals.h"
 #include <QBoxLayout>
 #include <QPushButton>
 #include <QDialogButtonBox>
-#include <QMessageBox>
-#include <QFile>
-#include <QTextStream>
-#include <QTextCodec>
 
 About::About(QWidget *parent) : QDialog(parent)
 {
@@ -77,36 +74,10 @@ void About::setVersions(QString jre, QString jdk, QString apktool)
     );
 }
 
-void About::showAuthors() const
+void About::showAuthors()
 {
-    QMessageBox authors;
-    authors.setWindowTitle(tr("Authors"));
-    authors.setIconPixmap(QPixmap(":/gfx/logo-about.png"));
-
-    QRegExp rx("\\(www.(.+)\\)");
-    rx.setMinimal(true);
-
-    QString strAuthors;
-    QFile inputFile(Path::App::dir() + "/authors.txt");
-    if (inputFile.open(QIODevice::ReadOnly)) {
-        QTextStream in(&inputFile);
-        in.setCodec(QTextCodec::codecForName("UTF-8"));
-        bool newline = true;
-        while (!in.atEnd()) {
-            QString line = in.readLine();
-            if (line == "Testers:") {
-                strAuthors.chop(4); // Chop the last "<br>" tag.
-                break;
-            }
-            line = line.replace(rx, "(<a href=\"http://www.\\1\">www.\\1</a>)");
-            strAuthors += !newline ? line + "<br>" : QString("<b>%1</b><br>").arg(line);
-            newline = line.isEmpty();
-        }
-        strAuthors.chop(4); // Chop the last "<br>" tag.
-        inputFile.close();
-        authors.setText(strAuthors);
-        authors.exec();
-    }
+    Authors authors(this);
+    authors.exec();
 }
 
 void About::retranslate()
