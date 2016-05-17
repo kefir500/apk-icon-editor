@@ -2,13 +2,35 @@
 #include "globals.h"
 #include <QProcess>
 
+bool Apk::whichJava(Java java)
+{
+#ifdef Q_OS_OSX
+    QProcess p;
+    p.start(QString("which %1").arg(java == JRE ? "java" : "javac"));
+    if (p.waitForStarted()) {
+        p.waitForFinished();
+        return !p.readAllStandardOutput().trimmed().isEmpty();
+    }
+    else {
+        return false;
+    }
+#else
+    return true;
+#endif
+}
+
 QString Apk::getApktoolVersion()
 {
-    QProcess p;
-    p.start(QString("java -jar \"%1/apktool.jar\" -version").arg(Path::App::dir()));
-    if (p.waitForStarted(-1)) {
-        p.waitForFinished(-1);
-        return p.readAllStandardOutput().trimmed();
+    if (whichJava(JRE)) {
+        QProcess p;
+        p.start(QString("java -jar \"%1/apktool.jar\" -version").arg(Path::App::dir()));
+        if (p.waitForStarted(-1)) {
+            p.waitForFinished(-1);
+            return p.readAllStandardOutput().trimmed();
+        }
+        else {
+            return QString();
+        }
     }
     else {
         return QString();
@@ -17,12 +39,17 @@ QString Apk::getApktoolVersion()
 
 QString Apk::getJavaVersion(Java java)
 {
-    QProcess p;
-    p.start(QString("%1 -version").arg(java == JRE ? "java" : "javac"));
-    if (p.waitForStarted(-1)) {
-        p.waitForFinished(-1);
-        const QString VERSION = p.readAllStandardError().replace("\r\n", "\n").trimmed();
-        return VERSION;
+    if (whichJava(java)) {
+        QProcess p;
+        p.start(QString("%1 -version").arg(java == JRE ? "java" : "javac"));
+        if (p.waitForStarted(-1)) {
+            p.waitForFinished(-1);
+            const QString VERSION = p.readAllStandardError().replace("\r\n", "\n").trimmed();
+            return VERSION;
+        }
+        else {
+            return QString();
+        }
     }
     else {
         return QString();

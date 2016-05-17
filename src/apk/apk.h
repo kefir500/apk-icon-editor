@@ -14,6 +14,7 @@ namespace Apk {
     QString getJreVersion();           ///< Returns JRE version.
     QString getJdkVersion();           ///< Returns JDK version.
     QString getApktoolVersion();       ///< Returns Apktool version.
+    bool whichJava(Java java);         ///< Returns \c true if OS X "which" command returns non-empty result.
 
     class String {
     public:
