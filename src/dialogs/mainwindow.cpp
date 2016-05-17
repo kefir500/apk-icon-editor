@@ -278,6 +278,7 @@ void MainWindow::init_gui()
     layoutIcons->addWidget(btnAddIcon);
     layoutIcons->addWidget(btnApplyIcons);
     layoutIcons->setMargin(4);
+    layoutIcons->setSpacing(6);
 
     QWidget *tabStrings = new QWidget(this);
     QGridLayout *layoutStrings = new QGridLayout(tabStrings);
