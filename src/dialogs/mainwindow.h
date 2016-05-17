@@ -79,7 +79,7 @@ public slots:
     bool setPreviewColor();          ///< Displays background color selection dialog.
     void showEffectsDialog();        ///< Displays "Effects" dialog.
 
-    void addIconTV();
+    void addIconTV();                ///< Adds Android TV banner for the current APK.
 
     void associate() const;          ///< Sets "APK Icon Editor" as the default application for \c apk files (Windows only).
     void browseSite() const;         ///< Opens website URL in the default browser.

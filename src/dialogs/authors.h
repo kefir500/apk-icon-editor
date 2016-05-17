@@ -13,16 +13,14 @@ class Authors : public QDialog
 public:
     explicit Authors(QWidget *parent = 0);
 
-public slots:
-
 private slots:
     void setCategory(QString text);
 
 private:
     void parse();
-    QMap<QString, QString> authors;
     QListWidget *list;
     QTextBrowser *text;
+    QMap<QString, QString> authors;
 };
 
 #endif // AUTHORS_H
