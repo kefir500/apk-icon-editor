@@ -34,7 +34,7 @@ About::About(QWidget *parent) : QDialog(parent)
     QDialogButtonBox *buttons = new QDialogButtonBox(this);
     btnAuthors = new QPushButton(this);
     buttons->addButton(QDialogButtonBox::Ok);
-    buttons->addButton(btnAuthors, QDialogButtonBox::ActionRole);
+    buttons->addButton(btnAuthors, QDialogButtonBox::AcceptRole);
 
     QHBoxLayout *layout = new QHBoxLayout(this);
     QVBoxLayout *texts = new QVBoxLayout;
