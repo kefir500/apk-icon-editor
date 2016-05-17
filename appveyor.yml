@@ -9,7 +9,7 @@ build_script:
 
 after_build:
   - call "C:\Qt\5.6\msvc2015\bin\qtenv2.bat"
-  - call "C:\Qt\5.6\msvc2015\bin\windeployqt" "C:/projects/apk-icon-editor/bin/apk-icon-editor.exe"
+  - call "C:\Qt\5.6\msvc2015\bin\windeployqt" "C:\projects\apk-icon-editor\bin\win32\apk-icon-editor.exe"
 
 artifacts:
   - path: bin\win32
@@ -21,7 +21,5 @@ deploy:
     release: Neutral Build
     auth_token:
       secure: t8/7KFOH0H0vl+tpP21AFg8T0cKG0bt2FfOg8EUK/EI+KJbfZXhpMwCfwW1/qIhW
-    artifact: application
-    draft: true
     prerelease: true
     force_update: true
