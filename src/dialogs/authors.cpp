@@ -7,7 +7,7 @@
 
 Authors::Authors(QWidget *parent) : QDialog(parent)
 {
-    resize(Gui::Screen::scaled(700, 256));
+    resize(Gui::Screen::scaled(700, 260));
     setWindowTitle(QApplication::translate("About", "Authors"));
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
