@@ -6,3 +6,8 @@ build_script:
   - qmake "DEFINES+=CI"
   - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86
   - nmake
+
+artifacts:
+  - path: bin\win32
+    name: application
+    type: zip
