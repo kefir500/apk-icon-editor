@@ -10,4 +10,14 @@ build_script:
 artifacts:
   - path: bin\win32
     name: application
-    type: zip
+
+deploy:
+  - provider: GitHub
+    tag: neutral
+    release: Neutral Build
+    auth_token:
+      secure: t8/7KFOH0H0vl+tpP21AFg8T0cKG0bt2FfOg8EUK/EI+KJbfZXhpMwCfwW1/qIhW
+    artifact: application
+    draft: true
+    prerelease: true
+    force_update: true
