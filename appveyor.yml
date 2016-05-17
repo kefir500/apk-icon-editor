@@ -4,4 +4,5 @@ install:
 
 build_script:
   - qmake apk-icon-editor.pro
+  - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86
   - nmake
