@@ -13,13 +13,15 @@ after_build:
 
 artifacts:
   - path: bin\win32
-    name: application
+    name: apk-icon-editor
 
 deploy:
   - provider: GitHub
     tag: neutral
     release: Neutral Build
+    description: Neutral Build
     auth_token:
-      secure: t8/7KFOH0H0vl+tpP21AFg8T0cKG0bt2FfOg8EUK/EI+KJbfZXhpMwCfwW1/qIhW
+      secure: qPnC/xIWRP0KyP0UcXb7q3hsJNHt8bX80th1gVxV54GzRkdMBvRJVCfPZMB2Hm/S
+    draft: false
     prerelease: true
     force_update: true
