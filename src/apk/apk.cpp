@@ -15,6 +15,7 @@ bool Apk::whichJava(Java java)
         return false;
     }
 #else
+    Q_UNUSED(java);
     return true;
 #endif
 }
