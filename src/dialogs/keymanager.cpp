@@ -320,7 +320,7 @@ void KeyCreator::accept()
     qputenv("PATH", ENV_PATH);
 
     if (p.waitForStarted(-1)) {
-        p.waitForFinished(10000);
+        p.waitForFinished(-1);
         if (p.exitCode() != 0) {
             QString error_text = p.readAllStandardError().trimmed();
             if (error_text.isEmpty()) error_text = p.readAllStandardOutput().trimmed();
