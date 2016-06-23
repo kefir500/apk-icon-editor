@@ -297,8 +297,8 @@ void KeyCreator::accept()
         return;
     }
     qDebug() << "Creating KeyStore...";
-    const QString ENV_PATH = qgetenv("PATH");
-    const QString JAVA_HOME = qgetenv("JAVA_HOME");
+    const QByteArray ENV_PATH = qgetenv("PATH");
+    const QByteArray JAVA_HOME = qgetenv("JAVA_HOME");
     const QString KEYTOOL_CMD =
             QString("keytool -genkeypair -v -keystore \"%1\" -storepass \"%10\""
                     " -alias \"%2\" -keyalg RSA -keysize 2048"
@@ -313,12 +313,11 @@ void KeyCreator::accept()
                         .arg(editState->text())
                         .arg(editCountry->text())
                         .arg(editYears->text().toInt() * 365);
-    qputenv("PATH", ENV_PATH.toStdString().c_str());
-    qputenv("PATH", QString("%1;%2/bin").arg(ENV_PATH, JAVA_HOME).toStdString().c_str());
+    qputenv("PATH", QString("%1;%2/bin").arg(QString(ENV_PATH)).arg(QString(JAVA_HOME)).toUtf8());
     qDebug() << qPrintable(KEYTOOL_CMD.arg("*****", "*****"));
     QProcess p;
     p.start(KEYTOOL_CMD.arg(editStorePass1->text(), editAliasPass1->text()));
-    qputenv("PATH", ENV_PATH.toStdString().c_str());
+    qputenv("PATH", ENV_PATH);
 
     if (p.waitForStarted(-1)) {
         p.waitForFinished(10000);
