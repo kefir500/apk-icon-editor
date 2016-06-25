@@ -3,13 +3,13 @@ install:
   - set PATH=%PATH%;%QTDIR%\bin
 
 build_script:
-  - qmake "DEFINES+=CI"
+  - qmake "DEFINES+=CI" -config release
   - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86
   - nmake
 
-after_build:
+before_deploy:
   - call "C:\Qt\5.6\msvc2015\bin\qtenv2.bat"
-  - call "C:\Qt\5.6\msvc2015\bin\windeployqt" "C:\projects\apk-icon-editor\bin\win32\apk-icon-editor.exe"
+  - call "C:\Qt\5.6\msvc2015\bin\windeployqt" "C:\projects\apk-icon-editor\bin\win32\apk-icon-editor.exe" --compiler-runtime --no-translations --no-svg
 
 artifacts:
   - path: bin\win32
