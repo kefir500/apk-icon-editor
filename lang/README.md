@@ -1,1 +1,1 @@
-APK Icon Editor is translated at [Transifex](https://www.transifex.com/projects/p/apk-icon-editor/).
+APK Icon Editor is translated at [Crowdin](https://crowdin.com/project/apk-icon-editor).

@@ -84,7 +84,7 @@ public slots:
     void associate() const;          ///< Sets "APK Icon Editor" as the default application for \c apk files (Windows only).
     void browseSite() const;         ///< Opens website URL in the default browser.
     void browseBugs() const;         ///< Opens bugs webpage in the default browser.
-    void browseTranslate() const;    ///< Opens Transifex URL in the default browser.
+    void browseTranslate() const;    ///< Opens Crowdin URL in the default browser.
     void browseFaq() const;          ///< Opens FAQ text document.
     void openLogFile() const;        ///< Opens log file.
     void openLogPath() const;        ///< Opens log directory.
