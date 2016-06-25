@@ -6,14 +6,14 @@
 
 ## Translations
 - Chinese (China) – [YFdyh000](https://www.transifex.com/user/profile/yfdyh000/), [QQ775405984](https://www.transifex.com/user/profile/775405984/)
-- Dutch (Netherlands) – [Heimen Stoffels](https://www.transifex.com/user/profile/Vistaus/), [Roder van Arkel](https://www.transifex.com/user/profile/Roder/)
+- Dutch – [Heimen Stoffels](https://www.transifex.com/user/profile/Vistaus/), [Roder van Arkel](https://www.transifex.com/user/profile/Roder/), [GyllieGyllie](https://crowdin.com/profile/GyllieGyllie)
 - French – [Stold](https://www.transifex.com/user/profile/Stold/), [AzRock](https://www.transifex.com/user/profile/AzRock/)
 - German – [Sebastian Herrmann](https://www.transifex.com/user/profile/herrherrmann/), [Wasilis Mandratzis-Walz](https://www.transifex.com/user/profile/beonex/)
 - Greek – [Wasilis Mandratzis-Walz](https://www.transifex.com/user/profile/beonex/), [Manos Santos](https://www.transifex.com/user/profile/goldensacrum/)
 - Hungarian – [Fodor Kristóf](https://www.transifex.com/user/profile/MintiIceCream/)
 - Italian – [Luca Fioravanti](https://www.transifex.com/user/profile/fioravanti.luka/)
 - Portuguese (Brazil) – [Valnei Júnior](https://www.transifex.com/user/profile/valneijr/)
-- Romanian – [Levente Bandi](https://www.transifex.com/user/profile/RafalWorks/)
+- Romanian – [Levente Bandi](https://crowdin.com/profile/rafalworks)
 - Russian – [Alexander Gorishnyak](https://www.transifex.com/user/profile/kefir500/)
 - Spanish – [Cristhian Garcia](https://www.transifex.com/user/profile/CristhianLP/)
 - Turkish – [Çağdaş Tatar](https://www.transifex.com/user/profile/echelon/)

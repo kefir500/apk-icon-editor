@@ -6,7 +6,7 @@ Ben Gruver – smali/baksmali
 
 Translations:
 Chinese (China) – YFdyh000, QQ775405984
-Dutch (Netherlands) – Heimen Stoffels, Roder van Arkel
+Dutch – Heimen Stoffels, Roder van Arkel, GyllieGyllie
 French – Stold, AzRock
 German – Sebastian Herrmann, Wasilis Mandratzis-Walz
 Greek – Wasilis Mandratzis-Walz, Manos Santos
