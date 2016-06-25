@@ -4,7 +4,7 @@ Connor Tumbleson – Apktool
 Ryszard Wiśniewski – Apktool (original)
 Ben Gruver – smali/baksmali
 
-Translations:
+Translators:
 Chinese (China) – YFdyh000, QQ775405984
 Dutch – Heimen Stoffels, Roder van Arkel, GyllieGyllie
 French – Stold, AzRock
@@ -22,7 +22,7 @@ Contributors:
 Roder van Arkel
 Ameen Ali
 
-Supported by:
+Donators:
 Cyclos (www.cyclos.org)
 Julien Veuillet (www.wakdev.com)
 
