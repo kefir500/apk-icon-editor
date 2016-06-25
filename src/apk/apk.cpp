@@ -40,19 +40,26 @@ QString Apk::getApktoolVersion()
 
 QString Apk::getJavaVersion(Java java)
 {
+    const QByteArray ENV_PATH = qgetenv("PATH");
+    const QByteArray JAVA_HOME = qgetenv("JAVA_HOME");
+    qputenv("PATH", QString("%1;%2/bin").arg(QString(ENV_PATH)).arg(QString(JAVA_HOME)).toUtf8());
+
     if (whichJava(java)) {
         QProcess p;
         p.start(QString("%1 -version").arg(java == JRE ? "java" : "javac"));
         if (p.waitForStarted(-1)) {
             p.waitForFinished(-1);
             const QString VERSION = p.readAllStandardError().replace("\r\n", "\n").trimmed();
+            qputenv("PATH", ENV_PATH);
             return VERSION;
         }
         else {
+            qputenv("PATH", ENV_PATH);
             return QString();
         }
     }
     else {
+        qputenv("PATH", ENV_PATH);
         return QString();
     }
 }
