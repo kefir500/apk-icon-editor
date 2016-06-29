@@ -48,11 +48,11 @@ void Cloud::cancel()
 
 void Cloud::catchReply(QNetworkReply *reply)
 {
+    QNetworkReply::NetworkError error = reply->error();
     reply->deleteLater();
     timer->stop();
 
-    if (reply->error() == QNetworkReply::NoError) {
-
+    if (error == QNetworkReply::NoError) {
         const int CODE = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
         if (CODE >= 200 && CODE < 300) {
             processReply(reply);
@@ -63,28 +63,21 @@ void Cloud::catchReply(QNetworkReply *reply)
             http->get(QNetworkRequest(QUrl(redirect)));
         }
     }
-    else if (reply->error() == QNetworkReply::AuthenticationRequiredError) {
+    else if (error == QNetworkReply::AuthenticationRequiredError) {
         if (!reply->url().toString().contains(DROPBOX_UPLOAD)) {
             auth();
         }
         else {
             // Handle situation when the destination Dropbox folder is removed during upload.
-            catchError(reply->error(), reply->errorString());
+            catchError(error, reply->errorString());
         }
     }
-    else if (reply->error() == QNetworkReply::UnknownContentError
-             && reply->url().toString().contains(urlToken))
-    {
-        catchError(reply->error(), tr("Check the code you entered."));
+    else if (error == QNetworkReply::UnknownContentError && reply->url().toString().contains(urlToken)) {
+        catchError(error, tr("Check the code you entered."));
     }
     else {
-#ifdef QT_DEBUG
-        qDebug() << "------- Reply -------";
         qDebug() << reply->url();
-        qDebug() << reply->readAll();
-        qDebug() << "----- Reply End -----";
-#endif
-        catchError(reply->error(), reply->errorString());
+        catchError(error, reply->errorString());
     }
 }
 
