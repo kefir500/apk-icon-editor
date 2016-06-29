@@ -106,7 +106,7 @@ void Cloud::catchError(QNetworkReply::NetworkError code, QString text)
         const QString ERR_UPLOAD(tr("Error uploading APK to %1.").arg(title));
         QString errtext;
         if (!text.isEmpty()) {
-            errtext = QString("%1\n%2").arg(ERR_UPLOAD, tr(text.toStdString().c_str()));
+            errtext = QString("%1\n%2").arg(ERR_UPLOAD, tr(text.toUtf8()));
         }
         else {
             errtext = QString("%1\n%2").arg(ERR_UPLOAD, tr("Code: %1").arg(code));
@@ -354,7 +354,7 @@ void GoogleDrive::startUpload()
 
     QHttpPart part1;
     part1.setHeader(QNetworkRequest::ContentTypeHeader, "application/json; charset=UTF-8");
-    part1.setBody(JSON.toStdString().c_str());
+    part1.setBody(JSON.toUtf8());
 
     QHttpPart part2;
     part2.setHeader(QNetworkRequest::ContentTypeHeader, "application/octet-stream");
