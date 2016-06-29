@@ -404,25 +404,6 @@ bool OneDrive::processReply(QNetworkReply *reply)
     return false;
 }
 
-void OneDrive::getFolderID()
-{
-    /*QNetworkRequest request;
-    request.setUrl(QUrl(urlFiles));
-    request.setRawHeader("Authorization", QString("Bearer " + token).toUtf8());
-    http->get(request);*/
-}
-
-void OneDrive::createFolder()
-{
-    /*QByteArray json = QString("{\"name\":\"%1\"}").arg(APP).toUtf8();
-    QNetworkRequest request;
-    request.setUrl(QUrl(urlFiles));
-    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
-    request.setHeader(QNetworkRequest::ContentLengthHeader, json.size());
-    request.setRawHeader("Authorization", QString("Bearer " + token).toUtf8());
-    http->post(request, json);*/
-}
-
 void OneDrive::startUpload()
 {
     const QByteArray BYTES = readFile(filename);

@@ -153,9 +153,6 @@ public:
 private:
     virtual bool processReply(QNetworkReply *reply);
     virtual void startUpload();
-    void getFolderID();         ///< \warning Dummy method. Do not use.
-    void createFolder();        ///< \warning Dummy method. Do not use.
-    QString folder;             ///< "APK Icon Editor" folder ID at OneDrive.
 };
 
 #endif // UPLOADER_H
