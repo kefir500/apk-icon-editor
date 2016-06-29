@@ -5,10 +5,10 @@
 #include <QDesktopServices>
 
 // Dropbox:
-const QString DROPBOX_AUTH      = QString("https://www.dropbox.com/1/oauth2/authorize?response_type=code&client_id=%1").arg(DROPBOX_ID);
-const QString DROPBOX_TOKEN     = "https://api.dropbox.com/1/oauth2/token";
-const QString DROPBOX_STATUS    = "https://api.dropbox.com/1/account/info";
-const QString DROPBOX_UPLOAD    = "https://api-content.dropbox.com/1/files_put/sandbox/";
+const QString DROPBOX_AUTH      = QString("https://www.dropbox.com/oauth2/authorize?response_type=code&client_id=%1").arg(DROPBOX_ID);
+const QString DROPBOX_TOKEN     = "https://api.dropboxapi.com/oauth2/token";
+const QString DROPBOX_STATUS    = "https://api.dropboxapi.com/2/users/get_current_account";
+const QString DROPBOX_UPLOAD    = "https://content.dropboxapi.com/2/files/upload";
 
 // Google Drive:
 const QString GDRIVE_AUTH       = QString("https://accounts.google.com/o/oauth2/auth?response_type=code&scope=https://www.googleapis.com/auth/drive.file&redirect_uri=urn:ietf:wg:oauth:2.0:oob&client_id=%1").arg(GGDRIVE_ID);
@@ -219,7 +219,12 @@ void Cloud::upload(QString filename)
         request.setUrl(QUrl(urlStatus));
         request.setRawHeader("Authorization", QString("Bearer " + token).toUtf8());
         timer->start();
-        http->head(request);
+        if (qobject_cast<Dropbox*>(this)) {
+            request.setRawHeader("Content-Type", "application/json");
+            http->post(request, "null");
+        } else {
+            http->head(request);
+        }
     }
     else {
         auth();
@@ -261,13 +266,13 @@ void Dropbox::startUpload()
     const QString TITLE = QFileInfo(filename).fileName();
 
     QNetworkRequest request;
-    request.setUrl(QUrl(urlUpload + TITLE + "?overwrite=false"));
-    request.setHeader(QNetworkRequest::ContentTypeHeader, "multipart/form-data; boundary=-----------------------------1a3189a56701e");
-    request.setHeader(QNetworkRequest::ContentLengthHeader, FILE.size());
+    request.setUrl(QUrl(urlUpload));
     request.setRawHeader("Authorization", QString("Bearer " + token).toUtf8());
+    request.setRawHeader("Content-Type", "application/octet-stream");
+    request.setRawHeader("Dropbox-API-Arg", QString("{\"path\": \"/%1\", \"mode\": \"add\", \"autorename\": true}").arg(TITLE).toUtf8());
 
     timer->start();
-    QNetworkReply *reply = http->put(request, FILE);
+    QNetworkReply *reply = http->post(request, FILE);
     connect(reply, SIGNAL(uploadProgress(qint64, qint64)), this, SLOT(uploadProgress(qint64, qint64)));
     connect(this, SIGNAL(cancelled()), reply, SLOT(abort()));
 }
