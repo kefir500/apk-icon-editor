@@ -8,7 +8,7 @@
 Authors::Authors(QWidget *parent) : QDialog(parent)
 {
     resize(Gui::Screen::scaled(700, 260));
-    setWindowTitle(QApplication::translate("About", "Authors"));
+    setWindowTitle(tr("Authors"));
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
     list = new QListWidget(this);
@@ -34,6 +34,13 @@ void Authors::setCategory(QString category)
 
 void Authors::parse()
 {
+    QT_TR_NOOP("Authors");
+    QT_TR_NOOP("Translators");
+    QT_TR_NOOP("Contributors");
+    QT_TR_NOOP("Donators");
+    QT_TR_NOOP("Special Thanks");
+    QT_TR_NOOP("Testers");
+
     QString category;
     QFile inputFile(Path::App::dir() + "/authors.txt");
     if (inputFile.open(QIODevice::ReadOnly)) {
@@ -43,8 +50,8 @@ void Authors::parse()
             QString line = in.readLine();
             if (line.endsWith(':')) {
                 line.chop(1);
-                category = line;
-                list->addItem(line);
+                category = tr(qPrintable(line));
+                list->addItem(category);
             }
             else {
                 if (!line.isEmpty()) {
