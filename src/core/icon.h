@@ -91,22 +91,4 @@ private:
     QString original; ///< Stores the pixmap original filename. Used to revert the original pixmap.
 };
 
-/// \brief Filter for open/save dialogs.
-/// \see EXT_GFX
-
-const QString FILTER_GFX =
-    "PNG (*.png)"
-    ";;ICO (*.ico)"
-    ";;GIF (*.gif)"
-    ";;JPEG (*.jpg *.jpeg)"
-    ";;BMP (*.bmp)"
-;
-
-/// \brief List of supported image formats.
-/// \see FILTER_GFX
-
-const QStringList EXT_GFX = QStringList()
-    << "png" << "ico" << "gif"
-    << "jpg" << "jpeg" << "bmp";
-
 #endif // ICON_H

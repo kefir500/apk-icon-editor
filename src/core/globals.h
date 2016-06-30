@@ -26,6 +26,21 @@ namespace Gui {
 }
 
 ///
+/// This namespace incorporates the functions related to icons and images.
+///
+
+namespace Image {
+
+    /// This namespace describes the supported image formats.
+
+    namespace Formats {
+        QStringList supported();    ///< Returns the list of supported image formats.
+        QString openDialogFilter(); ///< Returns an image format filter for the "Open" dialog.
+        QString saveDialogFilter(); ///< Returns an image format filter for the "Save" dialog.
+    }
+}
+
+///
 /// This namespace incorporates the constants and functions related to the application and system paths.
 ///
 

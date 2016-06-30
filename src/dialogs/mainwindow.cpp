@@ -1002,11 +1002,7 @@ bool MainWindow::icon_open(QString filename)
     }
 
     if (filename.isEmpty()) {
-        const QString SUPPORTED = " (*." + EXT_GFX.join(" *.") + ");;";
-        filename = QFileDialog::getOpenFileName(this, tr("Import Icon"), NULL,
-                                                tr("Supported Formats") + SUPPORTED
-                                                + FILTER_GFX + ";;"
-                                                + tr("All Files"));
+        filename = QFileDialog::getOpenFileName(this, tr("Import Icon"), NULL, Image::Formats::openDialogFilter());
         if (filename.isEmpty()) {
             return false;
         }
@@ -1055,7 +1051,7 @@ bool MainWindow::icon_save(QString filename)
         Device device = Devices::at(devices->currentGroupIndex());
         const QSize SIZE = device.getDpiSize(Dpi::cast(devices->currentItemIndex()));
         filename = QString("%1-%2x%3").arg(QFileInfo(currentApk).completeBaseName()).arg(SIZE.width()).arg(SIZE.height());
-        filename = QFileDialog::getSaveFileName(this, tr("Save Icon"), filename, FILTER_GFX);
+        filename = QFileDialog::getSaveFileName(this, tr("Save Icon"), filename, Image::Formats::saveDialogFilter());
         if (filename.isEmpty()) {
             return false;
         }
@@ -1452,7 +1448,7 @@ void MainWindow::dropEvent(QDropEvent *event)
         }
 
         QString ext = QFileInfo(filename).suffix().toLower();
-        if (EXT_GFX.contains(ext)) {
+        if (Image::Formats::supported().contains(ext)) {
             icon_open(filename);
         }
         else if (ext == "apk") {
