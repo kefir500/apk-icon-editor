@@ -20,8 +20,10 @@ deploy:
     tag: neutral
     release: Neutral Build
     description: Neutral Build
-    auth_token:
-      secure: qPnC/xIWRP0KyP0UcXb7q3hsJNHt8bX80th1gVxV54GzRkdMBvRJVCfPZMB2Hm/S
     draft: false
     prerelease: true
     force_update: true
+    auth_token:
+      secure: qPnC/xIWRP0KyP0UcXb7q3hsJNHt8bX80th1gVxV54GzRkdMBvRJVCfPZMB2Hm/S
+    on:
+      appveyor_scheduled_build: true
