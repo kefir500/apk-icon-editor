@@ -17,9 +17,9 @@ artifacts:
 
 deploy:
   - provider: GitHub
-    tag: neutral
-    release: Neutral Build
-    description: Neutral Build
+    tag: nightly
+    release: APK Icon Editor - Nightly Build
+    description: Nightly Build
     draft: false
     prerelease: true
     force_update: true
