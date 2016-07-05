@@ -1138,7 +1138,6 @@ void MainWindow::showEffectsDialog()
         effects->setColorDepth(TEMP_DEPTH * 100);
         effects->setBlur(TEMP_BLUR * 10);
         effects->setCorners(TEMP_ROUND);
-        // TODO: Get rid of flicker on exec().
         if (effects->exec() == QDialog::Accepted) {
             setWindowModified(true);
         }
