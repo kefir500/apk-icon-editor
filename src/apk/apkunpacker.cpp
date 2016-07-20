@@ -140,7 +140,7 @@ QString Unpacker::getManifest(QString filename) const
         // Continue reading AndroidManifest.xml:
     case 0:
         manifest = p.readAllStandardOutput().replace("\r\n", "\n");
-        qDebug() << "\n--- MANIFEST START ---\n" << qPrintable(manifest) << "--- MANIFEST END ---\n";
+        qDebug() << "\n--- DUMP START ---\n" << qPrintable(manifest) << "--- DUMP END ---\n";
         qDebug() << "Application name:" << getApplicationLabel(manifest);
         qDebug() << "Application version code:" << getVersionCode(manifest);
         qDebug() << "Application version name:" << getVersionName(manifest);
