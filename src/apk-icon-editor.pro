@@ -28,6 +28,10 @@ include(dialogs/dialogs.pri)
 INCLUDEPATH += $$PWD/../lib/include
 INCLUDEPATH += $$[QT_INSTALL_HEADERS]/QtZlib
 
+LIBS += -L$$PWD/../lib/bin
+LIBS += -lquazip -lsimplecrypt
+unix: LIBS += -lz
+
 defineTest(deploy) {
     DIRS = $$1
     for(DIR, DIRS) {
@@ -53,7 +57,6 @@ macx {
     ICON    = $$PWD/../res/icons/icon.icns
     QMAKE_MAC_SDK = macosx10.7
     QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.7
-    LIBS += -lz
     deploy(general macosx)
 }
 
@@ -67,10 +70,6 @@ unix {
     macx:DST = $$DESTDIR/apk-icon-editor.app/Contents/MacOS/
     QMAKE_POST_LINK += chmod +x $$quote($$DST/aapt) && chmod +x $$quote($$DST/zipalign)
 }
-
-LIBS += -L$$PWD/../lib/bin
-LIBS += -lquazip \
-        -lsimplecrypt
 
 DEFINES += QUAZIP_STATIC
 
