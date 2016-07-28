@@ -86,6 +86,11 @@ void Application::msgHandler(QtMsgType type, const QMessageLogContext &, const Q
         stream << line;
         fprintf(stderr, "%s", qPrintable(line));
         abort();
+    default:
+        line = QString("[%1] %2\n").arg(TIME, msg);
+        stream << line;
+        fprintf(stderr, "%s", qPrintable(line));
+        break;
     }
     fflush(stderr);
 }
