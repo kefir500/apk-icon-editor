@@ -35,6 +35,7 @@ Testers:
 Vladimir Gorishnyak
 nhanqv
 Roder van Arkel
+Peter Pursiainen
 Igor Petrunnikov
 Code War
 Apollo_IV
