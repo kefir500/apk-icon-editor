@@ -1,8 +1,9 @@
-/// \file keys.h
-/// \brief This file contains private keys.
 ///
+/// \file
+/// This file contains private keys.
 /// This file contains private data used for password encryption and OAuth authentication.
 /// The provided variables are DUMMIES.
+///
 
 #ifndef KEYS_H
 #define KEYS_H
@@ -10,7 +11,7 @@
 #include <QString>
 
 #ifndef CI
-#error The following variables are dummies. Set your own values and/or remove this line.
+#error The following constants are dummies. Set your own values and/or remove this line.
 #endif
 
 const quint64 SIMPLECRYPT_KEY   = Q_UINT64_C(0x0000000000000000);
