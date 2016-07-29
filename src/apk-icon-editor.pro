@@ -75,3 +75,7 @@ DEFINES += QUAZIP_STATIC
 
 TRANSLATIONS += $$PWD/../lang/apk-icon-editor.en.ts
 RESOURCES    += $$PWD/../res/resources.qrc
+
+MOC_DIR = $$PWD/../build/moc
+RCC_DIR = $$PWD/../build/rcc
+OBJECTS_DIR = $$PWD/../build/obj
