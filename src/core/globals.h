@@ -50,7 +50,6 @@ namespace Path {
 
     namespace App {
         QString dir();  ///< Returns the directory containing the application executable.
-        QString file(); ///< Returns the file path of the application executable.
     }
 
     /// This namespace contains the log paths.
