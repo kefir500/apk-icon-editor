@@ -46,12 +46,6 @@ namespace Image {
 
 namespace Path {
 
-    /// This namespace contains the application executable paths.
-
-    namespace App {
-        QString dir();  ///< Returns the directory containing the application executable.
-    }
-
     /// This namespace contains the log paths.
 
     namespace Log {

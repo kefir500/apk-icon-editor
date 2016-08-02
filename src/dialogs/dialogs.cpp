@@ -239,7 +239,7 @@ Donate::Donate(QWidget *parent) : QDialog(parent)
     QRegExp rx("\\((.+)\\)");
     rx.setMinimal(true);
 
-    QFile inputFile(Path::App::dir() + "/authors.txt");
+    QFile inputFile("authors.txt");
     if (inputFile.open(QIODevice::ReadOnly)) {
 
         QTextStream stream(&inputFile);

@@ -30,8 +30,13 @@ protected:
 private:    
     MainWindow *window;     ///< Main application window.
     static QFile *log;      ///< Application logfile.
+
+    void initEnv() const;   ///< Initializes PATH environment variable.
     bool initLog() const;   ///< Initializes logging system.
     void initFonts() const; ///< Initializes additional fonts.
+
+    /// Appends (or prepends) the specified \c path to the PATH environment variable.
+    void addToPath(QString path, bool append = true) const;
     static void msgHandler(QtMsgType type, const QMessageLogContext &, const QString &msg);
 };
 

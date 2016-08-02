@@ -23,6 +23,7 @@ Application::Application(int &argc, char **argv) : QApplication(argc, argv)
     setApplicationDisplayName(QString("%1 v%2").arg(APP, VER));
 #endif
 
+    initEnv();
     initLog();
     initFonts();
 
@@ -32,6 +33,29 @@ Application::Application(int &argc, char **argv) : QApplication(argc, argv)
 
     if (arguments().size() > 1) {
         window->apk_open(arguments()[1]);
+    }
+}
+
+void Application::addToPath(QString path, bool append) const
+{
+#if defined(Q_OS_WIN)
+    const QString FORMAT = append ? "%1;%2" : "%2;%1";
+    qputenv("PATH", QString(FORMAT).arg(QString(qgetenv("PATH")), path).toUtf8());
+#else
+    const QString FORMAT = append ? "%1:%2" : "%2:%1";
+    qputenv("PATH", QString("%1:%2").arg(QString(qgetenv("PATH")), path).toUtf8());
+#endif
+}
+
+void Application::initEnv() const
+{
+#ifdef Q_OS_LINUX
+    addToPath("/usr/share/apk-icon-editor", false);
+#endif
+    addToPath(applicationDirPath(), false);
+    const QString JAVA_HOME = qgetenv("JAVA_HOME");
+    if (!JAVA_HOME.isEmpty()) {
+        addToPath(JAVA_HOME + "/bin");
     }
 }
 

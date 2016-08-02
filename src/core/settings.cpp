@@ -76,20 +76,20 @@ bool Settings::get_smali()       { return settings->value("APK/Smali", false).to
 bool Settings::get_sign()        { return settings->value("APK/Sign", true).toBool(); }
 bool Settings::get_zipalign()    { return settings->value("APK/Optimize", true).toBool(); }
 
-bool Settings::get_use_keystore()     { return settings->value("Key/Method", false).toBool(); }
-QString Settings::get_keystore()      { return settings->value("Key/KeyStore", "").toString(); }
-QString Settings::get_alias()         { return settings->value("Key/Alias", "").toString(); }
+bool Settings::get_use_keystore() { return settings->value("Key/Method", false).toBool(); }
+QString Settings::get_keystore()  { return settings->value("Key/KeyStore", "").toString(); }
+QString Settings::get_alias()     { return settings->value("Key/Alias", "").toString(); }
 
 QString Settings::get_pem()
 {
     const QString PEM = settings->value("Key/PEM", "").toString();
-    return QFile::exists(PEM) ? PEM : Path::App::dir() + "/signer/certificate.pem";
+    return QFile::exists(PEM) ? PEM : QFileInfo("signer/certificate.pem").absoluteFilePath();
 }
 
 QString Settings::get_pk8()
 {
     const QString PK8 = settings->value("Key/PK8", "").toString();
-    return QFile::exists(PK8) ? PK8 : Path::App::dir() + "/signer/key.pk8";
+    return QFile::exists(PK8) ? PK8 : QFileInfo("signer/key.pk8").absoluteFilePath();
 }
 
 QString Settings::get_keystore_pass()

@@ -159,8 +159,8 @@ bool Packer::zip(QString contents, QString temp, short ratio) const
 bool Packer::zip(QString contents, QString temp, QString frameworks) const
 {
     QProcess p;
-    p.start(QString("java -jar \"%1/apktool.jar\" b \"%2\" -f -o \"%3/packed/temp.zip\" -p \"%4\"")
-            .arg(Path::App::dir(),contents, temp, frameworks));
+    p.start(QString("java -jar apktool.jar b \"%1\" -f -o \"%2/packed/temp.zip\" -p \"%3\"")
+            .arg(contents, temp, frameworks));
     if (!p.waitForStarted(-1)) {
         if (isJavaInstalled()) {
             qDebug() << "Error starting Apktool";
@@ -276,7 +276,6 @@ bool Packer::sign(QString temp, QString pem, QString pk8) const
 {
     const QString APK_SRC(temp + "/packed/temp-1.apk");
     const QString APK_DST(temp + "/packed/temp-2.apk");
-    const QString SIGNAPK(Path::App::dir() + "/signer/");
 
     if (!QFile::exists(pem) || !QFile::exists(pk8)) {
         qDebug() << "Warning: PEM/PK8 not found.";
@@ -285,8 +284,8 @@ bool Packer::sign(QString temp, QString pem, QString pk8) const
     }
 
     QProcess p;
-    p.start(QString("java -jar \"%1signapk.jar\" \"%2\" \"%3\" \"%4\" \"%5\"")
-            .arg(SIGNAPK, pem, pk8, APK_SRC, APK_DST));
+    p.start(QString("java -jar signer/signapk.jar \"%1\" \"%2\" \"%3\" \"%4\"")
+            .arg(pem, pk8, APK_SRC, APK_DST));
 
     if (p.waitForStarted(-1)) {
         p.waitForFinished(-1);
@@ -361,7 +360,7 @@ bool Packer::zipalign(QString temp) const
     const QString APK_DST(temp + "/packed/temp-3.apk");
 
     QProcess p;
-    p.start(QString("\"%1/zipalign\" -f 4 \"%2\" \"%3\"").arg(Path::App::dir(), APK_SRC, APK_DST));
+    p.start(QString("zipalign -f 4 \"%1\" \"%2\"").arg(APK_SRC, APK_DST));
 
     if (p.waitForStarted(-1)) {
         p.waitForFinished(-1);

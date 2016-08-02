@@ -4,6 +4,7 @@
 #include <QBoxLayout>
 #include <QPushButton>
 #include <QDialogButtonBox>
+#include <QFileInfo>
 
 About::About(QWidget *parent) : QDialog(parent)
 {
@@ -97,7 +98,7 @@ void About::retranslate()
             LINK.arg(Url::WEBSITE, tr("Visit Website"), tr("Visit our official website.")) +
             LINK.arg(Url::CONTACT, tr("Report a Bug"), tr("Found a bug? Let us know so we can fix it!")) +
             LINK.arg(Url::TRANSLATE, tr("Help Translate"), tr("Join our translation team on Crowdin.")) +
-            LINK.arg(QString("file:///%1/versions.txt").arg(Path::App::dir()), tr("Version History"), tr("List of changes made to the project.")) +
+            LINK.arg(QString("file:///%1").arg(QFileInfo("versions.txt").absoluteFilePath()), tr("Version History"), tr("List of changes made to the project.")) +
         "</table>"
     );
 

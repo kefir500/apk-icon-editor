@@ -91,8 +91,8 @@ bool Unpacker::unzip(QString filename, QString destination, QString frameworks, 
     QProcess p;
     QTime sw;
     sw.start();
-    p.start(QString("java -jar \"%1/apktool.jar\" d \"%2\" -f %3 -o \"%4\" -p \"%5\"")
-            .arg(Path::App::dir(), filename, (smali ? "" : "-s"), destination, frameworks));
+    p.start(QString("java -jar apktool.jar d \"%1\" -f %2 -o \"%3\" -p \"%4\"")
+            .arg(filename, (smali ? "" : "-s"), destination, frameworks));
     if (!p.waitForStarted(-1)) {
         if (isJavaInstalled()) {
             qDebug() << "Error starting Apktool";
@@ -122,7 +122,7 @@ QString Unpacker::getManifest(QString filename) const
     QString manifest;
 
     QProcess p;
-    p.start(QString("\"%1/aapt\" dump badging \"%2\"").arg(Path::App::dir(), filename));
+    p.start(QString("aapt dump badging \"%1\"").arg(filename));
     if (!p.waitForStarted(-1)) {
         qDebug() << qPrintable("Could not start aapt");
         qDebug() << "Error:" << p.errorString();

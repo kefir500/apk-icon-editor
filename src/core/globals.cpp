@@ -58,9 +58,3 @@ QString Image::Formats::saveDialogFilter()
         ";;BMP (*.bmp)"
     );
 }
-
-// Path::App
-
-QString Path::App::dir() {
-    return QApplication::applicationDirPath();
-}
