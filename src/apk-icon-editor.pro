@@ -47,14 +47,14 @@ defineTest(deploy) {
 
 win32 {
     DESTDIR  = $$PWD/../bin/win32
-    RC_ICONS = $$PWD/../res/icons/icon.ico \
-               $$PWD/../res/icons/icon-apk.ico
+    RC_ICONS = $$PWD/../res/icons/win32/icon.ico \
+               $$PWD/../res/icons/win32/icon-apk.ico
     deploy(general win32)
 }
 
 macx {
     DESTDIR = $$PWD/../bin/macosx
-    ICON    = $$PWD/../res/icons/icon.icns
+    ICON    = $$PWD/../res/icons/macosx/icon.icns
     QMAKE_MAC_SDK = macosx10.7
     QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.7
     deploy(general macosx)

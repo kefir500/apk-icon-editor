@@ -17,7 +17,7 @@ InstallDirRegKey HKCU "Software\apk-icon-editor" "InstallDir"
 RequestExecutionLevel admin
 SetCompressor /SOLID lzma
 
-!define MUI_ICON "..\res\icons\icon.ico"
+!define MUI_ICON "..\res\icons\win32\icon.ico"
 !define MUI_WELCOMEFINISHPAGE_BITMAP "gfx\welcome.bmp"
 !define MUI_HEADERIMAGE
 !define MUI_HEADERIMAGE_RIGHT
@@ -81,7 +81,7 @@ Section
 	SetOutPath "$INSTDIR"
 	File /r /x "*.manifest" "..\bin\win32\"
 	SetOutPath "$INSTDIR\gfx"
-	File "..\res\icons\icon.ico"
+	File "..\res\icons\win32\icon.ico"
 	WriteUninstaller "$INSTDIR\uninstall.exe"
 	SetOutPath "$INSTDIR"
 	CreateShortCut "$SMPROGRAMS\${APPNAME}.lnk" ${EXE} "" "" "" "" "" "${APPNAME} v${VERSION}"
