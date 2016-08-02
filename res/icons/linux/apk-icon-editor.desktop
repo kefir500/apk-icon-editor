@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.7.0
+Type=Application
+Name=APK Icon Editor
+Comment=APK resource editor
+Exec=/usr/bin/apk-icon-editor %F
+Path=/usr/share/apk-icon-editor
+Icon=apk-icon-editor
+Categories=Utility;
+Terminal=false
+MimeType=application/vnd.android.package-archive;

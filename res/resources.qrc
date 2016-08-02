@@ -39,5 +39,8 @@
         <file>gfx/devices/android.png</file>
         <file>gfx/devices/blackberry.png</file>
         <file>gfx/dpi/tv.png</file>
+        <file alias="gfx/icon/16.png">icons/linux/apk-icon-editor/16x16/apps/apk-icon-editor.png</file>
+        <file alias="gfx/icon/24.png">icons/linux/apk-icon-editor/24x24/apps/apk-icon-editor.png</file>
+        <file alias="gfx/icon/32.png">icons/linux/apk-icon-editor/32x32/apps/apk-icon-editor.png</file>
     </qresource>
 </RCC>
