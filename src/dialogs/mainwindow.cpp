@@ -100,7 +100,6 @@ void MainWindow::init_gui()
     splitter = new QSplitter(this);
     setCentralWidget(splitter);
     setAcceptDrops(true);
-    setInitialSize();
 
     QMenuBar *menu = new QMenuBar(this);
     setMenuBar(menu);
@@ -368,6 +367,8 @@ void MainWindow::init_gui()
     splitter->setCollapsible(0, false);
     splitter->setCollapsible(1, false);
     splitter->setStyleSheet("QSplitter {padding: 8px;}");
+
+    setInitialSize();
 }
 
 void MainWindow::init_languages()
