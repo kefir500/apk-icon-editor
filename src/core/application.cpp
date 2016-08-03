@@ -44,6 +44,11 @@ void Application::addToPath(QString path, bool append) const
 void Application::initEnv() const
 {
 #ifdef Q_OS_LINUX
+    QIcon icon;
+    icon.addPixmap(QPixmap(":/gfx/icon/16.png"));
+    icon.addPixmap(QPixmap(":/gfx/icon/24.png"));
+    icon.addPixmap(QPixmap(":/gfx/icon/32.png"));
+    setWindowIcon(icon);
     addToPath("/usr/share/apk-icon-editor", false);
 #endif
     addToPath(applicationDirPath(), false);
