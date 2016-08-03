@@ -46,7 +46,7 @@ void MainWindow::checkReqs()
     QRegExp rx;
     QStringList cap;
 
-    rx.setPattern("java version \"(.+)\"");
+    rx.setPattern("version \"(.+)\"");
     rx.indexIn(JRE);
     cap = rx.capturedTexts();
     if (cap.size() > 1) {
