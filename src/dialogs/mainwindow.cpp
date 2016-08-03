@@ -49,12 +49,16 @@ void MainWindow::checkReqs()
     rx.setPattern("java version \"(.+)\"");
     rx.indexIn(JRE);
     cap = rx.capturedTexts();
-    if (cap.size() > 1) version_jre = cap[1];
+    if (cap.size() > 1) {
+        version_jre = cap[1];
+    }
 
     rx.setPattern("javac (.+)");
     rx.indexIn(JDK);
     cap = rx.capturedTexts();
-    if (cap.size() > 1) version_jdk = cap[1];
+    if (cap.size() > 1) {
+        version_jdk = cap[1];
+    }
 
     qDebug() << "JRE (32-bit) version:" << qPrintable(!JRE.isNull() ? version_jre : "---");
     qDebug() << "JDK (32-bit) version:" << qPrintable(!JDK.isNull() ? version_jdk : "---");
