@@ -323,13 +323,9 @@ bool Packer::sign(QString temp, QString keystore, QString alias, QString passKey
     }
 
     QProcess p;
-    const QByteArray ENV_PATH = qgetenv("PATH");
-    const QByteArray JAVA_HOME = qgetenv("JAVA_HOME");
-    qputenv("PATH", QString("%1;%2/bin").arg(QString(ENV_PATH)).arg(QString(JAVA_HOME)).toUtf8());
     p.start(QString("jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 "
             "-keystore \"%1\" \"%2\" -storepass \"%3\" -keypass \"%4\" \"%5\"")
             .arg(keystore, APK_SRC, passKeystore, passAlias, alias));
-    qputenv("PATH", ENV_PATH);
 
     if (p.waitForStarted(-1)) {
         p.waitForFinished(-1);
