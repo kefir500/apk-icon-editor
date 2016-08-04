@@ -385,7 +385,7 @@ void MainWindow::init_languages()
 
     // Load language list:
 
-    const QDir LANGPATH("lang");
+    const QDir LANGPATH(Path::App::shared() + "lang");
     langs << LANGPATH.entryList(QStringList() << "apk-icon-editor.*");
 
     for (int i = 0; i < langs.size(); ++i) {
@@ -568,11 +568,12 @@ void MainWindow::setInitialSize()
 void MainWindow::setLanguage(QString lang)
 {
     qDebug() << "Language set to" << lang << "\n";
+    const QString LANGPATH(Path::App::shared() + "lang");
     QApplication::removeTranslator(translator);
     QApplication::removeTranslator(translatorQt);
-    if (translator->load(QString("apk-icon-editor.%1").arg(lang), "lang")) {
+    if (translator->load(QString("apk-icon-editor.%1").arg(lang), LANGPATH)) {
         // TODO (OS X) Crashes when setting any language different from English
-        translatorQt->load(QString("qt.%1").arg(lang), "lang");
+        translatorQt->load(QString("qt.%1").arg(lang), LANGPATH);
         QApplication::installTranslator(translator);
         QApplication::installTranslator(translatorQt);
     }
@@ -582,9 +583,9 @@ void MainWindow::setLanguage(QString lang)
 
     currentLang = lang;
     QPixmap flag;
-    if (flag.load(QString("lang/flag.%1.png").arg(lang)) == false) {
+    if (flag.load(QString("%1/flag.%2.png").arg(LANGPATH, lang)) == false) {
         lang = lang.left(2);
-        flag = QString("lang/flag.%1.png").arg(lang);
+        flag = QString("%1/flag.%2.png").arg(LANGPATH, lang);
     }
     menuLang->setIcon(flag);
 
@@ -1321,7 +1322,7 @@ void MainWindow::browseBugs() const
 
 void MainWindow::browseFaq() const
 {
-    QDesktopServices::openUrl(QUrl::fromLocalFile(QFileInfo("faq.txt").absoluteFilePath()));
+    QDesktopServices::openUrl(QUrl::fromLocalFile(Path::App::shared() + "faq.txt"));
 }
 
 void MainWindow::openLogFile() const

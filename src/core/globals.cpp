@@ -58,3 +58,19 @@ QString Image::Formats::saveDialogFilter()
         ";;BMP (*.bmp)"
     );
 }
+
+// Path::App
+
+QString Path::App::dir()
+{
+    return QApplication::applicationDirPath() + '/';
+}
+
+QString Path::App::shared()
+{
+#ifndef Q_OS_LINUX
+    return QApplication::applicationDirPath() + '/';
+#else
+    return QApplication::applicationDirPath() + "/../share/apk-icon-editor/";
+#endif
+}
