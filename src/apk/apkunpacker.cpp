@@ -91,8 +91,8 @@ bool Unpacker::unzip(QString filename, QString destination, QString frameworks, 
     QProcess p;
     QTime sw;
     sw.start();
-    p.start(QString("java -jar apktool.jar d \"%1\" -f %2 -o \"%3\" -p \"%4\"")
-            .arg(filename, (smali ? "" : "-s"), destination, frameworks));
+    p.start(QString("java -jar \"%1/apktool.jar\" d \"%2\" -f %3 -o \"%4\" -p \"%5\"")
+            .arg(Path::App::shared(), filename, (smali ? "" : "-s"), destination, frameworks));
     if (!p.waitForStarted(-1)) {
         if (isJavaInstalled()) {
             qDebug() << "Error starting Apktool";

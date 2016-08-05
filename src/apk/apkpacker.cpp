@@ -159,8 +159,8 @@ bool Packer::zip(QString contents, QString temp, short ratio) const
 bool Packer::zip(QString contents, QString temp, QString frameworks) const
 {
     QProcess p;
-    p.start(QString("java -jar apktool.jar b \"%1\" -f -o \"%2/packed/temp.zip\" -p \"%3\"")
-            .arg(contents, temp, frameworks));
+    p.start(QString("java -jar \"%1/apktool.jar\" b \"%2\" -f -o \"%3/packed/temp.zip\" -p \"%4\"")
+            .arg(Path::App::shared(),contents, temp, frameworks));
     if (!p.waitForStarted(-1)) {
         if (isJavaInstalled()) {
             qDebug() << "Error starting Apktool";
@@ -284,8 +284,8 @@ bool Packer::sign(QString temp, QString pem, QString pk8) const
     }
 
     QProcess p;
-    p.start(QString("java -jar signer/signapk.jar \"%1\" \"%2\" \"%3\" \"%4\"")
-            .arg(pem, pk8, APK_SRC, APK_DST));
+    p.start(QString("java -jar \"%1/signer/signapk.jar\" \"%2\" \"%3\" \"%4\" \"%5\"")
+            .arg(Path::App::shared(), pem, pk8, APK_SRC, APK_DST));
 
     if (p.waitForStarted(-1)) {
         p.waitForFinished(-1);

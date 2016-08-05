@@ -24,7 +24,7 @@ QString Apk::getApktoolVersion()
 {
     if (whichJava(JRE)) {
         QProcess p;
-        p.start("java -jar apktool.jar -version");
+        p.start(QString("java -jar \"%1/apktool.jar\" -version").arg(Path::App::shared()));
         if (p.waitForStarted(-1)) {
             p.waitForFinished(-1);
             return p.readAllStandardOutput().trimmed();
