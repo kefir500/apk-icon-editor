@@ -40,7 +40,7 @@ Application::Application(int &argc, char **argv) : QApplication(argc, argv)
 
 void Application::addToPath(QString path, bool append) const
 {
-#if defined(Q_OS_WIN)
+#ifdef Q_OS_WIN
     const QString FORMAT = append ? "%1;%2" : "%2;%1";
     qputenv("PATH", QString(FORMAT).arg(QString(qgetenv("PATH")), path).toUtf8());
 #else
