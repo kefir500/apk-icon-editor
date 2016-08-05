@@ -17,6 +17,14 @@ Application::Application(int &argc, char **argv) : QApplication(argc, argv)
     setApplicationDisplayName(QString("%1 v%2 (Debug)").arg(APP, VER));
 #endif
 
+#ifdef Q_OS_LINUX
+    QIcon icon;
+    icon.addPixmap(QPixmap(":/gfx/icon/16.png"));
+    icon.addPixmap(QPixmap(":/gfx/icon/24.png"));
+    icon.addPixmap(QPixmap(":/gfx/icon/32.png"));
+    setWindowIcon(icon);
+#endif
+
     initEnv();
     initLog();
     initFonts();
@@ -43,13 +51,6 @@ void Application::addToPath(QString path, bool append) const
 
 void Application::initEnv() const
 {
-#ifdef Q_OS_LINUX
-    QIcon icon;
-    icon.addPixmap(QPixmap(":/gfx/icon/16.png"));
-    icon.addPixmap(QPixmap(":/gfx/icon/24.png"));
-    icon.addPixmap(QPixmap(":/gfx/icon/32.png"));
-    setWindowIcon(icon);
-#endif
     addToPath(Path::App::shared(), false);
     const QString JAVA_HOME = qgetenv("JAVA_HOME");
     if (!JAVA_HOME.isEmpty()) {
