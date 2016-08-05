@@ -49,9 +49,8 @@ void Application::initEnv() const
     icon.addPixmap(QPixmap(":/gfx/icon/24.png"));
     icon.addPixmap(QPixmap(":/gfx/icon/32.png"));
     setWindowIcon(icon);
-    addToPath("/usr/share/apk-icon-editor", false);
 #endif
-    addToPath(applicationDirPath(), false);
+    addToPath(Path::App::shared(), false);
     const QString JAVA_HOME = qgetenv("JAVA_HOME");
     if (!JAVA_HOME.isEmpty()) {
         addToPath(JAVA_HOME + "/bin");
