@@ -51,7 +51,7 @@ void Application::addToPath(QString path, bool append) const
 
 void Application::initEnv() const
 {
-    addToPath(Path::App::shared(), false);
+    addToPath(Path::App::dir(), false);
     const QString JAVA_HOME = qgetenv("JAVA_HOME");
     if (!JAVA_HOME.isEmpty()) {
         addToPath(JAVA_HOME + "/bin");
