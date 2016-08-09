@@ -1442,15 +1442,8 @@ void MainWindow::dragLeaveEvent(QDragLeaveEvent *event)
 void MainWindow::dropEvent(QDropEvent *event)
 {
     const QMimeData *mimeData = event->mimeData();
-    if (mimeData->hasText()) {
-        QUrl url(mimeData->text());
-        QString filename = url.toLocalFile();
-
-        // Handle Qt Unix bug:
-        if (filename.right(2) == "\r\n") {
-            filename.chop(2);
-        }
-
+    if (mimeData->hasUrls()) {
+        QString filename = mimeData->urls().at(0).toLocalFile();
         QString ext = QFileInfo(filename).suffix().toLower();
         if (Image::Formats::supported().contains(ext)) {
             icon_open(filename);
