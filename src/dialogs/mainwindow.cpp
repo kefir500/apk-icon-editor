@@ -1443,8 +1443,8 @@ void MainWindow::dropEvent(QDropEvent *event)
 {
     const QMimeData *mimeData = event->mimeData();
     if (mimeData->hasUrls()) {
-        QString filename = mimeData->urls().at(0).toLocalFile();
-        QString ext = QFileInfo(filename).suffix().toLower();
+        const QString filename = mimeData->urls().at(0).toLocalFile();
+        const QString ext = QFileInfo(filename).suffix().toLower();
         if (Image::Formats::supported().contains(ext)) {
             icon_open(filename);
         }
