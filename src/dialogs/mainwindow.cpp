@@ -733,7 +733,7 @@ void MainWindow::cloneIcons()
     Icon *newIcon = drawArea->getIcon();
     if (!newIcon->isNull()) {
         if (QMessageBox::question(this, NULL, tr("Apply the current icon to all sizes?"))
-         == QMessageBox::Yes) {
+            == QMessageBox::Yes) {
             for (short i = Dpi::LDPI; i < Dpi::COUNT; ++i) {
                 const Dpi::Type DPI = Dpi::cast(i);
                 Icon *oldIcon = apk->getIcon(DPI);
@@ -743,8 +743,8 @@ void MainWindow::cloneIcons()
                     }
                 }
             }
+            setWindowModified(true);
         }
-        setWindowModified(true);
     }
 }
 
