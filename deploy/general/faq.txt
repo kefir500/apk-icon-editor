@@ -30,7 +30,7 @@
 
 ---------------
 
-[Q] Drag-and-Drop function does not work.
+[Q] Drag-and-Drop function does not work on Windows.
 [A] Run "APK Icon Editor" as a non-administrator user.
 
 ---------------
