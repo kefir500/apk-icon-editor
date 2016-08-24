@@ -35,6 +35,11 @@
 
 ---------------
 
+[Q] What legal restrictions are imposed to the APK repacking?
+[A] The repacked APKs should not violate the original licenses. Generally, you may not use "APK Icon Editor" for any illegal purposes.
+
+---------------
+
 [Q] I have another question or suggestion.
 [A] Feel free to contact developers: http://kefir500.github.io/apk-icon-editor/#contact
 

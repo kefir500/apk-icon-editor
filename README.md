@@ -24,5 +24,5 @@ Written in C++/Qt.
 - **JDK 32-bit** (optional alternative) – to sign APK files with KeyStore.
 
 ## Notice
-- You may not use **APK Icon Editor** for any illegal intentions;
-- Repacked APKs should not be used for purposes violating the original licenses.
+- You may not use **APK Icon Editor** for any illegal purposes;
+- The repacked APKs should not violate the original licenses.
