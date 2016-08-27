@@ -88,6 +88,8 @@ void MainWindow::init_core()
 
 void MainWindow::init_gui()
 {
+    qDebug() << "Screen DPI:" << Gui::Screen::dpi();
+
     // Dialogs:
 
     effects = new EffectsDialog(this);
