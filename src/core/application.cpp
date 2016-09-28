@@ -42,11 +42,10 @@ void Application::addToPath(QString path, bool append) const
 {
 #ifdef Q_OS_WIN
     const QString FORMAT = append ? "%1;%2" : "%2;%1";
-    qputenv("PATH", QString(FORMAT).arg(QString(qgetenv("PATH")), path).toUtf8());
 #else
     const QString FORMAT = append ? "%1:%2" : "%2:%1";
-    qputenv("PATH", QString("%1:%2").arg(QString(qgetenv("PATH")), path).toUtf8());
 #endif
+    qputenv("PATH", QString(FORMAT).arg(QString(qgetenv("PATH")), path).toUtf8());
 }
 
 void Application::initEnv() const
