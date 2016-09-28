@@ -11,6 +11,10 @@ QMAKE_TARGET_COPYRIGHT = Copyright (C) 2014-2016
 
 DEFINES += APP='"\\\"$$QMAKE_TARGET_PRODUCT\\\""'
 DEFINES += VER=\\\"$$VERSION\\\"
+DEFINES += QUAZIP_STATIC
+
+TRANSLATIONS += $$PWD/../lang/apk-icon-editor.en.ts
+RESOURCES    += $$PWD/../res/resources.qrc
 
 win32 {
     isEqual(QT_MAJOR_VERSION, 5) {
@@ -32,24 +36,17 @@ LIBS += -L$$PWD/../lib/bin
 LIBS += -lquazip -lsimplecrypt
 unix: LIBS += -lz
 
-defineTest(deploy) {
-    DIRS = $$1
-    for(DIR, DIRS) {
-        SRC = $$PWD/../deploy/$$DIR/.
-        DST = $$DESTDIR
-        macx:DST = $$DESTDIR/apk-icon-editor.app/Contents/MacOS/
-        win32:SRC ~= s,/,\\,g
-        win32:DST ~= s,/,\\,g
-        QMAKE_POST_LINK += $$QMAKE_COPY_DIR $$quote($$SRC) $$quote($$DST) $$escape_expand(\\n\\t)
-    }
-    export(QMAKE_POST_LINK)
-}
+# Build:
 
 win32 {
     DESTDIR  = $$PWD/../bin/win32
     RC_ICONS = $$PWD/../res/icons/win32/icon.ico \
                $$PWD/../res/icons/win32/icon-apk.ico
-    deploy(general win32)
+}
+
+unix:!macx {
+    DESTDIR = $$PWD/../bin/linux/bin
+    isEmpty(PREFIX): PREFIX = /usr
 }
 
 macx {
@@ -57,25 +54,56 @@ macx {
     ICON    = $$PWD/../res/icons/macosx/icon.icns
     QMAKE_MAC_SDK = macosx10.7
     QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.7
-    deploy(general macosx)
 }
-
-unix:!macx {
-    DESTDIR = $$PWD/../bin/linux
-    deploy(general linux)
-}
-
-unix {
-    !macx:DST = $$DESTDIR
-    macx:DST = $$DESTDIR/apk-icon-editor.app/Contents/MacOS/
-    QMAKE_POST_LINK += chmod +x $$quote($$DST/aapt) && chmod +x $$quote($$DST/zipalign)
-}
-
-DEFINES += QUAZIP_STATIC
-
-TRANSLATIONS += $$PWD/../lang/apk-icon-editor.en.ts
-RESOURCES    += $$PWD/../res/resources.qrc
 
 MOC_DIR = $$PWD/../build/moc
 RCC_DIR = $$PWD/../build/rcc
 OBJECTS_DIR = $$PWD/../build/obj
+
+# Deploy:
+
+SHARED = $$DESTDIR
+win32: SHARED ~= s,/,\\,g
+unix:!macx: SHARED = $$DESTDIR/../share/apk-icon-editor/
+unix:!macx: QMAKE_POST_LINK += mkdir -p $$quote($$SHARED) $$escape_expand(\\n\\t)
+macx:SHARED = $$DESTDIR/apk-icon-editor.app/Contents/MacOS/
+
+defineTest(deploy) {
+    DIRS = $$1
+    for(DIR, DIRS) {
+        DST = $$SHARED
+        unix:!macx {
+            !equals(DIR, "general") {
+                DST = $$DESTDIR
+            }
+        }
+        SRC = $$PWD/../deploy/$$DIR/.
+        win32: SRC ~= s,/,\\,g
+        QMAKE_POST_LINK += $$QMAKE_COPY_DIR $$quote($$SRC) $$quote($$DST) $$escape_expand(\\n\\t)
+    }
+    export(QMAKE_POST_LINK)
+}
+
+win32: deploy(general win32)
+unix:!macx: deploy(general linux)
+macx: deploy(general macosx)
+
+unix: QMAKE_POST_LINK += chmod +x $$quote($$DESTDIR/aapt) && chmod +x $$quote($$DESTDIR/zipalign) $$escape_expand(\\n\\t)
+
+# Install:
+
+unix:!macx {
+    target.path   = $$PREFIX/bin
+    share.files   = $$PWD/../deploy/general/*
+    share.path    = $$PREFIX/share/apk-icon-editor
+    icons.files   = $$PWD/../res/icons/linux/apk-icon-editor/*
+    icons.path    = $$PREFIX/share/icons/hicolor
+    desktop.files = $$PWD/../res/icons/linux/apk-icon-editor.desktop
+    desktop.path  = $$PREFIX/share/applications
+    INSTALLS      += target share icons desktop
+    isEmpty(PACKAGE) {
+        bin.files   = $$PWD/../deploy/linux/*
+        bin.path    = $$PREFIX/bin
+        INSTALLS    += bin
+    }
+}
