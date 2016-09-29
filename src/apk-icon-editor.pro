@@ -51,7 +51,6 @@ unix:!macx {
 
 macx {
     DESTDIR = $$PWD/../bin/macosx
-    ICON    = $$PWD/../res/icons/macosx/icon.icns
     QMAKE_MAC_SDK = macosx10.7
     QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.7
 }
@@ -72,10 +71,9 @@ defineTest(deploy) {
     DIRS = $$1
     for(DIR, DIRS) {
         DST = $$SHARED
-        unix:!macx {
-            !equals(DIR, "general") {
-                DST = $$DESTDIR
-            }
+        unix {
+            !macx: !equals(DIR, "general"): DST = $$DESTDIR
+            macx: !equals(DIR, "general"): DST = $$SHARED/../
         }
         SRC = $$PWD/../deploy/$$DIR/.
         win32: SRC ~= s,/,\\,g
