@@ -46,7 +46,6 @@ win32 {
 
 unix:!macx {
     DESTDIR = $$PWD/../bin/linux/bin
-    isEmpty(PREFIX): PREFIX = /usr
 }
 
 macx {
@@ -92,6 +91,7 @@ macx: QMAKE_POST_LINK += chmod +x $$quote($$SHARED/aapt) && chmod +x $$quote($$S
 # Install:
 
 unix:!macx {
+    isEmpty(PREFIX): PREFIX = /usr
     target.path   = $$PREFIX/bin
     share.files   = $$PWD/../deploy/general/*
     share.path    = $$PREFIX/share/apk-icon-editor
