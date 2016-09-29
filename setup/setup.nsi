@@ -1,4 +1,5 @@
 !include MUI2.nsh
+!include FileFunc.nsh
 !include nsProcess.nsh
 
 !define APPNAME "APK Icon Editor"
@@ -85,6 +86,8 @@ Section
 	WriteUninstaller "$INSTDIR\uninstall.exe"
 	SetOutPath "$INSTDIR"
 	CreateShortCut "$SMPROGRAMS\${APPNAME}.lnk" ${EXE} "" "" "" "" "" "${APPNAME} v${VERSION}"
+	${GetSize} "$INSTDIR" "/S=0K" $0 $1 $2
+	IntFmt $0 "0x%08X" $0
 	WriteRegStr HKCU "Software\apk-icon-editor" "InstallDir" "$INSTDIR"
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "DisplayName" "${APPNAME}"
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "DisplayVersion" "${VERSION}"
@@ -97,6 +100,7 @@ Section
 	WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "VersionMinor" "${VERSIONMINOR}"
 	WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "NoModify" 1
 	WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "NoRepair" 1
+	WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "EstimatedSize" "$0"
 SectionEnd
 
 Section "Desktop Shortcut" SEC_DESKTOP
