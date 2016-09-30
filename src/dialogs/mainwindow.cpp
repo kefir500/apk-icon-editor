@@ -402,7 +402,9 @@ void MainWindow::init_languages()
 
         // Set up menu action:
 
-        QAction *actLang = new QAction(QIcon(QString("%1/flag.%2.png").arg(LANGPATH.absolutePath(), locale)), title, this);
+        QAction *actLang = new QAction(this);
+        actLang->setText(title);
+        actLang->setIcon(QIcon(QString("%1/flag.%2.png").arg(LANGPATH.absolutePath(), locale)));
         connect(actLang, SIGNAL(triggered()), mapLang, SLOT(map()));
         mapLang->setMapping(actLang, locale);
         menuLang->addAction(actLang);
