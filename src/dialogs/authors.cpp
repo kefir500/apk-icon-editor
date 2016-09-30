@@ -34,12 +34,12 @@ void Authors::setCategory(QString category)
 
 void Authors::parse()
 {
-    QT_TR_NOOP("Authors");
-    QT_TR_NOOP("Translators");
-    QT_TR_NOOP("Contributors");
-    QT_TR_NOOP("Donators");
-    QT_TR_NOOP("Special Thanks");
-    QT_TR_NOOP("Testers");
+    Q_UNUSED(QT_TR_NOOP("Authors"));
+    Q_UNUSED(QT_TR_NOOP("Translators"));
+    Q_UNUSED(QT_TR_NOOP("Contributors"));
+    Q_UNUSED(QT_TR_NOOP("Donators"));
+    Q_UNUSED(QT_TR_NOOP("Special Thanks"));
+    Q_UNUSED(QT_TR_NOOP("Testers"));
 
     QString category;
     QFile inputFile(Path::App::shared() + "authors.txt");
