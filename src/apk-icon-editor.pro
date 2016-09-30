@@ -39,7 +39,7 @@ unix: LIBS += -lz
 # Build:
 
 win32 {
-    DESTDIR  = $$PWD/../bin/win32
+    DESTDIR = $$PWD/../bin/win32
     RC_ICONS = $$PWD/../res/icons/win32/icon.ico \
                $$PWD/../res/icons/win32/icon-apk.ico
 }
