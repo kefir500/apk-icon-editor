@@ -21,7 +21,7 @@
 ---------------
 
 [Q] Java Runtime Environment is installed, but "APK Icon Editor" keeps showing "JRE not installed" message.
-[A] "APK Icon Editor" is a 32-bit application and requires corresponding x86 (not x64) JRE version. Also, check your %PATH% variable (see instructions at http://www.java.com/en/download/help/path.xml).
+[A] Check your PATH variable (see instructions at http://www.java.com/en/download/help/path.xml). If you are using OS X, installing JDK instead of JRE may fix the PATH issue.
 
 ---------------
 
