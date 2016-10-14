@@ -52,7 +52,6 @@ win32 {
     DEFINES += NOMINMAX
 }
 
-
 symbian {
 
     # Note, on Symbian you may run into troubles with LGPL.
@@ -79,6 +78,11 @@ symbian {
     }
 }
 
-# APK Icon Editor destination directory:
+# APK Icon Editor:
 
 DESTDIR = $$PWD/../../../bin
+
+macx {
+    QMAKE_MAC_SDK = macosx10.7
+    QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.7
+}
