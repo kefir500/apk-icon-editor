@@ -97,6 +97,8 @@ QString UpdateWorker::parse(QString json) const
     const QString OS = "windows";
 #elif defined(Q_OS_OSX)
     const QString OS = "osx";
+#elif defined(Q_OS_LINUX)
+    const QString OS = "linux";
 #else
     const QString OS = "windows";
 #endif
