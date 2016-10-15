@@ -35,6 +35,10 @@ EffectsDialog::EffectsDialog(QWidget *parent) : QDialog(parent)
     colorDialog = new QColorDialog(this);
     buttons = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, this);
 
+#ifdef Q_OS_UNIX
+    colorDialog->setOption(QColorDialog::DontUseNativeDialog, true);
+#endif
+
     btnRotate0->setCheckable(true);
     btnRotate90->setCheckable(true);
     btnRotate180->setCheckable(true);
