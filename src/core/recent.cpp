@@ -1,16 +1,15 @@
 #include "recent.h"
+#include "globals.h"
 #include <QDir>
 #include <QPixmap>
 #include <QCryptographicHash>
 #include <QStandardPaths>
 
-const QString CACHE_PATH = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/apk-icon-editor/cache/recent";
-
 // Recent
 
 Recent::Recent(QStringList files)
 {
-    QDir().mkpath(CACHE_PATH);
+    QDir().mkpath(Path::Data::recent());
     recent.clear();
     limit = 10;
 
@@ -122,7 +121,7 @@ QString Recent::hash(QString filename) const
 
 QString Recent::cached(QString filename) const
 {
-    return QString("%1/%2.png").arg(CACHE_PATH, hash(filename));
+    return QString("%1/%2.png").arg(Path::Data::recent(), hash(filename));
 }
 
 // RecentFile

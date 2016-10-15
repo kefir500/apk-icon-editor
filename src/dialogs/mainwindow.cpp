@@ -387,7 +387,7 @@ void MainWindow::init_languages()
 
     // Load language list:
 
-    const QDir LANGPATH(Path::App::shared() + "lang");
+    const QDir LANGPATH(Path::Data::shared() + "lang");
     langs << LANGPATH.entryList(QStringList() << "apk-icon-editor.*");
 
     for (int i = 0; i < langs.size(); ++i) {
@@ -572,7 +572,7 @@ void MainWindow::setInitialSize()
 void MainWindow::setLanguage(QString lang)
 {
     qDebug() << "Language set to" << lang << "\n";
-    const QString LANGPATH(Path::App::shared() + "lang");
+    const QString LANGPATH(Path::Data::shared() + "lang");
     QApplication::removeTranslator(translator);
     QApplication::removeTranslator(translatorQt);
     if (translator->load(QString("apk-icon-editor.%1").arg(lang), LANGPATH)) {
@@ -1326,7 +1326,7 @@ void MainWindow::browseBugs() const
 
 void MainWindow::browseFaq() const
 {
-    QDesktopServices::openUrl(QUrl::fromLocalFile(Path::App::shared() + "faq.txt"));
+    QDesktopServices::openUrl(QUrl::fromLocalFile(Path::Data::shared() + "faq.txt"));
 }
 
 void MainWindow::openLogFile() const

@@ -42,7 +42,7 @@ void Authors::parse()
     Q_UNUSED(QT_TR_NOOP("Testers"));
 
     QString category;
-    QFile inputFile(Path::App::shared() + "authors.txt");
+    QFile inputFile(Path::Data::shared() + "authors.txt");
     if (inputFile.open(QIODevice::ReadOnly)) {
         QTextStream in(&inputFile);
         in.setCodec(QTextCodec::codecForName("UTF-8"));

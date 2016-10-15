@@ -7,7 +7,6 @@
 #define GLOBALS_H
 
 #include <QApplication>
-#include <QStandardPaths>
 
 ///
 /// This namespace incorporates the GUI-related constants and functions.
@@ -46,18 +45,24 @@ namespace Image {
 
 namespace Path {
 
-    /// This namespace contains paths to the application related data.
+    /// This namespace contains the executable paths.
 
     namespace App {
         QString dir();    ///< Returns the directory containing the application executable.
+    }
+
+    /// This namespace contains paths to the application related data.
+
+    namespace Data {
         QString shared(); ///< Returns the directory containing the application third-party and other related files.
+        QString recent(); ///< Returns the directory containing the cached recent thumbnails.
     }
 
     /// This namespace contains the log paths.
 
     namespace Log {
-        QString dir();  ///< Full path to the log directory.
-        QString file(); ///< Full path to the log file.
+        QString dir();  ///< Returns the full path to the log directory.
+        QString file(); ///< Returns the full path to the log file.
     }
 }
 
