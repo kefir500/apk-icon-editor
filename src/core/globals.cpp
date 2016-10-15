@@ -74,3 +74,15 @@ QString Path::App::shared()
     return QApplication::applicationDirPath() + "/../share/apk-icon-editor/";
 #endif
 }
+
+// Path::Log
+
+QString Path::Log::dir()
+{
+    return QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/apk-icon-editor/";
+}
+
+QString Path::Log::file()
+{
+    return Path::Log::dir() + "apk-icon-editor.log";
+}

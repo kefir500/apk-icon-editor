@@ -56,11 +56,8 @@ namespace Path {
     /// This namespace contains the log paths.
 
     namespace Log {
-        /// Full path to the log directory.
-        const QString DIR = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/apk-icon-editor/";
-
-        /// Full path to the log file.
-        const QString FILE = DIR + "apk-icon-editor.log";
+        QString dir();  ///< Full path to the log directory.
+        QString file(); ///< Full path to the log file.
     }
 }
 

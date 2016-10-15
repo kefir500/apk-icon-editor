@@ -59,11 +59,11 @@ void Application::initEnv() const
 
 bool Application::initLog() const
 {
-    if (!QDir().mkpath(Path::Log::DIR)) {
+    if (!QDir().mkpath(Path::Log::dir())) {
         return false;
     }
 
-    log = new QFile(Path::Log::FILE);
+    log = new QFile(Path::Log::file());
     if (log->open(QIODevice::WriteOnly | QIODevice::Text)) {
         qInstallMessageHandler(Application::msgHandler);
         qDebug() << qPrintable(QString("%1 v%2").arg(APP, VER));

@@ -1331,12 +1331,12 @@ void MainWindow::browseFaq() const
 
 void MainWindow::openLogFile() const
 {
-    QDesktopServices::openUrl(QUrl::fromLocalFile(Path::Log::FILE));
+    QDesktopServices::openUrl(QUrl::fromLocalFile(Path::Log::file()));
 }
 
 void MainWindow::openLogPath() const
 {
-    QDesktopServices::openUrl(QUrl::fromLocalFile(Path::Log::DIR));
+    QDesktopServices::openUrl(QUrl::fromLocalFile(Path::Log::dir()));
 }
 
 void MainWindow::donate()
