@@ -86,7 +86,11 @@ void About::retranslate()
     setWindowTitle(tr("About"));
 
     textApp->setText(
+#ifndef PORTABLE
         QString("<h3>%1 v%2</h3>").arg(APP, VER) +
+#else
+        QString("<h3>%1 v%2 %3</h3>").arg(APP, VER, "Portable") +
+#endif
         tr("Built on: %1 - %2").arg(__DATE__, __TIME__) + "<br>" +
         tr("Author: %1").arg("Alexander Gorishnyak") + "<br>" +
         tr("License") + ": <a href='http://www.gnu.org/licenses/gpl-3.0.html'>GNU GPL v3.0</a>"

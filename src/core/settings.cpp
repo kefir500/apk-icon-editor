@@ -15,7 +15,13 @@ bool Settings::init()
         return false;
     }
 
+#ifndef PORTABLE
     settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, "apk-icon-editor", "config");
+#else
+    QSettings::setPath(QSettings::IniFormat, QSettings::UserScope, Path::App::dir() + "data");
+    settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, "settings", "config");
+#endif
+
     crypt = new SimpleCrypt();
 
     // Init encryption / decryption:
@@ -65,7 +71,7 @@ QStringList Settings::get_recent()  { return settings->value("Recent", 0).toStri
 
 QString Settings::get_temp(bool fallback)
 {
-    const QString TEMP = QDir::toNativeSeparators(QDir::tempPath());
+    const QString TEMP = QDir::toNativeSeparators(Path::Data::temp());
     const QString PATH = settings->value("Temp", TEMP).toString();
     return (fallback && (!QDir(PATH).exists() || PATH.isEmpty())) ? TEMP : PATH;
 }

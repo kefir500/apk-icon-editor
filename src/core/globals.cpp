@@ -1,6 +1,6 @@
 #include "globals.h"
 #include <QScreen>
-#include <QStandardPaths>
+#include <QDir>
 
 // Gui::Screen
 
@@ -80,14 +80,31 @@ QString Path::Data::shared()
 
 QString Path::Data::recent()
 {
+#ifndef PORTABLE
     return QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation) + "/apk-icon-editor/cache/recent";
+#else
+    return Path::App::dir() + "data/recent/";
+#endif
+}
+
+QString Path::Data::temp()
+{
+#ifndef PORTABLE
+    return QDir::tempPath();
+#else
+    return Path::App::dir() + "data/temp/";
+#endif
 }
 
 // Path::Log
 
 QString Path::Log::dir()
 {
+#ifndef PORTABLE
     return QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation) + "/apk-icon-editor/logs/";
+#else
+    return Path::App::dir() + "data/logs/";
+#endif
 }
 
 QString Path::Log::file()

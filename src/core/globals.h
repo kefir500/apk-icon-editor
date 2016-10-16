@@ -56,6 +56,7 @@ namespace Path {
     namespace Data {
         QString shared(); ///< Returns the directory containing the application third-party and other related files.
         QString recent(); ///< Returns the directory containing the cached recent thumbnails.
+        QString temp();   ///< Returns the path to the system-wide temporary directory.
     }
 
     /// This namespace contains the log paths.

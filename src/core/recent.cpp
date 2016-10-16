@@ -3,7 +3,6 @@
 #include <QDir>
 #include <QPixmap>
 #include <QCryptographicHash>
-#include <QStandardPaths>
 
 // Recent
 

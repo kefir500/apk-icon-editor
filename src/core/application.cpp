@@ -11,10 +11,12 @@ Application::Application(int &argc, char **argv) : QApplication(argc, argv)
     setApplicationName(APP);
     setApplicationVersion(VER);
 
-#ifndef QT_DEBUG
-    setApplicationDisplayName(QString("%1 v%2").arg(APP, VER));
+#if defined(QT_DEBUG)
+    setApplicationDisplayName(QString("%1 v%2 Debug").arg(APP, VER));
+#elif defined(PORTABLE)
+    setApplicationDisplayName(QString("%1 v%2 Portable").arg(APP, VER));
 #else
-    setApplicationDisplayName(QString("%1 v%2 (Debug)").arg(APP, VER));
+    setApplicationDisplayName(QString("%1 v%2").arg(APP, VER));
 #endif
 
 #ifdef Q_OS_LINUX
