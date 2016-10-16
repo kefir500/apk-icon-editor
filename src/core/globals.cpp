@@ -1,6 +1,7 @@
 #include "globals.h"
-#include <QScreen>
 #include <QDir>
+#include <QScreen>
+#include <QStandardPaths>
 
 // Gui::Screen
 
