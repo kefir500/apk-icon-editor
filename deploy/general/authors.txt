@@ -25,6 +25,7 @@ Ameen Ali
 Donators:
 Cyclos (www.cyclos.org)
 Julien Veuillet (www.wakdev.com)
+Marco Santiago
 
 Special Thanks:
 Sergey Tachenov – QuaZIP
