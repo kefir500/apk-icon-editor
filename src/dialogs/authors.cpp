@@ -13,6 +13,7 @@ Authors::Authors(QWidget *parent) : QDialog(parent)
 
     list = new QListWidget(this);
     text = new QTextBrowser(this);
+    text->setWordWrapMode(QTextOption::NoWrap);
     text->setOpenExternalLinks(true);
 
     QHBoxLayout *layout = new QHBoxLayout(this);
