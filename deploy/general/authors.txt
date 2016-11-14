@@ -26,6 +26,7 @@ Donators:
 Cyclos (www.cyclos.org)
 Julien Veuillet (www.wakdev.com)
 Marco Santiago
+Niket Kanchan
 
 Special Thanks:
 Sergey Tachenov – QuaZIP
