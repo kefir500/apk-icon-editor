@@ -28,6 +28,7 @@ Julien Veuillet (www.wakdev.com)
 Benjamin Hahn
 Marco Santiago
 Niket Kanchan
+Sheng-Yang Huang
 
 Special Thanks:
 Sergey Tachenov – QuaZIP
