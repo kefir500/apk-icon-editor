@@ -7,6 +7,8 @@
 * Added icons for recent files.
 * Added *Italian* translation.
 * Added *Romanian* translation.
+* Fixed translations on *OS X*.
+* First *DEB* release for Linux.
 * Improved APK handling.
 * Reduced startup time.
 * Major improvements and bug fixes.
