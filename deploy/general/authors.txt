@@ -27,6 +27,7 @@ Cyclos (www.cyclos.org)
 Julien Veuillet (www.wakdev.com)
 Benjamin Hahn
 Marco Santiago
+Adan Ramirez
 Niket Kanchan
 Sheng-Yang Huang
 

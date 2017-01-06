@@ -27,7 +27,9 @@
 - [Julien Veuillet](http://www.wakdev.com)
 - Benjamin Hahn
 - Marco Santiago
+- Adan Ramirez
 - Niket Kanchan
+- Sheng-Yang Huang
 
 ## Special Thanks
 - Sergey Tachenov – [QuaZIP](http://quazip.sourceforge.net)
