@@ -3,7 +3,7 @@
 
 /*
 Copyright (C) 2010 Roberto Pompermaier
-Copyright (C) 2015-2016 Alexander Gorishnyak
+Copyright (C) 2015-2017 Alexander Gorishnyak
 Copyright (C) 2005-2014 Sergey A. Tachenov
 
 This file is part of QuaZIP.
