@@ -26,6 +26,7 @@ Donators:
 Cyclos (www.cyclos.org)
 Julien Veuillet (www.wakdev.com)
 Benjamin Hahn
+Harshtag
 Marco Santiago
 Adan Ramirez
 Niket Kanchan

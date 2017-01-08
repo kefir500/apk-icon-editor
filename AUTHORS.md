@@ -26,6 +26,7 @@
 - [Cyclos](http://www.cyclos.org)
 - [Julien Veuillet](http://www.wakdev.com)
 - Benjamin Hahn
+- Harshtag
 - Marco Santiago
 - Adan Ramirez
 - Niket Kanchan
