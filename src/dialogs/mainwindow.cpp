@@ -574,7 +574,6 @@ void MainWindow::setLanguage(QString lang)
     QApplication::removeTranslator(translator);
     QApplication::removeTranslator(translatorQt);
     if (translator->load(QString("apk-icon-editor.%1").arg(lang), LANGPATH)) {
-        // TODO (OS X) Crashes when setting any language different from English
         translatorQt->load(QString("qt.%1").arg(lang), LANGPATH);
         QApplication::installTranslator(translator);
         QApplication::installTranslator(translatorQt);
