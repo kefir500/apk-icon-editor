@@ -12,6 +12,7 @@ QMAKE_TARGET_COPYRIGHT = Copyright (C) 2014-2017
 DEFINES += APP='"\\\"$$QMAKE_TARGET_PRODUCT\\\""'
 DEFINES += VER=\\\"$$VERSION\\\"
 DEFINES += QUAZIP_STATIC
+#DEFINES += PORTABLE
 
 TRANSLATIONS += $$PWD/../lang/apk-icon-editor.en.ts
 RESOURCES    += $$PWD/../res/resources.qrc
