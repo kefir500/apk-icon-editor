@@ -27,6 +27,7 @@
 - [Julien Veuillet](http://www.wakdev.com)
 - Benjamin Hahn
 - Harshtag
+- Spyridon Moschopoulos
 - Marco Santiago
 - Adan Ramirez
 - Niket Kanchan
