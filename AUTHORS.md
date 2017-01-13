@@ -30,6 +30,7 @@
 - Spyridon Moschopoulos
 - Marco Santiago
 - Adan Ramirez
+- Halton Powell
 - Niket Kanchan
 - Sheng-Yang Huang
 
