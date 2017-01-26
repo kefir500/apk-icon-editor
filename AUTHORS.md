@@ -31,6 +31,8 @@
 - Marco Santiago
 - Adan Ramirez
 - Halton Powell
+- Lon Panissidi
+- Marcos Barbosa
 - Niket Kanchan
 - Sheng-Yang Huang
 
