@@ -14,6 +14,10 @@ namespace Apk {
 
         bool unpack(QString filepath, QString destination, QString frameworks, bool apktool, bool smali);
 
+        bool unzip(QString filename, QString destination);
+        bool unzip(QString filename, QString destination, QString frameworks, bool smali) const;
+
+    private:
         QString getManifest(QString filename) const;
         QString getVarAppTitle(QString contents) const;
 
@@ -26,11 +30,6 @@ namespace Apk {
 
         QList<QSharedPointer<Icon> > getIcons(QString manifest, QString contents);
         QList<Apk::String> getTranslations(QString contents, QString key);
-
-        bool unzip(QString filename, QString destination);
-        bool unzip(QString filename, QString destination, QString frameworks, bool smali) const;
-
-    public slots:
 
     signals:
         void unpacked(Apk::File *apk) const;
