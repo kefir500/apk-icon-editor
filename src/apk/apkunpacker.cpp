@@ -61,6 +61,15 @@ bool Unpacker::unpack(QString filepath, QString destination, QString frameworks,
     apk->setVarAppTitle(VAR_APPNAME);
     apk->setVersionCode(getVersionCode(MANIFEST));
     apk->setVersionName(getVersionName(MANIFEST));
+    // Hack: handle the situation when the banner file is present but the manifest entry is not:
+    if ((icons[Dpi::BANNER].data())->isNull()) {
+        const QString bannerFile(DEST + "/res/drawable-xhdpi-v4/banner.png");
+        if (QFile::exists(bannerFile)) {
+            apk->addAndroidTV();
+        }
+        icons[Dpi::BANNER].data()->load(bannerFile);
+    }
+    // Hack end.
     apk->setIcons(icons);
     apk->setStrings(strings);
     emit unpacked(apk);
@@ -183,10 +192,7 @@ QList<QSharedPointer<Icon> > Unpacker::getIcons(QString manifest, QString conten
         }
         if (filename.isEmpty()) {
             // Create dummy entry
-            icons.push_back(QSharedPointer<Icon>(
-                            i != Dpi::BANNER
-                            ? new Icon
-                            : new Icon(contents + "/res/drawable-xhdpi-v4/banner.png")));
+            icons.push_back(QSharedPointer<Icon>(new Icon));
             continue;
         }
         const int DUPL = files.lastIndexOf(filename, i - 1);
