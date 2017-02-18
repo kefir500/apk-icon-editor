@@ -28,12 +28,14 @@
 - Benjamin Hahn
 - Harshtag
 - Spyridon Moschopoulos
+- Rebecca McFarland
 - Marco Santiago
 - Adan Ramirez
 - Halton Powell
 - Lon Panissidi
 - Marcos Barbosa
 - Siegfried Engelbrecht
+- Orrin Duncan
 - Niket Kanchan
 - Sheng-Yang Huang
 
