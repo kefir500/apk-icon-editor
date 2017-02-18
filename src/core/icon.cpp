@@ -63,6 +63,11 @@ bool Icon::revert()
     return !(pixmap = QPixmap(original)).isNull();
 }
 
+QString Icon::getFilename()
+{
+    return original;
+}
+
 QPixmap Icon::getPixmap()
 {
     QPixmap gfx = pixmap;

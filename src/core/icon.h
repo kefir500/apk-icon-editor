@@ -57,6 +57,7 @@ public:
     bool isNull() const { return pixmap.isNull(); }      ///< Checks if the icon is \c NULL.
     int width() const { return pixmap.width(); }         ///< Returns the icon width.
     int height() const { return pixmap.height(); }       ///< Returns the icon height.
+    QString getFilename();                               ///< Returns the icon filename.
     QPixmap getPixmap();                                 ///< Returns the icon with the applied visual effects.
 
     bool getColorEnabled() { return colorize; }          ///< Returns \c true if the "Colorize" effect is enabled.
