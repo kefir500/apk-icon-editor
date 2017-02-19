@@ -29,6 +29,7 @@
 - Harshtag
 - Spyridon Moschopoulos
 - Rebecca McFarland
+- Adam Domanski
 - Marco Santiago
 - Adan Ramirez
 - Halton Powell
