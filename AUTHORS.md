@@ -39,6 +39,8 @@
 - Orrin Duncan
 - Niket Kanchan
 - Sheng-Yang Huang
+- Ford Nicholas
+- Andreas Mamesa
 
 ## Special Thanks
 - Sergey Tachenov – [QuaZIP](http://quazip.sourceforge.net)
