@@ -2,7 +2,7 @@ QT += widgets xml network
 TEMPLATE = app
 
 TARGET = apk-icon-editor
-VERSION = 1.7.0
+VERSION = 1.7.1
 
 QMAKE_TARGET_PRODUCT = APK Icon Editor
 QMAKE_TARGET_COMPANY = Alexander Gorishnyak

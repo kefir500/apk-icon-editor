@@ -1,5 +1,9 @@
 # Version History
 
+## 1.7.1
+* Upgraded *Apktool* to *v2.2.2*.
+* Improved APK handling.
+
 ## 1.7.0
 * Upgraded *Apktool* to *v2.2.1*.
 * Added *Android TV* banner support.
