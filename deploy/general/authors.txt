@@ -30,6 +30,7 @@ Harshtag
 Spyridon Moschopoulos
 Rebecca McFarland
 Adam Domanski
+Stefania Lavinia Szabo
 Marco Santiago
 Adan Ramirez
 Halton Powell
@@ -39,7 +40,7 @@ Siegfried Engelbrecht
 Orrin Duncan
 Niket Kanchan
 Sheng-Yang Huang
-Ford Nicholas
+Nicholas Ford
 Andreas Mamesa
 
 Special Thanks:
