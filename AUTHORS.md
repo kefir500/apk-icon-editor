@@ -41,6 +41,7 @@
 - Niket Kanchan
 - Sheng-Yang Huang
 - Nicholas Ford
+- Mania Media Repair
 - Andreas Mamesa
 
 ## Special Thanks
