@@ -42,6 +42,7 @@
 - Sheng-Yang Huang
 - Nicholas Ford
 - Mania Media Repair
+- Elijah Kabucwa
 - Andreas Mamesa
 
 ## Special Thanks
