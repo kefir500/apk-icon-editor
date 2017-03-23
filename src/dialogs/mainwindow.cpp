@@ -205,11 +205,11 @@ void MainWindow::init_gui()
     actIconEffect->setEnabled(false);
     actAutoUpdate->setCheckable(true);
 
-    actApkOpen->setShortcut(QKeySequence("Ctrl+O"));
+    actApkOpen->setShortcut(QKeySequence::Open);
     actApkExplore->setShortcut(QKeySequence("Ctrl+D"));
     actApkSave->setShortcut(QKeySequence("Ctrl+E"));
     actIconOpen->setShortcut(QKeySequence("Ctrl+R"));
-    actIconSave->setShortcut(QKeySequence("Ctrl+S"));
+    actIconSave->setShortcut(QKeySequence::Save);
     actIconScale->setShortcut(QKeySequence("Ctrl+W"));
     actIconResize->setShortcut(QKeySequence("Ctrl+I"));
     actIconRevert->setShortcut(QKeySequence::Undo);
