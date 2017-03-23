@@ -43,6 +43,7 @@
 - Nicholas Ford
 - Mania Media Repair
 - Elijah Kabucwa
+- Tatiana Leon
 - Andreas Mamesa
 
 ## Special Thanks
