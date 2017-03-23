@@ -775,6 +775,7 @@ void MainWindow::enableApktool(bool enable)
 {
     btnTool->setText(enable ? "Apktool" : "ZIP");
     btnTool->setToolTip(enable ? toolDialog->hint_apktool() : toolDialog->hint_quazip());
+    btnTool->setShortcut(QKeySequence("M"));
 
     menuBar()->resize(0, 0); // "Repaint" menu bar
 
