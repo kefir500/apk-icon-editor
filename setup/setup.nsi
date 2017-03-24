@@ -5,8 +5,8 @@
 !define APPNAME "APK Icon Editor"
 !define COMPANYNAME "Alexander Gorishnyak"
 !define VERSIONMAJOR 1
-!define VERSIONMINOR 7
-!define VERSIONPATCH 1
+!define VERSIONMINOR 8
+!define VERSIONPATCH 0
 !define VERSION "${VERSIONMAJOR}.${VERSIONMINOR}.${VERSIONPATCH}"
 !define ABOUTURL "http://kefir500.github.io/apk-icon-editor"
 !define UPDATEURL "http://kefir500.github.io/apk-icon-editor/download/#update"
