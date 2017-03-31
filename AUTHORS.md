@@ -31,6 +31,7 @@
 - Rebecca McFarland
 - Adam Domanski
 - Stefania Lavinia Szabo
+- Nico Mak
 - Marco Santiago
 - Adan Ramirez
 - Halton Powell
