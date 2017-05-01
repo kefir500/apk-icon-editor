@@ -45,6 +45,7 @@
 - Mania Media Repair
 - Elijah Kabucwa
 - Tatiana Leon
+- Andrea Hainc
 - Andreas Mamesa
 
 ## Special Thanks
