@@ -32,6 +32,7 @@
 - Adam Domanski
 - Stefania Lavinia Szabo
 - Nico Mak
+- Ivan Sudarev
 - Marco Santiago
 - Adan Ramirez
 - Halton Powell
