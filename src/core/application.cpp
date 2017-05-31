@@ -105,6 +105,11 @@ void Application::msgHandler(QtMsgType type, const QMessageLogContext &, const Q
         stream << line;
         fprintf(stderr, "%s", qPrintable(line));
         break;
+    case QtInfoMsg:
+        line = QString("[%1]  %2\n").arg(TIME).arg(msg);
+        ts << line;
+        fprintf(stderr, "%s", qPrintable(line));
+        break;
     case QtFatalMsg:
         line = QString("[%1] Fatal: %2\n").arg(TIME, msg);
         stream << line;
