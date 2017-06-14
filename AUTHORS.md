@@ -31,6 +31,8 @@
 - Rebecca McFarland
 - Adam Domanski
 - Stefania Lavinia Szabo
+- Nico Mak
+- Ivan Sudarev
 - Marco Santiago
 - Adan Ramirez
 - Halton Powell
@@ -44,6 +46,7 @@
 - Mania Media Repair
 - Elijah Kabucwa
 - Tatiana Leon
+- Andrea Hainc
 - Andreas Mamesa
 
 ## Special Thanks
