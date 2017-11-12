@@ -25,7 +25,9 @@
 ## Donators
 - [Cyclos](http://www.cyclos.org)
 - [Julien Veuillet](http://www.wakdev.com)
+- Khalida Begum
 - Benjamin Hahn
+- Evolanguage
 - Harshtag
 - Spyridon Moschopoulos
 - Rebecca McFarland
@@ -33,6 +35,9 @@
 - Stefania Lavinia Szabo
 - Nico Mak
 - Ivan Sudarev
+- Abel Bejan
+- Loubna Fathani
+- Philio Publishing
 - Marco Santiago
 - Adan Ramirez
 - Halton Powell
@@ -40,6 +45,7 @@
 - Marcos Barbosa
 - Siegfried Engelbrecht
 - Orrin Duncan
+- Osnaghi Simone
 - Niket Kanchan
 - Sheng-Yang Huang
 - Nicholas Ford
@@ -47,6 +53,14 @@
 - Elijah Kabucwa
 - Tatiana Leon
 - Andrea Hainc
+- USD Mint Inc
+- Agueda Miranda
+- Jon Tranchida
+- Space Digital
+- Charles Rhyddian
+- 김 윤주
+- Perla Juan
+- Bobby Liem
 - Andreas Mamesa
 
 ## Special Thanks
