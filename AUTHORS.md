@@ -45,7 +45,7 @@
 - Marcos Barbosa
 - Siegfried Engelbrecht
 - Orrin Duncan
-- Osnaghi Simone
+- Simone Osnaghi
 - Niket Kanchan
 - Sheng-Yang Huang
 - Nicholas Ford
@@ -59,8 +59,9 @@
 - Space Digital
 - Charles Rhyddian
 - 김 윤주
-- Perla Juan
+- Juan Perla
 - Bobby Liem
+- Darcy Clark
 - Andreas Mamesa
 
 ## Special Thanks
