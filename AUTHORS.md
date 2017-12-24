@@ -38,6 +38,8 @@
 - Abel Bejan
 - Loubna Fathani
 - Philio Publishing
+- Endrit Endrithoxha
+- Christine Mbella
 - Marco Santiago
 - Adan Ramirez
 - Halton Powell
@@ -62,7 +64,10 @@
 - Juan Perla
 - Bobby Liem
 - Darcy Clark
+- Mihaela Stemate
+- Emilio Vargas Tordecilla
 - Andreas Mamesa
+- Manuel Lopez
 
 ## Special Thanks
 - Sergey Tachenov – [QuaZIP](http://quazip.sourceforge.net)
