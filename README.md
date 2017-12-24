@@ -1,6 +1,6 @@
 # APK Icon Editor
 
-[![Build Status (Travis CI)](https://travis-ci.org/kefir500/apk-icon-editor.svg)](https://travis-ci.org/kefir500/apk-icon-editor/builds)
+[![Build Status (Travis CI)](https://travis-ci.org/kefir500/apk-icon-editor.svg?branch=master)](https://travis-ci.org/kefir500/apk-icon-editor/builds)
 [![Build Status (Appveyor)](https://ci.appveyor.com/api/projects/status/github/kefir500/apk-icon-editor?branch=master&svg=true)](https://ci.appveyor.com/project/kefir500/apk-icon-editor/history)
 [![Latest Release](https://img.shields.io/github/release/kefir500/apk-icon-editor.svg?maxAge=86400)](https://github.com/kefir500/apk-icon-editor/releases/latest)
 [![License](https://img.shields.io/badge/license-GPLv3-blue.svg?maxAge=2592000)](https://raw.githubusercontent.com/kefir500/apk-icon-editor/master/LICENSE)
