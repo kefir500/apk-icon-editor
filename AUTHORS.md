@@ -28,6 +28,7 @@
 - Khalida Begum
 - Benjamin Hahn
 - Evolanguage
+- Berend Jan Dunnewold
 - Harshtag
 - Spyridon Moschopoulos
 - Rebecca McFarland
@@ -40,6 +41,7 @@
 - Philio Publishing
 - Endrit Endrithoxha
 - Christine Mbella
+- Nelson Silva Fernandes
 - Marco Santiago
 - Adan Ramirez
 - Halton Powell
@@ -65,6 +67,8 @@
 - Bobby Liem
 - Darcy Clark
 - Mihaela Stemate
+- Ventas Online
+- Russell Gaither
 - Emilio Vargas Tordecilla
 - Andreas Mamesa
 - Manuel Lopez
