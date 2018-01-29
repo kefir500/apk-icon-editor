@@ -284,7 +284,7 @@ bool Packer::sign(QString temp, QString pem, QString pk8) const
     }
 
     QProcess p;
-    p.start(QString("java -jar \"%1/signer/signapk.jar\" \"%2\" \"%3\" \"%4\" \"%5\"")
+    p.start(QString("java -jar \"%1/signer/apksigner.jar\" sign --key %3 --cert %2 --out \"%5\" \"%4\"")
             .arg(Path::Data::shared(), pem, pk8, APK_SRC, APK_DST));
 
     if (p.waitForStarted(-1)) {
