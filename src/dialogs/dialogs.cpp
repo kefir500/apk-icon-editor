@@ -234,33 +234,8 @@ Donate::Donate(QWidget *parent) : QDialog(parent)
 
     // Initialize "Thanks" section:
 
-    QString thanks = QString("<hr>%1:<br>").arg(tr("Thank you for your support"));
-
     QRegExp rx("\\((.+)\\)");
     rx.setMinimal(true);
-
-    QFile inputFile("authors.txt");
-    if (inputFile.open(QIODevice::ReadOnly)) {
-
-        QTextStream stream(&inputFile);
-
-        while (!stream.atEnd()) {
-
-            QString line = stream.readLine();
-
-            if (line == "Supported by:") {
-                while (!line.isEmpty() && !stream.atEnd()) {
-                    line = stream.readLine();
-                    line = line.replace(rx, "(<a href=\"\\1\">\\1</a>)");
-                    thanks += line + "<br>";
-                }
-                thanks.chop(8);
-                break;
-            }
-        }
-
-        inputFile.close();
-    }
 
     // Create GUI:
 
@@ -271,17 +246,10 @@ Donate::Donate(QWidget *parent) : QDialog(parent)
     wallets->add("BitCoin:", "1M299bkCjSQL1TDbTzD38a7YyN96NvSo2k", Url::WEBSITE + "donate/#bitcoin");
     wallets->add("Yandex.Money:", "410011762016796", "https://money.yandex.ru/to/410011762016796");
 
-    QLabel *donators = new QLabel(this);
-    donators->setAlignment(Qt::AlignCenter);
-    donators->setTextFormat(Qt::RichText);
-    donators->setOpenExternalLinks(true);
-    donators->setText(thanks);
-
     QPushButton *btnOk = new QPushButton("OK", this);
 
     layout->addWidget(wallets);
     layout->addWidget(btnOk);
-    layout->addWidget(donators);
 
     connect(btnOk, SIGNAL(clicked()), this, SLOT(accept()));
 }
