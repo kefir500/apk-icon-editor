@@ -76,12 +76,25 @@ bool Packer::pack(Apk::File *apk, QString temp)
         }
     }
 
+    // Zipalign APK:
+
+    bool isOptimized = false;
+    if (apk->getZipalign()) {
+        qDebug() << "Optimizing...";
+        emit loading(60, tr("Optimizing APK..."));
+        isOptimized = zipalign(temp);
+    }
+    else {
+        isOptimized = true;
+        QFile::rename(temp + "/packed/temp-1.apk", temp + "/packed/temp-2.apk");
+    }
+
     // Sign APK:
 
     bool isSigned = false;
     if (apk->getSign()) {
         qDebug() << "Signing...";
-        emit loading(60, tr("Signing APK..."));
+        emit loading(80, tr("Signing APK..."));
 
         isSigned = apk->getKeystore()
         ? sign(temp, apk->getFileKeystore(), apk->getAlias(), apk->getPassKeystore(), apk->getPassAlias())
@@ -89,19 +102,6 @@ bool Packer::pack(Apk::File *apk, QString temp)
     }
     else {
         isSigned = true;
-        QFile::rename(temp + "/packed/temp-1.apk", temp + "/packed/temp-2.apk");
-    }
-
-    // Zipalign APK:
-
-    bool isOptimized = false;
-    if (apk->getZipalign()) {
-        qDebug() << "Optimizing...";
-        emit loading(80, tr("Optimizing APK..."));
-        isOptimized = zipalign(temp);
-    }
-    else {
-        isOptimized = true;
         QFile::rename(temp + "/packed/temp-2.apk", temp + "/packed/temp-3.apk");
     }
 
@@ -274,8 +274,8 @@ bool Packer::saveStrings(QList<Apk::String> strings) const
 
 bool Packer::sign(QString temp, QString pem, QString pk8) const
 {
-    const QString APK_SRC(temp + "/packed/temp-1.apk");
-    const QString APK_DST(temp + "/packed/temp-2.apk");
+    const QString APK_SRC(temp + "/packed/temp-2.apk");
+    const QString APK_DST(temp + "/packed/temp-3.apk");
 
     if (!QFile::exists(pem) || !QFile::exists(pk8)) {
         qDebug() << "Warning: PEM/PK8 not found.";
@@ -313,8 +313,8 @@ bool Packer::sign(QString temp, QString pem, QString pk8) const
 
 bool Packer::sign(QString temp, QString keystore, QString alias, QString passKeystore, QString passAlias) const
 {
-    const QString APK_SRC(temp + "/packed/temp-1.apk");
-    const QString APK_DST(temp + "/packed/temp-2.apk");
+    const QString APK_SRC(temp + "/packed/temp-2.apk");
+    const QString APK_DST(temp + "/packed/temp-3.apk");
 
     if (!QFile::exists(keystore)) {
         qDebug() << "Warning: KeyStore not found.";
@@ -353,8 +353,8 @@ bool Packer::sign(QString temp, QString keystore, QString alias, QString passKey
 
 bool Packer::zipalign(QString temp) const
 {
-    const QString APK_SRC(temp + "/packed/temp-2.apk");
-    const QString APK_DST(temp + "/packed/temp-3.apk");
+    const QString APK_SRC(temp + "/packed/temp-1.apk");
+    const QString APK_DST(temp + "/packed/temp-2.apk");
 
     QProcess p;
     p.start(QString("zipalign -f 4 \"%1\" \"%2\"").arg(APK_SRC, APK_DST));
