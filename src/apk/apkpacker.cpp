@@ -323,9 +323,9 @@ bool Packer::sign(QString temp, QString keystore, QString alias, QString passKey
     }
 
     QProcess p;
-    p.start(QString("jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 "
-            "-keystore \"%1\" \"%2\" -storepass \"%3\" -keypass \"%4\" \"%5\"")
-            .arg(keystore, APK_SRC, passKeystore, passAlias, alias));
+    p.start(QString("java -jar \"%1/signer/apksigner.jar\" sign --ks \"%2\" --ks-key-alias \"%3\" "
+                    "--ks-pass pass:\"%4\" --key-pass pass:\"%5\" \"%6\"")
+            .arg(Path::Data::shared(), keystore, alias, passKeystore, passAlias, APK_SRC));
 
     if (p.waitForStarted(-1)) {
         p.waitForFinished(-1);
@@ -336,12 +336,13 @@ bool Packer::sign(QString temp, QString keystore, QString alias, QString passKey
         else {
             QString error_text = p.readAllStandardError().replace("\r\n", "\n");
             if (error_text.isEmpty()) error_text = p.readAllStandardOutput().replace("\r\n", "\n");
-            qDebug() << "Jarsigner exit code:" << p.exitCode();
+            qDebug() << "Java exit code:" << p.exitCode();
             qDebug() << error_text;
         }
     }
     else {
-        qDebug() << qPrintable("Error starting Jarsigner");
+        qDebug() << qPrintable("Error starting Java");
+        qDebug() << "Error:" << p.errorString();
     }
 
     // Something went wrong:
