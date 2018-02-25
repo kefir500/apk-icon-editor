@@ -69,6 +69,7 @@
 - Mihaela Stemate
 - Ventas Online
 - Russell Gaither
+- Paola Zucchi
 - Emilio Vargas Tordecilla
 - Andreas Mamesa
 - Manuel Lopez
