@@ -32,7 +32,7 @@ EffectsDialog::EffectsDialog(QWidget *parent) : QDialog(parent)
     slideCorners = new QSlider(Qt::Horizontal, this);
     labelBlur = new QLabel(this);
     slideBlur = new QSlider(Qt::Horizontal, this);
-    colorDialog = new QColorDialog(this);
+    colorDialog = new QColorDialog(this); // TODO this causes crash on exit (macOS)
     buttons = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, this);
 
 #ifdef Q_OS_UNIX
