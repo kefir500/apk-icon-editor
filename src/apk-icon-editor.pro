@@ -2,12 +2,12 @@ QT += widgets xml network
 TEMPLATE = app
 
 TARGET = apk-icon-editor
-VERSION = 1.7.1
+VERSION = 1.8.0
 
 QMAKE_TARGET_PRODUCT = APK Icon Editor
 QMAKE_TARGET_COMPANY = Alexander Gorishnyak
 QMAKE_TARGET_DESCRIPTION = APK Icon Editor v$$VERSION
-QMAKE_TARGET_COPYRIGHT = Copyright (C) 2014-2017
+QMAKE_TARGET_COPYRIGHT = Copyright (C) 2014-2018
 
 DEFINES += APP='"\\\"$$QMAKE_TARGET_PRODUCT\\\""'
 DEFINES += VER=\\\"$$VERSION\\\"

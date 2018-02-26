@@ -19,8 +19,8 @@
 - Multilingual interface.
 
 ## Requirements
-- **JRE 32-bit** (for most users) – to sign APK files and use Apktool.
-- **JDK 32-bit** (optional alternative) – to sign APK files with KeyStore.
+- **JRE** (for most users) – to sign APK files and use Apktool.
+- **JDK** (optional alternative) – to sign APK files with KeyStore.
 
 ## Notice
 - You may not use **APK Icon Editor** for any illegal purposes;

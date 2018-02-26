@@ -25,7 +25,10 @@ Ameen Ali
 Donators:
 Cyclos (www.cyclos.org)
 Julien Veuillet (www.wakdev.com)
+Khalida Begum
 Benjamin Hahn
+Evolanguage
+Berend Jan Dunnewold
 Harshtag
 Spyridon Moschopoulos
 Rebecca McFarland
@@ -33,6 +36,12 @@ Adam Domanski
 Stefania Lavinia Szabo
 Nico Mak
 Ivan Sudarev
+Abel Bejan
+Loubna Fathani
+Philio Publishing
+Endrit Endrithoxha
+Christine Mbella
+Nelson Silva Fernandes
 Marco Santiago
 Adan Ramirez
 Halton Powell
@@ -40,6 +49,7 @@ Lon Panissidi
 Marcos Barbosa
 Siegfried Engelbrecht
 Orrin Duncan
+Simone Osnaghi
 Niket Kanchan
 Sheng-Yang Huang
 Nicholas Ford
@@ -47,7 +57,22 @@ Mania Media Repair
 Elijah Kabucwa
 Tatiana Leon
 Andrea Hainc
+USD Mint Inc
+Agueda Miranda
+Jon Tranchida
+Space Digital
+Charles Rhyddian
+김 윤주
+Juan Perla
+Bobby Liem
+Darcy Clark
+Mihaela Stemate
+Ventas Online
+Russell Gaither
+Paola Zucchi
+Emilio Vargas Tordecilla
 Andreas Mamesa
+Manuel Lopez
 
 Special Thanks:
 Sergey Tachenov – QuaZIP
@@ -58,6 +83,7 @@ Testers:
 Vladimir Gorishnyak
 nhanqv
 Roder van Arkel
+Ibuprophen
 Peter Pursiainen
 Igor Petrunnikov
 Code War

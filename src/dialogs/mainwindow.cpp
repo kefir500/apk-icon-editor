@@ -60,8 +60,8 @@ void MainWindow::checkReqs()
         version_jdk = cap[1];
     }
 
-    qDebug() << "JRE (32-bit) version:" << qPrintable(!JRE.isNull() ? version_jre : "---");
-    qDebug() << "JDK (32-bit) version:" << qPrintable(!JDK.isNull() ? version_jdk : "---");
+    qDebug() << "JRE version:" << qPrintable(!JRE.isNull() ? version_jre : "---");
+    qDebug() << "JDK version:" << qPrintable(!JDK.isNull() ? version_jdk : "---");
     qDebug() << "Apktool version:" << qPrintable(!version_apktool.isNull() ? version_apktool : "---") << '\n';
 
     if (!JRE.isNull()) qDebug().nospace() << "java -version\n" << qPrintable(JRE) << '\n';

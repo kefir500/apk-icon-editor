@@ -65,6 +65,13 @@ KeyManager::KeyManager(QWidget *parent) : QDialog(parent)
     layoutKey->addWidget(btnNew, 4, 0, 1, 0);
     groupKey->setLayout(layoutKey);
 
+    setTabOrder(boxKey, editStorePass);
+    setTabOrder(editStorePass, editAlias);
+    setTabOrder(editAlias, editAliasPass);
+    setTabOrder(editAliasPass, btnNew);
+    setTabOrder(btnNew, buttons->button(QDialogButtonBox::Ok));
+    setTabOrder(buttons->button(QDialogButtonBox::Ok), buttons->button(QDialogButtonBox::Cancel));
+
     QVBoxLayout *layout = new QVBoxLayout(this);
     layout->addWidget(radioPem);
     layout->addWidget(radioKey);

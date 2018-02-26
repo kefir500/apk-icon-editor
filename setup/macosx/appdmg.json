@@ -1,0 +1,10 @@
+{
+  "title": "APK Icon Editor",
+  "icon": "../../deploy/macosx/Resources/icon.icns",
+  "background": "background.png",
+  "icon-size": 128,
+  "contents": [
+    { "x": 160, "y": 200, "type": "file", "path": "build/APK Icon Editor.app" },
+    { "x": 430, "y": 200, "type": "link", "path": "/Applications" }
+  ]
+}

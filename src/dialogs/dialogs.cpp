@@ -2,6 +2,7 @@
 #include "globals.h"
 #include <QApplication>
 #include <QBoxLayout>
+#include <QTextEdit>
 #include <QClipboard>
 #include <QTextStream>
 #include <QDesktopServices>
@@ -230,14 +231,11 @@ Donate::Donate(QWidget *parent) : QDialog(parent)
 {
     setWindowTitle(QApplication::translate("MainWindow", "Donate"));
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
-    resize(Gui::Screen::scaled(450, 0));
+    resize(Gui::Screen::scaled(450, 360));
 
     // Initialize "Thanks" section:
 
-    QString thanks = QString("<hr>%1:<br>").arg(tr("Thank you for your support"));
-
-    QRegExp rx("\\((.+)\\)");
-    rx.setMinimal(true);
+    QString thanks = QString("%1:<hr>").arg(tr("Thank you for your support"));
 
     QFile inputFile("authors.txt");
     if (inputFile.open(QIODevice::ReadOnly)) {
@@ -245,13 +243,10 @@ Donate::Donate(QWidget *parent) : QDialog(parent)
         QTextStream stream(&inputFile);
 
         while (!stream.atEnd()) {
-
             QString line = stream.readLine();
-
-            if (line == "Supported by:") {
+            if (line == "Donators:") {
                 while (!line.isEmpty() && !stream.atEnd()) {
                     line = stream.readLine();
-                    line = line.replace(rx, "(<a href=\"\\1\">\\1</a>)");
                     thanks += line + "<br>";
                 }
                 thanks.chop(8);
@@ -271,11 +266,9 @@ Donate::Donate(QWidget *parent) : QDialog(parent)
     wallets->add("BitCoin:", "1M299bkCjSQL1TDbTzD38a7YyN96NvSo2k", Url::WEBSITE + "donate/#bitcoin");
     wallets->add("Yandex.Money:", "410011762016796", "https://money.yandex.ru/to/410011762016796");
 
-    QLabel *donators = new QLabel(this);
-    donators->setAlignment(Qt::AlignCenter);
-    donators->setTextFormat(Qt::RichText);
-    donators->setOpenExternalLinks(true);
+    QTextEdit *donators = new QTextEdit(this);
     donators->setText(thanks);
+    donators->setReadOnly(true);
 
     QPushButton *btnOk = new QPushButton("OK", this);
 
