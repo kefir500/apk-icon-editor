@@ -32,6 +32,7 @@ namespace Apk {
 
         short getRatio() const;
         bool getApktool() const;
+        bool getApksigner() const;
         bool getSmali() const;
         bool getSign() const;
         bool getZipalign() const;
@@ -55,6 +56,7 @@ namespace Apk {
         void setStrings(QList<Apk::String> strings);
 
         void setApktool(bool value);
+        void setApksigner(bool value);
         void setRatio(short ratio);
         void setSmali(bool value);
         void setSign(bool value);
@@ -74,6 +76,7 @@ namespace Apk {
 
         short ratio;          ///< ZIP compression ratio [0-9] (only in ZIP mode).
         bool isApktool;       ///< If \c true, Apktool is used instead of ZIP.
+        bool isApksigner;     ///< If \c true, apksigner is used instead of signapk / jarsigner.
         bool isSmali;         ///< If \c true, decompile "classes.dex" (only in Apktool mode).
         bool isSign;          ///< If \c true, sign APK.
         bool isZipalign;      ///< If \c true, zipalign APK.

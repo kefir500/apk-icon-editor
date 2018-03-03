@@ -114,6 +114,7 @@ QList<Apk::String> Apk::File::getStrings() const { return strings; }
 
 short Apk::File::getRatio() const { return ratio; }
 bool Apk::File::getApktool() const { return isApktool; }
+bool Apk::File::getApksigner() const { return isApksigner; }
 bool Apk::File::getSmali() const { return isSmali; }
 bool Apk::File::getSign() const { return isSign; }
 bool Apk::File::getZipalign() const { return isZipalign; }
@@ -138,6 +139,7 @@ void Apk::File::setIcons(QList<QSharedPointer<Icon> > icons) { this->icons = ico
 void Apk::File::setStrings(QList<Apk::String> strings) { this->strings = strings; }
 
 void Apk::File::setApktool(bool value) { isApktool = value; }
+void Apk::File::setApksigner(bool value) { isApksigner = value; }
 void Apk::File::setRatio(short ratio) { this->ratio = ratio; }
 void Apk::File::setSmali(bool value) { isSmali = value; }
 void Apk::File::setZipalign(bool value) { isZipalign = value; }

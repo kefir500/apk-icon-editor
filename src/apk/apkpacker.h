@@ -19,13 +19,16 @@ namespace Apk {
         bool saveIcons(QList<QSharedPointer<Icon> > icons) const;
         bool saveStrings(QList<Apk::String> strings) const;
 
-        bool zip(QString contents, QString temp, short ratio) const;
-        bool zip(QString contents, QString temp, QString frameworks) const;
-        bool sign(QString temp, QString pem, QString pk8) const;
-        bool sign(QString temp, QString keystore, QString alias, QString passKeystore, QString passAlias) const;
-        bool zipalign(QString temp) const;
+        bool zip(QString contents, QString apk, short ratio) const;
+        bool zip(QString contents, QString apk, QString frameworks) const;
+        bool sign(QString apk, QString pem, QString pk8, bool apksigner) const;
+        bool sign(QString apk, QString keystore, QString alias, QString passKeystore, QString passAlias, bool apksigner) const;
+        bool zipalign(QString apk) const;
 
-    public slots:
+    private:
+        bool stepSign(Apk::File *apk, QString tempAPK) const;
+        bool stepZipalign(Apk::File *apk, QString tempAPK) const;
+        bool stepFinalize(Apk::File *apk, QString tempAPK) const;
 
     signals:
         void packed(Apk::File *apk, QString message, bool success = true) const;

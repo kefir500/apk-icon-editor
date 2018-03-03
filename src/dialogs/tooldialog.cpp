@@ -23,15 +23,21 @@ ToolDialog::ToolDialog(QWidget *parent) : QDialog(parent)
     QVBoxLayout *layout = new QVBoxLayout(this);
     QHBoxLayout *layoutZip = new QHBoxLayout();
     QHBoxLayout *layoutApktool = new QHBoxLayout();
+    QVBoxLayout *layoutSign = new QVBoxLayout();
 
     radioZip = new QRadioButton(this);
     radioApktool = new QRadioButton(this);
+    radioApkSigner = new QRadioButton(QString("apksigner (JRE %1 7)").arg(QChar(0x2265)), this);
+    radioJarSigner = new QRadioButton(QString("signapk (JRE %1 8) + jarsigner (JDK)").arg(QChar(0x2264)), this);
     QDialogButtonBox *buttons = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, this);
 
     groupZip = new QGroupBox(this);
     groupZip->setLayout(layoutZip);
     groupApktool = new QGroupBox(this);
     groupApktool->setLayout(layoutApktool);
+    groupSign = new QGroupBox(this);
+    groupSign->setCheckable(true);
+    groupSign->setLayout(layoutSign);
 
     labelComp = new QLabel(this);
     labelMin = new QLabel(this);
@@ -41,7 +47,6 @@ ToolDialog::ToolDialog(QWidget *parent) : QDialog(parent)
     slideRatio->setTickPosition(QSlider::TicksBelow);
     checkSmali = new QCheckBox(this);
 
-    checkSign = new QCheckBox(this);
     checkOptimize = new QCheckBox(this);
     tempDir = new FileBox(this, true);
 
@@ -49,7 +54,7 @@ ToolDialog::ToolDialog(QWidget *parent) : QDialog(parent)
     layout->addWidget(radioApktool);
     layout->addWidget(groupZip);
     layout->addWidget(groupApktool);
-    layout->addWidget(checkSign);
+    layout->addWidget(groupSign);
     layout->addWidget(checkOptimize);
     layout->addWidget(tempDir);
     layout->addWidget(buttons);
@@ -58,6 +63,8 @@ ToolDialog::ToolDialog(QWidget *parent) : QDialog(parent)
     layoutZip->addWidget(slideRatio);
     layoutZip->addWidget(labelMax);
     layoutApktool->addWidget(checkSmali);
+    layoutSign->addWidget(radioApkSigner);
+    layoutSign->addWidget(radioJarSigner);
 
     connect(radioZip, SIGNAL(clicked()), this, SLOT(setModeZip()));
     connect(radioApktool, SIGNAL(clicked()), this, SLOT(setModeApktool()));
@@ -70,8 +77,9 @@ ToolDialog::ToolDialog(QWidget *parent) : QDialog(parent)
 void ToolDialog::accept()
 {
     const bool APKTOOL = radioApktool->isChecked();
+    const bool APKSIGNER = radioApkSigner->isChecked();
     const bool SMALI = checkSmali->isChecked();
-    const bool SIGN = checkSign->isChecked();
+    const bool SIGN = groupSign->isChecked();
     const bool ZIPALIGN = checkOptimize->isChecked();
     const int COMPRESSION = slideRatio->value();
     const QString TEMP = tempDir->value();
@@ -84,6 +92,7 @@ void ToolDialog::accept()
         Settings::set_use_apktool(APKTOOL);
     }
 
+    Settings::set_use_apksigner(APKSIGNER);
     Settings::set_smali(SMALI);
     Settings::set_compression(COMPRESSION);
     Settings::set_sign(SIGN);
@@ -104,9 +113,10 @@ void ToolDialog::reset()
 {
     slideRatio->setValue(Settings::get_compression());
     checkSmali->setChecked(Settings::get_smali());
-    checkSign->setChecked(Settings::get_sign());
+    groupSign->setChecked(Settings::get_sign());
     checkOptimize->setChecked(Settings::get_zipalign());
     tempDir->setValue(Settings::get_temp(false));
+    Settings::get_use_apksigner() ? radioApkSigner->setChecked(true) : radioJarSigner->setChecked(true);
     Settings::get_use_apktool() ? setModeApktool() : setModeZip();
 }
 
@@ -142,7 +152,7 @@ void ToolDialog::retranslate()
     labelMin->setText(tr("MIN"));
     labelMax->setText(tr("MAX"));
     checkSmali->setText(tr("Decompile %1").arg("CLASSES.DEX"));
-    checkSign->setText(tr("Sign APK"));
+    groupSign->setTitle(tr("Sign APK"));
     checkOptimize->setText(tr("Optimize APK"));
     tempDir->setTitle(tr("Temporary Directory") + ":");
 }

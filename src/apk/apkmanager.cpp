@@ -44,11 +44,12 @@ void ApkManager::pack(Apk::File *apk, QString temp)
 
     qDebug() << "Using Apktool:" << apk->getApktool();
     (!apk->getApktool())
-    ? qDebug() << "Ratio:" << apk->getRatio()
-    : qDebug() << "Smali:" << apk->getSmali();
+        ? qDebug() << "Ratio:" << apk->getRatio()
+        : qDebug() << "Smali:" << apk->getSmali();
 
     qDebug() << "Sign:" << apk->getSign();
     qDebug() << "Zipalign:" << apk->getZipalign();
+    qDebug() << "Using Apksigner:" << apk->getApksigner();
     qDebug() << "Using KeyStore:" << apk->getKeystore();
     if (!apk->getKeystore()) {
         qDebug() << "PEM" << (QFile::exists(apk->getFilePem()) ? "found;" : "NOT found;");

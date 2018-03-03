@@ -25,15 +25,17 @@ private:
     static const char *STR_APKTOOL;
     QRadioButton *radioZip;
     QRadioButton *radioApktool;
+    QRadioButton *radioApkSigner;
+    QRadioButton *radioJarSigner;
     QLabel *labelComp;
     QLabel *labelMin;
     QLabel *labelMax;
     QSlider *slideRatio;
     QCheckBox *checkSmali;
-    QCheckBox *checkSign;
     QCheckBox *checkOptimize;
     QGroupBox *groupZip;
     QGroupBox *groupApktool;
+    QGroupBox *groupSign;
     FileBox *tempDir;
 
 signals:

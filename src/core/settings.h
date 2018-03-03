@@ -35,6 +35,7 @@ public:
     static QStringList get_recent();     ///< Returns the list of the recent APK files.
 
     static bool get_use_apktool();       ///< Returns \c true if the Apktool is used instead of ZIP tools.
+    static bool get_use_apksigner();     ///< Returns \c true if the apksigner is used instead of signapk / jarsigner.
     static int get_compression();        ///< Returns the ZIP compression ratio.
     static bool get_smali();             ///< Returns \c true if smali/baksmali tool is used.
     static bool get_sign();              ///< Returns \c true if the signing of the APK files is turned on.
@@ -73,6 +74,7 @@ public:
     static void set_temp(QString path);              ///< Saves the temporary directory \c path.
 
     static void set_use_apktool(bool state);         ///< Saves the Apktool on/off \c state.
+    static void set_use_apksigner(bool state);       ///< Saves the Apksigner on/off \c state.
     static void set_compression(int ratio);          ///< Saves the ZIP compression \c ratio.
     static void set_smali(bool state);               ///< Saves the smali/baksmali on/off \c state.
     static void set_sign(bool state);                ///< Saves the APK signing on/off \c state.

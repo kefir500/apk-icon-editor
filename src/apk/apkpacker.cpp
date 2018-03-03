@@ -11,6 +11,7 @@ using Apk::Packer;
 
 bool Packer::pack(Apk::File *apk, QString temp)
 {
+    const QString TEMPAPK = temp + "/packed/temp.zip";
     const QString CONTENTS = QDir::fromNativeSeparators(apk->getDirectory());
     QDir(CONTENTS + "/META-INF").removeRecursively();
 
@@ -24,9 +25,8 @@ bool Packer::pack(Apk::File *apk, QString temp)
     // Clear temporary intermediate files:
 
     QFile::remove(temp + "/packed/temp.zip");
-    QFile::remove(temp + "/packed/temp-1.apk");
-    QFile::remove(temp + "/packed/temp-2.apk");
-    QFile::remove(temp + "/packed/temp-3.apk");
+    QFile::remove(temp + "/packed/temp-signed.apk");
+    QFile::remove(temp + "/packed/temp-aligned.apk");
 
     // Pack APK:
 
@@ -35,7 +35,7 @@ bool Packer::pack(Apk::File *apk, QString temp)
         // Pack APK (ZIP):
 
         emit loading(40, tr("Packing APK..."));
-        if (!zip(CONTENTS, temp, apk->getRatio())) {
+        if (!zip(CONTENTS, TEMPAPK, apk->getRatio())) {
             return false;
         }
     }
@@ -71,53 +71,29 @@ bool Packer::pack(Apk::File *apk, QString temp)
         // Pack APK (Apktool);
 
         emit loading(40, tr("Packing APK..."));
-        if (!zip(CONTENTS, temp, temp + "/framework/")) {
+        if (!zip(CONTENTS, TEMPAPK, temp + "/framework/")) {
             return false;
         }
     }
 
-    // Zipalign APK:
-
-    bool isOptimized = false;
-    if (apk->getZipalign()) {
-        qDebug() << "Optimizing...";
-        emit loading(60, tr("Optimizing APK..."));
-        isOptimized = zipalign(temp);
-    }
-    else {
-        isOptimized = true;
-        QFile::rename(temp + "/packed/temp-1.apk", temp + "/packed/temp-2.apk");
-    }
-
-    // Sign APK:
-
     bool isSigned = false;
-    if (apk->getSign()) {
-        qDebug() << "Signing...";
+    bool isOptimized = false;
+    if (apk->getApksigner()) {
+        emit loading(60, tr("Optimizing APK..."));
+        isOptimized = stepZipalign(apk, TEMPAPK);
         emit loading(80, tr("Signing APK..."));
-
-        isSigned = apk->getKeystore()
-        ? sign(temp, apk->getFileKeystore(), apk->getAlias(), apk->getPassKeystore(), apk->getPassAlias())
-        : sign(temp, apk->getFilePem(), apk->getFilePk8());
+        isSigned = stepSign(apk, TEMPAPK);
     }
     else {
-        isSigned = true;
-        QFile::rename(temp + "/packed/temp-2.apk", temp + "/packed/temp-3.apk");
+        emit loading(60, tr("Signing APK..."));
+        isSigned = stepSign(apk, TEMPAPK);
+        emit loading(80, tr("Optimizing APK..."));
+        isOptimized = stepZipalign(apk, TEMPAPK);
     }
 
     // Move APK to the destination:
 
-    QString output = apk->getFilePath();
-    QFileInfo fi(apk->getFilePath());
-    QString suffix = fi.suffix();
-    if (suffix.toLower() != "apk") {
-        output += ".apk";
-    }
-    QFile::remove(output);
-    if (!QFile::rename(temp + "/packed/temp-3.apk", output)) {
-        emit error(tr("Could not create output APK file."));
-        return false;
-    }
+    stepFinalize(apk, TEMPAPK);
 
     // Done!
 
@@ -143,24 +119,20 @@ bool Packer::pack(Apk::File *apk, QString temp)
     return true;
 }
 
-bool Packer::zip(QString contents, QString temp, short ratio) const
+bool Packer::zip(QString contents, QString apk, short ratio) const
 {
-    bool result = JlCompress::compressDir(temp + "/packed/temp.zip", contents, ratio);
-    if (result) {
-        QFile::rename(temp + "/packed/temp.zip", temp + "/packed/temp-1.apk");
-        return true;
-    }
-    else {
+    bool result = JlCompress::compressDir(apk, contents, ratio);
+    if (!result) {
         emit error(Apk::ERROR.arg("QuaZIP"));
-        return false;
     }
+    return result;
 }
 
-bool Packer::zip(QString contents, QString temp, QString frameworks) const
+bool Packer::zip(QString contents, QString apk, QString frameworks) const
 {
     QProcess p;
-    p.start(QString("java -jar \"%1/apktool.jar\" b \"%2\" -f -o \"%3/packed/temp.zip\" -p \"%4\"")
-            .arg(Path::Data::shared(),contents, temp, frameworks));
+    p.start(QString("java -jar \"%1/apktool.jar\" b \"%2\" -f -o \"%3\" -p \"%4\"")
+            .arg(Path::Data::shared(),contents, apk, frameworks));
     if (!p.waitForStarted(-1)) {
         if (isJavaInstalled()) {
             qDebug() << "Error starting Apktool";
@@ -174,15 +146,12 @@ bool Packer::zip(QString contents, QString temp, QString frameworks) const
         }
     }
     p.waitForFinished(-1);
-    if (!p.exitCode()) {
-        QFile::rename(temp + "/packed/temp.zip", temp + "/packed/temp-1.apk");
-        return true;
-    }
-    else {
+    if (p.exitCode()) {
         qDebug() << p.readAllStandardError().replace("\r\n", "\n");
         emit error(Apk::ERROR.arg("Apktool"));
         return false;
     }
+    return true;
 }
 
 void Packer::saveAppTitle(QString contents, QString title) const
@@ -272,25 +241,27 @@ bool Packer::saveStrings(QList<Apk::String> strings) const
     return result;
 }
 
-bool Packer::sign(QString temp, QString pem, QString pk8) const
+bool Packer::sign(QString apk, QString pem, QString pk8, bool apksigner) const
 {
-    const QString APK_SRC(temp + "/packed/temp-2.apk");
-    const QString APK_DST(temp + "/packed/temp-3.apk");
-
     if (!QFile::exists(pem) || !QFile::exists(pk8)) {
         qDebug() << "Warning: PEM/PK8 not found.";
-        QFile::rename(APK_SRC, APK_DST);
         return false;
     }
 
     QProcess p;
-    p.start(QString("java -jar \"%1/signer/apksigner.jar\" sign --key \"%3\" --cert \"%2\" --out \"%5\" \"%4\"")
-            .arg(Path::Data::shared(), pem, pk8, APK_SRC, APK_DST));
+    const QString apk_dst = apk + ".signed"; // Separate output file for signapk.jar
+    const QString procString = apksigner
+        ? "java -jar \"%1/signer/apksigner.jar\" sign --key \"%3\" --cert \"%2\" \"%4\""
+        : "java -jar \"%1/signer/signapk.jar\" \"%2\" \"%3\" \"%4\" \"%5\"";
+    p.start(procString.arg(Path::Data::shared(), pem, pk8, apk, apk_dst));
 
     if (p.waitForStarted(-1)) {
         p.waitForFinished(-1);
         if (p.exitCode() == 0) {
-            QFile::remove(APK_SRC);
+            if (!apksigner) {
+                QFile::remove(apk);
+                QFile::rename(apk_dst, apk);
+            }
             return true;
         }
         else {
@@ -307,30 +278,26 @@ bool Packer::sign(QString temp, QString pem, QString pk8) const
 
     // Something went wrong:
 
-    QFile::rename(APK_SRC, APK_DST);
+    QFile::remove(apk_dst);
     return false;
 }
 
-bool Packer::sign(QString temp, QString keystore, QString alias, QString passKeystore, QString passAlias) const
+bool Packer::sign(QString apk, QString keystore, QString alias, QString passKeystore, QString passAlias, bool apksigner) const
 {
-    const QString APK_SRC(temp + "/packed/temp-2.apk");
-    const QString APK_DST(temp + "/packed/temp-3.apk");
-
     if (!QFile::exists(keystore)) {
         qDebug() << "Warning: KeyStore not found.";
-        QFile::rename(APK_SRC, APK_DST);
         return false;
     }
 
     QProcess p;
-    p.start(QString("java -jar \"%1/signer/apksigner.jar\" sign --ks \"%2\" --ks-key-alias \"%3\" "
-                    "--ks-pass pass:\"%4\" --key-pass pass:\"%5\" \"%6\"")
-            .arg(Path::Data::shared(), keystore, alias, passKeystore, passAlias, APK_SRC));
+    QString procString = apksigner
+        ? "java -jar \"%1/signer/apksigner.jar\" sign --ks \"%2\" --ks-key-alias \"%3\" --ks-pass pass:\"%4\" --key-pass pass:\"%5\" \"%6\""
+        : "jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore \"%2\" \"%6\" -storepass \"%4\" -keypass \"%5\" \"%3\"";
+    p.start(procString.arg(Path::Data::shared(), keystore, alias, passKeystore, passAlias, apk));
 
     if (p.waitForStarted(-1)) {
         p.waitForFinished(-1);
         if (p.exitCode() == 0) {
-            QFile::rename(APK_SRC, APK_DST);
             return true;
         }
         else {
@@ -347,22 +314,21 @@ bool Packer::sign(QString temp, QString keystore, QString alias, QString passKey
 
     // Something went wrong:
 
-    QFile::rename(APK_SRC, APK_DST);
     return false;
 }
 
-bool Packer::zipalign(QString temp) const
+bool Packer::zipalign(QString apk) const
 {
-    const QString APK_SRC(temp + "/packed/temp-1.apk");
-    const QString APK_DST(temp + "/packed/temp-2.apk");
+    const QString apk_dst(apk + ".aligned");
 
     QProcess p;
-    p.start(QString("zipalign -f 4 \"%1\" \"%2\"").arg(APK_SRC, APK_DST));
+    p.start(QString("zipalign -f 4 \"%1\" \"%2\"").arg(apk, apk_dst));
 
     if (p.waitForStarted(-1)) {
         p.waitForFinished(-1);
         if (p.exitCode() == 0) {
-            QFile::remove(APK_SRC);
+            QFile::remove(apk);
+            QFile::rename(apk_dst, apk);
             return true;
         }
         else {
@@ -377,6 +343,44 @@ bool Packer::zipalign(QString temp) const
 
     // Something went wrong:
 
-    QFile::rename(APK_SRC, APK_DST);
+    QFile::remove(apk_dst);
     return false;
+}
+
+bool Packer::stepSign(Apk::File *apk, QString tempAPK) const
+{
+    if (apk->getSign()) {
+        qDebug() << "Signing...";
+        return apk->getKeystore()
+            ? sign(tempAPK, apk->getFileKeystore(), apk->getAlias(), apk->getPassKeystore(), apk->getPassAlias(), apk->getApksigner())
+            : sign(tempAPK, apk->getFilePem(), apk->getFilePk8(), apk->getApksigner());
+    }
+    // No signing needed:
+    return true;
+}
+
+bool Packer::stepZipalign(Apk::File *apk, QString tempAPK) const
+{
+    if (apk->getZipalign()) {
+        qDebug() << "Optimizing...";
+        return zipalign(tempAPK);
+    }
+    // No alignment needed:
+    return true;
+}
+
+bool Packer::stepFinalize(Apk::File *apk, QString tempAPK) const
+{
+    QString output = apk->getFilePath();
+    QFileInfo fi(apk->getFilePath());
+    QString suffix = fi.suffix();
+    if (suffix.toLower() != "apk") {
+        output += ".apk";
+    }
+    QFile::remove(output);
+    if (!QFile::rename(tempAPK, output)) {
+        emit error(tr("Could not create output APK file."));
+        return false;
+    }
+    return true;
 }

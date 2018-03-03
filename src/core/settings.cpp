@@ -76,11 +76,12 @@ QString Settings::get_temp(bool fallback)
     return (fallback && (!QDir(PATH).exists() || PATH.isEmpty())) ? TEMP : PATH;
 }
 
-bool Settings::get_use_apktool() { return settings->value("APK/Apktool", false).toBool(); }
-int Settings::get_compression()  { return settings->value("APK/Compression", 9).toInt(); }
-bool Settings::get_smali()       { return settings->value("APK/Smali", false).toBool(); }
-bool Settings::get_sign()        { return settings->value("APK/Sign", true).toBool(); }
-bool Settings::get_zipalign()    { return settings->value("APK/Optimize", true).toBool(); }
+bool Settings::get_use_apktool()   { return settings->value("APK/Apktool", false).toBool(); }
+bool Settings::get_use_apksigner() { return settings->value("APK/Apksigner", false).toBool(); }
+int Settings::get_compression()    { return settings->value("APK/Compression", 9).toInt(); }
+bool Settings::get_smali()         { return settings->value("APK/Smali", false).toBool(); }
+bool Settings::get_sign()          { return settings->value("APK/Sign", true).toBool(); }
+bool Settings::get_zipalign()      { return settings->value("APK/Optimize", true).toBool(); }
 
 bool Settings::get_use_keystore() { return settings->value("Key/Method", false).toBool(); }
 QString Settings::get_keystore()  { return settings->value("Key/KeyStore", "").toString(); }
@@ -139,6 +140,7 @@ void Settings::set_recent(QStringList recent) { settings->setValue("Recent", rec
 void Settings::set_temp(QString path)         { settings->setValue("Temp", path); }
 
 void Settings::set_use_apktool(bool state)    { settings->setValue("APK/Apktool", state); }
+void Settings::set_use_apksigner(bool state)  { settings->setValue("APK/Apksigner", state); }
 void Settings::set_compression(int ratio)     { settings->setValue("APK/Compression", ratio); }
 void Settings::set_smali(bool state)          { settings->setValue("APK/Smali", state); }
 void Settings::set_sign(bool state)           { settings->setValue("APK/Sign", state); }

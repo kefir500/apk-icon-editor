@@ -1270,6 +1270,7 @@ bool MainWindow::apk_save(QString filename)
     apk->setSmali(Settings::get_smali());
     apk->setSign(Settings::get_sign());
     apk->setZipalign(Settings::get_zipalign());
+    apk->setApksigner(Settings::get_use_apksigner());
     apk->setFilePemPk8(Settings::get_pem(), Settings::get_pk8());
     apk->setFileKeystore(Settings::get_keystore(), alias, pass_store, pass_alias);
     apk->setKeystore(USING_KEYSTORE);
