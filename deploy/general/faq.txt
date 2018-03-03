@@ -30,6 +30,11 @@
 
 ---------------
 
+[Q] What signing method is better: "apksigner" or "signapk" + "jarsigner"?
+[A] The "apksigner" tool is recommended as it is faster and was created specifically for signing APK files. However, it does not work with Java 7. In this case you will have to use "signapk" to sign APK with PEM/PK8 (this method does not support Java 9 and later) or "jarsigner" to sign APK using KeyStore (requires JDK).
+
+---------------
+
 [Q] Is it safe to save KeyStore passwords?
 [A] "APK Icon Editor" provides some encryption, but the safest way is not to store your passwords (just leave the corresponding "Key Manager" text fields blank) and simply enter your passwords when packing APK.
 
