@@ -1,0 +1,23 @@
+apk-icon-editor (1.8.0) unstable; urgency=low
+
+  * Added Android 8 Oreo support.
+  * Added Java 9 support.
+  * Upgraded Apktool to v2.3.1.
+  * New signing system.
+  * Improved APK handling.
+  * Minor GUI improvements.
+
+ -- Alexander Gorishnyak <kefir500@gmail.com>  Mon, 26 Feb 2018 22:39:48 +0600
+
+apk-icon-editor (1.7.1) unstable; urgency=low
+
+  * Upgraded Apktool to v2.2.2.
+  * Improved APK handling.
+
+ -- Alexander Gorishnyak <kefir500@gmail.com>  Tue, 07 Mar 2017 15:13:09 +0600
+
+apk-icon-editor (1.7.0) unstable; urgency=low
+
+  * Initial DEB release.
+
+ -- Alexander Gorishnyak <kefir500@gmail.com>  Sat, 07 Jan 2017 15:32:03 +0600
