@@ -5,6 +5,7 @@
 [![Latest Release](https://img.shields.io/github/release/kefir500/apk-icon-editor.svg?maxAge=86400)](https://github.com/kefir500/apk-icon-editor/releases/latest)
 [![License](https://img.shields.io/badge/license-GPLv3-blue.svg?maxAge=2592000)](https://raw.githubusercontent.com/kefir500/apk-icon-editor/master/LICENSE)
 [![Download Count](https://img.shields.io/github/downloads/kefir500/apk-icon-editor/total.svg?maxAge=86400)](https://github.com/kefir500/apk-icon-editor/releases)
+[![PayPal Donate](https://img.shields.io/badge/donate-PayPal-orange.svg?logo=paypal)](https://www.paypal.me/kefir500)
 
 ## Description
 **APK Icon Editor** is a cross-platform APK editor designed to easily edit and replace APK resources such as icons, strings, images, application name and version, etc. Written in C++/Qt.
