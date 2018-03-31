@@ -27,7 +27,7 @@ ToolDialog::ToolDialog(QWidget *parent) : QDialog(parent)
 
     radioZip = new QRadioButton(this);
     radioApktool = new QRadioButton(this);
-    radioApkSigner = new QRadioButton(QString("apksigner (JRE %1 7)").arg(QChar(0x2265)), this);
+    radioApkSigner = new QRadioButton(QString("apksigner (JRE %1 8)").arg(QChar(0x2265)), this);
     radioJarSigner = new QRadioButton(QString("signapk (JRE %1 8) + jarsigner (JDK)").arg(QChar(0x2264)), this);
     QDialogButtonBox *buttons = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, this);
 
