@@ -182,23 +182,36 @@ QList<QSharedPointer<Icon> > Unpacker::getIcons(QString manifest, QString conten
 
     for (short i = Dpi::LDPI; i < Dpi::COUNT; ++i) {
 
-        QString filename = files[i];
-        if (!QFile::exists(contents + "/" + files[i])) {
-            // Add "-v4" qualifier to handle Apktool behaviour:
-            const QString V4 = files[i].section('/', 0, 1) + "-v4/" + files[i].section('/', 2);
-            if (QFile::exists(contents + "/" + V4)) {
-                filename = V4;
+        QString resource = files[i];
+        if (!QFile::exists(contents + "/" + resource)) {
+            QString directory = resource.section('/', 0, 1);
+            QString filename = resource.section('/', 2);
+            if (directory.endsWith("-v4")) {
+                // Try to remove "-v4" qualifier to handle Apktool behaviour:
+                directory.chop(3);
+                const QString v0 = directory + "/" + filename;
+                if (QFile::exists(contents + "/" + v0)) {
+                    qDebug() << "Removing '-v4' qualifier.";
+                    resource = v0;
+                }
+            } else {
+                // Try to add "-v4" qualifier to handle Apktool behaviour:
+                const QString v4 = directory + "-v4/" + filename;
+                if (QFile::exists(contents + "/" + v4)) {
+                    qDebug() << "Adding '-v4' qualifier.";
+                    resource = v4;
+                }
             }
         }
-        if (filename.isEmpty()) {
+        if (resource.isEmpty()) {
             // Create dummy entry
             icons.push_back(QSharedPointer<Icon>(new Icon));
             continue;
         }
-        const int DUPL = files.lastIndexOf(filename, i - 1);
+        const int DUPL = files.lastIndexOf(resource, i - 1);
         if (i == 0 || DUPL == -1) {
             // Create new entry
-            icons.push_back(QSharedPointer<Icon>(new Icon(contents + "/" + filename)));
+            icons.push_back(QSharedPointer<Icon>(new Icon(contents + "/" + resource)));
         }
         else {
             // Reuse existing entry
