@@ -50,6 +50,7 @@ Marcos Barbosa
 Siegfried Engelbrecht
 Orrin Duncan
 Simone Osnaghi
+Airran McKeown
 Niket Kanchan
 Sheng-Yang Huang
 Nicholas Ford
@@ -70,6 +71,8 @@ Mihaela Stemate
 Ventas Online
 Russell Gaither
 Paola Zucchi
+Universalip.tv
+Brian Kerr
 Emilio Vargas Tordecilla
 Andreas Mamesa
 Manuel Lopez
