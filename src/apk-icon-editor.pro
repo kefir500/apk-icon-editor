@@ -1,5 +1,6 @@
 QT += widgets xml network
 TEMPLATE = app
+CONFIG += c++11
 
 TARGET = apk-icon-editor
 VERSION = 1.8.0
