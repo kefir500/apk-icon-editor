@@ -1304,7 +1304,7 @@ void MainWindow::apk_explore()
 
 void MainWindow::associate() const
 {
-#ifdef Q_OS_WIN32
+#ifdef Q_OS_WIN
     QString exe = QDir::toNativeSeparators(QApplication::applicationFilePath());
     QSettings reg("HKEY_CURRENT_USER\\Software\\Classes", QSettings::NativeFormat);
     reg.setValue("apk-icon-editor.apk/DefaultIcon/Default", exe + ",1");
