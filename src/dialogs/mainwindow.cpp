@@ -256,6 +256,16 @@ void MainWindow::init_gui()
     drawArea->addAction(separator);
     drawArea->addActions(menuIcon->actions());
 
+    QPushButton *btnStudio = new QPushButton(this);
+    btnStudio->setText("APK Editor Studio");
+    btnStudio->setIcon(QPixmap(":/gfx/apk-editor-studio.png"));
+    btnStudio->setFixedHeight(32);
+    btnStudio->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
+    btnStudio->hide();
+    connect(btnStudio, &QPushButton::clicked, []() {
+        QDesktopServices::openUrl(QUrl("https://kefir500.github.io/apk-editor-studio"));
+    });
+
     loadingDialog = new ProgressDialog(this);
     loadingDialog->setIcon(QPixmap(":/gfx/actions/box.png"));
     loadingDialog->setAllowCancel(false);
@@ -360,6 +370,7 @@ void MainWindow::init_gui()
     layoutSide->addWidget(checkGDrive);
     layoutSide->addWidget(checkOneDrive);
     layoutSide->addWidget(checkUpload);
+    layoutSide->addWidget(btnStudio);
     layoutSide->addWidget(btnPack);
 
     splitter->addWidget(drawArea);
