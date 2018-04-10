@@ -12,10 +12,6 @@ Copyright: 2010-2011 Ryszard Wiśniewski
            2012-2016 Connor Tumbleson
 License: Apache-2.0
 
-Files: deploy/linux/aapt
-Copyright: 2008 The Android Open Source Project
-License: Apache-2.0
-
 Files: deploy/linux/zipalign
 Copyright: 2008 The Android Open Source Project
 License: Apache-2.0

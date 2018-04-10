@@ -10,7 +10,7 @@ Vcs-Browser: https://github.com/kefir500/apk-icon-editor
 
 Package: apk-icon-editor
 Architecture: any
-Depends: aapt, zipalign, default-jre-headless | java7-runtime-headless | java7-runtime, ${shlibs:Depends}, ${misc:Depends}
+Depends: zipalign, default-jre-headless | java7-runtime-headless | java7-runtime, ${shlibs:Depends}, ${misc:Depends}
 Description: Simple APK resource editor
  APK editor designed to easily change
  APK icons, name, version and other resources.

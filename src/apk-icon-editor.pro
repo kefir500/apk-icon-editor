@@ -86,8 +86,8 @@ win32: deploy(general win32)
 unix:!macx: deploy(general linux)
 macx: deploy(general macosx)
 
-unix:!macx: QMAKE_POST_LINK += chmod +x $$quote($$DESTDIR/aapt) && chmod +x $$quote($$DESTDIR/zipalign) $$escape_expand(\\n\\t)
-macx: QMAKE_POST_LINK += chmod +x $$quote($$SHARED/aapt) && chmod +x $$quote($$SHARED/zipalign) $$escape_expand(\\n\\t)
+unix:!macx: QMAKE_POST_LINK += chmod +x $$quote($$DESTDIR/zipalign) $$escape_expand(\\n\\t)
+macx:       QMAKE_POST_LINK += chmod +x $$quote($$SHARED/zipalign) $$escape_expand(\\n\\t)
 
 # Install:
 
