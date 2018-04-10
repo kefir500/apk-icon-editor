@@ -2,7 +2,9 @@
 #define APKFILE_H
 
 #include "apk.h"
-#include "icon.h"
+#include "iconsmodel.h"
+#include "manifestmodel.h"
+#include "titlesmodel.h"
 #include "device.h"
 #include <QDomDocument>
 
@@ -11,27 +13,21 @@ namespace Apk {
     class File {
 
     public:
+        explicit File(const QString &contentsPath);
         ~File();
 
-        void clear();
+        void saveIcons();
+        void saveTitles();
 
-        // TODO: Move these methods to a seperate class (e.g., Apk::Manifest).
+        void removeFiles();
+
         bool addAndroidTV();
         QDomElement findIntentByCategory(QDomElement root, QString category);
 
         QString getFilePath() const;
-        QString getDirectory() const;
-        QString getAppTitle() const;
-        QString getVarAppTitle() const;
-        QString getVersionName() const;
-        QString getVersionCode() const;
+        QString getContentsPath() const;
+        QIcon getThumbnail() const;
 
-        Icon* getIcon(Dpi::Type dpi) const;
-        QList<QSharedPointer<Icon> > getIcons() const;
-        QList<Apk::String> getStrings() const;
-
-        short getRatio() const;
-        bool getApktool() const;
         bool getApksigner() const;
         bool getSmali() const;
         bool getSign() const;
@@ -45,37 +41,28 @@ namespace Apk {
         QString getAlias() const;
         QString getPassAlias() const;
 
-        void setFilePath(QString filepath);
-        void setDirectory(QString path); // Warning: unsafe method
-        void setAppTitle(QString title);
-        void setVarAppTitle(QString variable);
-        void setVersionName(QString name);
-        void setVersionCode(QString code);
-
-        void setIcons(QList<QSharedPointer<Icon> > icons);
-        void setStrings(QList<Apk::String> strings);
-
-        void setApktool(bool value);
+        void setFilePath(QString filePath);
         void setApksigner(bool value);
-        void setRatio(short ratio);
         void setSmali(bool value);
         void setSign(bool value);
         void setZipalign(bool value);        
         void setKeystore(bool value);
 
         void setFilePemPk8(QString pem, QString pk8);
-        void setFileKeystore(QString filepath, QString alias, QString passKeystore, QString passAlias);
+        void setFileKeystore(QString filePath, QString alias, QString passKeystore, QString passAlias);
+
+        IconsModel iconsModel;
+        ManifestModel manifestModel;
+        TitlesModel titlesModel;
 
     private:
-        QString filepath;     ///< APK filename.
-        QString contents;     ///< Path to APK contents directory.
-        QString appTitle;     ///< Application title.
-        QString varAppTitle;  ///< Name of the application title variable.
-        QString versionName;  ///< Application version name.
-        QString versionCode;  ///< Application version code.
+        QString filePath;     ///< APK filename.
+        QString contentsPath; ///< Path to APK contents directory.
+
+        QIcon thumbnail;
+        Manifest *manifest;
 
         short ratio;          ///< ZIP compression ratio [0-9] (only in ZIP mode).
-        bool isApktool;       ///< If \c true, Apktool is used instead of ZIP.
         bool isApksigner;     ///< If \c true, apksigner is used instead of signapk / jarsigner.
         bool isSmali;         ///< If \c true, decompile "classes.dex" (only in Apktool mode).
         bool isSign;          ///< If \c true, sign APK.
@@ -88,9 +75,6 @@ namespace Apk {
         QString passKeystore; ///< KeyStore password.
         QString alias;        ///< KeyStore alias.
         QString passAlias;    ///< KeyStore alias password.
-
-        QList<QSharedPointer<Icon> > icons; ///< List of APK icons.
-        QList<Apk::String> strings;         ///< List of APK strings.
     };
 }
 

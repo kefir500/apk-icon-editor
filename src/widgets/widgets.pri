@@ -1,9 +1,9 @@
 INCLUDEPATH += $$PWD
 
-SOURCES += $$PWD/combolist.cpp \
-           $$PWD/drawarea.cpp \
-           $$PWD/filebox.cpp
+SOURCES += $$PWD/drawarea.cpp \
+           $$PWD/filebox.cpp \
+           $$PWD/decorationdelegate.cpp
 
-HEADERS += $$PWD/combolist.h \
-           $$PWD/drawarea.h \
-           $$PWD/filebox.h
+HEADERS += $$PWD/drawarea.h \
+           $$PWD/filebox.h \
+           $$PWD/decorationdelegate.h

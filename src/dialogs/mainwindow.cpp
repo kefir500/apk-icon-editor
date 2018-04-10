@@ -2,6 +2,7 @@
 #include "globals.h"
 #include "settings.h"
 #include "apkfile.h"
+#include "decorationdelegate.h"
 #include <QHeaderView>
 #include <QMenuBar>
 #include <QMessageBox>
@@ -11,6 +12,8 @@
 #include <QDesktopServices>
 #include <QtConcurrent/QtConcurrentRun>
 #include <QApplication>
+
+// TODO icons list is not updated when using proxy
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
@@ -113,15 +116,6 @@ void MainWindow::init_gui()
     menu->addMenu(menuIcon);
     menu->addMenu(menuSett);
     menu->addMenu(menuHelp);
-
-    labelTool = new QLabel(this);
-    btnTool = new QToolButton(this);
-    QWidget *menuCorner = new QWidget(this);
-    QHBoxLayout *layoutCorner = new QHBoxLayout(menuCorner);
-    layoutCorner->addWidget(labelTool);
-    layoutCorner->addWidget(btnTool);
-    layoutCorner->setMargin(0);
-    menu->setCornerWidget(menuCorner);
 
     actApkOpen = new QAction(this);
     actApkSave = new QAction(this);
@@ -273,10 +267,19 @@ void MainWindow::init_gui()
     uploadDialog = new ProgressDialog(this);
 
     QWidget *tabIcons = new QWidget(this);
+    QHBoxLayout *layoutDevices = new QHBoxLayout;
     QVBoxLayout *layoutIcons = new QVBoxLayout(tabIcons);
-    devices = new ComboList(this);
-    devices->addActions(menuIcon->actions());
-    devices->setEnabled(false);
+    devicesLabel = new QLabel(this);
+    devices = new QComboBox(this);
+    devices->setStyleSheet("QComboBox {padding: 4px}");
+    devices->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+
+    listIcons = new QListView(this);
+    listIcons->addActions(menuIcon->actions()); // TODO not working
+    listIcons->setItemDelegate(new DecorationDelegate(QSize(32, 32), this));
+    iconsProxy = new IconsProxy(this);
+    listIcons->setModel(iconsProxy);
+
     QMenu *menuAdd = new QMenu(this);
     actAddIconTV = new QAction("TV", this);
     actAddIconTV->setIcon(QIcon(":/gfx/dpi/tv.png"));
@@ -287,67 +290,32 @@ void MainWindow::init_gui()
     btnAddIcon->setMenu(menuAdd);
     btnApplyIcons = new QPushButton(this);
     btnApplyIcons->setEnabled(false);
-    layoutIcons->addWidget(devices);
+    layoutDevices->addWidget(devicesLabel);
+    layoutDevices->addWidget(devices);
+    layoutIcons->addLayout(layoutDevices);
+    layoutIcons->addWidget(listIcons);
     layoutIcons->addWidget(btnAddIcon);
     layoutIcons->addWidget(btnApplyIcons);
     layoutIcons->setMargin(4);
     layoutIcons->setSpacing(6);
 
-    QWidget *tabStrings = new QWidget(this);
-    QGridLayout *layoutStrings = new QGridLayout(tabStrings);
-    labelAppName = new QLabel(this);
-    labelVersionName = new QLabel(this);
-    labelVersionCode = new QLabel(this);
-    editAppName = new QLineEdit(this);
-    editAppName->setEnabled(false);
-    editVersionName = new QLineEdit(this);
-    editVersionName->setEnabled(false);
-    editVersionCode = new QSpinBox(this);
-    editVersionCode->setEnabled(false);
-    editVersionCode->setMinimum(1);
-    editVersionCode->setMaximum(std::numeric_limits<int>::max());
-    btnApplyAppName = new QPushButton(this);
-    btnApplyAppName->setEnabled(false);
-    tableStrings = new QTableWidget(this);
-    tableStrings->setColumnCount(4);
-    tableStrings->verticalHeader()->setVisible(false);
-    tableStrings->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Interactive);
-    tableStrings->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
-    tableStrings->horizontalHeader()->setSectionHidden(2, true);
-    tableStrings->horizontalHeader()->setSectionHidden(3, true);
-    tableStrings->setSelectionMode(QTableWidget::SingleSelection);
-    labelApktool = new QLabel(this);
-    labelApktool->setWordWrap(true);
-#ifndef Q_OS_UNIX
-    labelApktool->setFont(QFont("Open Sans Light", 10));
-#endif
-    labelApktool->setAlignment(Qt::AlignCenter);
-    labelApktool->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::MinimumExpanding);
-    btnRepacking = new QPushButton(this);
-    btnRepacking->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
-    panelApktool = new QWidget(this);
-    panelApktool->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    panelApktool->setObjectName("panelApktool");
-    panelApktool->setStyleSheet("QWidget#panelApktool {border: 1px solid gray}");
-    QVBoxLayout *layoutApktool = new QVBoxLayout(panelApktool);
-    layoutApktool->setAlignment(Qt::AlignCenter);
-    layoutApktool->addWidget(labelApktool);
-    layoutApktool->addWidget(btnRepacking);
-
-    layoutStrings->addWidget(labelAppName,      0, 0, 1, 1);
-    layoutStrings->addWidget(editAppName,       1, 0, 1, 1);
-    layoutStrings->addWidget(btnApplyAppName,   1, 1, 1, 1);
-    layoutStrings->addWidget(tableStrings,      2, 0, 1, 2);
-    layoutStrings->addWidget(panelApktool,      3, 0, 1, 2);
-    layoutStrings->addWidget(labelVersionName,  4, 0, 1, 1);
-    layoutStrings->addWidget(editVersionName,   4, 1, 1, 1);
-    layoutStrings->addWidget(labelVersionCode,  5, 0, 1, 1);
-    layoutStrings->addWidget(editVersionCode,   5, 1, 1, 1);
-    layoutStrings->setMargin(4);
+    QWidget *tabProperties = new QWidget(this);
+    QVBoxLayout *layoutProperties = new QVBoxLayout(tabProperties);
+    tableManifest = new QTableView(this);
+    tableManifest->horizontalHeader()->hide();
+    tableManifest->horizontalHeader()->setStretchLastSection(true);
+    tableManifest->setVerticalScrollMode(QTableView::ScrollPerPixel);
+    tableTitles = new QTableView(this);
+    tableTitles->verticalHeader()->setVisible(false);
+    tableTitles->setSelectionMode(QTableView::SingleSelection);
+    tableTitles->setVerticalScrollMode(QTableView::ScrollPerPixel);
+    layoutProperties->addWidget(tableManifest);
+    layoutProperties->addWidget(tableTitles);
+    layoutProperties->setMargin(4);
 
     tabs = new QTabWidget(this);
     tabs->addTab(tabIcons, NULL);
-    tabs->addTab(tabStrings, NULL);
+    tabs->addTab(tabProperties, NULL);
 
     checkDropbox = new QCheckBox(this);
     checkDropbox->setIcon(dropbox->getIcon());
@@ -430,22 +398,14 @@ void MainWindow::init_languages()
 
 void MainWindow::init_devices()
 {
-    Devices::init();
-    for (int i = 0; i < Devices::count(); ++i) {
-        Device device = Devices::at(i);
-        devices->addGroup(device.getTitle(), device.getThumb());
-        for (short j = Dpi::LDPI; j < Dpi::COUNT; ++j) {
-            const Dpi::Type DPI = Dpi::cast(j);
-            devices->addItem(device.getTitle(), device.getDpiTitle(DPI));
-        }
-    }
+    devices->setModel(&deviceModel);
+    Device *firstDevice = static_cast<Device *>(deviceModel.index(0, 0).internalPointer());
+    iconsProxy->setDevice(firstDevice);
 }
 
 void MainWindow::init_slots()
 {
     connect(drawArea, SIGNAL(clicked()), this, SLOT(apk_open()));
-    connect(devices, SIGNAL(groupChanged(int)), this, SLOT(hideEmptyDpi()));
-    connect(devices, SIGNAL(itemChanged(int)), this, SLOT(setCurrentIcon(int)));
     connect(checkUpload, SIGNAL(toggled(bool)), this, SLOT(enableUpload(bool)));
     connect(actApkOpen, SIGNAL(triggered()), this, SLOT(apk_open()));
     connect(actApkSave, SIGNAL(triggered()), this, SLOT(apk_save()));
@@ -476,16 +436,17 @@ void MainWindow::init_slots()
     connect(mapRecent, SIGNAL(mapped(QString)), this, SLOT(apk_open(QString)));
     connect(actAddIconTV, SIGNAL(triggered()), this, SLOT(addIconTV()));
     connect(btnApplyIcons, SIGNAL(clicked()), this, SLOT(cloneIcons()));
-    connect(tableStrings, SIGNAL(cellChanged(int, int)), this, SLOT(stringChanged(int, int)));
-    connect(editAppName, SIGNAL(textEdited(QString)), this, SLOT(setModified()));
-    connect(editVersionCode, SIGNAL(valueChanged(int)), this, SLOT(setModified()));
-    connect(editVersionName, SIGNAL(textEdited(QString)), this, SLOT(setModified()));
-    connect(btnApplyAppName, SIGNAL(clicked()), this, SLOT(applyAppName()));
-    connect(btnRepacking, SIGNAL(clicked()), toolDialog, SLOT(open()));
-    connect(btnTool, SIGNAL(clicked()), toolDialog, SLOT(switch_mode()));
-    connect(btnTool, SIGNAL(clicked()), this, SLOT(askReloadApk()));
-    connect(toolDialog, SIGNAL(apktool_checked(bool)), this, SLOT(enableApktool(bool)));
-    connect(toolDialog, SIGNAL(tool_changed()), this, SLOT(askReloadApk()));
+    void (QComboBox::*devicesIndexChanged)(int row) = &QComboBox::currentIndexChanged;
+    connect(devices, devicesIndexChanged, [=](int row) {
+        Device *device = static_cast<Device *>(devices->model()->index(row, 0).internalPointer());
+        iconsProxy->setDevice(device);
+        setCurrentIcon(listIcons->currentIndex().row());
+    });
+    connect(listIcons->selectionModel(), &QItemSelectionModel::currentChanged, [=](const QModelIndex &index) {
+        setCurrentIcon(index.row());
+    });
+    connect(tableTitles, SIGNAL(cellChanged(int, int)), this, SLOT(stringChanged(int, int)));
+//    connect(btnApplyAppName, SIGNAL(clicked()), this, SLOT(applyAppName())); TODO
     connect(apkManager, SIGNAL(loading(short, QString)), loadingDialog, SLOT(setProgress(short, QString)));
     connect(apkManager, SIGNAL(error(QString, QString)), this, SLOT(error(QString, QString)));
     connect(apkManager, SIGNAL(error(QString, QString)), loadingDialog, SLOT(accept()));
@@ -519,7 +480,7 @@ void MainWindow::settings_load()
     splitter->restoreState(Settings::get_splitter());
     setLanguage(Settings::get_language());
     currentPath = Settings::get_last_path();
-    devices->setCurrentGroup(Settings::get_device());
+    devices->setCurrentText(Settings::get_device());
     actAutoUpdate->setChecked(Settings::get_update());
 
     // Recent List:
@@ -556,14 +517,10 @@ bool MainWindow::resetApktool()
 void MainWindow::settings_reset()
 {
     if (QMessageBox::question(this, tr("Reset?"), tr("Reset settings to default?")) == QMessageBox::Yes) {
-        const bool APKTOOL = Settings::get_use_apktool();
         Settings::reset();
         settings_load();
         resetApktool();
         setInitialSize();
-        if (APKTOOL != Settings::get_use_apktool()) {
-            askReloadApk();
-        }
     }
 }
 
@@ -607,15 +564,9 @@ void MainWindow::setLanguage(QString lang)
     tabs->setTabText(0, tr("Icons"));
     tabs->setTabText(1, tr("Properties"));
     tabs->setTabText(2, tr("Details"));
-    devices->setLabelText(tr("Device:"));
+    devicesLabel->setText(tr("Device:"));
     btnApplyIcons->setText(tr("Apply to All"));
-    labelAppName->setText(tr("Application Name") + ':');
-    labelVersionName->setText(tr("Version Name") + ':');
-    labelVersionCode->setText(tr("Version Code") + ':');
-    btnApplyAppName->setText(tr("Apply to All"));
-    labelApktool->setText(tr("To edit application name and version, switch to \"Apktool\" mode."));
-    btnRepacking->setText(tr("&Repacking"));
-    tableStrings->setHorizontalHeaderLabels(QStringList() << tr("Language") << tr("Application Name"));
+//    btnApplyAppName->setText(tr("Apply to All")); TODO
     checkDropbox->setText(tr("Upload to %1").arg(dropbox->getTitle()));
     checkGDrive->setText(tr("Upload to %1").arg(gdrive->getTitle()));
     checkOneDrive->setText(tr("Upload to %1").arg(onedrive->getTitle()));
@@ -656,10 +607,8 @@ void MainWindow::setLanguage(QString lang)
     actUpdate->setText(tr("Check for &Updates"));
     actAboutQt->setText(tr("About Qt"));
     actAbout->setText(tr("About %1").arg(APP));
-    labelTool->setText(tr("Current Mode:"));
     loadingDialog->setWindowTitle(tr("Processing"));
     uploadDialog->setWindowTitle(tr("Uploading"));
-    btnTool->setToolTip(Settings::get_use_apktool() ? toolDialog->hint_apktool() : toolDialog->hint_quazip());
     menuBar()->resize(0, 0); // "Repaint" menu bar
 
     effects->retranslate();
@@ -670,21 +619,7 @@ void MainWindow::setLanguage(QString lang)
 
 void MainWindow::recent_add(QString filename)
 {
-    // Get the smallest icon:
-
-    Dpi::Type dpi = Dpi::LDPI;
-    for (short i = Dpi::LDPI; i < Dpi::COUNT; ++i) {
-        if (Icon *icon = apk->getIcon(Dpi::cast(i))) {
-            if (!icon->isNull()) {
-                dpi = Dpi::cast(i);
-                break;
-            }
-        }
-    }
-
-    // Add to recent and refresh the list:
-
-    recent->add(filename, apk->getIcon(dpi)->getPixmap());
+    recent->add(filename, apk->getThumbnail().pixmap(32, 32));
     recent_update();
 }
 
@@ -715,126 +650,47 @@ void MainWindow::recent_clear()
     recent_update();
 }
 
-void MainWindow::hideEmptyDpi()
-{
-    for (short i = Dpi::LDPI; i < Dpi::COUNT; ++i) {
-        Icon *icon;
-        bool visible = false;
-        const Dpi::Type DPI = Dpi::cast(i);
-        if (apk && (icon = apk->getIcon(DPI))) {
-            visible = !icon->isNull();
-        }
-        devices->setItemVisible(DPI, visible);
-        if (DPI == Dpi::BANNER) { actAddIconTV->setEnabled(!visible); }
-    }
-}
-
 void MainWindow::addIconTV()
 {
-    if (apk->addAndroidTV()) {
-        QList<QSharedPointer<Icon> > icons = apk->getIcons();
-        icons[Dpi::BANNER].data()->replace(QPixmap(":/gfx/blank/tv.png"));
-        setModified();
-        hideEmptyDpi();
-        devices->setCurrentItem(Dpi::BANNER);
-    }
+    // TODO
+//    if (apk->addAndroidTV()) {
+//        QList<QSharedPointer<Icon> > icons = apk->getIcons();
+//        icons[Dpi::BANNER].data()->replace(QPixmap(":/gfx/blank/tv.png"));
+//        setModified();
+//        devices->setCurrentItem(Dpi::BANNER);
+//    }
 }
 
 void MainWindow::cloneIcons()
 {
     Icon *newIcon = drawArea->getIcon();
     if (!newIcon->isNull()) {
-        if (QMessageBox::question(this, NULL, tr("Apply the current icon to all sizes?"))
-            == QMessageBox::Yes) {
-            for (short i = Dpi::LDPI; i < Dpi::COUNT; ++i) {
-                const Dpi::Type DPI = Dpi::cast(i);
-                Icon *oldIcon = apk->getIcon(DPI);
-                if (newIcon != oldIcon) {
-                    if (!oldIcon->isNull()) {
-                        oldIcon->replace(newIcon->getPixmap());
-                    }
-                }
-            }
+        if (QMessageBox::question(this, NULL, tr("Apply the current icon to all sizes?")) == QMessageBox::Yes) {
+            apk->iconsModel.clone(newIcon);
             setWindowModified(true);
         }
     }
 }
 
-void MainWindow::stringChanged(int row, int col)
-{
-    if (col == 1) {
-        // Mark this cell as "edited":
-        tableStrings->item(row, col)->setData(Qt::UserRole, true);
-        setWindowModified(true);
-    }
-}
-
 void MainWindow::applyAppName()
 {
-    QString name = editAppName->text();
-    if (!name.isEmpty()) {
-        if (QMessageBox::question(this, NULL, tr("Apply the current application name to all translations?"))
-        == QMessageBox::Yes) {
-            for (int i = 0; i < tableStrings->rowCount(); ++i) {
-                tableStrings->item(i, 1)->setText(name);
-            }
-        }
+    if (QMessageBox::question(this, NULL, tr("Apply the current application name to all translations?")) == QMessageBox::Yes) {
+        // TODO Apply
     }
 }
 
-void MainWindow::enableApktool(bool enable)
+void MainWindow::setCurrentIcon(int index)
 {
-    btnTool->setText(enable ? "Apktool" : "ZIP");
-    btnTool->setToolTip(enable ? toolDialog->hint_apktool() : toolDialog->hint_quazip());
-    btnTool->setShortcut(QKeySequence("M"));
-
-    menuBar()->resize(0, 0); // "Repaint" menu bar
-
-    // If any APK is currently open:
-
-    if (!currentApk.isEmpty()) {
-        editAppName->setEnabled(enable);
-        editVersionCode->setEnabled(enable);
-        editVersionName->setEnabled(enable);
-        btnApplyAppName->setEnabled(enable);
-        btnAddIcon->setEnabled(enable);
+    if (!apk || index < 0) {
+        return;
     }
 
-    if (enable) {
-        tableStrings->setVisible(true);
-        panelApktool->setVisible(false);
-    }
-    else {
-        tableStrings->setVisible(false);
-        panelApktool->setVisible(true);
-    }
-}
+    Icon *icon = static_cast<Icon *>(apk->iconsModel.index(index, 0).internalPointer());
+    const Device *device = static_cast<Device *>(devices->model()->index(devices->currentIndex(), 0).internalPointer());
+    const QSize size = device->getStandardSize(icon->getDpi()).size;
+    drawArea->setBounds(size.width(), size.height());
 
-bool MainWindow::askReloadApk()
-{
-    if (currentApk.isEmpty()) { // Check if any APK is currently loaded
-        return false;
-    }
-
-    int result = QMessageBox::question(this, tr("Repack?"),
-                                       tr("Changing tool requires repacking.\nProceed?"),
-                                       QMessageBox::Yes, QMessageBox::No);
-
-    if (result != QMessageBox::Yes || !apk_open(currentApk)) {
-        toolDialog->switch_mode();
-    }
-
-    return result;
-}
-
-void MainWindow::setCurrentIcon(int dpi)
-{
-    if (!apk || dpi == -1) return;
-    const Device DEVICE = Devices::at(devices->currentGroupIndex());
-    const int W = DEVICE.getDpiSize(Dpi::cast(dpi)).width();
-    const int H = DEVICE.getDpiSize(Dpi::cast(dpi)).height();
-    drawArea->setBounds(W, H);
-    if (Icon *icon = apk->getIcon(Dpi::cast(dpi))) {
+    if (icon) {
         disconnect(effects, 0, 0, 0);
         connect(effects, SIGNAL(colorActivated(bool)), icon,     SLOT(setColorize(bool)), Qt::DirectConnection);
         connect(effects, SIGNAL(rotate(int)),          icon,     SLOT(setAngle(int)),     Qt::DirectConnection);
@@ -917,74 +773,14 @@ void MainWindow::apk_unpacked(Apk::File *apk)
     loadingDialog->accept();
     setActiveApk(apk->getFilePath());
 
-    // Automatically select DPI from the list:
+    // Set models:
 
-    devices->setCurrentItem(0);
-
-    const int LAST = devices->currentItemIndex();
-    const Icon *ICON = apk->getIcon(Dpi::cast(LAST));
-    if (LAST != -1 && ICON && !ICON->isNull()) {
-        devices->setCurrentItem(LAST);
-    }
-    else {
-        for (short i = Dpi::LDPI; i < Dpi::COUNT; ++i) {
-            const Dpi::Type DPI = Dpi::cast(i);
-            if (Icon *icon = apk->getIcon(DPI)) {
-                if (!icon->isNull()) {
-                    devices->setCurrentItem(i);
-                    break;
-                }
-            }
-        }
-    }
-
-    hideEmptyDpi();
-
-    // Load strings to the table:
-
-    editAppName->clear();
-    editVersionCode->clear();
-    editVersionName->clear();
-    tableStrings->clear();
-    tableStrings->setHorizontalHeaderLabels(QStringList() << tr("Language") << tr("Application Name"));
-    QList<Apk::String> strings = apk->getStrings();
-    tableStrings->setRowCount(strings.size());
-    for (int i = strings.size() - 1; i >= 0; --i) {
-        QFileInfo fi(strings[i].getFilename());
-        QString locale = fi.dir().dirName().mid(7);
-        QString native = QLocale(locale).nativeLanguageName();
-        if (!native.isEmpty()) {
-            native[0] = native[0].toUpper();
-            native = QString("%1 (%2)").arg(native, locale);
-        }
-        else {
-            if (locale.isEmpty()) { // This has to be the last iteration
-                editAppName->setText(strings[i].getValue());
-                tableStrings->removeRow(i);
-                continue;
-            }
-            else {
-                native = locale;
-            }
-        }
-        QTableWidgetItem *c1 = new QTableWidgetItem(native);
-        QTableWidgetItem *c2 = new QTableWidgetItem(strings[i].getValue());
-        QTableWidgetItem *c3 = new QTableWidgetItem(strings[i].getFilename());
-        QTableWidgetItem *c4 = new QTableWidgetItem(strings[i].getKey());
-        c1->setFlags(c1->flags() & ~Qt::ItemIsEditable);
-        tableStrings->blockSignals(true);
-        tableStrings->setItem(i, 0, c1);
-        tableStrings->setItem(i, 1, c2);
-        tableStrings->setItem(i, 2, c3);
-        tableStrings->setItem(i, 3, c4);
-        tableStrings->item(i, 1)->setData(Qt::UserRole, false); // Mark as "not edited"
-        tableStrings->blockSignals(false);
-    }
-    if (editAppName->text().isEmpty()) {
-        editAppName->setText(apk->getAppTitle());
-    }
-    editVersionCode->setValue(apk->getVersionCode().toInt());
-    editVersionName->setText(apk->getVersionName());
+    iconsProxy->setSourceModel(&apk->iconsModel);
+    tableManifest->setModel(&apk->manifestModel);
+    tableTitles->setModel(&apk->titlesModel);
+    tableTitles->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
+    tableTitles->horizontalHeader()->setSectionResizeMode(1, QHeaderView::ResizeToContents);
+    listIcons->setCurrentIndex(listIcons->model()->index(0, 0));
 
     // Enable operations with APK and icons:
 
@@ -997,13 +793,7 @@ void MainWindow::apk_unpacked(Apk::File *apk)
     actIconResize->setEnabled(true);
     actIconScale->setEnabled(true);
     btnApplyIcons->setEnabled(true);
-    if (Settings::get_use_apktool()) {
-        editAppName->setEnabled(true);
-        editVersionCode->setEnabled(true);
-        editVersionName->setEnabled(true);
-        btnApplyAppName->setEnabled(true);
-        btnAddIcon->setEnabled(true);
-    }
+    btnAddIcon->setEnabled(true);
     devices->setEnabled(true);
     btnPack->setEnabled(true);
 
@@ -1029,15 +819,16 @@ bool MainWindow::icon_open(QString filename)
     QPixmap backup = icon->getPixmap();
 
     if (icon->replace(QPixmap(filename))) {
-        const Device DEVICE = Devices::at(devices->currentGroupIndex());
-        const QSize DPI = DEVICE.getDpiSize(Dpi::cast(devices->currentItemIndex()));
-        if (icon->width() != DPI.width() || icon->height() != DPI.height()) {
+        const Device *device = static_cast<Device *>(devices->model()->index(devices->currentIndex(), 0).internalPointer());
+        const QSize size = device->getStandardSize(icon->getDpi()).size;
+
+        if (icon->width() != size.width() || icon->height() != size.height()) {
             int result = QMessageBox::warning(this, tr("Resize?"),
-                                      tr("Icon you are trying to load is off-size.\nResize automatically?"),
-                                      QMessageBox::Yes, QMessageBox::No, QMessageBox::Cancel);
+                                              tr("Icon you are trying to load is off-size.\nResize automatically?"),
+                                              QMessageBox::Yes, QMessageBox::No, QMessageBox::Cancel);
             switch (result) {
             case QMessageBox::Yes:
-                icon->resize(DPI);
+                icon->resize(size);
                 break;
             case QMessageBox::No:
                 break;
@@ -1066,9 +857,9 @@ bool MainWindow::icon_save(QString filename)
     }
 
     if (filename.isEmpty()) {
-        Device device = Devices::at(devices->currentGroupIndex());
-        const QSize SIZE = device.getDpiSize(Dpi::cast(devices->currentItemIndex()));
-        filename = QString("%1-%2x%3").arg(QFileInfo(currentApk).completeBaseName()).arg(SIZE.width()).arg(SIZE.height());
+        const Device *device = static_cast<Device *>(devices->model()->index(devices->currentIndex(), 0).internalPointer());
+        const QSize size = device->getStandardSize(icon->getDpi()).size;
+        filename = QString("%1-%2x%3").arg(QFileInfo(currentApk).completeBaseName()).arg(size.width()).arg(size.height());
         filename = QFileDialog::getSaveFileName(this, tr("Save Icon"), filename, Image::Formats::saveDialogFilter());
         if (filename.isEmpty()) {
             return false;
@@ -1079,9 +870,9 @@ bool MainWindow::icon_save(QString filename)
 
 bool MainWindow::icon_scale()
 {
-    const Device DEVICE = Devices::at(devices->currentGroupIndex());
-    const QSize SIZE = DEVICE.getDpiSize(Dpi::cast(devices->currentItemIndex()));
-    return icon_resize(SIZE);
+    const Device *device = static_cast<Device *>(devices->model()->index(devices->currentIndex(), 0).internalPointer());
+    const QSize size = device->getStandardSize(drawArea->getIcon()->getDpi()).size;
+    return icon_resize(size);
 }
 
 bool MainWindow::icon_resize(QSize size)
@@ -1206,38 +997,14 @@ bool MainWindow::apk_open(QString filename)
     loadingDialog->setProgress(0);
 
     const QString DEST = Settings::get_temp() + "/apk-icon-editor/";
-    const bool APKTOOL = Settings::get_use_apktool();
     const bool SMALI = Settings::get_smali();
-    apkManager->unpack(filename, DEST, APKTOOL, SMALI);
+    apkManager->unpack(filename, DEST, SMALI);
 
     return true;
 }
 
 bool MainWindow::apk_save(QString filename)
 {
-    // Check if required fields are empty:
-
-    if (editAppName->text().isEmpty()) {
-        warning(NULL, tr("\"%1\" field cannot be empty.").arg(tr("Application Name")));
-        tabs->setCurrentIndex(1);
-        editAppName->setFocus();
-        return false;
-    }
-    else if (editVersionName->text().isEmpty()) {
-        warning(NULL, tr("\"%1\" field cannot be empty.").arg(tr("Version Name")));
-        tabs->setCurrentIndex(1);
-        editVersionName->setFocus();
-        return false;
-    }
-
-    // Fill empty translation values:
-
-    for (int i = 0; i < tableStrings->rowCount(); ++i) {
-        if (tableStrings->item(i, 1)->text().isEmpty()) {
-            tableStrings->item(i, 1)->setText(editAppName->text());
-        }
-    }
-
     // "Save" dialog:
 
     if (filename.isEmpty()) {
@@ -1273,11 +1040,6 @@ bool MainWindow::apk_save(QString filename)
     loadingDialog->setProgress(0);
 
     apk->setFilePath(filename);
-    apk->setAppTitle(editAppName->text());
-    apk->setVersionCode(editVersionCode->text());
-    apk->setVersionName(editVersionName->text());
-    apk->setApktool(Settings::get_use_apktool());
-    apk->setRatio(Settings::get_compression());
     apk->setSmali(Settings::get_smali());
     apk->setSign(Settings::get_sign());
     apk->setZipalign(Settings::get_zipalign());
@@ -1286,23 +1048,6 @@ bool MainWindow::apk_save(QString filename)
     apk->setFileKeystore(Settings::get_keystore(), alias, pass_store, pass_alias);
     apk->setKeystore(USING_KEYSTORE);
 
-    QList<Apk::String> strings;
-    for (int i = 0; i < tableStrings->rowCount(); ++i) {
-        // Add only edited translations:
-        if (tableStrings->item(i, 1)->data(Qt::UserRole) == true) {
-            const QString KEY = tableStrings->item(i, 3)->text();
-            const QString VALUE = tableStrings->item(i, 1)->text();
-            const QString FILENAME = tableStrings->item(i, 2)->text();
-            strings.push_back(Apk::String(KEY, VALUE, FILENAME));
-        }
-    }
-    if (!apk->getVarAppTitle().isEmpty()) {
-        // Add default application name:
-        Apk::String DEFAULT(apk->getVarAppTitle(), editAppName->text(), apk->getDirectory() + "/res/values/strings.xml");
-        strings.push_front(DEFAULT);
-    }
-
-    apk->setStrings(strings);
     apkManager->pack(apk, Settings::get_temp() + "/apk-icon-editor/");
     return true;
 }
@@ -1480,7 +1225,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
     // Save Settings:
 
     Settings::set_version(VER);
-    Settings::set_device(devices->currentGroupText());
+    Settings::set_device(devices->currentText());
     Settings::set_language(currentLang);
     Settings::set_update(actAutoUpdate->isChecked());
     Settings::set_path(currentPath);

@@ -8,21 +8,24 @@
 
 #include <QMainWindow>
 #include <QSplitter>
-#include <QTableWidget>
+#include <QListView>
+#include <QTableView>
+#include <QComboBox>
 #include <QSignalMapper>
 #include <QTranslator>
 #include <QCloseEvent>
+#include "about.h"
 #include "apkmanager.h"
-#include "combolist.h"
+#include "cloud.h"
+#include "dialogs.h"
 #include "drawarea.h"
 #include "effectsdialog.h"
-#include "tooldialog.h"
+#include "devicemodel.h"
+#include "iconsproxy.h"
 #include "keymanager.h"
-#include "dialogs.h"
-#include "about.h"
-#include "updater.h"
 #include "recent.h"
-#include "cloud.h"
+#include "tooldialog.h"
+#include "updater.h"
 
 ///
 /// Main window class.
@@ -74,8 +77,7 @@ public slots:
     // Actions:
 
     void setLanguage(QString lang);  ///< Sets the GUI language to \c lang.
-    void setCurrentIcon(int dpi);    ///< Displays the icon with the specified \c dpi in the icon preview widget.
-    void enableApktool(bool enable); ///< Enables or disables editing of the application name/version.
+    void setCurrentIcon(int index);  ///< Displays the icon with the specified \c index in the icon preview widget.
     bool setPreviewColor();          ///< Displays background color selection dialog.
     void showEffectsDialog();        ///< Displays "Effects" dialog.
 
@@ -124,9 +126,7 @@ private slots:
     // Actions:
 
     void setModified();             ///< Marks the current APK as containing unsaved changes.
-    void hideEmptyDpi();            ///< Hides empty icons from the list.
     void cloneIcons();              ///< Clones the current icon for to all sizes.
-    void stringChanged(int, int);   ///< Handles the changes in the strings table.
     void applyAppName();            ///< Applies the global application name to all translations.
     void enableUpload(bool enable); ///< Enables or disables upload to cloud services.
 
@@ -134,7 +134,6 @@ private slots:
 
     void donate();       ///< Displays donation dialog.
     void authCloud();    ///< Displays cloud authentication input dialog.
-    bool askReloadApk(); ///< Displays the "Repack APK?" question dialog.
 
     /// Displays the "New version available" dialog.
     /// \param version Number representing the new version.
@@ -189,27 +188,24 @@ private:
     ProgressDialog *loadingDialog;
     ProgressDialog *uploadDialog;
 
+    // MVC:
+
+    QListView *listIcons;
+    QTableView *tableManifest;
+    QTableView *tableTitles;
+
+    DeviceModel deviceModel;
+    IconsProxy *iconsProxy;
+
     // Widgets:
 
     QSplitter *splitter;
     DrawArea *drawArea;
     QTabWidget *tabs;
-    ComboList *devices;
+    QLabel *devicesLabel;
+    QComboBox *devices;
     QPushButton *btnAddIcon;
     QPushButton *btnApplyIcons;
-    QLabel *labelTool;
-    QToolButton *btnTool;
-    QLabel *labelAppName;
-    QLabel *labelVersionName;
-    QLabel *labelVersionCode;
-    QLineEdit *editAppName;
-    QLineEdit *editVersionName;
-    QSpinBox *editVersionCode;
-    QPushButton *btnApplyAppName;
-    QWidget *panelApktool;
-    QLabel *labelApktool;
-    QPushButton *btnRepacking;
-    QTableWidget *tableStrings;
     QCheckBox *checkDropbox;
     QCheckBox *checkGDrive;
     QCheckBox *checkOneDrive;

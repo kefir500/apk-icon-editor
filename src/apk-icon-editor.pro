@@ -3,7 +3,7 @@ TEMPLATE = app
 CONFIG += c++11
 
 TARGET = apk-icon-editor
-VERSION = 1.8.0
+VERSION = 2.0.0
 
 QMAKE_TARGET_PRODUCT = APK Icon Editor
 QMAKE_TARGET_COMPANY = Alexander Gorishnyak
@@ -12,7 +12,6 @@ QMAKE_TARGET_COPYRIGHT = Copyright (C) 2014-2018
 
 DEFINES += APP='"\\\"$$QMAKE_TARGET_PRODUCT\\\""'
 DEFINES += VER=\\\"$$VERSION\\\"
-DEFINES += QUAZIP_STATIC
 #DEFINES += PORTABLE
 
 TRANSLATIONS += $$PWD/../lang/apk-icon-editor.en.ts
@@ -35,7 +34,7 @@ INCLUDEPATH += $$PWD/../lib/include
 INCLUDEPATH += $$[QT_INSTALL_HEADERS]/QtZlib
 
 LIBS += -L$$PWD/../lib/bin
-LIBS += -lquazip -lsimplecrypt
+LIBS += -lsimplecrypt
 unix: LIBS += -lz
 
 # Build:

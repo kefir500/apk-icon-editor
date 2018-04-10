@@ -19,17 +19,15 @@ ApkManager::ApkManager(QObject *parent) : QObject(parent)
     connect(packer, SIGNAL(packed(Apk::File*, QString, bool)), this, SIGNAL(packed(Apk::File*, QString, bool)));
 }
 
-void ApkManager::unpack(QString filename, QString temp, bool apktool, bool smali)
+void ApkManager::unpack(QString filename, QString temp, bool smali)
 {
     qDebug() << "Unpacking" << filename;
-    qDebug() << "Using Apktool:" << apktool;
     qDebug() << "Output directory:" << temp;
 
     QtConcurrent::run(unpacker, &Apk::Unpacker::unpack,
                       filename,
                       temp + "/apk/",
                       temp + "/framework",
-                      apktool,
                       smali);
 }
 
@@ -37,15 +35,7 @@ void ApkManager::pack(Apk::File *apk, QString temp)
 {
     qDebug() << "\n--- Packing APK ---";
     qDebug() << "Output file:" << apk->getFilePath();
-    qDebug() << "Contents directory:" << apk->getDirectory();
-    qDebug() << "New application title:" << apk->getAppTitle();
-    qDebug() << "New version code:" << apk->getVersionCode();
-    qDebug() << "New version name:" << apk->getVersionName();
-
-    qDebug() << "Using Apktool:" << apk->getApktool();
-    (!apk->getApktool())
-        ? qDebug() << "Ratio:" << apk->getRatio()
-        : qDebug() << "Smali:" << apk->getSmali();
+    qDebug() << "Contents directory:" << apk->getContentsPath();
 
     qDebug() << "Sign:" << apk->getSign();
     qDebug() << "Zipalign:" << apk->getZipalign();
@@ -81,6 +71,6 @@ void ApkManager::catchError(QString message)
 ApkManager::~ApkManager()
 {
     if (apk) {
-        apk->clear();
+        apk->removeFiles();
     }
 }

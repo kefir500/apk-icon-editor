@@ -16,10 +16,8 @@ namespace Apk {
 
         void saveAppTitle(QString contents, QString title) const;
         void saveAppVersion(QString contents, QString code, QString name) const;
-        bool saveIcons(QList<QSharedPointer<Icon> > icons) const;
         bool saveStrings(QList<Apk::String> strings) const;
 
-        bool zip(QString contents, QString apk, short ratio) const;
         bool zip(QString contents, QString apk, QString frameworks) const;
         bool sign(QString apk, QString pem, QString pk8, bool apksigner) const;
         bool sign(QString apk, QString keystore, QString alias, QString passKeystore, QString passAlias, bool apksigner) const;

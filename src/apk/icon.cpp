@@ -4,14 +4,28 @@
 #include <QPainter>
 #include <QLabel>
 
+#ifdef QT_DEBUG
+    #include <QDebug>
+#endif
+
 Icon::Icon(QString filename)
 {
+    dpi = None;
+    qualifiers = QFileInfo(filename).path().split('/').last().split('-').mid(1);
+    foreach (const QString &qualifier, qualifiers) {
+        if (qualifier == "ldpi") { dpi = Ldpi; }
+        else if (qualifier == "mdpi") { dpi = Mdpi; }
+        else if (qualifier == "hdpi") { dpi = Hdpi; }
+        else if (qualifier == "xhdpi") { dpi = Xhdpi; }
+        else if (qualifier == "xxhdpi") { dpi = Xxhdpi; }
+        else if (qualifier == "xxxhdpi") { dpi = Xxxhdpi; }
+    }
     load(filename);
 }
 
 bool Icon::load(QString filename)
 {
-    original = filename;
+    filePath = filename;
     return revert();
 }
 
@@ -22,59 +36,63 @@ bool Icon::save(QString filename)
         return true;
     }
     if (filename.isEmpty()) {
-        filename = original;
+        filename = filePath;
     }
+    qDebug() << filename << pixmap.isNull();
     QDir().mkpath(QFileInfo(filename).absolutePath());
     return getPixmap().save(filename, NULL, 100);
 }
 
 bool Icon::replace(QPixmap pixmap)
 {
-    if (!pixmap.isNull()) {
-        this->pixmap = pixmap;
-        return true;
-    }
-    else {
+    if (pixmap.isNull()) {
         return false;
     }
+    this->pixmap = pixmap;
+    return true;
 }
 
 bool Icon::resize(QSize size)
 {
-    // TODO Option to keep aspect ratio.
     return !(pixmap = pixmap.scaled(size, Qt::IgnoreAspectRatio, Qt::SmoothTransformation)).isNull();
 }
 
-bool Icon::resize(int width, int height)
+bool Icon::resize(int w, int h)
 {
-    return resize(QSize(width, height));
+    return resize(QSize(w, h));
 }
 
 bool Icon::revert()
 {
-    angle    = 0;
-    colorize = false;
-    flipX    = false;
-    flipY    = false;
-    color    = Qt::black;
-    depth    = 1.0;
-    blur     = 1.0;
-    corners  = 0;
-    return !(pixmap = QPixmap(original)).isNull();
+    angle      = 0;
+    isColorize = false;
+    isFlipX    = false;
+    isFlipY    = false;
+    color      = Qt::black;
+    depth      = 1.0;
+    blur       = 1.0;
+    corners    = 0;
+    return !(pixmap = QPixmap(filePath)).isNull();
 }
 
 QString Icon::getFilename()
 {
-    return original;
+    return filePath;
+}
+
+Icon::Dpi Icon::getDpi()
+{
+    return dpi;
 }
 
 QPixmap Icon::getPixmap()
 {
+    // TODO error on clone
     QPixmap gfx = pixmap;
 
     // Apply color overlay:
 
-    if (colorize && !qFuzzyIsNull(depth)) {
+    if (isColorize && !qFuzzyIsNull(depth)) {
         QLabel canvas;
         QGraphicsColorizeEffect *effect = new QGraphicsColorizeEffect();
         effect->setColor(color);
@@ -113,9 +131,19 @@ QPixmap Icon::getPixmap()
 
     // Apply flipping and rotation:
 
-    if (flipX) { gfx = gfx.transformed(QTransform().scale(-1, 1)); }
-    if (flipY) { gfx = gfx.transformed(QTransform().scale(1, -1)); }
+    if (isFlipX) { gfx = gfx.transformed(QTransform().scale(-1, 1)); }
+    if (isFlipY) { gfx = gfx.transformed(QTransform().scale(1, -1)); }
     if (angle) { gfx = gfx.transformed(QTransform().rotate(angle)); }
 
     return gfx;
+}
+
+const QStringList &Icon::getQualifiers() const
+{
+    return qualifiers;
+}
+
+void Icon::setPixmap(const QPixmap &pixmap)
+{
+    this->pixmap = pixmap;
 }

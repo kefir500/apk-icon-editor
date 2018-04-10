@@ -3,24 +3,22 @@
 #include "globals.h"
 #include <QApplication>
 #include <QProcess>
+#include <QDir>
 #include <QDebug>
 #include <QtXml/QDomDocument>
-#include <QuaZIP/JlCompress.h>
 
 using Apk::Packer;
 
 bool Packer::pack(Apk::File *apk, QString temp)
 {
     const QString TEMPAPK = temp + "/packed/temp.zip";
-    const QString CONTENTS = QDir::fromNativeSeparators(apk->getDirectory());
+    const QString CONTENTS = QDir::fromNativeSeparators(apk->getContentsPath());
     QDir(CONTENTS + "/META-INF").removeRecursively();
 
     // Save icons:
 
     emit loading(20, tr("Saving PNG icons..."));
-    if (!saveIcons(apk->getIcons())) {
-        return false;
-    }
+    apk->saveIcons();
 
     // Clear temporary intermediate files:
 
@@ -28,53 +26,19 @@ bool Packer::pack(Apk::File *apk, QString temp)
     QFile::remove(temp + "/packed/temp-signed.apk");
     QFile::remove(temp + "/packed/temp-aligned.apk");
 
-    // Pack APK:
+    // Save application name, version and strings:
 
-    if (!apk->getApktool()) {
+    emit loading(30, tr("Saving string resources..."));
+    apk->saveTitles();
 
-        // Pack APK (ZIP):
+    // Pack APK (Apktool);
 
-        emit loading(40, tr("Packing APK..."));
-        if (!zip(CONTENTS, TEMPAPK, apk->getRatio())) {
-            return false;
-        }
+    emit loading(40, tr("Packing APK..."));
+    if (!zip(CONTENTS, TEMPAPK, temp + "/framework/")) {
+        return false;
     }
-    else {
 
-        // Save application name, version and strings:
-
-        emit loading(30, tr("Saving string resources..."));
-
-        if (apk->getVarAppTitle().isEmpty()) {
-            saveAppTitle(CONTENTS, apk->getAppTitle());
-        }
-        saveAppVersion(CONTENTS, apk->getVersionCode(), apk->getVersionName());
-        saveStrings(apk->getStrings());
-
-        // Handle Apktool 2.0.3 issue #1122:
-
-        QFile f(CONTENTS + "/apktool.yml");
-        if (f.open(QFile::ReadWrite | QFile::Text)) {
-            QString output;
-            QTextStream stream(&f);
-            while(!stream.atEnd()) {
-                QString line = stream.readLine();
-                if (!line.contains("- ''")) {
-                    output.append(line + "\n");
-                }
-            }
-            f.resize(0);
-            stream << output;
-            f.close();
-        }
-
-        // Pack APK (Apktool);
-
-        emit loading(40, tr("Packing APK..."));
-        if (!zip(CONTENTS, TEMPAPK, temp + "/framework/")) {
-            return false;
-        }
-    }
+    // Sing and optimize:
 
     bool isSigned = false;
     bool isOptimized = false;
@@ -117,15 +81,6 @@ bool Packer::pack(Apk::File *apk, QString temp)
         emit packed(apk, warning, false);
     }
     return true;
-}
-
-bool Packer::zip(QString contents, QString apk, short ratio) const
-{
-    bool result = JlCompress::compressDir(apk, contents, ratio);
-    if (!result) {
-        emit error(Apk::ERROR.arg("QuaZIP"));
-    }
-    return result;
 }
 
 bool Packer::zip(QString contents, QString apk, QString frameworks) const
@@ -189,17 +144,6 @@ void Packer::saveAppVersion(QString contents, QString code, QString name) const
         out << yml;
         f.close();
     }
-}
-
-bool Packer::saveIcons(QList<QSharedPointer<Icon> > icons) const
-{
-    for (int i = 0; i < icons.size(); ++i) {
-        if (!icons[i]->save()) {
-            emit error("Error saving PNG icon.");
-            return false;
-        }
-    }
-    return true;
 }
 
 bool Packer::saveStrings(QList<Apk::String> strings) const
