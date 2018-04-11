@@ -13,8 +13,6 @@
 #include <QtConcurrent/QtConcurrentRun>
 #include <QApplication>
 
-// TODO icons list is not updated when using proxy
-
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
     init_core();

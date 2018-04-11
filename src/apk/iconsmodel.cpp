@@ -31,7 +31,6 @@ void IconsModel::clone(Icon *source)
     if (source) {
         foreach (Icon *icon, icons) {
             if (icon->getDpi() != Icon::None) {
-                qDebug() << icon->getDpi();
                 icon->replace(source->getPixmap());
             }
         }
@@ -57,6 +56,7 @@ Icon *IconsModel::last()
 
 bool IconsModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
+    Q_UNUSED(role);
     if (index.isValid()) {
         Icon *icon = icons.at(index.row());
         icon->setPixmap(value.value<QPixmap>());

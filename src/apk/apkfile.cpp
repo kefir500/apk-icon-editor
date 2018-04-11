@@ -3,8 +3,6 @@
 #include <QTextStream>
 #include <QDebug>
 
-// TODO icons list is not updated when using proxy
-
 Apk::File::File(const QString &contentsPath)
 {
     // Be careful with the "contentsPath" variable: this directory is recursively removed in the destructor.
