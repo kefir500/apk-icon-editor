@@ -92,6 +92,23 @@ void Apk::File::removeFiles()
     }
 }
 
+bool Apk::File::addIcon(Icon::Dpi dpi)
+{
+    if (!iconsModel.hasDpi(dpi)) {
+        const QString filePath = getIconPath(dpi) + ".png";
+        if (!filePath.isEmpty()) {
+            QString directory = QFileInfo(filePath).path();
+            QDir().mkdir(directory);
+            QPixmap pixmap = iconsModel.last()->getPixmap();
+            if (pixmap.save(filePath)) {
+                iconsModel.add(filePath);
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 QDomElement Apk::File::findIntentByCategory(QDomElement activity, QString category)
 {
     QDomElement intent = activity.firstChildElement("intent-filter");
@@ -203,4 +220,27 @@ void Apk::File::setFileKeystore(QString filename, QString alias, QString passKey
     this->alias = alias;
     this->passKeystore = passKeystore;
     this->passAlias = passAlias;
+}
+
+QString Apk::File::getIconPath(Icon::Dpi dpi)
+{
+    const QString iconAttribute = manifest->getApplicationIcon();
+    const QString iconCategory = iconAttribute.split('/').value(0).mid(1);
+    const QString iconFilename = iconAttribute.split('/').value(1);
+
+    QString qualifier;
+    switch (dpi) {
+        case Icon::Ldpi: qualifier = "ldpi"; break;
+        case Icon::Mdpi: qualifier = "mdpi"; break;
+        case Icon::Hdpi: qualifier = "hdpi"; break;
+        case Icon::Xhdpi: qualifier = "xhdpi"; break;
+        case Icon::Xxhdpi: qualifier = "xxhdpi"; break;
+        case Icon::Xxxhdpi: qualifier = "xxxhdpi"; break;
+        default: return false;
+    }
+
+    if (!iconFilename.isEmpty() && !qualifier.isEmpty()) {
+        return QString("%1/res/%2-%3/%4").arg(contentsPath, iconCategory, qualifier, iconFilename);
+    }
+    return QString();
 }

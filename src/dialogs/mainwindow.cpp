@@ -127,6 +127,7 @@ void MainWindow::init_gui()
     iconActions = new QActionGroup(this);
     actIconOpen = new QAction(iconActions);
     actIconSave = new QAction(iconActions);
+    menuIconAdd = new QMenu(this);
     actIconScale = new QAction(iconActions);
     actIconResize = new QAction(iconActions);
     actIconRevert = new QAction(iconActions);
@@ -159,6 +160,8 @@ void MainWindow::init_gui()
     menuFile->addSeparator();
     menuFile->addAction(actExit);
     menuIcon->addActions(iconActions->actions());
+    menuIcon->addSeparator();
+    menuIcon->addMenu(menuIconAdd);
     menuIcon->addSeparator();
     menuIcon->addAction(actIconBackground);
     menuSett->addAction(actPacking);
@@ -272,14 +275,34 @@ void MainWindow::init_gui()
     layoutDevices->addWidget(devices);
 
     listIcons = new QListView(this);
-    listIcons->addActions(menuIcon->actions()); // TODO not working
+    listIcons->addActions(menuIcon->actions());
     listIcons->setContextMenuPolicy(Qt::ActionsContextMenu);
     listIcons->setItemDelegate(new DecorationDelegate(QSize(32, 32), this));
     iconsProxy = new IconsProxy(this);
     listIcons->setModel(iconsProxy);
 
+    actAddIconLdpi = new QAction("LDPI", this);
+    actAddIconMdpi = new QAction("MDPI", this);
+    actAddIconHdpi = new QAction("HDPI", this);
+    actAddIconXhdpi = new QAction("XHDPI", this);
+    actAddIconXxhdpi = new QAction("XXHDPI", this);
+    actAddIconXxxhdpi = new QAction("XXXHDPI", this);
     actAddIconTv = new QAction("TV", this);
     actAddIconTv->setIcon(QIcon(":/gfx/dpi/tv.png"));
+    menuIconAdd->setIcon(QIcon(":/gfx/actions/add.png"));
+    menuIconAdd->addAction(actAddIconLdpi);
+    menuIconAdd->addAction(actAddIconMdpi);
+    menuIconAdd->addAction(actAddIconHdpi);
+    menuIconAdd->addAction(actAddIconXhdpi);
+    menuIconAdd->addAction(actAddIconXxhdpi);
+    menuIconAdd->addAction(actAddIconXxxhdpi);
+    menuIconAdd->addAction(actAddIconTv);
+    btnAddIcon = new QToolButton(this);
+    btnAddIcon->setShortcut(QKeySequence("Plus")); // TODO
+    btnAddIcon->setIcon(QIcon(":/gfx/actions/add.png"));
+    btnAddIcon->setMenu(menuIconAdd);
+    btnAddIcon->setPopupMode(QToolButton::InstantPopup);
+    btnAddIcon->setStyleSheet("QToolButton::menu-indicator { image: none; width: 0; }");
     btnOpenIcon = new QToolButton(this);
     btnSaveIcon = new QToolButton(this);
     btnScaleIcon = new QToolButton(this);
@@ -294,6 +317,7 @@ void MainWindow::init_gui()
     btnRevertIcon->setDefaultAction(actIconRevert);
     btnEffectIcon->setDefaultAction(actIconEffect);
     btnCloneIcons->setDefaultAction(actIconClone);
+    btnAddIcon->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
     btnOpenIcon->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
     btnSaveIcon->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
     btnScaleIcon->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
@@ -302,6 +326,7 @@ void MainWindow::init_gui()
     btnEffectIcon->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
     btnCloneIcons->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
     QHBoxLayout *layoutIconsButtons = new QHBoxLayout;
+    layoutIconsButtons->addWidget(btnAddIcon);
     layoutIconsButtons->addWidget(btnOpenIcon);
     layoutIconsButtons->addWidget(btnSaveIcon);
     layoutIconsButtons->addWidget(btnScaleIcon);
@@ -452,6 +477,12 @@ void MainWindow::init_slots()
     connect(actAboutQt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
     connect(btnPack, SIGNAL(clicked()), this, SLOT(apk_save()));
     connect(mapRecent, SIGNAL(mapped(QString)), this, SLOT(apk_open(QString)));
+    connect(actAddIconLdpi, &QAction::triggered, [=]() { apk->addIcon(Icon::Ldpi); });
+    connect(actAddIconMdpi, &QAction::triggered, [=]() { apk->addIcon(Icon::Mdpi); });
+    connect(actAddIconHdpi, &QAction::triggered, [=]() { apk->addIcon(Icon::Hdpi); });
+    connect(actAddIconXhdpi, &QAction::triggered, [=]() { apk->addIcon(Icon::Xhdpi); });
+    connect(actAddIconXxhdpi, &QAction::triggered, [=]() { apk->addIcon(Icon::Xxhdpi); });
+    connect(actAddIconXxxhdpi, &QAction::triggered, [=]() { apk->addIcon(Icon::Xxxhdpi); });
     connect(actAddIconTv, SIGNAL(triggered()), this, SLOT(addIconTV()));
     void (QComboBox::*devicesIndexChanged)(int row) = &QComboBox::currentIndexChanged;
     connect(devices, devicesIndexChanged, [=](int row) {
@@ -606,6 +637,8 @@ void MainWindow::setLanguage(QString lang)
     actIconRevert->setText(tr("Revert &Original"));
     actIconEffect->setText(tr("E&ffects"));
     actIconClone->setText(tr("Apply to All"));
+    menuIconAdd->setTitle(tr("&Add Icon"));
+    btnAddIcon->setToolTip(tr("&Add Icon").remove('&'));
     actIconBackground->setText(tr("Preview Background &Color"));
     actPacking->setText(tr("&Repacking"));
     actKeys->setText(tr("Key Manager"));

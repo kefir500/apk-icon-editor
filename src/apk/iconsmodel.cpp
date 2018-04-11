@@ -14,6 +14,18 @@ void IconsModel::add(const QString &filename)
     endInsertRows();
 }
 
+bool IconsModel::hasDpi(Icon::Dpi dpi)
+{
+    QListIterator<Icon *> it(icons);
+    while (it.hasNext()) {
+        Icon *icon = it.next();
+        if (icon->getDpi() == dpi) {
+            return true;
+        }
+    }
+    return false;
+}
+
 void IconsModel::clone(Icon *source)
 {
     if (source) {
@@ -31,6 +43,16 @@ void IconsModel::save()
     foreach (Icon *icon, icons) {
         icon->save();
     }
+}
+
+Icon *IconsModel::first()
+{
+    return icons.first();
+}
+
+Icon *IconsModel::last()
+{
+    return icons.last();
 }
 
 bool IconsModel::setData(const QModelIndex &index, const QVariant &value, int role)

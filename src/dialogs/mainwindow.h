@@ -206,6 +206,7 @@ private:
     QWidget *tabIcons;
     QLabel *devicesLabel;
     QComboBox *devices;
+    QToolButton *btnAddIcon;
     QToolButton *btnOpenIcon;
     QToolButton *btnSaveIcon;
     QToolButton *btnScaleIcon;
@@ -223,6 +224,7 @@ private:
 
     QMenu *menuFile;
     QMenu *menuIcon;
+    QMenu *menuIconAdd;
     QMenu *menuSett;
     QMenu *menuHelp;
     QMenu *menuRecent;
@@ -246,6 +248,12 @@ private:
     QAction *actIconBackground;
     QAction *actIconEffect;
     QAction *actIconClone;
+    QAction *actAddIconLdpi;
+    QAction *actAddIconMdpi;
+    QAction *actAddIconHdpi;
+    QAction *actAddIconXhdpi;
+    QAction *actAddIconXxhdpi;
+    QAction *actAddIconXxxhdpi;
     QAction *actAddIconTv;
     QAction *actPacking;
     QAction *actKeys;
