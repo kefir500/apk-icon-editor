@@ -1,11 +1,9 @@
 #include "titlesmodel.h"
 #include <QFile>
+#include <QTextStream>
 #include <QDirIterator>
 #include <QCoreApplication>
-
-#ifdef QT_DEBUG
-    #include <QDebug>
-#endif
+#include <QDebug>
 
 TitlesModel::~TitlesModel()
 {

@@ -26,7 +26,7 @@ Apk::File::File(const QString &contentsPath)
 
     QString labelAttribute = manifest->getApplicationLabel();
     if (!labelAttribute.startsWith("@string/")) {
-        return; // TODO a cho esli net?
+        return; // TODO
     }
     QString labelKey = labelAttribute.mid(QString("@string/").length());
 

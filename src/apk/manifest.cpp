@@ -1,10 +1,6 @@
 #include "manifest.h"
 #include <QTextStream>
-
-#ifdef QT_DEBUG
-    #include <QDebug>
-    #include <QElapsedTimer>
-#endif
+#include <QDebug>
 
 Manifest::Manifest(const QString &xmlPath, const QString &ymlPath)
 {

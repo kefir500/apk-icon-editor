@@ -4,10 +4,6 @@
 #include <QPainter>
 #include <QLabel>
 
-#ifdef QT_DEBUG
-    #include <QDebug>
-#endif
-
 Icon::Icon(QString filename)
 {
     dpi = None;
@@ -38,7 +34,6 @@ bool Icon::save(QString filename)
     if (filename.isEmpty()) {
         filename = filePath;
     }
-    qDebug() << filename << pixmap.isNull();
     QDir().mkpath(QFileInfo(filename).absolutePath());
     return getPixmap().save(filename, NULL, 100);
 }
