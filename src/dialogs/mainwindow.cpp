@@ -266,13 +266,16 @@ void MainWindow::init_gui()
 
     uploadDialog = new ProgressDialog(this);
 
-    QWidget *tabIcons = new QWidget(this);
+    tabIcons = new QWidget(this);
+    tabIcons->setEnabled(false);
     QHBoxLayout *layoutDevices = new QHBoxLayout;
     QVBoxLayout *layoutIcons = new QVBoxLayout(tabIcons);
     devicesLabel = new QLabel(this);
     devices = new QComboBox(this);
     devices->setStyleSheet("QComboBox {padding: 4px}");
     devices->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+    layoutDevices->addWidget(devicesLabel);
+    layoutDevices->addWidget(devices);
 
     listIcons = new QListView(this);
     listIcons->addActions(menuIcon->actions()); // TODO not working
@@ -281,21 +284,38 @@ void MainWindow::init_gui()
     listIcons->setModel(iconsProxy);
 
     QMenu *menuAdd = new QMenu(this);
-    actAddIconTV = new QAction("TV", this);
-    actAddIconTV->setIcon(QIcon(":/gfx/dpi/tv.png"));
-    menuAdd->addAction(actAddIconTV);
-    btnAddIcon = new QPushButton(this);
+    actAddIconLdpi = new QAction("LDPI", this);
+    actAddIconMdpi = new QAction("MDPI", this);
+    actAddIconHdpi = new QAction("HDPI", this);
+    actAddIconXhdpi = new QAction("XHDPI", this);
+    actAddIconXxhdpi = new QAction("XXHDPI", this);
+    actAddIconXxxhdpi = new QAction("XXXHDPI", this);
+    actAddIconTv = new QAction("TV", this);
+    actAddIconTv->setIcon(QIcon(":/gfx/dpi/tv.png"));
+    menuAdd->addAction(actAddIconLdpi);
+    menuAdd->addAction(actAddIconMdpi);
+    menuAdd->addAction(actAddIconHdpi);
+    menuAdd->addAction(actAddIconXhdpi);
+    menuAdd->addAction(actAddIconXxhdpi);
+    menuAdd->addAction(actAddIconXxxhdpi);
+    menuAdd->addAction(actAddIconTv);
+    btnAddIcon = new QToolButton(this);
     btnAddIcon->setIcon(QIcon(":/gfx/actions/add.png"));
-    btnAddIcon->setEnabled(false);
     btnAddIcon->setMenu(menuAdd);
-    btnApplyIcons = new QPushButton(this);
-    btnApplyIcons->setEnabled(false);
-    layoutDevices->addWidget(devicesLabel);
-    layoutDevices->addWidget(devices);
+    btnAddIcon->setPopupMode(QToolButton::InstantPopup);
+    btnAddIcon->setStyleSheet("QToolButton::menu-indicator { image: none; width: 0; }");
+    btnRemoveIcon = new QToolButton(this);
+    btnRemoveIcon->setIcon(QIcon(":/gfx/actions/remove.png"));
+    btnCloneIcons = new QPushButton(this);
+    QHBoxLayout *layoutIconsButtons = new QHBoxLayout;
+    layoutIconsButtons->addWidget(btnAddIcon);
+    layoutIconsButtons->addWidget(btnRemoveIcon);
+    layoutIconsButtons->addWidget(btnCloneIcons);
+    layoutIconsButtons->setSpacing(2);
+
     layoutIcons->addLayout(layoutDevices);
     layoutIcons->addWidget(listIcons);
-    layoutIcons->addWidget(btnAddIcon);
-    layoutIcons->addWidget(btnApplyIcons);
+    layoutIcons->addLayout(layoutIconsButtons);
     layoutIcons->setMargin(4);
     layoutIcons->setSpacing(6);
 
@@ -327,7 +347,6 @@ void MainWindow::init_gui()
     checkUpload->setChecked(true);
     checkUpload->setIcon(QPixmap(":/gfx/clouds/upload.png"));
     btnPack = new QPushButton(this);
-    btnPack->setEnabled(false);
     btnPack->setFixedHeight(64);
 
     QWidget *sidebar = new QWidget(this);
@@ -434,8 +453,8 @@ void MainWindow::init_slots()
     connect(actAboutQt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
     connect(btnPack, SIGNAL(clicked()), this, SLOT(apk_save()));
     connect(mapRecent, SIGNAL(mapped(QString)), this, SLOT(apk_open(QString)));
-    connect(actAddIconTV, SIGNAL(triggered()), this, SLOT(addIconTV()));
-    connect(btnApplyIcons, SIGNAL(clicked()), this, SLOT(cloneIcons()));
+    connect(actAddIconTv, SIGNAL(triggered()), this, SLOT(addIconTV()));
+    connect(btnCloneIcons, SIGNAL(clicked()), this, SLOT(cloneIcons()));
     void (QComboBox::*devicesIndexChanged)(int row) = &QComboBox::currentIndexChanged;
     connect(devices, devicesIndexChanged, [=](int row) {
         Device *device = static_cast<Device *>(devices->model()->index(row, 0).internalPointer());
@@ -565,7 +584,7 @@ void MainWindow::setLanguage(QString lang)
     tabs->setTabText(1, tr("Properties"));
     tabs->setTabText(2, tr("Details"));
     devicesLabel->setText(tr("Device:"));
-    btnApplyIcons->setText(tr("Apply to All"));
+    btnCloneIcons->setText(tr("Apply to All"));
 //    btnApplyAppName->setText(tr("Apply to All")); TODO
     checkDropbox->setText(tr("Upload to %1").arg(dropbox->getTitle()));
     checkGDrive->setText(tr("Upload to %1").arg(gdrive->getTitle()));
@@ -784,6 +803,7 @@ void MainWindow::apk_unpacked(Apk::File *apk)
 
     // Enable operations with APK and icons:
 
+    tabIcons->setEnabled(true);
     actApkSave->setEnabled(true);
     actApkExplore->setEnabled(true);
     actIconOpen->setEnabled(true);
@@ -792,10 +812,6 @@ void MainWindow::apk_unpacked(Apk::File *apk)
     actIconEffect->setEnabled(true);
     actIconResize->setEnabled(true);
     actIconScale->setEnabled(true);
-    btnApplyIcons->setEnabled(true);
-    btnAddIcon->setEnabled(true);
-    devices->setEnabled(true);
-    btnPack->setEnabled(true);
 
     setWindowModified(false);
 }
