@@ -14,6 +14,24 @@ void IconsModel::add(const QString &filename)
     endInsertRows();
 }
 
+bool IconsModel::remove(Icon *icon)
+{
+    QMutableListIterator<Icon *> it(icons);
+    while (it.hasNext()) {
+        if (icon == it.next()) {
+            int index = icons.indexOf(icon);
+            if (index >= 0) {
+                beginRemoveRows(QModelIndex(), index, index);
+                    it.remove();
+                    delete icon;
+                endRemoveRows();
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 bool IconsModel::hasDpi(Icon::Dpi dpi)
 {
     QListIterator<Icon *> it(icons);

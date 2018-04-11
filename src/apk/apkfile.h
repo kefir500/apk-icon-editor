@@ -21,6 +21,7 @@ namespace Apk {
         void removeFiles();
 
         bool addIcon(Icon::Dpi dpi);
+        void removeIcon(Icon *icon);
 
         bool addAndroidTV();
         QDomElement findIntentByCategory(QDomElement root, QString category);

@@ -126,6 +126,7 @@ void MainWindow::init_gui()
     actIconOpen = new QAction(iconActions);
     actIconSave = new QAction(iconActions);
     menuIconAdd = new QMenu(this);
+    actIconRemove = new QAction(iconActions);
     actIconScale = new QAction(iconActions);
     actIconResize = new QAction(iconActions);
     actIconRevert = new QAction(iconActions);
@@ -197,6 +198,7 @@ void MainWindow::init_gui()
     actApkSave->setShortcut(QKeySequence("Ctrl+E"));
     actIconOpen->setShortcut(QKeySequence("Ctrl+R"));
     actIconSave->setShortcut(QKeySequence::Save);
+    actIconRemove->setShortcut(QKeySequence::Delete);
     actIconScale->setShortcut(QKeySequence("Ctrl+W"));
     actIconResize->setShortcut(QKeySequence("Ctrl+I"));
     actIconRevert->setShortcut(QKeySequence::Undo);
@@ -215,6 +217,7 @@ void MainWindow::init_gui()
     actApkSave->setIcon(QIcon(":/gfx/actions/pack.png"));
     actIconOpen->setIcon(QIcon(":/gfx/actions/open-icon.png"));
     actIconSave->setIcon(QIcon(":/gfx/actions/save.png"));
+    actIconRemove->setIcon(QIcon(":/gfx/actions/remove.png"));
     actIconScale->setIcon(QIcon(":/gfx/actions/scale.png"));
     actIconResize->setIcon(QIcon(":/gfx/actions/resize.png"));
     actIconRevert->setIcon(QIcon(":/gfx/actions/undo.png"));
@@ -301,6 +304,7 @@ void MainWindow::init_gui()
     btnAddIcon->setMenu(menuIconAdd);
     btnAddIcon->setPopupMode(QToolButton::InstantPopup);
     btnAddIcon->setStyleSheet("QToolButton::menu-indicator { image: none; width: 0; }");
+    btnRemoveIcon = new QToolButton(this);
     btnOpenIcon = new QToolButton(this);
     btnSaveIcon = new QToolButton(this);
     btnScaleIcon = new QToolButton(this);
@@ -308,6 +312,7 @@ void MainWindow::init_gui()
     btnRevertIcon = new QToolButton(this);
     btnEffectIcon = new QToolButton(this);
     btnCloneIcons = new QToolButton(this);
+    btnRemoveIcon->setDefaultAction(actIconRemove);
     btnOpenIcon->setDefaultAction(actIconOpen);
     btnSaveIcon->setDefaultAction(actIconSave);
     btnScaleIcon->setDefaultAction(actIconScale);
@@ -316,6 +321,7 @@ void MainWindow::init_gui()
     btnEffectIcon->setDefaultAction(actIconEffect);
     btnCloneIcons->setDefaultAction(actIconClone);
     btnAddIcon->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
+    btnRemoveIcon->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
     btnOpenIcon->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
     btnSaveIcon->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
     btnScaleIcon->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
@@ -325,6 +331,7 @@ void MainWindow::init_gui()
     btnCloneIcons->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
     QHBoxLayout *layoutIconsButtons = new QHBoxLayout;
     layoutIconsButtons->addWidget(btnAddIcon);
+    layoutIconsButtons->addWidget(btnRemoveIcon);
     layoutIconsButtons->addWidget(btnOpenIcon);
     layoutIconsButtons->addWidget(btnSaveIcon);
     layoutIconsButtons->addWidget(btnScaleIcon);
@@ -454,6 +461,7 @@ void MainWindow::init_slots()
     connect(actRecentClear, SIGNAL(triggered()), this, SLOT(recent_clear()));
     connect(actIconOpen, SIGNAL(triggered()), this, SLOT(icon_open()));
     connect(actIconSave, SIGNAL(triggered()), this, SLOT(icon_save()));
+    connect(actIconRemove, SIGNAL(triggered()), this, SLOT(removeIcon()));
     connect(actIconScale, SIGNAL(triggered()), this, SLOT(icon_scale()));
     connect(actIconResize, SIGNAL(triggered()), this, SLOT(icon_resize()));
     connect(actIconRevert, SIGNAL(triggered()), this, SLOT(icon_revert()));
@@ -630,6 +638,7 @@ void MainWindow::setLanguage(QString lang)
     actNoRecent->setText(tr("No Recent Files"));
     actIconOpen->setText(tr("Replace &Icon"));
     actIconSave->setText(tr("&Save Icon"));
+    actIconRemove->setText(tr("Remove Icon"));
     actIconScale->setText(tr("Scale to &Fit"));
     actIconResize->setText(tr("&Resize Icon"));
     actIconRevert->setText(tr("Revert &Original"));
@@ -1205,9 +1214,14 @@ void MainWindow::error(QString title, QString text)
     QMessageBox::critical(this, title, text);
 }
 
-void MainWindow::setModified()
+void MainWindow::removeIcon()
 {
-    setWindowModified(true);
+    // TODO ask if ok
+    Icon *icon = drawArea->getIcon();
+    if (icon) {
+        apk->removeIcon(icon);
+        setWindowModified(true);
+    }
 }
 
 bool MainWindow::confirmExit()

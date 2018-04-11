@@ -13,6 +13,7 @@ public:
     ~IconsModel();
 
     void add(const QString &filename);
+    bool remove(Icon *icon);
     bool hasDpi(Icon::Dpi dpi);
     void clone(Icon *source);
     void save();

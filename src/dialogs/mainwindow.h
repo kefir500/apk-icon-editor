@@ -126,7 +126,7 @@ private slots:
 
     // Actions:
 
-    void setModified();             ///< Marks the current APK as containing unsaved changes.
+    void removeIcon();              ///< Removes the current icon file and model index.
     void cloneIcons();              ///< Clones the current icon for to all sizes.
     void applyAppName();            ///< Applies the global application name to all translations.
     void enableUpload(bool enable); ///< Enables or disables upload to cloud services.
@@ -207,6 +207,7 @@ private:
     QLabel *devicesLabel;
     QComboBox *devices;
     QToolButton *btnAddIcon;
+    QToolButton *btnRemoveIcon;
     QToolButton *btnOpenIcon;
     QToolButton *btnSaveIcon;
     QToolButton *btnScaleIcon;
@@ -242,6 +243,7 @@ private:
     QActionGroup *iconActions;
     QAction *actIconOpen;
     QAction *actIconSave;
+    QAction *actIconRemove;
     QAction *actIconScale;
     QAction *actIconResize;
     QAction *actIconRevert;

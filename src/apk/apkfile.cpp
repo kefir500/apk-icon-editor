@@ -107,6 +107,18 @@ bool Apk::File::addIcon(Icon::Dpi dpi)
     return false;
 }
 
+void Apk::File::removeIcon(Icon *icon)
+{
+    QFileInfo fi(icon->getFilename());
+    QString filePath = fi.path() + "/" + fi.baseName();
+    QStringList icons;
+    icons << filePath + ".png" << filePath + ".jpg" << filePath + ".gif";
+    foreach (const QString &icon, icons) {
+        QFile::remove(icon);
+    }
+    iconsModel.remove(icon);
+}
+
 QDomElement Apk::File::findIntentByCategory(QDomElement activity, QString category)
 {
     QDomElement intent = activity.firstChildElement("intent-filter");
