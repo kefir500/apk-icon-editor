@@ -124,13 +124,15 @@ void MainWindow::init_gui()
     actExit = new QAction(this);
     actRecentClear = new QAction(this);
     actNoRecent = new QAction(this);
-    actIconOpen = new QAction(this);
-    actIconSave = new QAction(this);
-    actIconScale = new QAction(this);
-    actIconResize = new QAction(this);
-    actIconRevert = new QAction(this);
-    actIconEffect = new QAction(this);
-    actIconBack = new QAction(this);
+    iconActions = new QActionGroup(this);
+    actIconOpen = new QAction(iconActions);
+    actIconSave = new QAction(iconActions);
+    actIconScale = new QAction(iconActions);
+    actIconResize = new QAction(iconActions);
+    actIconRevert = new QAction(iconActions);
+    actIconEffect = new QAction(iconActions);
+    actIconClone = new QAction(iconActions);
+    actIconBackground = new QAction(this);
     actPacking = new QAction(this);
     actKeys = new QAction(this);
     menuLang = new QMenu(this);
@@ -156,14 +158,9 @@ void MainWindow::init_gui()
     menuFile->addAction(actApkSave);
     menuFile->addSeparator();
     menuFile->addAction(actExit);
-    menuIcon->addAction(actIconOpen);
-    menuIcon->addAction(actIconSave);
-    menuIcon->addAction(actIconScale);
-    menuIcon->addAction(actIconResize);
-    menuIcon->addAction(actIconRevert);
-    menuIcon->addAction(actIconEffect);
+    menuIcon->addActions(iconActions->actions());
     menuIcon->addSeparator();
-    menuIcon->addAction(actIconBack);
+    menuIcon->addAction(actIconBackground);
     menuSett->addAction(actPacking);
     menuSett->addAction(actKeys);
     menuSett->addSeparator();
@@ -191,12 +188,7 @@ void MainWindow::init_gui()
     actApkExplore->setEnabled(false);
     actApkSave->setEnabled(false);
     actNoRecent->setEnabled(false);
-    actIconOpen->setEnabled(false);
-    actIconSave->setEnabled(false);
-    actIconScale->setEnabled(false);
-    actIconResize->setEnabled(false);
-    actIconRevert->setEnabled(false);
-    actIconEffect->setEnabled(false);
+    iconActions->setEnabled(false);
     actAutoUpdate->setCheckable(true);
 
     actApkOpen->setShortcut(QKeySequence::Open);
@@ -208,6 +200,7 @@ void MainWindow::init_gui()
     actIconResize->setShortcut(QKeySequence("Ctrl+I"));
     actIconRevert->setShortcut(QKeySequence::Undo);
     actIconEffect->setShortcut(QKeySequence("Ctrl+F"));
+    actIconClone->setShortcut(QKeySequence("Ctrl+C"));
     actPacking->setShortcut(QKeySequence("Ctrl+P"));
     actKeys->setShortcut(QKeySequence("Ctrl+K"));
     actFaq->setShortcut(QKeySequence::HelpContents);
@@ -225,6 +218,7 @@ void MainWindow::init_gui()
     actIconResize->setIcon(QIcon(":/gfx/actions/resize.png"));
     actIconRevert->setIcon(QIcon(":/gfx/actions/undo.png"));
     actIconEffect->setIcon(QIcon(":/gfx/actions/effects.png"));
+    actIconClone->setIcon(QIcon((":/gfx/actions/copy-icon.png")));
     actPacking->setIcon(QIcon(":/gfx/actions/box.png"));
     actKeys->setIcon(QIcon(":/gfx/actions/key.png"));
     actAutoUpdate->setIcon(QIcon(":/gfx/actions/update.png"));
@@ -279,37 +273,41 @@ void MainWindow::init_gui()
 
     listIcons = new QListView(this);
     listIcons->addActions(menuIcon->actions()); // TODO not working
+    listIcons->setContextMenuPolicy(Qt::ActionsContextMenu);
     listIcons->setItemDelegate(new DecorationDelegate(QSize(32, 32), this));
     iconsProxy = new IconsProxy(this);
     listIcons->setModel(iconsProxy);
 
-    QMenu *menuAdd = new QMenu(this);
-    actAddIconLdpi = new QAction("LDPI", this);
-    actAddIconMdpi = new QAction("MDPI", this);
-    actAddIconHdpi = new QAction("HDPI", this);
-    actAddIconXhdpi = new QAction("XHDPI", this);
-    actAddIconXxhdpi = new QAction("XXHDPI", this);
-    actAddIconXxxhdpi = new QAction("XXXHDPI", this);
     actAddIconTv = new QAction("TV", this);
     actAddIconTv->setIcon(QIcon(":/gfx/dpi/tv.png"));
-    menuAdd->addAction(actAddIconLdpi);
-    menuAdd->addAction(actAddIconMdpi);
-    menuAdd->addAction(actAddIconHdpi);
-    menuAdd->addAction(actAddIconXhdpi);
-    menuAdd->addAction(actAddIconXxhdpi);
-    menuAdd->addAction(actAddIconXxxhdpi);
-    menuAdd->addAction(actAddIconTv);
-    btnAddIcon = new QToolButton(this);
-    btnAddIcon->setIcon(QIcon(":/gfx/actions/add.png"));
-    btnAddIcon->setMenu(menuAdd);
-    btnAddIcon->setPopupMode(QToolButton::InstantPopup);
-    btnAddIcon->setStyleSheet("QToolButton::menu-indicator { image: none; width: 0; }");
-    btnRemoveIcon = new QToolButton(this);
-    btnRemoveIcon->setIcon(QIcon(":/gfx/actions/remove.png"));
-    btnCloneIcons = new QPushButton(this);
+    btnOpenIcon = new QToolButton(this);
+    btnSaveIcon = new QToolButton(this);
+    btnScaleIcon = new QToolButton(this);
+    btnResizeIcon = new QToolButton(this);
+    btnRevertIcon = new QToolButton(this);
+    btnEffectIcon = new QToolButton(this);
+    btnCloneIcons = new QToolButton(this);
+    btnOpenIcon->setDefaultAction(actIconOpen);
+    btnSaveIcon->setDefaultAction(actIconSave);
+    btnScaleIcon->setDefaultAction(actIconScale);
+    btnResizeIcon->setDefaultAction(actIconResize);
+    btnRevertIcon->setDefaultAction(actIconRevert);
+    btnEffectIcon->setDefaultAction(actIconEffect);
+    btnCloneIcons->setDefaultAction(actIconClone);
+    btnOpenIcon->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
+    btnSaveIcon->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
+    btnScaleIcon->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
+    btnResizeIcon->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
+    btnRevertIcon->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
+    btnEffectIcon->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
+    btnCloneIcons->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
     QHBoxLayout *layoutIconsButtons = new QHBoxLayout;
-    layoutIconsButtons->addWidget(btnAddIcon);
-    layoutIconsButtons->addWidget(btnRemoveIcon);
+    layoutIconsButtons->addWidget(btnOpenIcon);
+    layoutIconsButtons->addWidget(btnSaveIcon);
+    layoutIconsButtons->addWidget(btnScaleIcon);
+    layoutIconsButtons->addWidget(btnResizeIcon);
+    layoutIconsButtons->addWidget(btnRevertIcon);
+    layoutIconsButtons->addWidget(btnEffectIcon);
     layoutIconsButtons->addWidget(btnCloneIcons);
     layoutIconsButtons->setSpacing(2);
 
@@ -437,7 +435,8 @@ void MainWindow::init_slots()
     connect(actIconResize, SIGNAL(triggered()), this, SLOT(icon_resize()));
     connect(actIconRevert, SIGNAL(triggered()), this, SLOT(icon_revert()));
     connect(actIconEffect, SIGNAL(triggered()), this, SLOT(showEffectsDialog()));
-    connect(actIconBack, SIGNAL(triggered()), this, SLOT(setPreviewColor()));
+    connect(actIconClone, SIGNAL(triggered()), this, SLOT(cloneIcons()));
+    connect(actIconBackground, SIGNAL(triggered()), this, SLOT(setPreviewColor()));
     connect(actPacking, SIGNAL(triggered()), toolDialog, SLOT(open()));
     connect(actKeys, SIGNAL(triggered()), keyManager, SLOT(open()));
     connect(actAssoc, SIGNAL(triggered()), this, SLOT(associate()));
@@ -454,7 +453,6 @@ void MainWindow::init_slots()
     connect(btnPack, SIGNAL(clicked()), this, SLOT(apk_save()));
     connect(mapRecent, SIGNAL(mapped(QString)), this, SLOT(apk_open(QString)));
     connect(actAddIconTv, SIGNAL(triggered()), this, SLOT(addIconTV()));
-    connect(btnCloneIcons, SIGNAL(clicked()), this, SLOT(cloneIcons()));
     void (QComboBox::*devicesIndexChanged)(int row) = &QComboBox::currentIndexChanged;
     connect(devices, devicesIndexChanged, [=](int row) {
         Device *device = static_cast<Device *>(devices->model()->index(row, 0).internalPointer());
@@ -584,7 +582,6 @@ void MainWindow::setLanguage(QString lang)
     tabs->setTabText(1, tr("Properties"));
     tabs->setTabText(2, tr("Details"));
     devicesLabel->setText(tr("Device:"));
-    btnCloneIcons->setText(tr("Apply to All"));
 //    btnApplyAppName->setText(tr("Apply to All")); TODO
     checkDropbox->setText(tr("Upload to %1").arg(dropbox->getTitle()));
     checkGDrive->setText(tr("Upload to %1").arg(gdrive->getTitle()));
@@ -608,7 +605,8 @@ void MainWindow::setLanguage(QString lang)
     actIconResize->setText(tr("&Resize Icon"));
     actIconRevert->setText(tr("Revert &Original"));
     actIconEffect->setText(tr("E&ffects"));
-    actIconBack->setText(tr("Preview Background &Color"));
+    actIconClone->setText(tr("Apply to All"));
+    actIconBackground->setText(tr("Preview Background &Color"));
     actPacking->setText(tr("&Repacking"));
     actKeys->setText(tr("Key Manager"));
     menuLang->setTitle(tr("&Language"));
@@ -806,12 +804,7 @@ void MainWindow::apk_unpacked(Apk::File *apk)
     tabIcons->setEnabled(true);
     actApkSave->setEnabled(true);
     actApkExplore->setEnabled(true);
-    actIconOpen->setEnabled(true);
-    actIconSave->setEnabled(true);
-    actIconRevert->setEnabled(true);
-    actIconEffect->setEnabled(true);
-    actIconResize->setEnabled(true);
-    actIconScale->setEnabled(true);
+    iconActions->setEnabled(true);
 
     setWindowModified(false);
 }
@@ -935,7 +928,7 @@ bool MainWindow::setPreviewColor()
         drawArea->setBackground(COLOR);
         QPixmap icon(32, 32);
         icon.fill(COLOR);
-        actIconBack->setIcon(QIcon(icon));
+        actIconBackground->setIcon(QIcon(icon));
         return true;
     }
     else {

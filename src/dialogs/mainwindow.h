@@ -11,6 +11,7 @@
 #include <QListView>
 #include <QTableView>
 #include <QComboBox>
+#include <QActionGroup>
 #include <QSignalMapper>
 #include <QTranslator>
 #include <QCloseEvent>
@@ -205,9 +206,13 @@ private:
     QWidget *tabIcons;
     QLabel *devicesLabel;
     QComboBox *devices;
-    QToolButton *btnAddIcon;
-    QToolButton *btnRemoveIcon;
-    QPushButton *btnCloneIcons;
+    QToolButton *btnOpenIcon;
+    QToolButton *btnSaveIcon;
+    QToolButton *btnScaleIcon;
+    QToolButton *btnResizeIcon;
+    QToolButton *btnRevertIcon;
+    QToolButton *btnEffectIcon;
+    QToolButton *btnCloneIcons;
     QCheckBox *checkDropbox;
     QCheckBox *checkGDrive;
     QCheckBox *checkOneDrive;
@@ -232,19 +237,15 @@ private:
     QAction *actExit;
     QAction *actRecentClear;
     QAction *actNoRecent;
+    QActionGroup *iconActions;
     QAction *actIconOpen;
     QAction *actIconSave;
     QAction *actIconScale;
     QAction *actIconResize;
     QAction *actIconRevert;
-    QAction *actIconBack;
+    QAction *actIconBackground;
     QAction *actIconEffect;
-    QAction *actAddIconLdpi;
-    QAction *actAddIconMdpi;
-    QAction *actAddIconHdpi;
-    QAction *actAddIconXhdpi;
-    QAction *actAddIconXxhdpi;
-    QAction *actAddIconXxxhdpi;
+    QAction *actIconClone;
     QAction *actAddIconTv;
     QAction *actPacking;
     QAction *actKeys;
