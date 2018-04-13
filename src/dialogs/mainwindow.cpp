@@ -299,7 +299,7 @@ void MainWindow::init_gui()
     menuIconAdd->addAction(actAddIconXxxhdpi);
     menuIconAdd->addAction(actAddIconTv);
     btnAddIcon = new QToolButton(this);
-    btnAddIcon->setShortcut(QKeySequence("Plus")); // TODO
+    btnAddIcon->setShortcut(QKeySequence("+"));
     btnAddIcon->setIcon(QIcon(":/gfx/actions/add.png"));
     btnAddIcon->setMenu(menuIconAdd);
     btnAddIcon->setPopupMode(QToolButton::InstantPopup);
