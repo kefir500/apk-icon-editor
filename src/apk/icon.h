@@ -27,8 +27,8 @@ public:
     bool resize(int w, int h);
 
     QPixmap getPixmap();                                 ///< Returns the icon with the applied visual effects.
-    QString getFilename();                               ///< Returns the icon filename.
-    Dpi getDpi();
+    QString getFilename() const;                         ///< Returns the icon filename.
+    Dpi getDpi() const;
 
     bool revert();                                       ///< Reverts the original icon (loaded from the original filename).
     bool isNull() const { return pixmap.isNull(); }      ///< Checks if the icon is \c NULL.

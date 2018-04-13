@@ -70,12 +70,12 @@ bool Icon::revert()
     return !(pixmap = QPixmap(filePath)).isNull();
 }
 
-QString Icon::getFilename()
+QString Icon::getFilename() const
 {
     return filePath;
 }
 
-Icon::Dpi Icon::getDpi()
+Icon::Dpi Icon::getDpi() const
 {
     return dpi;
 }

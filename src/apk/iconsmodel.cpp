@@ -8,10 +8,17 @@ IconsModel::~IconsModel()
 
 void IconsModel::add(const QString &filename)
 {
+    // Add:
     qDebug() << "Added application icon:" << filename;
     beginInsertRows(QModelIndex(), icons.count(), icons.count());
         icons.append(new Icon(filename));
     endInsertRows();
+
+    // Sort:
+    std::sort(icons.begin(), icons.end(), [](const Icon *a, const Icon *b) {
+        return (a->getDpi() < b->getDpi());
+    });
+    emit dataChanged(index(0, 0), index(icons.count() - 1, 0));
 }
 
 bool IconsModel::remove(Icon *icon)
