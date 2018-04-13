@@ -12,6 +12,9 @@ TitlesModel::~TitlesModel()
 
 void TitlesModel::add(const QString &filepath, const QString &key)
 {
+    if (key.isEmpty()) {
+        return;
+    }
     QFile xml(filepath);
     if (xml.open(QFile::ReadOnly | QFile::Text)) {
         QTextStream stream(&xml);

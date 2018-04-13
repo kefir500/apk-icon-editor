@@ -23,10 +23,7 @@ Apk::File::File(const QString &contentsPath)
     // Parse application label attribute (android:label):
 
     QString labelAttribute = manifest->getApplicationLabel();
-    if (!labelAttribute.startsWith("@string/")) {
-        return; // TODO
-    }
-    QString labelKey = labelAttribute.mid(QString("@string/").length());
+    QString labelKey = labelAttribute.startsWith("@string/") ? labelAttribute.mid(QString("@string/").length()) : QString();
 
     // Parse resource directories:
 
@@ -58,10 +55,12 @@ Apk::File::File(const QString &contentsPath)
 
             // Parse titles:
 
-            QDirIterator resourceFiles(contentsPath + "/res/" + resourceDirectory, QDir::Files);
-            while (resourceFiles.hasNext()) {
-                const QString resourceFile = QFileInfo(resourceFiles.next()).filePath();
-                titlesModel.add(resourceFile, labelKey);
+            if (!labelKey.isEmpty()) {
+                QDirIterator resourceFiles(contentsPath + "/res/" + resourceDirectory, QDir::Files);
+                while (resourceFiles.hasNext()) {
+                    const QString resourceFile = QFileInfo(resourceFiles.next()).filePath();
+                    titlesModel.add(resourceFile, labelKey);
+                }
             }
         }
     }
