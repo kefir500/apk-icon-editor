@@ -246,7 +246,7 @@ QString Apk::File::getIconPath(Icon::Dpi dpi)
         case Icon::Xhdpi: qualifier = "xhdpi"; break;
         case Icon::Xxhdpi: qualifier = "xxhdpi"; break;
         case Icon::Xxxhdpi: qualifier = "xxxhdpi"; break;
-        default: return false;
+        default: return QString();
     }
 
     if (!iconFilename.isEmpty() && !qualifier.isEmpty()) {

@@ -32,18 +32,6 @@ bool IconsModel::remove(Icon *icon)
     return false;
 }
 
-bool IconsModel::hasDpi(Icon::Dpi dpi)
-{
-    QListIterator<Icon *> it(icons);
-    while (it.hasNext()) {
-        Icon *icon = it.next();
-        if (icon->getDpi() == dpi) {
-            return true;
-        }
-    }
-    return false;
-}
-
 void IconsModel::clone(Icon *source)
 {
     if (source) {
@@ -60,6 +48,18 @@ void IconsModel::save()
     foreach (Icon *icon, icons) {
         icon->save();
     }
+}
+
+bool IconsModel::hasDpi(Icon::Dpi dpi) const
+{
+    QListIterator<Icon *> it(icons);
+    while (it.hasNext()) {
+        Icon *icon = it.next();
+        if (icon->getDpi() == dpi) {
+            return true;
+        }
+    }
+    return false;
 }
 
 Icon *IconsModel::first()

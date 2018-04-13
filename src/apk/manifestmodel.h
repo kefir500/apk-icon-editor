@@ -1,4 +1,4 @@
-#ifndef MANIFESTMODEL_Hb
+#ifndef MANIFESTMODEL_H
 #define MANIFESTMODEL_H
 
 #include "manifest.h"

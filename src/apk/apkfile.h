@@ -66,7 +66,6 @@ namespace Apk {
         QIcon thumbnail;
         Manifest *manifest;
 
-        short ratio;          ///< ZIP compression ratio [0-9] (only in ZIP mode).
         bool isApksigner;     ///< If \c true, apksigner is used instead of signapk / jarsigner.
         bool isSmali;         ///< If \c true, decompile "classes.dex" (only in Apktool mode).
         bool isSign;          ///< If \c true, sign APK.
