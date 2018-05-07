@@ -30,14 +30,14 @@ public:
 
     QString getTitle() const;   ///< Returns the device title.
     QIcon getThumbnail() const; ///< Returns the device thumbnail icon.
-    StandardSize getStandardSize(Icon::Dpi dpi) const;
+    StandardSize getStandardSize(Icon::Type type) const;
 
-    void setHint(Icon::Dpi dpi, const QString &hint);
+    void setHint(Icon::Type type, const QString &hint);
 
 private:
-    QString title;                       ///< Device title.
-    QIcon thumbnail;                     ///< Device thumbnail icon.
-    QMap<Icon::Dpi, StandardSize> sizes; ///< List of sizes for a single device.
+    QString title;                        ///< Device title.
+    QIcon thumbnail;                      ///< Device thumbnail icon.
+    QMap<Icon::Type, StandardSize> sizes; ///< List of sizes for a single device.
 };
 
 #endif // DEVICES_H

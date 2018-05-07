@@ -288,7 +288,7 @@ void MainWindow::init_gui()
     actAddIconXhdpi = new QAction("XHDPI", this);
     actAddIconXxhdpi = new QAction("XXHDPI", this);
     actAddIconXxxhdpi = new QAction("XXXHDPI", this);
-    actAddIconTv = new QAction("TV", this);
+    actAddIconTv = new QAction(this);
     actAddIconTv->setIcon(QIcon(":/gfx/dpi/tv.png"));
     menuIconAdd->setIcon(QIcon(":/gfx/actions/add.png"));
     menuIconAdd->addAction(actAddIconLdpi);
@@ -489,7 +489,7 @@ void MainWindow::init_slots()
     connect(actAddIconXhdpi, &QAction::triggered, [=]() { apk->addIcon(Icon::Xhdpi); });
     connect(actAddIconXxhdpi, &QAction::triggered, [=]() { apk->addIcon(Icon::Xxhdpi); });
     connect(actAddIconXxxhdpi, &QAction::triggered, [=]() { apk->addIcon(Icon::Xxxhdpi); });
-    connect(actAddIconTv, SIGNAL(triggered()), this, SLOT(addIconTV()));
+    connect(actAddIconTv, &QAction::triggered, [=]() { apk->addIcon(Icon::TvBanner); });
     void (QComboBox::*devicesIndexChanged)(int row) = &QComboBox::currentIndexChanged;
     connect(devices, devicesIndexChanged, [=](int row) {
         Device *device = static_cast<Device *>(devices->model()->index(row, 0).internalPointer());
@@ -645,6 +645,7 @@ void MainWindow::setLanguage(QString lang)
     actIconEffect->setText(tr("E&ffects"));
     actIconClone->setText(tr("Apply to All"));
     menuIconAdd->setTitle(tr("&Add Icon"));
+    actAddIconTv->setText(QCoreApplication::translate("Icon", "TV Banner"));
     btnAddIcon->setToolTip(tr("&Add Icon").remove('&'));
     actIconBackground->setText(tr("Preview Background &Color"));
     actPacking->setText(tr("&Repacking"));
@@ -707,17 +708,6 @@ void MainWindow::recent_clear()
     recent_update();
 }
 
-void MainWindow::addIconTV()
-{
-    // TODO
-//    if (apk->addAndroidTV()) {
-//        QList<QSharedPointer<Icon> > icons = apk->getIcons();
-//        icons[Dpi::BANNER].data()->replace(QPixmap(":/gfx/blank/tv.png"));
-//        setModified();
-//        devices->setCurrentItem(Dpi::BANNER);
-//    }
-}
-
 void MainWindow::cloneIcons()
 {
     Icon *newIcon = drawArea->getIcon();
@@ -744,7 +734,7 @@ void MainWindow::setCurrentIcon(int index)
 
     Icon *icon = static_cast<Icon *>(apk->iconsModel.index(index, 0).internalPointer());
     const Device *device = static_cast<Device *>(devices->model()->index(devices->currentIndex(), 0).internalPointer());
-    const QSize size = device->getStandardSize(icon->getDpi()).size;
+    const QSize size = device->getStandardSize(icon->getType()).size;
     drawArea->setBounds(size.width(), size.height());
 
     if (icon) {
@@ -869,7 +859,7 @@ bool MainWindow::icon_open(QString filename)
 
     if (icon->replace(QPixmap(filename))) {
         const Device *device = static_cast<Device *>(devices->model()->index(devices->currentIndex(), 0).internalPointer());
-        const QSize size = device->getStandardSize(icon->getDpi()).size;
+        const QSize size = device->getStandardSize(icon->getType()).size;
 
         if (icon->width() != size.width() || icon->height() != size.height()) {
             int result = QMessageBox::warning(this, tr("Resize?"),
@@ -907,7 +897,7 @@ bool MainWindow::icon_save(QString filename)
 
     if (filename.isEmpty()) {
         const Device *device = static_cast<Device *>(devices->model()->index(devices->currentIndex(), 0).internalPointer());
-        const QSize size = device->getStandardSize(icon->getDpi()).size;
+        const QSize size = device->getStandardSize(icon->getType()).size;
         filename = QString("%1-%2x%3").arg(QFileInfo(currentApk).completeBaseName()).arg(size.width()).arg(size.height());
         filename = QFileDialog::getSaveFileName(this, tr("Save Icon"), filename, Image::Formats::saveDialogFilter());
         if (filename.isEmpty()) {
@@ -920,7 +910,7 @@ bool MainWindow::icon_save(QString filename)
 bool MainWindow::icon_scale()
 {
     const Device *device = static_cast<Device *>(devices->model()->index(devices->currentIndex(), 0).internalPointer());
-    const QSize size = device->getStandardSize(drawArea->getIcon()->getDpi()).size;
+    const QSize size = device->getStandardSize(drawArea->getIcon()->getType()).size;
     return icon_resize(size);
 }
 

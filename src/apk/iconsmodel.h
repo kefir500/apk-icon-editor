@@ -12,14 +12,15 @@ public:
     explicit IconsModel(QObject *parent = 0) : QAbstractListModel(parent) {}
     ~IconsModel();
 
-    void add(const QString &filename);
+    void add(const QString &filename, Icon::Type type = Icon::Unknown);
     bool remove(Icon *icon);
     void clone(Icon *source);
     void save();
-    bool hasDpi(Icon::Dpi dpi) const;
+    bool hasIcon(Icon::Type type) const;
 
     Icon *first();
     Icon *last();
+    Icon *getLargestIcon();
 
     bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) Q_DECL_OVERRIDE;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;

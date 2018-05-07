@@ -13,6 +13,7 @@ Manifest::Manifest(const QString &xmlPath, const QString &ymlPath)
         xml.setContent(stream.readAll());
         applicationLabel = getXmlAttribute(QStringList() << "application" << "android:label");
         applicationIcon = getXmlAttribute(QStringList() << "application" << "android:icon");
+        applicationBanner = getXmlAttribute(QStringList() << "application" << "android:banner");
 #ifdef QT_DEBUG
         qDebug() << "Parsed app label:   " << applicationLabel.value();
         qDebug() << "Parsed app icon:    " << applicationIcon.value();
@@ -67,14 +68,19 @@ QDomAttr Manifest::getXmlAttribute(QStringList &tree) const
     return QDomAttr();
 }
 
-QString Manifest::getApplicationLabel() const
-{
-    return applicationLabel.value();
-}
-
 QString Manifest::getApplicationIcon() const
 {
     return applicationIcon.value();
+}
+
+QString Manifest::getApplicationBanner() const
+{
+    return applicationBanner.value();
+}
+
+QString Manifest::getApplicationLabel() const
+{
+    return applicationLabel.value();
 }
 
 int Manifest::getMinSdk() const
@@ -97,15 +103,15 @@ QString Manifest::getVersionName() const
     return versionName;
 }
 
-void Manifest::setApplicationLabel(const QString &value)
-{
-    applicationLabel.setValue(value);
-    saveXml();
-}
-
 void Manifest::setApplicationIcon(const QString &value)
 {
     applicationIcon.setValue(value);
+    saveXml();
+}
+
+void Manifest::setApplicationLabel(const QString &value)
+{
+    applicationLabel.setValue(value);
     saveXml();
 }
 
@@ -140,6 +146,49 @@ void Manifest::setVersionName(const QString &value)
     saveYml();
 }
 
+bool Manifest::addApplicationBanner()
+{
+    // TODO Refactor:
+
+    QDomElement application = xml.firstChildElement("manifest").firstChildElement("application");
+    QDomElement intent;
+
+    QDomElement activity = application.firstChildElement("activity");
+    while (!activity.isNull()) {
+        intent = findIntentByCategory(activity, "LAUNCHER");
+        if (!intent.isNull()) {
+            break;
+        }
+        activity = activity.nextSiblingElement();
+    }
+
+    // If the "activity" tag was not found, try the "activity-alias" tag:
+
+    if (intent.isNull()) {
+        QDomElement activity = application.firstChildElement("activity-alias");
+        while (!activity.isNull()) {
+            intent = findIntentByCategory(activity, "LAUNCHER");
+            if (!intent.isNull()) {
+                break;
+            }
+            activity = activity.nextSiblingElement();
+        }
+    }
+
+    if (!intent.isNull()) {
+        // Add intent:
+        QDomElement tvlauncher = xml.createElement("category");
+        tvlauncher.setTagName("category");
+        tvlauncher.setAttribute("android:name", "android.intent.category.LEANBACK_LAUNCHER");
+        intent.appendChild(tvlauncher);
+        // Add application attribute:
+        application.setAttribute("android:banner", "@drawable/banner_custom");
+        applicationBanner = getXmlAttribute(QStringList() << "application" << "android:banner");
+        return saveXml();
+    }
+    return true;
+}
+
 bool Manifest::saveXml()
 {
     if (xmlFile->isWritable()) {
@@ -166,4 +215,20 @@ bool Manifest::saveYml()
         qWarning() << "Error: Could not save apktool.yml";
         return false;
     }
+}
+
+QDomElement Manifest::findIntentByCategory(QDomElement activity, QString category)
+{
+    QDomElement intent = activity.firstChildElement("intent-filter");
+    while (!intent.isNull()) {
+        QDomElement cat = intent.firstChildElement("category");
+        while (!cat.isNull()) {
+            if (cat.attribute("android:name") == "android.intent.category." + category) {
+                return intent;
+            }
+            cat = cat.nextSiblingElement();
+        }
+        intent = intent.nextSiblingElement();
+    }
+    return QDomElement();
 }

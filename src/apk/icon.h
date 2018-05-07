@@ -8,27 +8,29 @@ class Icon : public QObject
     Q_OBJECT
 
 public:
-    enum Dpi {
-        None,
+    enum Type {
+        Unknown,
         Ldpi,
         Mdpi,
         Hdpi,
         Xhdpi,
         Xxhdpi,
         Xxxhdpi,
-        DpiCount
+        TvBanner,
+        TypeCount
     };
 
-    explicit Icon(QString filename);
+    explicit Icon(QString filename, Type type = Unknown);
     bool load(QString filename);
     bool save(QString filename = QString());
     bool replace(QPixmap pixmap);
     bool resize(QSize size);
     bool resize(int w, int h);
 
+    QString getTitle() const;                            ///< Returns the user-friendly icon title.
     QPixmap getPixmap();                                 ///< Returns the icon with the applied visual effects.
     QString getFilename() const;                         ///< Returns the icon filename.
-    Dpi getDpi() const;
+    Type getType() const;
 
     bool revert();                                       ///< Reverts the original icon (loaded from the original filename).
     bool isNull() const { return pixmap.isNull(); }      ///< Checks if the icon is \c NULL.
@@ -60,7 +62,7 @@ private:
     QPixmap pixmap;   ///< Stores the pixmap itself.
     QString filePath; ///< Stores the pixmap original filename. Used to revert the original pixmap.
     QStringList qualifiers;
-    Dpi dpi;
+    Type type;
 
     bool isColorize;  ///< Stores the "Colorize" effect state.
     bool isFlipX;     ///< Stores the horizontal flipping state.

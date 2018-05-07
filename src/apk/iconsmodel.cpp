@@ -6,7 +6,7 @@ IconsModel::~IconsModel()
     qDeleteAll(icons);
 }
 
-void IconsModel::add(const QString &filename)
+void IconsModel::add(const QString &filename, Icon::Type type)
 {
     // Add:
     qDebug() << "Added application icon:" << filename;
@@ -16,7 +16,7 @@ void IconsModel::add(const QString &filename)
 
     // Sort:
     std::sort(icons.begin(), icons.end(), [](const Icon *a, const Icon *b) {
-        return (a->getDpi() < b->getDpi());
+        return (a->getType() < b->getType());
     });
     emit dataChanged(index(0, 0), index(icons.count() - 1, 0));
 }
@@ -43,7 +43,7 @@ void IconsModel::clone(Icon *source)
 {
     if (source) {
         foreach (Icon *icon, icons) {
-            if (icon->getDpi() != Icon::None) {
+            if (icon->getType() != Icon::Unknown) {
                 icon->replace(source->getPixmap());
             }
         }
@@ -57,12 +57,12 @@ void IconsModel::save()
     }
 }
 
-bool IconsModel::hasDpi(Icon::Dpi dpi) const
+bool IconsModel::hasIcon(Icon::Type type) const
 {
     QListIterator<Icon *> it(icons);
     while (it.hasNext()) {
         Icon *icon = it.next();
-        if (icon->getDpi() == dpi) {
+        if (icon->getType() == type) {
             return true;
         }
     }
@@ -77,6 +77,17 @@ Icon *IconsModel::first()
 Icon *IconsModel::last()
 {
     return icons.last();
+}
+
+Icon *IconsModel::getLargestIcon()
+{
+    for (int i = icons.size() - 1; i >= 0; --i) {
+        Icon *icon = icons.at(i);
+        if (icon->getType() != Icon::TvBanner) {
+            return icon;
+        }
+    }
+    return nullptr;
 }
 
 bool IconsModel::setData(const QModelIndex &index, const QVariant &value, int role)
@@ -96,7 +107,7 @@ QVariant IconsModel::data(const QModelIndex &index, int role) const
     if (index.isValid()) {
         Icon *icon = icons.at(index.row());
         if (role == Qt::DisplayRole) {
-            return icon->getQualifiers().join(" - ").toUpper();
+            return icon->getTitle();;
         } else if (role == Qt::DecorationRole) {
             return icon->getPixmap();
         }

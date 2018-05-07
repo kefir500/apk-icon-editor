@@ -23,9 +23,9 @@ QVariant IconsProxy::data(const QModelIndex &index, int role) const
         Icon *icon = static_cast<Icon *>(sourceIndex.internalPointer());
         if (role == Qt::DisplayRole) {
             if (icon) {
-                Icon::Dpi dpi = icon->getDpi();
+                Icon::Type type = icon->getType();
                 QString caption = sourceModel()->data(index, role).toString();
-                Device::StandardSize icon = device->getStandardSize(dpi);
+                Device::StandardSize icon = device->getStandardSize(type);
                 if (icon.size.isValid()) {
                     return icon.info.isEmpty()
                         ? QString("%1 - (%2x%3)").arg(caption).arg(icon.size.width()).arg(icon.size.height())

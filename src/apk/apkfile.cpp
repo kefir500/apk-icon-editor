@@ -20,6 +20,11 @@ Apk::File::File(const QString &contentsPath)
     QString iconCategory = iconAttribute.split('/').value(0).mid(1);
     QString iconFilename = iconAttribute.split('/').value(1);
 
+    // Parse application banner attribute (android:banner):
+
+    QString bannerAttribute = manifest->getApplicationBanner();
+    QString bannerFilename = bannerAttribute.split('/').value(1);
+
     // Parse application label attribute (android:label):
 
     QString labelAttribute = manifest->getApplicationLabel();
@@ -33,7 +38,7 @@ Apk::File::File(const QString &contentsPath)
         const QString resourceDirectory = QFileInfo(resourceDirectories.next()).fileName();
         const QString categoryTitle = resourceDirectory.split('-').first(); // E.g., "drawable", "values"...
 
-        if (iconCategory == categoryTitle) {
+        if (categoryTitle == iconCategory) {
 
             // Parse resource files:
 
@@ -44,11 +49,26 @@ Apk::File::File(const QString &contentsPath)
 
                 // Parse application icons:
 
-                const QStringList possibleIcons = QStringList() << (iconFilename + ".png") << (iconFilename + ".jpg") << (iconFilename + ".gif");
-                if (categoryTitle == iconCategory && possibleIcons.contains(resourceFile)) {
-                    const QString icon = QString("%1/res/%2/%3").arg(contentsPath, resourceDirectory, resourceFile);
-                    thumbnail.addFile(icon);
-                    iconsModel.add(icon);
+                if (categoryTitle == iconCategory) {
+                    const QStringList possibleIcons = QStringList() << (iconFilename + ".png") << (iconFilename + ".jpg") << (iconFilename + ".gif");
+                    if (possibleIcons.contains(resourceFile)) {
+                        const QString icon = QString("%1/res/%2/%3").arg(contentsPath, resourceDirectory, resourceFile);
+                        thumbnail.addFile(icon);
+                        iconsModel.add(icon);
+                    }
+                }
+
+                if (categoryTitle == "drawable") {
+
+                    // Parse banner icons:
+
+                    if (!bannerFilename.isEmpty() && bannerFilename != iconFilename) {
+                        const QStringList possibleBanners = QStringList() << (bannerFilename + ".png") << (bannerFilename + ".jpg") << (bannerFilename + ".gif");
+                        if (possibleBanners.contains(resourceFile)) {
+                            const QString banner = QString("%1/res/%2/%3").arg(contentsPath, resourceDirectory, resourceFile);
+                            iconsModel.add(banner, Icon::TvBanner);
+                        }
+                    }
                 }
             }
         } else if (categoryTitle == "values") {
@@ -89,16 +109,32 @@ void Apk::File::removeFiles()
     }
 }
 
-bool Apk::File::addIcon(Icon::Dpi dpi)
+bool Apk::File::addIcon(Icon::Type type)
 {
-    if (!iconsModel.hasDpi(dpi)) {
-        const QString filePath = getIconPath(dpi) + ".png";
-        if (!filePath.isEmpty()) {
+    // TODO Mark APK as modified
+    if (!iconsModel.hasIcon(type)) {
+        if (type != Icon::TvBanner) {
+            QString filePath = getIconPath(type);
+            if (!filePath.isEmpty()) {
+                filePath.append(".png");
+                QString directory = QFileInfo(filePath).path();
+                QDir().mkdir(directory);
+                Icon *icon = iconsModel.getLargestIcon();
+                if (icon && icon->getPixmap().save(filePath)) {
+                    iconsModel.add(filePath);
+                    return true;
+                }
+            }
+        } else {
+            if (!manifest->addApplicationBanner()) {
+                return false;
+            }
+            const QString filePath = contentsPath + "/res/drawable-xhdpi/banner_custom.png";
             QString directory = QFileInfo(filePath).path();
             QDir().mkdir(directory);
-            QPixmap pixmap = iconsModel.last()->getPixmap();
+            QPixmap pixmap(":/gfx/blank/tv.png");
             if (pixmap.save(filePath)) {
-                iconsModel.add(filePath);
+                iconsModel.add(filePath, Icon::TvBanner);
                 return true;
             }
         }
@@ -116,81 +152,6 @@ void Apk::File::removeIcon(Icon *icon)
         QFile::remove(icon);
     }
     iconsModel.remove(icon);
-}
-
-QDomElement Apk::File::findIntentByCategory(QDomElement activity, QString category)
-{
-    QDomElement intent = activity.firstChildElement("intent-filter");
-    while (!intent.isNull()) {
-
-        QDomElement cat = intent.firstChildElement("category");
-        while (!cat.isNull()) {
-
-            if (cat.attribute("android:name") == "android.intent.category." + category) {
-                return intent;
-            }
-            cat = cat.nextSiblingElement();
-        }
-        intent = intent.nextSiblingElement();
-    }
-    return QDomElement();
-}
-
-bool Apk::File::addAndroidTV()
-{
-    QFile f(contentsPath + "/AndroidManifest.xml");
-    if (f.open(QFile::ReadWrite | QFile::Text)) {
-
-        QTextStream in(&f);
-        QString xml = in.readAll();
-        QDomDocument dom;
-        dom.setContent(xml);
-
-        QDomElement application = dom.firstChildElement("manifest")
-                                     .firstChildElement("application");
-
-        application.setAttribute("android:banner", "@drawable/banner");
-
-        QDomElement intent;
-
-        QDomElement activity = application.firstChildElement("activity");
-        while (!activity.isNull()) {
-            intent = findIntentByCategory(activity, "LAUNCHER");
-            if (!intent.isNull()) { break; }
-            activity = activity.nextSiblingElement();
-        }
-
-        // If the "activity" tag was not found, try the "activity-alias" tag:
-        if (intent.isNull()) {
-            QDomElement activity = application.firstChildElement("activity-alias");
-            while (!activity.isNull()) {
-                intent = findIntentByCategory(activity, "LAUNCHER");
-                if (!intent.isNull()) { break; }
-                activity = activity.nextSiblingElement();
-            }
-        }
-
-        if (!intent.isNull()) {
-            // Add Android TV launcher:
-            QDomElement tvlauncher = dom.createElement("category");
-            tvlauncher.setTagName("category");
-            tvlauncher.setAttribute("android:name", "android.intent.category.LEANBACK_LAUNCHER");
-            intent.appendChild(tvlauncher);
-
-            // Write output XML:
-            f.resize(0);
-            QTextStream out(&f);
-            dom.save(out, 4);
-            f.close();
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-    else {
-        return false;
-    }
 }
 
 // Getters:
@@ -231,20 +192,22 @@ void Apk::File::setFileKeystore(QString filename, QString alias, QString passKey
     this->passAlias = passAlias;
 }
 
-QString Apk::File::getIconPath(Icon::Dpi dpi)
+QString Apk::File::getIconPath(Icon::Type type)
 {
     const QString iconAttribute = manifest->getApplicationIcon();
     const QString iconCategory = iconAttribute.split('/').value(0).mid(1);
     const QString iconFilename = iconAttribute.split('/').value(1);
+    qDebug() << iconAttribute << iconCategory << iconFilename;
 
     QString qualifier;
-    switch (dpi) {
+    switch (type) {
         case Icon::Ldpi: qualifier = "ldpi"; break;
         case Icon::Mdpi: qualifier = "mdpi"; break;
         case Icon::Hdpi: qualifier = "hdpi"; break;
         case Icon::Xhdpi: qualifier = "xhdpi"; break;
         case Icon::Xxhdpi: qualifier = "xxhdpi"; break;
         case Icon::Xxxhdpi: qualifier = "xxxhdpi"; break;
+        case Icon::TvBanner: qualifier = "xhdpi"; break;
         default: return QString();
     }
 

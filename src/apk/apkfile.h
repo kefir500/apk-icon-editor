@@ -20,11 +20,8 @@ namespace Apk {
         void saveTitles();
         void removeFiles();
 
-        bool addIcon(Icon::Dpi dpi);
+        bool addIcon(Icon::Type type);
         void removeIcon(Icon *icon);
-
-        bool addAndroidTV();
-        QDomElement findIntentByCategory(QDomElement root, QString category);
 
         QString getFilePath() const;
         QString getContentsPath() const;
@@ -58,7 +55,7 @@ namespace Apk {
         TitlesModel titlesModel;
 
     private:
-        QString getIconPath(Icon::Dpi dpi);
+        QString getIconPath(Icon::Type type);
 
         QString filePath;     ///< APK filename.
         QString contentsPath; ///< Path to APK contents directory.

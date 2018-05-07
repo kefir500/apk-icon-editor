@@ -4,17 +4,19 @@
 #include <QPainter>
 #include <QLabel>
 
-Icon::Icon(QString filename)
+Icon::Icon(QString filename, Type type)
 {
-    dpi = None;
-    qualifiers = QFileInfo(filename).path().split('/').last().split('-').mid(1);
-    foreach (const QString &qualifier, qualifiers) {
-        if (qualifier == "ldpi") { dpi = Ldpi; }
-        else if (qualifier == "mdpi") { dpi = Mdpi; }
-        else if (qualifier == "hdpi") { dpi = Hdpi; }
-        else if (qualifier == "xhdpi") { dpi = Xhdpi; }
-        else if (qualifier == "xxhdpi") { dpi = Xxhdpi; }
-        else if (qualifier == "xxxhdpi") { dpi = Xxxhdpi; }
+    this->type = type;
+    if (type == Unknown) {
+        qualifiers = QFileInfo(filename).path().split('/').last().split('-').mid(1);
+        foreach (const QString &qualifier, qualifiers) {
+            if (qualifier == "ldpi") { this->type = Ldpi; break; }
+            else if (qualifier == "mdpi") { this->type = Mdpi; break; }
+            else if (qualifier == "hdpi") { this->type = Hdpi; break; }
+            else if (qualifier == "xhdpi") { this->type = Xhdpi; break; }
+            else if (qualifier == "xxhdpi") { this->type = Xxhdpi; break; }
+            else if (qualifier == "xxxhdpi") { this->type = Xxxhdpi; break; }
+        }
     }
     load(filename);
 }
@@ -75,9 +77,17 @@ QString Icon::getFilename() const
     return filePath;
 }
 
-Icon::Dpi Icon::getDpi() const
+Icon::Type Icon::getType() const
 {
-    return dpi;
+    return type;
+}
+
+QString Icon::getTitle() const
+{
+    if (type == TvBanner) {
+        return tr("TV Banner");
+    }
+    return getQualifiers().join(" - ").toUpper();
 }
 
 QPixmap Icon::getPixmap()

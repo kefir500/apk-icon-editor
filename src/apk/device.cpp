@@ -1,9 +1,6 @@
 #include "device.h"
 
-Device::Device(QString title, QIcon thumb,
-               short ldpi, short mdpi, short hdpi,
-               short xhdpi, short xxhdpi, short xxxhdpi,
-               QSize banner)
+Device::Device(QString title, QIcon thumb, short ldpi, short mdpi, short hdpi, short xhdpi, short xxhdpi, short xxxhdpi, QSize banner)
 {
     this->title = title;
     this->thumbnail = thumb;
@@ -13,7 +10,7 @@ Device::Device(QString title, QIcon thumb,
     sizes[Icon::Xhdpi] = StandardSize(QSize(xhdpi, xhdpi));
     sizes[Icon::Xxhdpi] = StandardSize(QSize(xxhdpi, xxhdpi));
     sizes[Icon::Xxxhdpi] = StandardSize(QSize(xxxhdpi, xxxhdpi));
-    //    sizes[Icon::Ldpi] = Size("TV", banner); // TODO
+    sizes[Icon::TvBanner] = StandardSize(banner);
 }
 
 QString Device::getTitle() const
@@ -26,12 +23,12 @@ QIcon Device::getThumbnail() const
     return thumbnail;
 }
 
-Device::StandardSize Device::getStandardSize(Icon::Dpi dpi) const
+Device::StandardSize Device::getStandardSize(Icon::Type type) const
 {
-    return sizes[dpi];
+    return sizes[type];
 }
 
-void Device::setHint(Icon::Dpi dpi, const QString &hint)
+void Device::setHint(Icon::Type type, const QString &hint)
 {
-    sizes[dpi].info = hint;
+    sizes[type].info = hint;
 }

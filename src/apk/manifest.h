@@ -13,23 +13,27 @@ public:
 
     QDomAttr getXmlAttribute(QStringList &tree) const;
 
-    QString getApplicationLabel() const;
     QString getApplicationIcon() const;
+    QString getApplicationBanner() const;
+    QString getApplicationLabel() const;
     int getMinSdk() const;
     int getTargetSdk() const;
     int getVersionCode() const;
     QString getVersionName() const;
 
-    void setApplicationLabel(const QString &value);
     void setApplicationIcon(const QString &value);
+    void setApplicationLabel(const QString &value);
     void setMinSdk(int value);
     void setTargetSdk(int value);
     void setVersionCode(int value);
     void setVersionName(const QString &value);
+    bool addApplicationBanner();
 
 private:
     bool saveXml();
     bool saveYml();
+
+    QDomElement findIntentByCategory(QDomElement activity, QString category);
 
     QFile *xmlFile;
     QFile *ymlFile;
@@ -37,8 +41,9 @@ private:
     QDomDocument xml;
     QString yml;
 
-    QDomAttr applicationLabel;
     QDomAttr applicationIcon;
+    QDomAttr applicationBanner;
+    QDomAttr applicationLabel;
 
     int minSdk;
     int targetSdk;
