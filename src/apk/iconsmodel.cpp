@@ -11,7 +11,12 @@ void IconsModel::add(const QString &filename, Icon::Type type)
     // Add:
     qDebug() << "Added application icon:" << filename;
     beginInsertRows(QModelIndex(), icons.count(), icons.count());
-        icons.append(new Icon(filename));
+        Icon *icon = new Icon(filename, type);
+        icons.append(icon);
+        connect(icon, &Icon::updated, [=]() {
+            QModelIndex index = this->index(icons.indexOf(icon), 0);
+            emit dataChanged(index, index);
+        });
     endInsertRows();
 
     // Sort:
@@ -107,7 +112,7 @@ QVariant IconsModel::data(const QModelIndex &index, int role) const
     if (index.isValid()) {
         Icon *icon = icons.at(index.row());
         if (role == Qt::DisplayRole) {
-            return icon->getTitle();;
+            return icon->getTitle();
         } else if (role == Qt::DecorationRole) {
             return icon->getPixmap();
         }

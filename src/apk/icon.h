@@ -49,14 +49,17 @@ public:
 
 public slots:
     void setPixmap(const QPixmap &pixmap);
-    void setAngle(int value) { angle = value; }            ///< Sets the rotation angle to the specified \c value (in degrees).
-    void setColorize(bool enable) { isColorize = enable; } ///< Turns the "Colorize" effect on/off.
-    void setFlipX(bool value) { isFlipX = value; }         ///< Turns the horizontal flipping on/off.
-    void setFlipY(bool value) { isFlipY = value; }         ///< Turns the vertical flipping on/off.
-    void setColor(QColor value) { color = value; }         ///< Sets the "Colorize" effect color to the specified \c value.
-    void setDepth(qreal value) { depth = value; }          ///< Sets the "Colorize" effect depth to the specified \c value.
-    void setBlur(qreal radius) { blur = radius; }          ///< Sets the "Blur" effect radius to the specified \c radius.
-    void setCorners(qreal radius) { corners = radius; }    ///< Sets the radius of the rounded corners to the specified \c radius.
+    void setAngle(int value);                       ///< Sets the rotation angle to the specified \c value (in degrees).
+    void setColorize(bool enable);                  ///< Turns the "Colorize" effect on/off.
+    void setFlipX(bool value);                      ///< Turns the horizontal flipping on/off.
+    void setFlipY(bool value);                      ///< Turns the vertical flipping on/off.
+    void setColor(QColor value);                    ///< Sets the "Colorize" effect color to the specified \c value.
+    void setDepth(qreal value);                     ///< Sets the "Colorize" effect depth to the specified \c value.
+    void setBlur(qreal radius);                     ///< Sets the "Blur" effect radius to the specified \c radius.
+    void setCorners(qreal radius);                  ///< Sets the radius of the rounded corners to the specified \c radius.
+
+signals:
+    void updated() const;
 
 private:
     QPixmap pixmap;   ///< Stores the pixmap itself.

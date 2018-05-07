@@ -858,6 +858,7 @@ bool MainWindow::icon_open(QString filename)
     QPixmap backup = icon->getPixmap();
 
     if (icon->replace(QPixmap(filename))) {
+        repaint();
         const Device *device = static_cast<Device *>(devices->model()->index(devices->currentIndex(), 0).internalPointer());
         const QSize size = device->getStandardSize(icon->getType()).size;
 
@@ -933,7 +934,9 @@ bool MainWindow::icon_resize(QSize size)
     }
 
     setWindowModified(true);
-    return icon->resize(size);
+    bool result = icon->resize(size);
+    drawArea->repaint();
+    return result;
 }
 
 bool MainWindow::icon_revert()

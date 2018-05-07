@@ -45,13 +45,16 @@ bool Icon::replace(QPixmap pixmap)
     if (pixmap.isNull()) {
         return false;
     }
-    this->pixmap = pixmap;
+    setPixmap(pixmap);
+    emit updated();
     return true;
 }
 
 bool Icon::resize(QSize size)
 {
-    return !(pixmap = pixmap.scaled(size, Qt::IgnoreAspectRatio, Qt::SmoothTransformation)).isNull();
+    setPixmap(pixmap.scaled(size, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+    emit updated();
+    return !pixmap.isNull();
 }
 
 bool Icon::resize(int w, int h)
@@ -69,7 +72,9 @@ bool Icon::revert()
     depth      = 1.0;
     blur       = 1.0;
     corners    = 0;
-    return !(pixmap = QPixmap(filePath)).isNull();
+    setPixmap(QPixmap(filePath));
+    emit updated();
+    return !pixmap.isNull();
 }
 
 QString Icon::getFilename() const
