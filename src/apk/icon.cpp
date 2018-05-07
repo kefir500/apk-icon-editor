@@ -97,55 +97,7 @@ QString Icon::getTitle() const
 
 QPixmap Icon::getPixmap()
 {
-    // TODO error on clone
-    QPixmap gfx = pixmap;
-
-    // Apply color overlay:
-
-    if (isColorize && !qFuzzyIsNull(depth)) {
-        QLabel canvas;
-        QGraphicsColorizeEffect *effect = new QGraphicsColorizeEffect();
-        effect->setColor(color);
-        effect->setStrength(depth);
-        canvas.setPixmap(gfx);
-        canvas.setGraphicsEffect(effect);
-        gfx = canvas.grab();
-    }
-
-    // Apply rounded corners:
-
-    if (!qFuzzyIsNull(corners)) {
-        QImage canvas(gfx.size(), QImage::Format_ARGB32_Premultiplied);
-        QPainter painter(&canvas);
-        painter.setCompositionMode(QPainter::CompositionMode_Source);
-        painter.fillRect(gfx.rect(), Qt::transparent);
-        painter.setPen(Qt::NoPen);
-        painter.setBrush(QBrush(gfx));
-        painter.setRenderHint(QPainter::Antialiasing);
-        painter.drawRoundedRect(gfx.rect(), corners, corners);
-        painter.end();
-        gfx = QPixmap::fromImage(canvas);
-    }
-
-    // Apply blur:
-
-    if (blur > 1.0) {
-        QLabel canvas;
-        QGraphicsBlurEffect *effect = new QGraphicsBlurEffect();
-        effect->setBlurRadius(blur);
-        effect->setBlurHints(QGraphicsBlurEffect::QualityHint);
-        canvas.setPixmap(gfx);
-        canvas.setGraphicsEffect(effect);
-        gfx = canvas.grab();
-    }
-
-    // Apply flipping and rotation:
-
-    if (isFlipX) { gfx = gfx.transformed(QTransform().scale(-1, 1)); }
-    if (isFlipY) { gfx = gfx.transformed(QTransform().scale(1, -1)); }
-    if (angle) { gfx = gfx.transformed(QTransform().rotate(angle)); }
-
-    return gfx;
+    return pixmapFx;
 }
 
 const QStringList &Icon::getQualifiers() const
@@ -156,4 +108,104 @@ const QStringList &Icon::getQualifiers() const
 void Icon::setPixmap(const QPixmap &pixmap)
 {
     this->pixmap = pixmap;
+    this->pixmapFx = pixmap;
+    applyEffects();
+}
+
+void Icon::setAngle(int value)
+{
+    angle = value;
+    applyEffects();
+}
+
+void Icon::setColorize(bool enable)
+{
+    isColorize = enable;
+    applyEffects();
+}
+
+void Icon::setFlipX(bool value)
+{
+    isFlipX = value;
+    applyEffects();
+}
+
+void Icon::setFlipY(bool value)
+{
+    isFlipY = value;
+    applyEffects();
+}
+
+void Icon::setColor(QColor value)
+{
+    color = value;
+    applyEffects();
+}
+
+void Icon::setDepth(qreal value)
+{
+    depth = value;
+    applyEffects();
+}
+
+void Icon::setBlur(qreal radius)
+{
+    blur = radius;
+    applyEffects();
+}
+
+void Icon::setCorners(qreal radius)
+{
+    corners = radius;
+    applyEffects();
+}
+
+void Icon::applyEffects()
+{
+    pixmapFx = pixmap;
+
+    // Apply color overlay:
+
+    if (isColorize && !qFuzzyIsNull(depth)) {
+        QLabel canvas;
+        QGraphicsColorizeEffect *effect = new QGraphicsColorizeEffect();
+        effect->setColor(color);
+        effect->setStrength(depth);
+        canvas.setPixmap(pixmapFx);
+        canvas.setGraphicsEffect(effect);
+        pixmapFx = canvas.grab();
+    }
+
+    // Apply rounded corners:
+
+    if (!qFuzzyIsNull(corners)) {
+        QImage canvas(pixmapFx.size(), QImage::Format_ARGB32_Premultiplied);
+        QPainter painter(&canvas);
+        painter.setCompositionMode(QPainter::CompositionMode_Source);
+        painter.fillRect(pixmapFx.rect(), Qt::transparent);
+        painter.setPen(Qt::NoPen);
+        painter.setBrush(QBrush(pixmapFx));
+        painter.setRenderHint(QPainter::Antialiasing);
+        painter.drawRoundedRect(pixmapFx.rect(), corners, corners);
+        painter.end();
+        pixmapFx = QPixmap::fromImage(canvas);
+    }
+
+    // Apply blur:
+
+    if (blur > 1.0) {
+        QLabel canvas;
+        QGraphicsBlurEffect *effect = new QGraphicsBlurEffect();
+        effect->setBlurRadius(blur);
+        effect->setBlurHints(QGraphicsBlurEffect::QualityHint);
+        canvas.setPixmap(pixmapFx);
+        canvas.setGraphicsEffect(effect);
+        pixmapFx = canvas.grab();
+    }
+
+    // Apply flipping and rotation:
+
+    if (isFlipX) { pixmapFx = pixmapFx.transformed(QTransform().scale(-1, 1)); }
+    if (isFlipY) { pixmapFx = pixmapFx.transformed(QTransform().scale(1, -1)); }
+    if (angle) { pixmapFx = pixmapFx.transformed(QTransform().rotate(angle)); }
 }
