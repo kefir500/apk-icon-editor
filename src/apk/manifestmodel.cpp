@@ -17,11 +17,11 @@ bool ManifestModel::setData(const QModelIndex &index, const QVariant &value, int
     if (manifest && index.isValid() && role == Qt::EditRole) {
         const int row = index.row();
         switch (row) {
-            case ApplicationLabel: manifest->setApplicationLabel(value.toString()); break;
             case VersionCode:      manifest->setVersionCode(value.toInt()); break;
             case VersionName:      manifest->setVersionName(value.toString()); break;
             case MinimumSdk:       manifest->setMinSdk(value.toInt()); break;
             case TargetSdk:        manifest->setTargetSdk(value.toInt()); break;
+            case ApplicationLabel: manifest->setApplicationLabel(value.toString()); break;
         }
         emit dataChanged(index, index);
         return true;
@@ -35,14 +35,12 @@ QVariant ManifestModel::data(const QModelIndex &index, int role) const
         const int row = index.row();
         if (role == Qt::DisplayRole || role == Qt::EditRole) {
             switch (row) {
-                case ApplicationLabel: return manifest->getApplicationLabel();
                 case VersionCode:      return manifest->getVersionCode();
                 case VersionName:      return manifest->getVersionName();
                 case MinimumSdk:       return manifest->getMinSdk();
                 case TargetSdk:        return manifest->getTargetSdk();
+                case ApplicationLabel: return manifest->getApplicationLabel();
             }
-        } else if (role == 1000 && row == 1000) { // TODO
-            return manifest->getApplicationLabel().startsWith("@string/");
         }
     }
     return QVariant();
@@ -53,11 +51,11 @@ QVariant ManifestModel::headerData(int section, Qt::Orientation orientation, int
     if (orientation == Qt::Vertical) {
         if (role == Qt::DisplayRole) {
             switch (section) {
-                case ApplicationLabel: return QCoreApplication::translate("MainWindow", "Application Name");
                 case VersionCode:      return QCoreApplication::translate("MainWindow", "Version Code");
                 case VersionName:      return QCoreApplication::translate("MainWindow", "Version Name");
                 case MinimumSdk:       return tr("Minimum SDK");
                 case TargetSdk:        return tr("Target SDK");
+                case ApplicationLabel: return QCoreApplication::translate("MainWindow", "Application Name");
             }
         }
     }

@@ -10,11 +10,11 @@ class ManifestModel : public QAbstractListModel
 
 public:
     enum ManifestRow {
-        ApplicationLabel,
         VersionCode,
         VersionName,
         MinimumSdk,
         TargetSdk,
+        ApplicationLabel,
         RowCount
     };
 
