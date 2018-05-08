@@ -204,6 +204,7 @@ private:
     QWidget *tabIcons;
     QLabel *devicesLabel;
     QComboBox *devices;
+    QPushButton *btnApplyAppName;
     QToolButton *btnAddIcon;
     QToolButton *btnRemoveIcon;
     QToolButton *btnOpenIcon;

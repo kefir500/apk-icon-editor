@@ -18,6 +18,7 @@ public:
     ~TitlesModel();
 
     void add(const QString &filepath, const QString &key);
+    void applyToAll(const QString &value);
     bool save() const;
 
     bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) Q_DECL_OVERRIDE;

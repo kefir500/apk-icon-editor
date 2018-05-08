@@ -44,6 +44,14 @@ void TitlesModel::add(const QString &filepath, const QString &key)
     }
 }
 
+void TitlesModel::applyToAll(const QString &value)
+{
+    foreach (String *title, titles) {
+        title->setValue(value);
+    }
+    emit dataChanged(index(0, 0), index(rowCount() - 1, columnCount() - 1));
+}
+
 bool TitlesModel::save() const
 {
     foreach (String *title, titles) {

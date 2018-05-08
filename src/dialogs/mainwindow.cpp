@@ -500,7 +500,7 @@ void MainWindow::init_slots()
         setCurrentIcon(index.row());
     });
     connect(tableTitles, SIGNAL(cellChanged(int, int)), this, SLOT(stringChanged(int, int)));
-//    connect(btnApplyAppName, SIGNAL(clicked()), this, SLOT(applyAppName())); TODO
+    connect(btnApplyAppName, SIGNAL(clicked()), this, SLOT(applyAppName()));
     connect(apkManager, SIGNAL(loading(short, QString)), loadingDialog, SLOT(setProgress(short, QString)));
     connect(apkManager, SIGNAL(error(QString, QString)), this, SLOT(error(QString, QString)));
     connect(apkManager, SIGNAL(error(QString, QString)), loadingDialog, SLOT(accept()));
@@ -619,7 +619,7 @@ void MainWindow::setLanguage(QString lang)
     tabs->setTabText(1, tr("Properties"));
     tabs->setTabText(2, tr("Details"));
     devicesLabel->setText(tr("Device:"));
-//    btnApplyAppName->setText(tr("Apply to All")); TODO
+    btnApplyAppName->setText(tr("Apply to All"));
     checkDropbox->setText(tr("Upload to %1").arg(dropbox->getTitle()));
     checkGDrive->setText(tr("Upload to %1").arg(gdrive->getTitle()));
     checkOneDrive->setText(tr("Upload to %1").arg(onedrive->getTitle()));
@@ -721,8 +721,12 @@ void MainWindow::cloneIcons()
 
 void MainWindow::applyAppName()
 {
-    if (QMessageBox::question(this, NULL, tr("Apply the current application name to all translations?")) == QMessageBox::Yes) {
-        // TODO Apply
+    QModelIndex index = tableTitles->currentIndex();
+    if (index.isValid()) {
+        if (QMessageBox::question(this, NULL, tr("Apply the current application name to all translations?")) == QMessageBox::Yes) {
+            const QString title = index.sibling(index.row(), 0).data().toString();
+            static_cast<TitlesModel *>(tableTitles->model())->applyToAll(title);
+        }
     }
 }
 
