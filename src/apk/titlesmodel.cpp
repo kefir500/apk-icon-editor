@@ -2,6 +2,7 @@
 #include <QFile>
 #include <QTextStream>
 #include <QDirIterator>
+#include <QRegularExpression>
 #include <QCoreApplication>
 #include <QDebug>
 
@@ -69,13 +70,24 @@ QVariant TitlesModel::data(const QModelIndex &index, int role) const
 {
     if (index.isValid()) {
         String *title = titles.at(index.row());
+        QFileInfo fi(title->getFilePath());
+        const QString qualifiers = fi.path().split('/').last();
         if (role == Qt::DisplayRole || role == Qt::EditRole) {
             switch (index.column()) {
             case Value:
                 return title->getValue();
+            case Language: {
+                QRegularExpression regex("-([a-z]{2}(-r[A-Z]{2})?)(?:-|$)");
+                QString locale = regex.match(qualifiers).captured(1).replace("-r", "-");
+                QString native = QLocale(locale).nativeLanguageName();
+                if (!native.isEmpty()) {
+                    native[0] = native[0].toUpper();
+                }
+                return native;
+            }
             case Path:
                 QFileInfo fi(title->getFilePath());
-                return QString("%1/%2").arg(fi.path().split('/').last(), fi.fileName());
+                return QString("%1/%2").arg(qualifiers, fi.fileName());
             }
         }
     }
@@ -86,8 +98,9 @@ QVariant TitlesModel::headerData(int section, Qt::Orientation orientation, int r
 {
     if (role == Qt::DisplayRole && orientation == Qt::Horizontal) {
         switch (section) {
-            case Value: return QCoreApplication::translate("MainWindow", "Application Name");
-            case Path:  return tr("Resource");
+            case Value:    return QCoreApplication::translate("MainWindow", "Application Name");
+            case Language: return QCoreApplication::translate("MainWindow", "Language");
+            case Path:     return QCoreApplication::translate("TitlesModel", "Resource");
         }
     }
     return QVariant();

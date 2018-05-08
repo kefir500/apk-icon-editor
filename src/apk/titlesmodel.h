@@ -9,6 +9,7 @@ class TitlesModel : public QAbstractTableModel {
 public:
     enum TitleColumn {
         Value,
+        Language,
         Path,
         ColumnCount
     };
