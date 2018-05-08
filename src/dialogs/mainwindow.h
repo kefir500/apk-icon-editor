@@ -202,6 +202,8 @@ private:
     DrawArea *drawArea;
     QTabWidget *tabs;
     QWidget *tabIcons;
+    QWidget *tabTranslations;
+    QWidget *tabProperties;
     QLabel *devicesLabel;
     QComboBox *devices;
     QPushButton *btnApplyAppName;

@@ -347,22 +347,35 @@ void MainWindow::init_gui()
     layoutIcons->setMargin(4);
     layoutIcons->setSpacing(6);
 
-    QWidget *tabProperties = new QWidget(this);
+    tabTranslations = new QWidget(this);
+    tabTranslations->setEnabled(false);
+    QVBoxLayout *layoutTranslations = new QVBoxLayout(tabTranslations);
+    tableTitles = new QTableView(this);
+    tableTitles->verticalHeader()->setVisible(false);
+    tableTitles->setSelectionMode(QTableView::SingleSelection);
+    tableTitles->setSelectionBehavior(QAbstractItemView::SelectRows);
+    tableTitles->setHorizontalScrollMode(QTableView::ScrollPerPixel);
+    tableTitles->setVerticalScrollMode(QTableView::ScrollPerPixel);
+    btnApplyAppName = new QPushButton(this);
+    layoutTranslations->addWidget(tableTitles);
+    layoutTranslations->addWidget(btnApplyAppName);
+    layoutTranslations->setMargin(4);
+
+    tabProperties = new QWidget(this);
+    tabProperties->setEnabled(false);
     QVBoxLayout *layoutProperties = new QVBoxLayout(tabProperties);
     tableManifest = new QTableView(this);
     tableManifest->horizontalHeader()->hide();
     tableManifest->horizontalHeader()->setStretchLastSection(true);
+    tableManifest->setSelectionMode(QTableView::SingleSelection);
+    tableManifest->setHorizontalScrollMode(QTableView::ScrollPerPixel);
     tableManifest->setVerticalScrollMode(QTableView::ScrollPerPixel);
-    tableTitles = new QTableView(this);
-    tableTitles->verticalHeader()->setVisible(false);
-    tableTitles->setSelectionMode(QTableView::SingleSelection);
-    tableTitles->setVerticalScrollMode(QTableView::ScrollPerPixel);
     layoutProperties->addWidget(tableManifest);
-    layoutProperties->addWidget(tableTitles);
     layoutProperties->setMargin(4);
 
     tabs = new QTabWidget(this);
     tabs->addTab(tabIcons, NULL);
+    tabs->addTab(tabTranslations, NULL);
     tabs->addTab(tabProperties, NULL);
 
     checkDropbox = new QCheckBox(this);
@@ -616,8 +629,8 @@ void MainWindow::setLanguage(QString lang)
 
     drawArea->setText(tr("CLICK HERE\n(or drag APK and icons)"));
     tabs->setTabText(0, tr("Icons"));
-    tabs->setTabText(1, tr("Properties"));
-    tabs->setTabText(2, tr("Details"));
+    tabs->setTabText(1, tr("Translations"));
+    tabs->setTabText(2, tr("Properties")); // tr("Details")
     devicesLabel->setText(tr("Device:"));
     btnApplyAppName->setText(tr("Apply to All"));
     checkDropbox->setText(tr("Upload to %1").arg(dropbox->getTitle()));
@@ -829,13 +842,14 @@ void MainWindow::apk_unpacked(Apk::File *apk)
     iconsProxy->setSourceModel(&apk->iconsModel);
     tableManifest->setModel(&apk->manifestModel);
     tableTitles->setModel(&apk->titlesModel);
-    tableTitles->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
-    tableTitles->horizontalHeader()->setSectionResizeMode(1, QHeaderView::ResizeToContents);
+    tableTitles->resizeColumnsToContents();
     listIcons->setCurrentIndex(listIcons->model()->index(0, 0));
 
     // Enable operations with APK and icons:
 
     tabIcons->setEnabled(true);
+    tabTranslations->setEnabled(true);
+    tabProperties->setEnabled(true);
     actApkSave->setEnabled(true);
     actApkExplore->setEnabled(true);
     iconActions->setEnabled(true);
