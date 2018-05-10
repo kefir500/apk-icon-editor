@@ -75,6 +75,5 @@
 - Manuel Lopez
 
 ## Special Thanks
-- Sergey Tachenov – [QuaZIP](http://quazip.sourceforge.net)
 - Andre Somers – [SimpleCrypt](http://qt-project.org/wiki/Simple_encryption)
 - [Mark James](http://www.famfamfam.com) – icons

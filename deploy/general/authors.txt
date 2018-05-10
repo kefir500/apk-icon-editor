@@ -78,7 +78,6 @@ Andreas Mamesa
 Manuel Lopez
 
 Special Thanks:
-Sergey Tachenov – QuaZIP
 Andre Somers – SimpleCrypt
 Mark James – icons (www.famfamfam.com)
 
