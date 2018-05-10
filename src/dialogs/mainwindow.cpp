@@ -1229,9 +1229,8 @@ void MainWindow::error(QString title, QString text)
 
 void MainWindow::removeIcon()
 {
-    // TODO ask if ok
     Icon *icon = drawArea->getIcon();
-    if (icon) {
+    if (icon && QMessageBox::question(this, QString(), tr("Are you sure you want to delete this icon?")) == QMessageBox::Yes) {
         apk->removeIcon(icon);
         setWindowModified(true);
     }
