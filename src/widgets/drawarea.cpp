@@ -51,7 +51,7 @@ void DrawArea::paintEvent(QPaintEvent *event)
 
         // Paint border and icon:
         QPainter painter(this);
-        painter.fillRect(bx + 1, by + 1, bw - 1, bw - 1, background);
+        painter.fillRect(bx + 1, by + 1, bw - 1, bh - 1, background);
         if (background == palette().color(QPalette::Window)) {
             painter.fillRect(bx + 1, by + 1, bw - 1, bh - 1, Qt::Dense7Pattern);
         }
