@@ -844,6 +844,8 @@ void MainWindow::apk_unpacked(Apk::File *apk)
     tableTitles->setModel(&apk->titlesModel);
     tableTitles->resizeColumnsToContents();
     listIcons->setCurrentIndex(listIcons->model()->index(0, 0));
+    connect(&apk->manifestModel, &ManifestModel::dataChanged, [=]() { setWindowModified(true); });
+    connect(&apk->titlesModel, &TitlesModel::dataChanged, [=]() { setWindowModified(true); });
 
     // Enable operations with APK and icons:
 
