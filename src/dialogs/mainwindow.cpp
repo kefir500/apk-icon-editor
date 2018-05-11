@@ -512,7 +512,6 @@ void MainWindow::init_slots()
     connect(listIcons->selectionModel(), &QItemSelectionModel::currentChanged, [=](const QModelIndex &index) {
         setCurrentIcon(index.row());
     });
-    connect(tableTitles, SIGNAL(cellChanged(int, int)), this, SLOT(stringChanged(int, int)));
     connect(btnApplyAppName, SIGNAL(clicked()), this, SLOT(applyAppName()));
     connect(apkManager, SIGNAL(loading(short, QString)), loadingDialog, SLOT(setProgress(short, QString)));
     connect(apkManager, SIGNAL(error(QString, QString)), this, SLOT(error(QString, QString)));

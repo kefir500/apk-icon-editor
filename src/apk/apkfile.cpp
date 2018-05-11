@@ -197,7 +197,6 @@ QString Apk::File::getIconPath(Icon::Type type)
     const QString iconAttribute = manifest->getApplicationIcon();
     const QString iconCategory = iconAttribute.split('/').value(0).mid(1);
     const QString iconFilename = iconAttribute.split('/').value(1);
-    qDebug() << iconAttribute << iconCategory << iconFilename;
 
     QString qualifier;
     switch (type) {
