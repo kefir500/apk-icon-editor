@@ -6,7 +6,7 @@
 ---------------
 
 [Q] "APK Icon Editor" cannot pack/unpack some APK files.
-[A] Try switching between "ZIP" and "Apktool" modes. Do not use source/destination directories containing Unicode characters. If your user name also consists of non-Latin characters, choose a custom temporary directory ("Settings" -> "Repacking").
+[A] Do not use source/destination directories containing Unicode characters. If your user name also consists of non-Latin characters, choose a custom temporary directory ("Settings" -> "Repacking").
 
 ---------------
 
