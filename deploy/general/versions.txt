@@ -1,5 +1,16 @@
 # Version History
 
+## 2.0.0
+* Brand-new APK parsing algorithm.
+* Majorly improved resource handling.
+* Majorly improved *Android 8 Oreo* support.
+* Added ability to add icons.
+* Added ability to remove icons.
+* Upgraded *Apktool* to *v2.3.3*.
+* Dropped usage of *ZIP* mode.
+* Dropped usage of *aapt*.
+* Lots of internal refactoring.
+
 ## 1.8.0
 * Added *Android 8 Oreo* support.
 * Added *Java 9* support.
