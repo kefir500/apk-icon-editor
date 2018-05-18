@@ -72,7 +72,7 @@ namespace Path {
 ///
 
 namespace Url {
-    const QString WEBSITE   = "http://kefir500.github.io/apk-icon-editor/";
+    const QString WEBSITE   = "https://kefir500.github.io/apk-icon-editor/";
     const QString VERSION   = WEBSITE + "VERSION-2";
     const QString UPDATE    = WEBSITE + "download/#update";
     const QString CONTACT   = WEBSITE + "#contact";
