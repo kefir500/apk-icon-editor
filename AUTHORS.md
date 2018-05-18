@@ -23,8 +23,8 @@
 - [Ameen Ali](https://github.com/AmeenAli)
 
 ## Donators
-- [Cyclos](http://www.cyclos.org)
 - [Julien Veuillet](http://www.wakdev.com)
+- [Cyclos](http://www.cyclos.org)
 - Khalida Begum
 - Benjamin Hahn
 - Evolanguage
@@ -50,6 +50,7 @@
 - Siegfried Engelbrecht
 - Orrin Duncan
 - Simone Osnaghi
+- Airran McKeown
 - Niket Kanchan
 - Sheng-Yang Huang
 - Nicholas Ford
@@ -70,6 +71,8 @@
 - Ventas Online
 - Russell Gaither
 - Paola Zucchi
+- Universalip.tv
+- Brian Kerr
 - Emilio Vargas Tordecilla
 - Andreas Mamesa
 - Manuel Lopez

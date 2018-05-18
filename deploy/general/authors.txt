@@ -23,8 +23,8 @@ Roder van Arkel
 Ameen Ali
 
 Donators:
-Cyclos (www.cyclos.org)
 Julien Veuillet (www.wakdev.com)
+Cyclos (www.cyclos.org)
 Khalida Begum
 Benjamin Hahn
 Evolanguage
