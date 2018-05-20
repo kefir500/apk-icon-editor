@@ -9,7 +9,7 @@
 
 using Apk::Unpacker;
 
-bool Unpacker::unpack(QString filepath, QString destination, QString frameworks, bool smali)
+bool Unpacker::unpack(QString filepath, QString destination, QString apktoolPath, QString frameworks, bool smali)
 {
     destination = QDir::fromNativeSeparators(destination);
 
@@ -24,7 +24,7 @@ bool Unpacker::unpack(QString filepath, QString destination, QString frameworks,
     QProcess apktool;
     QStringList args;
     args << "-jar"
-         << QString("%1/apktool.jar").arg(Path::Data::shared())
+         << apktoolPath
          << QString("d") << filepath
          << "-f"
          << (smali ? "" : "-s")

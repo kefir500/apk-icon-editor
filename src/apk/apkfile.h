@@ -33,6 +33,7 @@ namespace Apk {
         bool getZipalign() const;
         bool getKeystore() const;
 
+        QString getApktool() const;
         QString getFilePem() const;
         QString getFilePk8() const;
         QString getFileKeystore() const;
@@ -47,6 +48,7 @@ namespace Apk {
         void setZipalign(bool value);        
         void setKeystore(bool value);
 
+        void setApktool(QString path);
         void setFilePemPk8(QString pem, QString pk8);
         void setFileKeystore(QString filePath, QString alias, QString passKeystore, QString passAlias);
 
@@ -69,6 +71,7 @@ namespace Apk {
         bool isZipalign;      ///< If \c true, zipalign APK.
         bool isKeystore;      ///< If \c true, use KeyStore singning method instead of PEM/PK8.
 
+        QString apktool;      ///< Path to Apktool.
         QString filePem;      ///< Path to PEM file.
         QString filePk8;      ///< Path to PK8 file.
         QString fileKeystore; ///< Path to KeyStore file.

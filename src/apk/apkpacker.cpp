@@ -11,6 +11,7 @@ using Apk::Packer;
 
 bool Packer::pack(Apk::File *apk, QString temp)
 {
+    const QString APKTOOL = QDir::fromNativeSeparators(apk->getApktool());
     const QString TEMPAPK = temp + "/packed/temp.zip";
     const QString CONTENTS = QDir::fromNativeSeparators(apk->getContentsPath());
     QDir(CONTENTS + "/META-INF").removeRecursively();
@@ -34,7 +35,7 @@ bool Packer::pack(Apk::File *apk, QString temp)
     // Pack APK (Apktool);
 
     emit loading(40, tr("Packing APK..."));
-    if (!zip(CONTENTS, TEMPAPK, temp + "/framework/")) {
+    if (!zip(CONTENTS, TEMPAPK, APKTOOL, temp + "/framework/")) {
         return false;
     }
 
@@ -83,11 +84,10 @@ bool Packer::pack(Apk::File *apk, QString temp)
     return true;
 }
 
-bool Packer::zip(QString contents, QString apk, QString frameworks) const
+bool Packer::zip(QString contents, QString apk, QString apktoolPath, QString frameworks) const
 {
     QProcess p;
-    p.start(QString("java -jar \"%1/apktool.jar\" b \"%2\" -f -o \"%3\" -p \"%4\"")
-            .arg(Path::Data::shared(),contents, apk, frameworks));
+    p.start(QString("java -jar \"%1\" b \"%2\" -f -o \"%3\" -p \"%4\"").arg(apktoolPath, contents, apk, frameworks));
     if (!p.waitForStarted(-1)) {
         if (isJavaInstalled()) {
             qDebug() << "Error starting Apktool";

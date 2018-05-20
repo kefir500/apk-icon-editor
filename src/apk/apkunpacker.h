@@ -12,7 +12,7 @@ namespace Apk {
     public:
         explicit Unpacker(QObject *parent = 0) : QObject(parent) {}
 
-        bool unpack(QString filepath, QString destination, QString frameworks, bool smali);
+        bool unpack(QString filepath, QString destination, QString apktoolPath, QString frameworks, bool smali);
 
     signals:
         void unpacked(Apk::File *apk) const;

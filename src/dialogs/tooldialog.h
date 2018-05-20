@@ -18,6 +18,7 @@ public:
     void retranslate();
 
 private:
+    FileBox *apktoolPath;
     QRadioButton *radioApkSigner;
     QRadioButton *radioJarSigner;
     QCheckBox *checkSmali;

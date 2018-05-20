@@ -76,6 +76,12 @@ QString Settings::get_temp(bool fallback)
     return (fallback && (!QDir(PATH).exists() || PATH.isEmpty())) ? TEMP : PATH;
 }
 
+QString Settings::get_apktool()
+{
+    const QString APKTOOL = QDir::toNativeSeparators(Path::Data::shared() + "apktool.jar");
+    return settings->value("Paths/Apktool", APKTOOL).toString();
+}
+
 bool Settings::get_use_apksigner() { return settings->value("APK/Apksigner", false).toBool(); }
 bool Settings::get_smali()         { return settings->value("APK/Smali", false).toBool(); }
 bool Settings::get_sign()          { return settings->value("APK/Sign", true).toBool(); }
@@ -137,6 +143,7 @@ void Settings::set_splitter(QByteArray value) { settings->setValue("Splitter", v
 void Settings::set_recent(QStringList recent) { settings->setValue("Recent", recent); }
 void Settings::set_temp(QString path)         { settings->setValue("Temp", path); }
 
+void Settings::set_apktool(QString path)      { settings->setValue("Paths/Apktool", path); }
 void Settings::set_use_apksigner(bool state)  { settings->setValue("APK/Apksigner", state); }
 void Settings::set_smali(bool state)          { settings->setValue("APK/Smali", state); }
 void Settings::set_sign(bool state)           { settings->setValue("APK/Sign", state); }

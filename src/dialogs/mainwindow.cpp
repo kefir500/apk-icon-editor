@@ -21,9 +21,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     init_devices();
     init_slots();
 
-    QtConcurrent::run(this, &MainWindow::checkReqs);
     Settings::init();
-
     settings_load();
 
     if (actAutoUpdate->isChecked()) {
@@ -38,37 +36,41 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
 void MainWindow::checkReqs()
 {
-    QString version_jre;
-    QString version_jdk;
-    QString version_apktool = Apk::getApktoolVersion();
-    const QString JRE = Apk::getJreVersion();
-    const QString JDK = Apk::getJdkVersion();
+    QtConcurrent::run([=]() {
+        resetApktool();
 
-    QRegExp rx;
-    QStringList cap;
+        QString version_jre;
+        QString version_jdk;
+        QString version_apktool = Apk::getApktoolVersion();
+        const QString JRE = Apk::getJreVersion();
+        const QString JDK = Apk::getJdkVersion();
 
-    rx.setPattern("version \"(.+)\"");
-    rx.indexIn(JRE);
-    cap = rx.capturedTexts();
-    if (cap.size() > 1) {
-        version_jre = cap[1];
-    }
+        QRegExp rx;
+        QStringList cap;
 
-    rx.setPattern("javac (.+)");
-    rx.indexIn(JDK);
-    cap = rx.capturedTexts();
-    if (cap.size() > 1) {
-        version_jdk = cap[1];
-    }
+        rx.setPattern("version \"(.+)\"");
+        rx.indexIn(JRE);
+        cap = rx.capturedTexts();
+        if (cap.size() > 1) {
+            version_jre = cap[1];
+        }
 
-    qDebug() << "JRE version:" << qPrintable(!JRE.isNull() ? version_jre : "---");
-    qDebug() << "JDK version:" << qPrintable(!JDK.isNull() ? version_jdk : "---");
-    qDebug() << "Apktool version:" << qPrintable(!version_apktool.isNull() ? version_apktool : "---") << '\n';
+        rx.setPattern("javac (.+)");
+        rx.indexIn(JDK);
+        cap = rx.capturedTexts();
+        if (cap.size() > 1) {
+            version_jdk = cap[1];
+        }
 
-    if (!JRE.isNull()) qDebug().nospace() << "java -version\n" << qPrintable(JRE) << '\n';
-    if (!JDK.isNull()) qDebug().nospace() << "javac -version\n" << qPrintable(JDK) << '\n';
+        qDebug() << "JRE version:" << qPrintable(!JRE.isNull() ? version_jre : "---");
+        qDebug() << "JDK version:" << qPrintable(!JDK.isNull() ? version_jdk : "---");
+        qDebug() << "Apktool version:" << qPrintable(!version_apktool.isNull() ? version_apktool : "---") << '\n';
 
-    emit reqsChecked(version_jre, version_jdk, version_apktool);
+        if (!JRE.isNull()) qDebug().nospace() << "java -version\n" << qPrintable(JRE) << '\n';
+        if (!JDK.isNull()) qDebug().nospace() << "javac -version\n" << qPrintable(JDK) << '\n';
+
+        emit reqsChecked(version_jre, version_jdk, version_apktool);
+    });
 }
 
 void MainWindow::init_core()
@@ -518,6 +520,7 @@ void MainWindow::init_slots()
     connect(apkManager, SIGNAL(error(QString, QString)), loadingDialog, SLOT(accept()));
     connect(apkManager, SIGNAL(packed(Apk::File*, QString, bool)), this, SLOT(apk_packed(Apk::File*, QString, bool)));
     connect(apkManager, SIGNAL(unpacked(Apk::File*)), this, SLOT(apk_unpacked(Apk::File*)));
+    connect(toolDialog, &ToolDialog::accepted, [=]() { checkReqs(); });
     connect(keyManager, SIGNAL(success(QString, QString)), this, SLOT(success(QString, QString)));
     connect(keyManager, SIGNAL(warning(QString, QString)), this, SLOT(warning(QString, QString)));
     connect(keyManager, SIGNAL(error(QString, QString)), this, SLOT(error(QString, QString)));
@@ -539,9 +542,10 @@ void MainWindow::init_slots()
 
 void MainWindow::settings_load()
 {
+    checkReqs();
+
     // Global:
 
-    if (Settings::get_version() != VER) { resetApktool(); }
     restoreGeometry(Settings::get_geometry());
     splitter->restoreState(Settings::get_splitter());
     setLanguage(Settings::get_language());
@@ -1059,7 +1063,8 @@ bool MainWindow::apk_open(QString filename)
 
     const QString DEST = Settings::get_temp() + "/apk-icon-editor/";
     const bool SMALI = Settings::get_smali();
-    apkManager->unpack(filename, DEST, SMALI);
+    const QString APKTOOL = Settings::get_apktool();
+    apkManager->unpack(filename, DEST, APKTOOL, SMALI);
 
     return true;
 }
@@ -1101,6 +1106,7 @@ bool MainWindow::apk_save(QString filename)
     loadingDialog->setProgress(0);
 
     apk->setFilePath(filename);
+    apk->setApktool(Settings::get_apktool());
     apk->setSmali(Settings::get_smali());
     apk->setSign(Settings::get_sign());
     apk->setZipalign(Settings::get_zipalign());

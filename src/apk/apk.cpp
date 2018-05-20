@@ -1,5 +1,6 @@
 #include "apk.h"
 #include "globals.h"
+#include "settings.h"
 #include <QProcess>
 
 bool Apk::whichJava(Java java)
@@ -24,7 +25,7 @@ QString Apk::getApktoolVersion()
 {
     if (whichJava(JRE)) {
         QProcess p;
-        p.start(QString("java -jar \"%1/apktool.jar\" -version").arg(Path::Data::shared()));
+        p.start(QString("java -jar \"%1\" -version").arg(Settings::get_apktool()));
         if (p.waitForStarted(-1)) {
             p.waitForFinished(-1);
             return p.readAllStandardOutput().trimmed();

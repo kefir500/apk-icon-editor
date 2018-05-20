@@ -18,7 +18,7 @@ namespace Apk {
         void saveAppVersion(QString contents, QString code, QString name) const;
         bool saveStrings(QList<Apk::String> strings) const;
 
-        bool zip(QString contents, QString apk, QString frameworks) const;
+        bool zip(QString contents, QString apk, QString apktoolPath, QString frameworks) const;
         bool sign(QString apk, QString pem, QString pk8, bool apksigner) const;
         bool sign(QString apk, QString keystore, QString alias, QString passKeystore, QString passAlias, bool apksigner) const;
         bool zipalign(QString apk) const;

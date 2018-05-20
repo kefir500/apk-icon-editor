@@ -20,11 +20,12 @@ ToolDialog::ToolDialog(QWidget *parent) : QDialog(parent)
     groupSign->setCheckable(true);
     groupSign->setLayout(layoutSign);
 
+    apktoolPath = new FileBox(this, false);
     checkSmali = new QCheckBox(this);
-
     checkOptimize = new QCheckBox(this);
     tempDir = new FileBox(this, true);
 
+    layout->addWidget(apktoolPath);
     layout->addWidget(checkSmali);
     layout->addWidget(checkOptimize);
     layout->addWidget(groupSign);
@@ -39,12 +40,14 @@ ToolDialog::ToolDialog(QWidget *parent) : QDialog(parent)
 
 void ToolDialog::accept()
 {
+    const QString APKTOOL = apktoolPath->value();
     const bool APKSIGNER = radioApkSigner->isChecked();
     const bool SMALI = checkSmali->isChecked();
     const bool SIGN = groupSign->isChecked();
     const bool ZIPALIGN = checkOptimize->isChecked();
     const QString TEMP = tempDir->value();
 
+    Settings::set_apktool(APKTOOL);
     Settings::set_use_apksigner(APKSIGNER);
     Settings::set_smali(SMALI);
     Settings::set_sign(SIGN);
@@ -63,6 +66,7 @@ void ToolDialog::reject()
 
 void ToolDialog::reset()
 {
+    apktoolPath->setValue(Settings::get_apktool());
     checkSmali->setChecked(Settings::get_smali());
     groupSign->setChecked(Settings::get_sign());
     checkOptimize->setChecked(Settings::get_zipalign());
@@ -73,6 +77,7 @@ void ToolDialog::reset()
 void ToolDialog::retranslate()
 {
     setWindowTitle(tr("Repacking"));
+    apktoolPath->setTitle("Apktool:");
     checkSmali->setText(tr("Decompile %1").arg("CLASSES.DEX"));
     groupSign->setTitle(tr("Sign APK"));
     checkOptimize->setText(tr("Optimize APK"));

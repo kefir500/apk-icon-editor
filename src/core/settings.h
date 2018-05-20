@@ -34,6 +34,7 @@ public:
     static QByteArray get_splitter();    ///< Returns the position of the main window splitter.
     static QStringList get_recent();     ///< Returns the list of the recent APK files.
 
+    static QString get_apktool();        ///< Return the path to Apktool.
     static bool get_use_apksigner();     ///< Returns \c true if the apksigner is used instead of signapk / jarsigner.
     static bool get_smali();             ///< Returns \c true if smali/baksmali tool is used.
     static bool get_sign();              ///< Returns \c true if the signing of the APK files is turned on.
@@ -71,6 +72,7 @@ public:
     static void set_recent(QStringList recent);      ///< Saves the \c recent file list.
     static void set_temp(QString path);              ///< Saves the temporary directory \c path.
 
+    static void set_apktool(QString path);           ///< Saves the \c path to Apktool.
     static void set_use_apksigner(bool state);       ///< Saves the Apksigner on/off \c state.
     static void set_smali(bool state);               ///< Saves the smali/baksmali on/off \c state.
     static void set_sign(bool state);                ///< Saves the APK signing on/off \c state.

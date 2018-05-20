@@ -166,6 +166,7 @@ bool Apk::File::getSign() const { return isSign; }
 bool Apk::File::getZipalign() const { return isZipalign; }
 bool Apk::File::getKeystore() const { return isKeystore; }
 
+QString Apk::File::getApktool() const { return apktool; }
 QString Apk::File::getFilePem() const { return filePem; }
 QString Apk::File::getFilePk8() const { return filePk8; }
 QString Apk::File::getFileKeystore() const { return fileKeystore; }
@@ -182,8 +183,8 @@ void Apk::File::setZipalign(bool value) { isZipalign = value; }
 void Apk::File::setSign(bool value) { isSign = value; }
 void Apk::File::setKeystore(bool value) { isKeystore = value; }
 
+void Apk::File::setApktool(QString path) { apktool = path; }
 void Apk::File::setFilePemPk8(QString pem, QString pk8) { filePem = pem; filePk8 = pk8; }
-
 void Apk::File::setFileKeystore(QString filename, QString alias, QString passKeystore, QString passAlias)
 {
     fileKeystore = filename;

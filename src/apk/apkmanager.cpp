@@ -19,7 +19,7 @@ ApkManager::ApkManager(QObject *parent) : QObject(parent)
     connect(packer, SIGNAL(packed(Apk::File*, QString, bool)), this, SIGNAL(packed(Apk::File*, QString, bool)));
 }
 
-void ApkManager::unpack(QString filename, QString temp, bool smali)
+void ApkManager::unpack(QString filename, QString temp, QString apktool, bool smali)
 {
     qDebug() << "Unpacking" << filename;
     qDebug() << "Output directory:" << temp;
@@ -27,6 +27,7 @@ void ApkManager::unpack(QString filename, QString temp, bool smali)
     QtConcurrent::run(unpacker, &Apk::Unpacker::unpack,
                       filename,
                       temp + "/apk/",
+                      apktool,
                       temp + "/framework",
                       smali);
 }

@@ -13,7 +13,7 @@ public:
     ~ApkManager();
 
 public slots:
-    void unpack(QString filename, QString temp, bool smali);
+    void unpack(QString filename, QString temp, QString apktool, bool smali);
     void pack(Apk::File *apk, QString temp);
 
 signals:
