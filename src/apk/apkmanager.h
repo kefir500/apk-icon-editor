@@ -15,6 +15,8 @@ public:
 public slots:
     void unpack(QString filename, QString temp, QString apktool, bool smali);
     void pack(Apk::File *apk, QString temp);
+    void cancel();
+    void close();
 
 signals:
     void unpacked(Apk::File *apk) const;

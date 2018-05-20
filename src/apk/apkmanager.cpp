@@ -23,13 +23,11 @@ void ApkManager::unpack(QString filename, QString temp, QString apktool, bool sm
 {
     qDebug() << "Unpacking" << filename;
     qDebug() << "Output directory:" << temp;
-
-    QtConcurrent::run(unpacker, &Apk::Unpacker::unpack,
-                      filename,
-                      temp + "/apk/",
-                      apktool,
-                      temp + "/framework",
-                      smali);
+    unpacker->unpack(filename,
+                     temp + "/apk/",
+                     apktool,
+                     temp + "/framework",
+                     smali);
 }
 
 void ApkManager::pack(Apk::File *apk, QString temp)
@@ -56,11 +54,23 @@ void ApkManager::pack(Apk::File *apk, QString temp)
     QtConcurrent::run(packer, &Apk::Packer::pack, apk, temp);
 }
 
+void ApkManager::cancel()
+{
+    unpacker->cancel();
+    packer->cancel();
+}
+
+void ApkManager::close()
+{
+    if (apk) {
+        delete apk;
+        apk = NULL;
+    }
+}
+
 void ApkManager::catchApk(Apk::File *apk)
 {
-    if (this->apk) {
-        delete this->apk;
-    }
+    close();
     this->apk = apk;
 }
 

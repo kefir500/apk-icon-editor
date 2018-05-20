@@ -15,9 +15,8 @@ DrawArea::DrawArea(QWidget *parent) : QLabel(parent)
 
     setMouseTracking(true);
     setAutoFillBackground(true);
-    setCursor(Qt::PointingHandCursor);
 
-    welcome = true;
+    icon = NULL;
     bounds = QSize(0, 0);
     background = palette().color(QPalette::Background);
 }
@@ -25,15 +24,13 @@ DrawArea::DrawArea(QWidget *parent) : QLabel(parent)
 void DrawArea::setIcon(Icon *icon)
 {
     this->icon = icon;
-    welcome = false;
-    setCursor(Qt::ArrowCursor);
-    setAllowHover(false);
+    setAllowHover(!icon);
     repaint();
 }
 
 void DrawArea::mousePressEvent(QMouseEvent *event)
 {
-    if (welcome && event->button() == Qt::LeftButton) {
+    if (!icon && event->button() == Qt::LeftButton) {
         emit clicked();
     }
     event->accept();
@@ -41,7 +38,7 @@ void DrawArea::mousePressEvent(QMouseEvent *event)
 
 void DrawArea::paintEvent(QPaintEvent *event)
 {
-    if (!welcome) {
+    if (icon) {
 
         // Border bounds:
         const int bx = width() / 2 - bounds.width() / 2;
@@ -76,4 +73,5 @@ void DrawArea::setAllowHover(bool allow)
     ;
     if (allow) style += "DrawArea::hover { background-color: white; }";
     setStyleSheet(style);
+    setCursor(allow ? Qt::PointingHandCursor : Qt::ArrowCursor);
 }

@@ -55,6 +55,9 @@ public slots:
     /// Opens the directory containing the unpacked APK files.
     void apk_explore();
 
+    /// Closes the current APK.
+    void apk_close();
+
     // Icons:
 
     /// Loads icon from the file with the given \c filename.

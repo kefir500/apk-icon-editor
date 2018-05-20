@@ -21,6 +21,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     init_devices();
     init_slots();
 
+    apk_close();
+
     Settings::init();
     settings_load();
 
@@ -520,6 +522,7 @@ void MainWindow::init_slots()
     connect(apkManager, SIGNAL(error(QString, QString)), loadingDialog, SLOT(accept()));
     connect(apkManager, SIGNAL(packed(Apk::File*, QString, bool)), this, SLOT(apk_packed(Apk::File*, QString, bool)));
     connect(apkManager, SIGNAL(unpacked(Apk::File*)), this, SLOT(apk_unpacked(Apk::File*)));
+    connect(loadingDialog, SIGNAL(rejected()), apkManager, SLOT(cancel()));
     connect(toolDialog, &ToolDialog::accepted, [=]() { checkReqs(); });
     connect(keyManager, SIGNAL(success(QString, QString)), this, SLOT(success(QString, QString)));
     connect(keyManager, SIGNAL(warning(QString, QString)), this, SLOT(warning(QString, QString)));
@@ -1059,11 +1062,13 @@ bool MainWindow::apk_open(QString filename)
 
     // Unpacking:
 
-    loadingDialog->setProgress(0);
+    loadingDialog->setProgress(20, QApplication::translate("Apk::Unpacker", "Unpacking APK..."));
+    QApplication::processEvents();
 
     const QString DEST = Settings::get_temp() + "/apk-icon-editor/";
     const bool SMALI = Settings::get_smali();
     const QString APKTOOL = Settings::get_apktool();
+    apk_close();
     apkManager->unpack(filename, DEST, APKTOOL, SMALI);
 
     return true;
@@ -1123,6 +1128,28 @@ void MainWindow::apk_explore()
 {
     const QString TEMPDIR = Settings::get_temp() + "/apk-icon-editor/apk";
     QDesktopServices::openUrl(QUrl::fromLocalFile(TEMPDIR));
+}
+
+void MainWindow::apk_close()
+{
+    apkManager->close();
+
+    setWindowTitle(QString());
+    setWindowModified(false);
+
+    iconsProxy->setSourceModel(NULL);
+    tableManifest->setModel(NULL);
+    tableTitles->setModel(NULL);
+
+    tabIcons->setEnabled(false);
+    tabTranslations->setEnabled(false);
+    tabProperties->setEnabled(false);
+    actApkSave->setEnabled(false);
+    actApkExplore->setEnabled(false);
+    iconActions->setEnabled(false);
+    btnPack->setEnabled(false);
+
+    drawArea->setIcon(NULL);
 }
 
 void MainWindow::associate() const

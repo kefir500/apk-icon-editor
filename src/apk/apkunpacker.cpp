@@ -3,62 +3,80 @@
 #include "globals.h"
 #include <QApplication>
 #include <QDir>
-#include <QProcess>
 #include <QDomDocument>
 #include <QDebug>
 
 using Apk::Unpacker;
 
-bool Unpacker::unpack(QString filepath, QString destination, QString apktoolPath, QString frameworks, bool smali)
+Unpacker::Unpacker(QObject *parent) : QObject(parent)
+{
+    apktool = new QProcess(this);
+    apktool->kill();
+}
+
+void Unpacker::unpack(QString filepath, QString destination, QString apktoolPath, QString frameworks, bool smali)
 {
     destination = QDir::fromNativeSeparators(destination);
+    apktool->disconnect();
 
     // Clear temporary directory;
 
-    emit loading(20, tr("Unpacking APK..."));
-    QDir(destination).removeRecursively();
+//    emit loading(20, tr("Unpacking APK..."));
+//    QDir(destination).removeRecursively();
 
-    // Unpack APK;
+    // Unpack APK:
 
     emit loading(50, tr("Unpacking APK..."));
-    QProcess apktool;
     QStringList args;
     args << "-jar"
          << apktoolPath
-         << QString("d") << filepath
+         << "d" << filepath
          << "-f"
          << (smali ? "" : "-s")
          << "-o" << destination
          << "-p" << frameworks;
-    apktool.start("java", args);
-    if (!apktool.waitForStarted(-1)) {
-        if (isJavaInstalled()) {
-            qDebug() << "Error starting Apktool";
-            qDebug() << "Error:" << apktool.errorString();
-            emit error(Apk::ERRORSTART.arg("Apktool"));
-            return false;
-        } else {
-            emit error(Apk::NOJAVA + "<br>" + Apk::GETJAVA);
-            return false;
+
+    connect(apktool, static_cast<void(QProcess::*)(int)>(&QProcess::finished), [=](int code) {
+        const int QPROCESS_KILL_CODE = 62097;
+        switch (code) {
+            case 0: {
+                emit loading(70, tr("Reading AndroidManifest.xml..."));
+                Apk::File *apk = new Apk::File(destination);
+                apk->setFilePath(filepath);
+                qDebug() << "Done.\n";
+                emit loading(100, tr("APK successfully loaded"));
+                emit unpacked(apk);
+                break;
+            }
+            case QPROCESS_KILL_CODE:
+                qDebug() << "Unpacking cancelled by user.";
+                break;
+            default: {
+                const QString errorText = apktool->readAllStandardError().replace("\r\n", "\n");
+                qDebug() << errorText;
+                emit error(Apk::ERROR.arg("Apktool"));
+                break;
+            }
         }
-    }
-    apktool.waitForFinished(-1);
-    if (apktool.exitCode()) {
-        qDebug() << apktool.readAllStandardError().replace("\r\n", "\n");
-        emit error(Apk::ERROR.arg("Apktool"));
-        return false;
-    }
+    });
 
-    // Read APK manifest:
+    connect(apktool, static_cast<void(QProcess::*)(QProcess::ProcessError)>(&QProcess::error), [=](QProcess::ProcessError processError) {
+        if (processError == QProcess::FailedToStart) {
+            if (isJavaInstalled()) {
+                const QString errorText = apktool->errorString();
+                qDebug() << "Error starting Apktool";
+                qDebug() << "Error:" << errorText;
+                emit error(Apk::ERRORSTART.arg("Apktool"));
+            } else {
+                emit error(Apk::NOJAVA + "<br>" + Apk::GETJAVA);
+            }
+        }
+    });
 
-    emit loading(70, tr("Reading AndroidManifest.xml..."));
-    Apk::File *apk = new Apk::File(destination);
-    apk->setFilePath(filepath);
+    apktool->start("java", args);
+}
 
-    // Done!
-
-    qDebug() << "Done.\n";
-    emit loading(100, tr("APK successfully loaded"));
-    emit unpacked(apk);
-    return true;
+void Unpacker::cancel()
+{
+    apktool->kill();
 }

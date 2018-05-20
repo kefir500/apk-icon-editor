@@ -50,7 +50,6 @@ protected:
 private:
     Icon *icon;        ///< Currently previewed icon.
     QColor background; ///< Preview area background color.
-    bool welcome;      ///< If \c true, prints the welcoming text and allows the \c clicked signal.
     QSize bounds;      ///< Size of the template border.
 
     /// Enables or disables the mouse hover widget styling.
