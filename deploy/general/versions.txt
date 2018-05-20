@@ -6,9 +6,11 @@
 * Majorly improved *Android 8 Oreo* support.
 * Added ability to add icons.
 * Added ability to remove icons.
+* Added ability to change API levels.
 * Upgraded *Apktool* to *v2.3.3*.
 * Dropped usage of *ZIP* mode.
 * Dropped usage of *aapt*.
+* Major GUI improvements.
 * Lots of internal refactoring.
 
 ## 1.8.0
