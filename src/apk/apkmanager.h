@@ -22,11 +22,11 @@ signals:
     void unpacked(Apk::File *apk) const;
     void packed(Apk::File *apk, QString message, bool success = true) const;
     void loading(short percentage, QString text = QString()) const;
-    void error(QString title, QString text);
+    void error(QString title, QString text, QString details);
 
 private slots:
     void catchApk(Apk::File *apk);
-    void catchError(QString message);
+    void catchError(QString message, QString details);
 
 private:
     Apk::Packer *packer;

@@ -8,13 +8,13 @@ ApkManager::ApkManager(QObject *parent) : QObject(parent)
     apk = NULL;
 
     unpacker = new Apk::Unpacker(this);
-    connect(unpacker, SIGNAL(error(QString)), this, SLOT(catchError(QString)));
+    connect(unpacker, SIGNAL(error(QString, QString)), this, SLOT(catchError(QString, QString)));
     connect(unpacker, SIGNAL(loading(short, QString)), this, SIGNAL(loading(short, QString)));
     connect(unpacker, SIGNAL(unpacked(Apk::File*)), this, SIGNAL(unpacked(Apk::File*)));
     connect(unpacker, SIGNAL(unpacked(Apk::File*)), this, SLOT(catchApk(Apk::File*)));
 
     packer = new Apk::Packer(this);
-    connect(packer, SIGNAL(error(QString)), this, SLOT(catchError(QString)));
+    connect(packer, SIGNAL(error(QString, QString)), this, SLOT(catchError(QString, QString)));
     connect(packer, SIGNAL(loading(short, QString)), this, SIGNAL(loading(short, QString)));
     connect(packer, SIGNAL(packed(Apk::File*, QString, bool)), this, SIGNAL(packed(Apk::File*, QString, bool)));
 }
@@ -74,9 +74,9 @@ void ApkManager::catchApk(Apk::File *apk)
     this->apk = apk;
 }
 
-void ApkManager::catchError(QString message)
+void ApkManager::catchError(QString message, QString details)
 {
-    emit error(QString(), message);
+    emit error(QString(), message, details);
 }
 
 ApkManager::~ApkManager()

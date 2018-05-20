@@ -152,9 +152,10 @@ private slots:
     void warning(QString title, QString text);
 
     /// Displays error message.
-    /// \param title Message brief title.
-    /// \param text  Message detailed text.
-    void error(QString title, QString text);
+    /// \param title   Message brief title.
+    /// \param text    Message brief text.
+    /// \param details Message detailed text.
+    void error(QString title, QString text, QString details = QString());
 
 protected:
     void dragEnterEvent(QDragEnterEvent *event);

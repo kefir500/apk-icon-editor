@@ -518,8 +518,8 @@ void MainWindow::init_slots()
     });
     connect(btnApplyAppName, SIGNAL(clicked()), this, SLOT(applyAppName()));
     connect(apkManager, SIGNAL(loading(short, QString)), loadingDialog, SLOT(setProgress(short, QString)));
-    connect(apkManager, SIGNAL(error(QString, QString)), this, SLOT(error(QString, QString)));
-    connect(apkManager, SIGNAL(error(QString, QString)), loadingDialog, SLOT(accept()));
+    connect(apkManager, SIGNAL(error(QString, QString, QString)), this, SLOT(error(QString, QString, QString)));
+    connect(apkManager, SIGNAL(error(QString, QString, QString)), loadingDialog, SLOT(accept()));
     connect(apkManager, SIGNAL(packed(Apk::File*, QString, bool)), this, SLOT(apk_packed(Apk::File*, QString, bool)));
     connect(apkManager, SIGNAL(unpacked(Apk::File*)), this, SLOT(apk_unpacked(Apk::File*)));
     connect(loadingDialog, SIGNAL(rejected()), apkManager, SLOT(cancel()));
@@ -1252,11 +1252,22 @@ void MainWindow::warning(QString title, QString text)
     QMessageBox::warning(this, title, text);
 }
 
-void MainWindow::error(QString title, QString text)
+void MainWindow::error(QString title, QString text, QString details)
 {
     qDebug() << qPrintable(QString("Error (%1): %2").arg(title).arg(text));
     QApplication::alert(this);
-    QMessageBox::critical(this, title, text);
+    QMessageBox box(this);
+    box.setWindowTitle(title);
+    box.setText(text);
+    box.setIcon(QMessageBox::Critical);
+    box.setStandardButtons(QMessageBox::Ok);
+    box.setDetailedText(details);
+    if (!details.isEmpty()) {
+        QSpacerItem *spacer = new QSpacerItem(320, 0, QSizePolicy::Minimum, QSizePolicy::Expanding);
+        QGridLayout *layout = static_cast<QGridLayout *>(box.layout());
+        layout->addItem(spacer, layout->rowCount(), 0, 1, layout->columnCount());
+    }
+    box.exec();
 }
 
 void MainWindow::removeIcon()
