@@ -2,15 +2,28 @@
 #include "apkunpacker.h"
 #include "globals.h"
 #include <QApplication>
-#include <QProcess>
 #include <QDir>
 #include <QDebug>
 #include <QtXml/QDomDocument>
 
 using Apk::Packer;
 
-bool Packer::pack(Apk::File *apk, QString temp)
+Packer::Packer(QObject *parent) : QObject(parent)
 {
+    apktool = new QProcess(this);
+    zipaligner = new QProcess(this);
+    signer = new QProcess(this);
+}
+
+void Packer::pack(Apk::File *apk, QString temp)
+{
+    apktool->disconnect();
+    zipaligner->disconnect();
+    signer->disconnect();
+
+    signError = false;
+    alignError = false;
+
     const QString APKTOOL = QDir::fromNativeSeparators(apk->getApktool());
     const QString TEMPAPK = temp + "/packed/temp.zip";
     const QString CONTENTS = QDir::fromNativeSeparators(apk->getContentsPath());
@@ -24,89 +37,58 @@ bool Packer::pack(Apk::File *apk, QString temp)
     // Clear temporary intermediate files:
 
     QFile::remove(temp + "/packed/temp.zip");
-    QFile::remove(temp + "/packed/temp-signed.apk");
-    QFile::remove(temp + "/packed/temp-aligned.apk");
+    QFile::remove(temp + "/packed/temp.zip.signed");
+    QFile::remove(temp + "/packed/temp.zip.aligned");
 
     // Save application name, version and strings:
 
     emit loading(30, tr("Saving string resources..."));
     apk->saveTitles();
 
-    // Pack APK (Apktool);
+    // Pack APK (Apktool):
 
     emit loading(40, tr("Packing APK..."));
-    if (!zip(CONTENTS, TEMPAPK, APKTOOL, temp + "/framework/")) {
-        return false;
-    }
 
-    // Sing and optimize:
-
-    bool isSigned = false;
-    bool isOptimized = false;
-    if (apk->getApksigner()) {
-        emit loading(60, tr("Optimizing APK..."));
-        isOptimized = stepZipalign(apk, TEMPAPK);
-        emit loading(80, tr("Signing APK..."));
-        isSigned = stepSign(apk, TEMPAPK);
-    }
-    else {
-        emit loading(60, tr("Signing APK..."));
-        isSigned = stepSign(apk, TEMPAPK);
-        emit loading(80, tr("Optimizing APK..."));
-        isOptimized = stepZipalign(apk, TEMPAPK);
-    }
-
-    // Move APK to the destination:
-
-    stepFinalize(apk, TEMPAPK);
-
-    // Done!
-
-    emit loading(100, tr("APK successfully packed!"));
-    qDebug() << "Done.\n";
-
-    if (isSigned && isOptimized) {
-        emit packed(apk, tr("APK successfully packed!"));
-    }
-    else {
-        QString warning(tr("APK packed with following warnings:"));
-        if (!isSigned) {
-            warning += "<br>&bull; " + tr("APK is <b>not signed</b>;");
+    connect(apktool, static_cast<void(QProcess::*)(int)>(&QProcess::finished), [=](int code) {
+        const int QPROCESS_KILL_CODE = 62097;
+        switch (code) {
+            case 0: {
+                apk->getApksigner() ? zipalign(apk, TEMPAPK) : sign(apk, TEMPAPK);
+                break;
+            }
+            case QPROCESS_KILL_CODE:
+                qDebug() << "Packing cancelled by user.";
+                return;
+            default: {
+                const QString errorText = apktool->readAllStandardError().replace("\r\n", "\n");
+                qDebug() << errorText;
+                emit error(Apk::ERROR.arg("Apktool"));
+                break;
+            }
         }
-        if (!isOptimized) {
-            warning += "<br>&bull; " + tr("APK is <b>not optimized</b>;");
+    });
+
+    connect(apktool, static_cast<void(QProcess::*)(QProcess::ProcessError)>(&QProcess::error), [=](QProcess::ProcessError processError) {
+        if (processError == QProcess::FailedToStart) {
+            if (isJavaInstalled()) {
+                const QString errorText = apktool->errorString();
+                qDebug() << "Error starting Apktool";
+                qDebug() << "Error:" << errorText;
+                emit error(Apk::ERRORSTART.arg("Apktool"));
+            } else {
+                emit error(Apk::NOJAVA + "<br>" + Apk::GETJAVA);
+            }
         }
-        if (!isJavaInstalled()) {
-            warning += "<hr>" + tr("Signing APK requires Java Runtime Environment.") + "<br>" + Apk::GETJAVA;
-        }
-        emit packed(apk, warning, false);
-    }
-    return true;
+    });
+
+    apktool->start(QString("java -jar \"%1\" b \"%2\" -f -o \"%3\" -p \"%4\"").arg(APKTOOL, CONTENTS, TEMPAPK, temp + "/framework/"));
 }
 
-bool Packer::zip(QString contents, QString apk, QString apktoolPath, QString frameworks) const
+void Packer::cancel()
 {
-    QProcess p;
-    p.start(QString("java -jar \"%1\" b \"%2\" -f -o \"%3\" -p \"%4\"").arg(apktoolPath, contents, apk, frameworks));
-    if (!p.waitForStarted(-1)) {
-        if (isJavaInstalled()) {
-            qDebug() << "Error starting Apktool";
-            qDebug() << "Error:" << p.errorString();
-            emit error(Apk::ERRORSTART.arg("Apktool"));
-            return false;
-        }
-        else {
-            emit error(Apk::NOJAVA + "<br>" + Apk::GETJAVA);
-            return false;
-        }
-    }
-    p.waitForFinished(-1);
-    if (p.exitCode()) {
-        qDebug() << p.readAllStandardError().replace("\r\n", "\n");
-        emit error(Apk::ERROR.arg("Apktool"));
-        return false;
-    }
-    return true;
+    apktool->kill();
+    signer->kill();
+    zipaligner->kill();
 }
 
 void Packer::saveAppTitle(QString contents, QString title) const
@@ -185,136 +167,168 @@ bool Packer::saveStrings(QList<Apk::String> strings) const
     return result;
 }
 
-bool Packer::sign(QString apk, QString pem, QString pk8, bool apksigner) const
+void Packer::sign(Apk::File *apk, QString apkPath)
 {
-    if (!QFile::exists(pem) || !QFile::exists(pk8)) {
-        qDebug() << "Warning: PEM/PK8 not found.";
-        return false;
+    if (!apk->getSign()) {
+        apk->getApksigner() ? finalize(apk, apkPath) : zipalign(apk, apkPath);
+        return;
     }
 
-    QProcess p;
-    const QString apk_dst = apk + ".signed"; // Separate output file for signapk.jar
-    const QString procString = apksigner
+    qDebug() << "Signing...";
+    emit loading(apk->getApksigner() ? 80 : 60, tr("Signing APK..."));
+
+    apk->getKeystore()
+        ? signWithKeystore(apk, apkPath)
+        : signWithPem(apk, apkPath);
+}
+
+void Packer::signWithPem(Apk::File *apk, QString apkPath)
+{
+    const QString pem = apk->getFilePem();
+    const QString pk8 = apk->getFilePk8();
+    const bool isApksigner = apk->getApksigner();
+    const QString apkDest = apkPath + ".signed"; // Separate output file for signapk.jar
+
+    connect(signer, static_cast<void(QProcess::*)(int)>(&QProcess::finished), [=](int code) {
+        const int QPROCESS_KILL_CODE = 62097;
+        switch (code) {
+            case 0: {
+                if (!isApksigner) {
+                    QFile::remove(apkPath);
+                    QFile::rename(apkDest, apkPath);
+                }
+                signError = false;
+                break;
+            }
+            case QPROCESS_KILL_CODE:
+                qDebug() << "Signing cancelled by user.";
+                return;
+            default: {
+                QString errorText = signer->readAllStandardError().replace("\r\n", "\n");
+                if (errorText.isEmpty()) errorText = signer->readAllStandardOutput().replace("\r\n", "\n");
+                qDebug() << "Signer exit code:" << signer->exitCode();
+                qDebug() << errorText;
+                signError = true;
+                break;
+            }
+        }
+        isApksigner ? finalize(apk, apkPath) : zipalign(apk, apkPath);
+    });
+
+    connect(signer, static_cast<void(QProcess::*)(QProcess::ProcessError)>(&QProcess::error), [=](QProcess::ProcessError processError) {
+        if (processError == QProcess::FailedToStart) {
+            qDebug() << "Error starting signer";
+            qDebug() << "Error:" << signer->errorString();
+            QFile::remove(apkDest);
+            signError = true;
+            isApksigner ? finalize(apk, apkPath) : zipalign(apk, apkPath);
+        }
+    });
+
+    const QString procString = isApksigner
         ? "java -jar \"%1/signer/apksigner.jar\" sign --key \"%3\" --cert \"%2\" \"%4\""
         : "java -jar \"%1/signer/signapk.jar\" \"%2\" \"%3\" \"%4\" \"%5\"";
-    p.start(procString.arg(Path::Data::shared(), pem, pk8, apk, apk_dst));
-
-    if (p.waitForStarted(-1)) {
-        p.waitForFinished(-1);
-        if (p.exitCode() == 0) {
-            if (!apksigner) {
-                QFile::remove(apk);
-                QFile::rename(apk_dst, apk);
-            }
-            return true;
-        }
-        else {
-            QString error_text = p.readAllStandardError().replace("\r\n", "\n");
-            if (error_text.isEmpty()) error_text = p.readAllStandardOutput().replace("\r\n", "\n");
-            qDebug() << "Java exit code:" << p.exitCode();
-            qDebug() << error_text;
-        }
-    }
-    else {
-        qDebug() << "Error starting Java";
-        qDebug() << "Error:" << p.errorString();
-    }
-
-    // Something went wrong:
-
-    QFile::remove(apk_dst);
-    return false;
+    signer->start(procString.arg(Path::Data::shared(), pem, pk8, apkPath, apkDest));
 }
 
-bool Packer::sign(QString apk, QString keystore, QString alias, QString passKeystore, QString passAlias, bool apksigner) const
+void Packer::signWithKeystore(Apk::File *apk, QString apkPath)
 {
-    if (!QFile::exists(keystore)) {
-        qDebug() << "Warning: KeyStore not found.";
-        return false;
-    }
+    const QString keystore = apk->getFileKeystore();
+    const QString alias = apk->getAlias();
+    const QString passKeystore = apk->getPassKeystore();
+    const QString passAlias = apk->getPassAlias();
+    const bool isApksigner = apk->getApksigner();
 
-    QProcess p;
-    QString procString = apksigner
+    connect(signer, static_cast<void(QProcess::*)(int)>(&QProcess::finished), [=](int code) {
+        const int QPROCESS_KILL_CODE = 62097;
+        switch (code) {
+            case 0: {
+                signError = false;
+                break;
+            }
+            case QPROCESS_KILL_CODE:
+                qDebug() << "Signing cancelled by user.";
+                return;
+            default: {
+                QString errorText = signer->readAllStandardError().replace("\r\n", "\n");
+                if (errorText.isEmpty()) errorText = signer->readAllStandardOutput().replace("\r\n", "\n");
+                qDebug() << "Signer exit code:" << signer->exitCode();
+                qDebug() << errorText;
+                signError = true;
+                break;
+            }
+        }
+        isApksigner ? finalize(apk, apkPath) : zipalign(apk, apkPath);
+    });
+
+    connect(signer, static_cast<void(QProcess::*)(QProcess::ProcessError)>(&QProcess::error), [=](QProcess::ProcessError processError) {
+        if (processError == QProcess::FailedToStart) {
+            qDebug() << "Error starting signer";
+            qDebug() << "Error:" << signer->errorString();
+            signError = true;
+            isApksigner ? finalize(apk, apkPath) : zipalign(apk, apkPath);
+        }
+    });
+
+    qDebug() << "Packing...";
+    QString procString = isApksigner
         ? "java -jar \"%1/signer/apksigner.jar\" sign --ks \"%2\" --ks-key-alias \"%3\" --ks-pass pass:\"%4\" --key-pass pass:\"%5\" \"%6\""
         : "jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore \"%2\" \"%6\" -storepass \"%4\" -keypass \"%5\" \"%3\"";
-    p.start(procString.arg(Path::Data::shared(), keystore, alias, passKeystore, passAlias, apk));
-
-    if (p.waitForStarted(-1)) {
-        p.waitForFinished(-1);
-        if (p.exitCode() == 0) {
-            return true;
-        }
-        else {
-            QString error_text = p.readAllStandardError().replace("\r\n", "\n");
-            if (error_text.isEmpty()) error_text = p.readAllStandardOutput().replace("\r\n", "\n");
-            qDebug() << "Java exit code:" << p.exitCode();
-            qDebug() << error_text;
-        }
-    }
-    else {
-        qDebug() << qPrintable("Error starting Java");
-        qDebug() << "Error:" << p.errorString();
-    }
-
-    // Something went wrong:
-
-    return false;
+    signer->start(procString.arg(Path::Data::shared(), keystore, alias, passKeystore, passAlias, apkPath));
 }
 
-bool Packer::zipalign(QString apk) const
+void Packer::zipalign(Apk::File *apk, QString apkPath)
 {
-    const QString apk_dst(apk + ".aligned");
+    if (!apk->getZipalign()) {
+        apk->getApksigner() ? sign(apk, apkPath) : finalize(apk, apkPath);
+        return;
+    }
 
-    QProcess p;
-    p.start(QString("zipalign -f 4 \"%1\" \"%2\"").arg(apk, apk_dst));
+    qDebug() << "Optimizing...";
+    emit loading(apk->getApksigner() ? 60 : 80, tr("Optimizing APK..."));
 
-    if (p.waitForStarted(-1)) {
-        p.waitForFinished(-1);
-        if (p.exitCode() == 0) {
-            QFile::remove(apk);
-            QFile::rename(apk_dst, apk);
-            return true;
+    const QString apkDest(apkPath + ".aligned");
+
+    connect(zipaligner, static_cast<void(QProcess::*)(int)>(&QProcess::finished), [=](int code) {
+        const int QPROCESS_KILL_CODE = 62097;
+        switch (code) {
+            case 0: {
+                QFile::remove(apkPath);
+                QFile::rename(apkDest, apkPath);
+                alignError = false;
+                break;
+            }
+            case QPROCESS_KILL_CODE:
+                qDebug() << "Alignment cancelled by user.";
+                QFile::remove(apkDest);
+                return;
+            default: {
+                qDebug() << "Zipalign exit code:" << zipaligner->exitCode();
+                qDebug() << zipaligner->readAllStandardError().replace("\r\n", "\n");
+                QFile::remove(apkDest);
+                alignError = true;
+                break;
+            }
         }
-        else {
-            qDebug() << "Zipalign exit code:" << p.exitCode();
-            qDebug() << p.readAllStandardError().replace("\r\n", "\n");
+        apk->getApksigner() ? sign(apk, apkPath) : finalize(apk, apkPath);
+    });
+
+    connect(zipaligner, static_cast<void(QProcess::*)(QProcess::ProcessError)>(&QProcess::error), [=](QProcess::ProcessError processError) {
+        if (processError == QProcess::FailedToStart) {
+            qDebug() << "Error starting Zipalign";
+            qDebug() << "Error:" << zipaligner->errorString();
+            alignError = true;
+            apk->getApksigner() ? sign(apk, apkPath) : finalize(apk, apkPath);
         }
-    }
-    else {
-        qDebug() << "Error starting Zipalign";
-        qDebug() << "Error:" << p.errorString();
-    }
+    });
 
-    // Something went wrong:
-
-    QFile::remove(apk_dst);
-    return false;
+    zipaligner->start(QString("zipalign -f 4 \"%1\" \"%2\"").arg(apkPath, apkDest));
 }
 
-bool Packer::stepSign(Apk::File *apk, QString tempAPK) const
+void Packer::finalize(Apk::File *apk, QString apkPath) const
 {
-    if (apk->getSign()) {
-        qDebug() << "Signing...";
-        return apk->getKeystore()
-            ? sign(tempAPK, apk->getFileKeystore(), apk->getAlias(), apk->getPassKeystore(), apk->getPassAlias(), apk->getApksigner())
-            : sign(tempAPK, apk->getFilePem(), apk->getFilePk8(), apk->getApksigner());
-    }
-    // No signing needed:
-    return true;
-}
+    // Move APK to destination:
 
-bool Packer::stepZipalign(Apk::File *apk, QString tempAPK) const
-{
-    if (apk->getZipalign()) {
-        qDebug() << "Optimizing...";
-        return zipalign(tempAPK);
-    }
-    // No alignment needed:
-    return true;
-}
-
-bool Packer::stepFinalize(Apk::File *apk, QString tempAPK) const
-{
     QString output = apk->getFilePath();
     QFileInfo fi(apk->getFilePath());
     QString suffix = fi.suffix();
@@ -322,9 +336,29 @@ bool Packer::stepFinalize(Apk::File *apk, QString tempAPK) const
         output += ".apk";
     }
     QFile::remove(output);
-    if (!QFile::rename(tempAPK, output)) {
+    if (!QFile::rename(apkPath, output)) {
         emit error(tr("Could not create output APK file."));
-        return false;
+        return;
     }
-    return true;
+
+    // Done:
+
+    emit loading(100, tr("APK successfully packed!"));
+    qDebug() << "Done.\n";
+
+    if (!signError && !alignError) {
+        emit packed(apk, tr("APK successfully packed!"));
+    } else {
+        QString warning(tr("APK packed with following warnings:"));
+        if (signError) {
+            warning += "<br>&bull; " + tr("APK is <b>not signed</b>;");
+        }
+        if (alignError) {
+            warning += "<br>&bull; " + tr("APK is <b>not optimized</b>;");
+        }
+        if (!isJavaInstalled()) {
+            warning += "<hr>" + tr("Signing APK requires Java Runtime Environment.") + "<br>" + Apk::GETJAVA;
+        }
+        emit packed(apk, warning, false);
+    }
 }

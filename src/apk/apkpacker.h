@@ -2,6 +2,7 @@
 #define APKPACKER_H
 
 #include "apkfile.h"
+#include <QProcess>
 
 namespace Apk {
 
@@ -10,28 +11,34 @@ namespace Apk {
         Q_OBJECT
 
     public:
-        explicit Packer(QObject *parent = 0) : QObject(parent) {}
+        explicit Packer(QObject *parent = 0);
 
-        bool pack(Apk::File *apk, QString temp);
+        void pack(Apk::File *apk, QString temp);
+        void cancel();
 
         void saveAppTitle(QString contents, QString title) const;
         void saveAppVersion(QString contents, QString code, QString name) const;
         bool saveStrings(QList<Apk::String> strings) const;
 
-        bool zip(QString contents, QString apk, QString apktoolPath, QString frameworks) const;
-        bool sign(QString apk, QString pem, QString pk8, bool apksigner) const;
-        bool sign(QString apk, QString keystore, QString alias, QString passKeystore, QString passAlias, bool apksigner) const;
-        bool zipalign(QString apk) const;
+        void sign(Apk::File *apk, QString apkPath);
+        void zipalign(Apk::File *apk, QString apkPath);
 
     private:
-        bool stepSign(Apk::File *apk, QString tempAPK) const;
-        bool stepZipalign(Apk::File *apk, QString tempAPK) const;
-        bool stepFinalize(Apk::File *apk, QString tempAPK) const;
+        void signWithPem(Apk::File *apk, QString apkPath);
+        void signWithKeystore(Apk::File *apk, QString apkPath);
+        void finalize(Apk::File *apk, QString apkPath) const;
+
+        QProcess *apktool;
+        QProcess *zipaligner;
+        QProcess *signer;
+
+        bool signError;
+        bool alignError;
 
     signals:
         void packed(Apk::File *apk, QString message, bool success = true) const;
         void loading(short percentage, QString text = QString()) const;
-        void error(QString message) const;
+        void error(QString message, QString details = QString()) const;
     };
 }
 

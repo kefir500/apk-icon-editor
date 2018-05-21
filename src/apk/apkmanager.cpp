@@ -1,5 +1,4 @@
 #include "apkmanager.h"
-#include <QtConcurrent/QtConcurrentRun>
 #include <QFile>
 #include <QDebug>
 
@@ -51,7 +50,7 @@ void ApkManager::pack(Apk::File *apk, QString temp)
         qDebug() << "Alias Password:" << (!apk->getPassAlias().isEmpty() ? "present;" : "NOT present;");
     }
 
-    QtConcurrent::run(packer, &Apk::Packer::pack, apk, temp);
+    packer->pack(apk, temp);
 }
 
 void ApkManager::cancel()
