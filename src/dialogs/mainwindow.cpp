@@ -191,10 +191,7 @@ void MainWindow::init_gui()
     menuHelp->addSeparator();
     menuHelp->addAction(actAboutQt);
     menuHelp->addAction(actAbout);
-    actApkExplore->setEnabled(false);
-    actApkSave->setEnabled(false);
     actNoRecent->setEnabled(false);
-    iconActions->setEnabled(false);
     actAutoUpdate->setCheckable(true);
 
     actApkOpen->setShortcut(QKeySequence::Open);
@@ -269,7 +266,6 @@ void MainWindow::init_gui()
     uploadDialog = new ProgressDialog(this);
 
     tabIcons = new QWidget(this);
-    tabIcons->setEnabled(false);
     QHBoxLayout *layoutDevices = new QHBoxLayout;
     QVBoxLayout *layoutIcons = new QVBoxLayout(tabIcons);
     devicesLabel = new QLabel(this);
@@ -352,7 +348,6 @@ void MainWindow::init_gui()
     layoutIcons->setSpacing(6);
 
     tabTranslations = new QWidget(this);
-    tabTranslations->setEnabled(false);
     QVBoxLayout *layoutTranslations = new QVBoxLayout(tabTranslations);
     tableTitles = new QTableView(this);
     tableTitles->verticalHeader()->setVisible(false);
@@ -366,7 +361,6 @@ void MainWindow::init_gui()
     layoutTranslations->setMargin(4);
 
     tabProperties = new QWidget(this);
-    tabProperties->setEnabled(false);
     QVBoxLayout *layoutProperties = new QVBoxLayout(tabProperties);
     tableManifest = new QTableView(this);
     tableManifest->horizontalHeader()->hide();
@@ -861,6 +855,8 @@ void MainWindow::apk_unpacked(Apk::File *apk)
     actApkSave->setEnabled(true);
     actApkExplore->setEnabled(true);
     iconActions->setEnabled(true);
+    menuIconAdd->setEnabled(true);
+    btnPack->setEnabled(true);
 
     setWindowModified(false);
 }
@@ -1147,6 +1143,7 @@ void MainWindow::apk_close()
     actApkSave->setEnabled(false);
     actApkExplore->setEnabled(false);
     iconActions->setEnabled(false);
+    menuIconAdd->setEnabled(false);
     btnPack->setEnabled(false);
 
     drawArea->setIcon(NULL);
