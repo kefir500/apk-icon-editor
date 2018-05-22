@@ -264,7 +264,6 @@ void MainWindow::init_gui()
 
     loadingDialog = new ProgressDialog(this);
     loadingDialog->setIcon(QPixmap(":/gfx/actions/box.png"));
-    loadingDialog->setAllowCancel(false);
 
     uploadDialog = new ProgressDialog(this);
 
