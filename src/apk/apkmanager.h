@@ -20,7 +20,7 @@ public slots:
 
 signals:
     void unpacked(Apk::File *apk) const;
-    void packed(Apk::File *apk, QString message, bool success = true) const;
+    void packed(Apk::File *apk, bool success, QString message, QString details) const;
     void loading(short percentage, QString text = QString()) const;
     void error(QString title, QString text, QString details);
 

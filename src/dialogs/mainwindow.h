@@ -11,6 +11,7 @@
 #include <QListView>
 #include <QTableView>
 #include <QComboBox>
+#include <QMessageBox>
 #include <QActionGroup>
 #include <QSignalMapper>
 #include <QTranslator>
@@ -103,9 +104,10 @@ private slots:
 
     /// Handles the packed APK.
     /// \param apk       Object representing the packed APK.
-    /// \param text      Additional message text.
     /// \param isSuccess Contains \c false if the APK is packed with warnings.
-    void apk_packed(Apk::File *apk, QString text = QString(), bool isSuccess = true);
+    /// \param text      Message text.
+    /// \param details   Descriptive message text.
+    void apk_packed(Apk::File *apk, bool isSuccess, QString text, QString details);
 
     /// Handles the unpacked APK.
     /// \param apk Object representing the unpacked APK.
@@ -141,15 +143,27 @@ private slots:
     /// \param version Number representing the new version.
     bool newVersion(QString version);
 
+    /// Displays a message.
+    /// \param title   Message brief title.
+    /// \param text    Message brief text.
+    /// \param details Message detailed text.
+    /// \param type    Message type (information, warning...).
+    void message(QString title,
+                 QString text,
+                 QString details = QString(),
+                 QMessageBox::Icon type = QMessageBox::Information);
+
     /// Displays success message.
-    /// \param title Message brief title.
-    /// \param text  Message detailed text.
-    void success(QString title, QString text);
+    /// \param title   Message brief title.
+    /// \param text    Message brief text.
+    /// \param details Message detailed text.
+    void success(QString title, QString text, QString details = QString());
 
     /// Displays warning message.
-    /// \param title Message brief title.
-    /// \param text  Message detailed text.
-    void warning(QString title, QString text);
+    /// \param title   Message brief title.
+    /// \param text    Message brief text.
+    /// \param details Message detailed text.
+    void warning(QString title, QString text, QString details = QString());
 
     /// Displays error message.
     /// \param title   Message brief title.

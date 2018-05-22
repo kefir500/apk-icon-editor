@@ -54,7 +54,7 @@ void Unpacker::unpack(QString filepath, QString destination, QString apktoolPath
             default: {
                 const QString errorText = apktool->readAllStandardError().replace("\r\n", "\n");
                 qDebug() << errorText;
-                emit error(Apk::ERROR.arg("Apktool"));
+                emit error(Apk::ERROR.arg("Apktool"), errorText);
                 break;
             }
         }
@@ -66,7 +66,7 @@ void Unpacker::unpack(QString filepath, QString destination, QString apktoolPath
                 const QString errorText = apktool->errorString();
                 qDebug() << "Error starting Apktool";
                 qDebug() << "Error:" << errorText;
-                emit error(Apk::ERRORSTART.arg("Apktool"));
+                emit error(Apk::ERRORSTART.arg("Apktool"), errorText);
             } else {
                 emit error(Apk::NOJAVA + "<br>" + Apk::GETJAVA);
             }

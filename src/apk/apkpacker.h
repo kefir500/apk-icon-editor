@@ -32,11 +32,11 @@ namespace Apk {
         QProcess *zipaligner;
         QProcess *signer;
 
-        bool signError;
-        bool alignError;
+        QString signError;
+        QString alignError;
 
     signals:
-        void packed(Apk::File *apk, QString message, bool success = true) const;
+        void packed(Apk::File *apk, bool success, QString message, QString details = QString()) const;
         void loading(short percentage, QString text = QString()) const;
         void error(QString message, QString details = QString()) const;
     };

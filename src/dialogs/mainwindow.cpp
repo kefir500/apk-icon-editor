@@ -5,7 +5,6 @@
 #include "decorationdelegate.h"
 #include <QHeaderView>
 #include <QMenuBar>
-#include <QMessageBox>
 #include <QFileDialog>
 #include <QMimeData>
 #include <QTextCodec>
@@ -514,7 +513,7 @@ void MainWindow::init_slots()
     connect(apkManager, SIGNAL(loading(short, QString)), loadingDialog, SLOT(setProgress(short, QString)));
     connect(apkManager, SIGNAL(error(QString, QString, QString)), this, SLOT(error(QString, QString, QString)));
     connect(apkManager, SIGNAL(error(QString, QString, QString)), loadingDialog, SLOT(accept()));
-    connect(apkManager, SIGNAL(packed(Apk::File*, QString, bool)), this, SLOT(apk_packed(Apk::File*, QString, bool)));
+    connect(apkManager, SIGNAL(packed(Apk::File*, bool, QString, QString)), this, SLOT(apk_packed(Apk::File*, bool, QString, QString)));
     connect(apkManager, SIGNAL(unpacked(Apk::File*)), this, SLOT(apk_unpacked(Apk::File*)));
     connect(loadingDialog, SIGNAL(rejected()), apkManager, SLOT(cancel()));
     connect(toolDialog, &ToolDialog::accepted, [=]() { checkReqs(); });
@@ -801,7 +800,7 @@ void MainWindow::upload(Cloud *uploader, QString filename)
     loop.exec(); // Block execution until cloud upload is finished.
 }
 
-void MainWindow::apk_packed(Apk::File *apk, QString text, bool isSuccess)
+void MainWindow::apk_packed(Apk::File *apk, bool isSuccess, QString text, QString details)
 {
     loadingDialog->accept();
     const QString FILENAME = apk->getFilePath();
@@ -818,10 +817,10 @@ void MainWindow::apk_packed(Apk::File *apk, QString text, bool isSuccess)
             if (UPLOAD_TO_ONEDRIVE) upload(onedrive, FILENAME);
         }
         uploadDialog->accept();
-        success(NULL, text);
+        success(NULL, text, details);
     }
     else {
-        warning(NULL, text);
+        warning(NULL, text, details);
         if (checkUpload->isChecked()) {
             if (UPLOAD_TO_DROPBOX)  upload(dropbox, FILENAME);
             if (UPLOAD_TO_GDRIVE)   upload(gdrive, FILENAME);
@@ -1236,27 +1235,18 @@ void MainWindow::authCloud()
     }
 }
 
-void MainWindow::success(QString title, QString text)
+void MainWindow::message(QString title, QString text, QString details, QMessageBox::Icon type)
 {
-    QApplication::alert(this);
-    QMessageBox::information(this, title, text);
-}
-
-void MainWindow::warning(QString title, QString text)
-{
-    qDebug() << qPrintable(QString("Warning (%1): %2").arg(title).arg(text));
-    QApplication::alert(this);
-    QMessageBox::warning(this, title, text);
-}
-
-void MainWindow::error(QString title, QString text, QString details)
-{
-    qDebug() << qPrintable(QString("Error (%1): %2").arg(title).arg(text));
+    if (type == QMessageBox::Warning) {
+        qDebug() << qPrintable(QString("Warning (%1): %2").arg(title).arg(text));
+    } else if (type == QMessageBox::Critical) {
+        qDebug() << qPrintable(QString("Error (%1): %2").arg(title).arg(text));
+    }
     QApplication::alert(this);
     QMessageBox box(this);
     box.setWindowTitle(title);
     box.setText(text);
-    box.setIcon(QMessageBox::Critical);
+    box.setIcon(type);
     box.setStandardButtons(QMessageBox::Ok);
     box.setDetailedText(details);
     if (!details.isEmpty()) {
@@ -1265,6 +1255,21 @@ void MainWindow::error(QString title, QString text, QString details)
         layout->addItem(spacer, layout->rowCount(), 0, 1, layout->columnCount());
     }
     box.exec();
+}
+
+void MainWindow::success(QString title, QString text, QString details)
+{
+    message(title, text, details, QMessageBox::Information);
+}
+
+void MainWindow::warning(QString title, QString text, QString details)
+{
+    message(title, text, details, QMessageBox::Warning);
+}
+
+void MainWindow::error(QString title, QString text, QString details)
+{
+    message(title, text, details, QMessageBox::Critical);
 }
 
 void MainWindow::removeIcon()

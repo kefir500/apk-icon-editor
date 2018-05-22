@@ -15,7 +15,7 @@ ApkManager::ApkManager(QObject *parent) : QObject(parent)
     packer = new Apk::Packer(this);
     connect(packer, SIGNAL(error(QString, QString)), this, SLOT(catchError(QString, QString)));
     connect(packer, SIGNAL(loading(short, QString)), this, SIGNAL(loading(short, QString)));
-    connect(packer, SIGNAL(packed(Apk::File*, QString, bool)), this, SIGNAL(packed(Apk::File*, QString, bool)));
+    connect(packer, SIGNAL(packed(Apk::File*, bool, QString, QString)), this, SIGNAL(packed(Apk::File*, bool, QString, QString)));
 }
 
 void ApkManager::unpack(QString filename, QString temp, QString apktool, bool smali)
