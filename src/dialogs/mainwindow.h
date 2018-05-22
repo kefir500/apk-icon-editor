@@ -254,8 +254,9 @@ private:
     // Actions:
 
     QAction *actApkOpen;
-    QAction *actApkExplore;
     QAction *actApkSave;
+    QAction *actApkExplore;
+    QAction *actApkClose;
     QAction *actExit;
     QAction *actRecentClear;
     QAction *actNoRecent;

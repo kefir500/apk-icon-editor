@@ -122,6 +122,7 @@ void MainWindow::init_gui()
     actApkSave = new QAction(this);
     menuRecent = new QMenu(this);
     actApkExplore = new QAction(this);
+    actApkClose = new QAction(this);
     actExit = new QAction(this);
     actRecentClear = new QAction(this);
     actNoRecent = new QAction(this);
@@ -159,6 +160,8 @@ void MainWindow::init_gui()
     menuFile->addAction(actApkExplore);
     menuFile->addSeparator();
     menuFile->addAction(actApkSave);
+    menuFile->addSeparator();
+    menuFile->addAction(actApkClose);
     menuFile->addSeparator();
     menuFile->addAction(actExit);
     menuIcon->addActions(iconActions->actions());
@@ -215,6 +218,7 @@ void MainWindow::init_gui()
     actRecentClear->setIcon(QIcon(":/gfx/actions/close.png"));
     actApkExplore->setIcon(QIcon(":/gfx/actions/explore.png"));
     actApkSave->setIcon(QIcon(":/gfx/actions/pack.png"));
+    actApkClose->setIcon(QIcon(":/gfx/actions/remove.png"));
     actIconOpen->setIcon(QIcon(":/gfx/actions/open-icon.png"));
     actIconSave->setIcon(QIcon(":/gfx/actions/save.png"));
     actIconRemove->setIcon(QIcon(":/gfx/actions/remove.png"));
@@ -467,6 +471,7 @@ void MainWindow::init_slots()
     connect(actApkOpen, SIGNAL(triggered()), this, SLOT(apk_open()));
     connect(actApkSave, SIGNAL(triggered()), this, SLOT(apk_save()));
     connect(actApkExplore, SIGNAL(triggered()), this, SLOT(apk_explore()));
+    connect(actApkClose, SIGNAL(triggered()), this, SLOT(apk_close()));
     connect(actExit, SIGNAL(triggered()), this, SLOT(close()));
     connect(actRecentClear, SIGNAL(triggered()), this, SLOT(recent_clear()));
     connect(actIconOpen, SIGNAL(triggered()), this, SLOT(icon_open()));
@@ -645,6 +650,7 @@ void MainWindow::setLanguage(QString lang)
     actApkSave->setText(tr("&Export (Pack) APK"));
     menuRecent->setTitle(tr("&Recent APKs"));
     actApkExplore->setText(tr("Explore APK &Contents"));
+    actApkClose->setText(tr("&Close APK"));
     actExit->setText(tr("E&xit"));
     actRecentClear->setText(tr("&Clear List"));
     actNoRecent->setText(tr("No Recent Files"));
@@ -853,6 +859,7 @@ void MainWindow::apk_unpacked(Apk::File *apk)
     tabProperties->setEnabled(true);
     actApkSave->setEnabled(true);
     actApkExplore->setEnabled(true);
+    actApkClose->setEnabled(true);
     iconActions->setEnabled(true);
     menuIconAdd->setEnabled(true);
     btnPack->setEnabled(true);
@@ -1141,6 +1148,7 @@ void MainWindow::apk_close()
     tabProperties->setEnabled(false);
     actApkSave->setEnabled(false);
     actApkExplore->setEnabled(false);
+    actApkClose->setEnabled(false);
     iconActions->setEnabled(false);
     menuIconAdd->setEnabled(false);
     btnPack->setEnabled(false);
