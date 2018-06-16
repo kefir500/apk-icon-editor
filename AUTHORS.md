@@ -73,9 +73,11 @@
 - Paola Zucchi
 - Universalip.tv
 - Brian Kerr
+- Lydia Sovar Kihalić
 - Emilio Vargas Tordecilla
 - Andreas Mamesa
 - Manuel Lopez
+- MeP Host
 
 ## Special Thanks
 - Andre Somers – [SimpleCrypt](http://qt-project.org/wiki/Simple_encryption)
