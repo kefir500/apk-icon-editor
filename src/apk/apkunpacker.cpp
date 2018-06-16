@@ -28,13 +28,13 @@ void Unpacker::unpack(QString filepath, QString destination, QString apktoolPath
 
     emit loading(50, tr("Unpacking APK..."));
     QStringList args;
-    args << "-jar"
-         << apktoolPath
-         << "d" << filepath
-         << "-f"
-         << (smali ? "" : "-s")
-         << "-o" << destination
-         << "-p" << frameworks;
+    args << "-jar";
+    args << apktoolPath;
+    args << "d" << filepath;
+    args << "-f";
+    if (!smali) { args << "-s"; }
+    args << "-o" << destination;
+    args << "-p" << frameworks;
 
     connect(apktool, static_cast<void(QProcess::*)(int)>(&QProcess::finished), [=](int code) {
         const int QPROCESS_KILL_CODE = 62097;
