@@ -1,7 +1,7 @@
 # Version History
 
 ## 2.1.0
-* Added ability to specify path to Apktool.
+* Added ability to specify path to *Apktool*.
 * Added ability to cancel repacking process.
 * Fixed *smali* unpacking error.
 * More informative error messages.
