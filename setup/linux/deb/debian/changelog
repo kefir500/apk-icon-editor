@@ -1,3 +1,13 @@
+apk-icon-editor (2.1.0-1) unstable; urgency=low
+
+  * Added ability to specify path to Apktool.
+  * Added ability to cancel repacking process.
+  * Fixed smali unpacking error.
+  * More informative error messages.
+  * GUI improvements and fixes.
+
+ -- Alexander Gorishnyak <kefir500@gmail.com>  Sun, 17 Jun 2018 15:01:19 +0600
+
 apk-icon-editor (2.0.0-1) unstable; urgency=low
 
   * Brand-new APK parsing algorithm.
