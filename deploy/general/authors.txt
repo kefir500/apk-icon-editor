@@ -88,6 +88,7 @@ Vladimir Gorishnyak
 nhanqv
 Roder van Arkel
 Ibuprophen
+ngasoft
 Peter Pursiainen
 Igor Petrunnikov
 Code War
