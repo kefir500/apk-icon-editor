@@ -66,7 +66,7 @@ void ToolDialog::reject()
 
 void ToolDialog::reset()
 {
-    apktoolPath->setValue(Settings::get_apktool());
+    apktoolPath->setValue(Settings::get_apktool(false));
     checkSmali->setChecked(Settings::get_smali());
     groupSign->setChecked(Settings::get_sign());
     checkOptimize->setChecked(Settings::get_zipalign());

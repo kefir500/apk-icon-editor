@@ -71,15 +71,16 @@ QStringList Settings::get_recent()  { return settings->value("Recent", 0).toStri
 
 QString Settings::get_temp(bool fallback)
 {
-    const QString TEMP = QDir::toNativeSeparators(Path::Data::temp());
-    const QString PATH = settings->value("Temp", TEMP).toString();
-    return (fallback && (!QDir(PATH).exists() || PATH.isEmpty())) ? TEMP : PATH;
+    const QString defaultPath = QDir::toNativeSeparators(Path::Data::temp());
+    const QString currentPath = settings->value("Temp", defaultPath).toString();
+    return (fallback && (!QDir(currentPath).exists() || currentPath.isEmpty())) ? defaultPath : currentPath;
 }
 
-QString Settings::get_apktool()
+QString Settings::get_apktool(bool fallback)
 {
-    const QString APKTOOL = QDir::toNativeSeparators(Path::Data::shared() + "apktool.jar");
-    return settings->value("Paths/Apktool", APKTOOL).toString();
+    const QString defaultPath = QDir::toNativeSeparators(Path::Data::shared() + "apktool.jar");
+    const QString currentPath = settings->value("Paths/Apktool", defaultPath).toString();
+    return (fallback && (!QFile::exists(currentPath))) ? defaultPath : currentPath;
 }
 
 bool Settings::get_use_apksigner() { return settings->value("APK/Apksigner", false).toBool(); }

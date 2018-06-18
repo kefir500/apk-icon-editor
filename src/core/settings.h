@@ -34,7 +34,9 @@ public:
     static QByteArray get_splitter();    ///< Returns the position of the main window splitter.
     static QStringList get_recent();     ///< Returns the list of the recent APK files.
 
-    static QString get_apktool();        ///< Return the path to Apktool.
+    /// Returns the path to Apktool.
+    /// \param fallback If \c true, the default value will be returned instead of *nonexistent* Apktool path.
+    static QString get_apktool(bool fallback = true);
     static bool get_use_apksigner();     ///< Returns \c true if the apksigner is used instead of signapk / jarsigner.
     static bool get_smali();             ///< Returns \c true if smali/baksmali tool is used.
     static bool get_sign();              ///< Returns \c true if the signing of the APK files is turned on.
