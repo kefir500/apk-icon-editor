@@ -56,6 +56,9 @@ void Packer::pack(Apk::File *apk, QString temp)
                 apk->getApksigner() ? zipalign(apk, TEMPAPK) : sign(apk, TEMPAPK);
                 break;
             }
+#ifdef Q_OS_OSX
+            case 9:
+#endif
             case QPROCESS_KILL_CODE:
                 qDebug() << "Packing cancelled by user.";
                 return;
@@ -199,6 +202,9 @@ void Packer::signWithPem(Apk::File *apk, QString apkPath)
                 }
                 break;
             }
+#ifdef Q_OS_OSX
+            case 9:
+#endif
             case QPROCESS_KILL_CODE:
                 qDebug() << "Signing cancelled by user.";
                 return;
@@ -243,6 +249,9 @@ void Packer::signWithKeystore(Apk::File *apk, QString apkPath)
             case 0: {
                 break;
             }
+#ifdef Q_OS_OSX
+            case 9:
+#endif
             case QPROCESS_KILL_CODE:
                 qDebug() << "Signing cancelled by user.";
                 return;
@@ -293,6 +302,9 @@ void Packer::zipalign(Apk::File *apk, QString apkPath)
                 QFile::rename(apkDest, apkPath);
                 break;
             }
+#ifdef Q_OS_OSX
+            case 9:
+#endif
             case QPROCESS_KILL_CODE:
                 qDebug() << "Alignment cancelled by user.";
                 QFile::remove(apkDest);

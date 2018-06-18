@@ -48,6 +48,9 @@ void Unpacker::unpack(QString filepath, QString destination, QString apktoolPath
                 emit unpacked(apk);
                 break;
             }
+#ifdef Q_OS_OSX
+            case 9:
+#endif
             case QPROCESS_KILL_CODE:
                 qDebug() << "Unpacking cancelled by user.";
                 break;
