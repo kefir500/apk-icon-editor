@@ -42,6 +42,7 @@
 - Endrit Endrithoxha
 - Christine Mbella
 - Nelson Silva Fernandes
+- Custom Media Installation
 - Marco Santiago
 - Adan Ramirez
 - Halton Powell
@@ -51,6 +52,7 @@
 - Orrin Duncan
 - Simone Osnaghi
 - Airran McKeown
+- Hernando Durana
 - Niket Kanchan
 - Sheng-Yang Huang
 - Nicholas Ford
@@ -74,10 +76,13 @@
 - Universalip.tv
 - Brian Kerr
 - Lydia Sovar Kihalić
+- Marcio Roberto de Almeida Souza
 - Emilio Vargas Tordecilla
 - Andreas Mamesa
 - Manuel Lopez
+- Tiago Canastra
 - MeP Host
+- Uhuru TV
 
 ## Special Thanks
 - Andre Somers – [SimpleCrypt](http://qt-project.org/wiki/Simple_encryption)
