@@ -250,6 +250,7 @@ private:
     QMenu *menuRecent;
     QMenu *menuLang;
     QMenu *menuLogs;
+    QToolButton *btnDonate;
 
     // Actions:
 

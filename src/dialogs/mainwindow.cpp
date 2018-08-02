@@ -113,10 +113,15 @@ void MainWindow::init_gui()
     menuIcon = new QMenu(this);
     menuSett = new QMenu(this);
     menuHelp = new QMenu(this);
+    btnDonate = new QToolButton(this);
+    btnDonate->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    btnDonate->setIcon(QPixmap(":/gfx/actions/donate.png"));
     menu->addMenu(menuFile);
     menu->addMenu(menuIcon);
     menu->addMenu(menuSett);
     menu->addMenu(menuHelp);
+    menu->setCornerWidget(btnDonate);
+    connect(btnDonate, SIGNAL(clicked()), this, SLOT(donate()));
 
     actApkOpen = new QAction(this);
     actApkSave = new QAction(this);
@@ -682,6 +687,7 @@ void MainWindow::setLanguage(QString lang)
     actUpdate->setText(tr("Check for &Updates"));
     actAboutQt->setText(tr("About Qt"));
     actAbout->setText(tr("About %1").arg(APP));
+    btnDonate->setText(tr("Donate"));
     loadingDialog->setWindowTitle(tr("Processing"));
     uploadDialog->setWindowTitle(tr("Uploading"));
     menuBar()->resize(0, 0); // "Repaint" menu bar
