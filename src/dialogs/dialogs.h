@@ -178,42 +178,4 @@ private:
 #endif
 };
 
-///
-/// Donation dialog.
-///
-
-class Donate : public QDialog
-{
-    Q_OBJECT
-
-public:
-    /// Constructs a donation dialog with the specified \c parent.
-    explicit Donate(QWidget *parent = 0);
-};
-
-///
-/// Wallet list widget.
-/// This widget displays list of wallets for accepting donations.
-/// It also provides "Copy to Clipboard" and "Open in Browser" functions for wallets.
-///
-
-class Wallets : public QWidget
-{
-    Q_OBJECT
-
-public:
-    /// Constructs a wallet list widget with the specified \c parent.
-    Wallets(QWidget *parent = 0);
-
-    /// Adds a new wallet to the list.
-    /// \param title Wallet title.
-    /// \param wallet Wallet ID.
-    /// \param wallet Wallet URL.
-    void add(QString title, QString wallet, QString link = QString());
-
-private slots:
-    void copy() const; ///< Copies the wallet ID to the clipboard.
-    void open() const; ///< Opens the wallet link in the default browser.
-};
-
 #endif // DIALOGS_H

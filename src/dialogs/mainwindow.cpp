@@ -1193,8 +1193,7 @@ void MainWindow::openLogPath() const
 
 void MainWindow::donate()
 {
-    Donate dialog(this);
-    dialog.exec();
+    QDesktopServices::openUrl(Url::DONATE);
 }
 
 void MainWindow::invalidDpi()
