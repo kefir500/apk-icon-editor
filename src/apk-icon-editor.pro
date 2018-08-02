@@ -55,10 +55,6 @@ macx {
     QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.7
 }
 
-MOC_DIR = $$PWD/../build/moc
-RCC_DIR = $$PWD/../build/rcc
-OBJECTS_DIR = $$PWD/../build/obj
-
 # Deploy:
 
 SHARED = $$DESTDIR
