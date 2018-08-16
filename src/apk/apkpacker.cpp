@@ -277,9 +277,9 @@ void Packer::signWithKeystore(Apk::File *apk, QString apkPath)
 
     qDebug() << "Packing...";
     QString procString = isApksigner
-        ? "java -jar \"%1/signer/apksigner.jar\" sign --ks \"%2\" --ks-key-alias \"%3\" --ks-pass pass:\"%4\" --key-pass pass:\"%5\" \"%6\""
-        : "jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore \"%2\" \"%6\" -storepass \"%4\" -keypass \"%5\" \"%3\"";
-    signer->start(procString.arg(Path::Data::shared(), keystore, alias, passKeystore, passAlias, apkPath));
+        ? "java -jar \"%6/signer/apksigner.jar\" sign --ks \"%1\" --ks-key-alias \"%2\" --ks-pass pass:\"%3\" --key-pass pass:\"%4\" \"%5\""
+        : "jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore \"%1\" \"%5\" -storepass \"%3\" -keypass \"%4\" \"%2\"";
+    signer->start(procString.arg(keystore, alias, passKeystore, passAlias, apkPath, Path::Data::shared()));
 }
 
 void Packer::zipalign(Apk::File *apk, QString apkPath)
