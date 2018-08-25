@@ -30,6 +30,7 @@ Benjamin Hahn
 Evolanguage
 Berend Jan Dunnewold
 Adam Domanski
+Juegos Destrem
 Harshtag
 Spyridon Moschopoulos
 Rebecca McFarland
@@ -43,6 +44,7 @@ Endrit Endrithoxha
 Christine Mbella
 Nelson Silva Fernandes
 Custom Media Installation
+Thorsten Appel
 Marco Santiago
 Adan Ramirez
 Halton Powell
@@ -82,6 +84,7 @@ Emilio Vargas Tordecilla
 Andreas Mamesa
 Manuel Lopez
 Tiago Canastra
+Denis Parakhin
 MeP Host
 Uhuru TV
 
