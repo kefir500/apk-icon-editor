@@ -55,6 +55,7 @@
 - Simone Osnaghi
 - Airran McKeown
 - Hernando Durana
+- Rolf Califice
 - Niket Kanchan
 - Sheng-Yang Huang
 - Nicholas Ford
@@ -80,6 +81,7 @@
 - Lydia Sovar Kihalić
 - Marcio Roberto de Almeida Souza
 - Online Unlimited, LLC
+- Aleksandar Petrov
 - Emilio Vargas Tordecilla
 - Andreas Mamesa
 - Manuel Lopez
