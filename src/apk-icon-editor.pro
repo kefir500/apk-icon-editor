@@ -3,7 +3,7 @@ TEMPLATE = app
 CONFIG += c++11
 
 TARGET = apk-icon-editor
-VERSION = 2.1.0
+VERSION = 2.2.0
 
 QMAKE_TARGET_PRODUCT = APK Icon Editor
 QMAKE_TARGET_COMPANY = Alexander Gorishnyak
