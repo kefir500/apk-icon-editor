@@ -20,8 +20,14 @@
 - Multilingual interface.
 
 ## Requirements
-- **JRE** (for most users) – to sign APK files and use Apktool.
-- **JDK** (optional alternative) – to sign APK files with KeyStore.
+#### Recommended:
+- [JRE 64-bit 1.8](https://www.java.com/en/download/manual.jsp) (or later)
+#### Note for macOS users:
+- [JDK 64-bit 1.8](https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) (or later) is recommended because JRE for macOS doesn't add Java to the PATH environment variable automatically.
+#### Note for older Java versions:
+In case you want to use Java 1.7:
+- [JRE 64-bit 1.7](https://www.oracle.com/technetwork/java/javase/downloads/java-archive-downloads-javase7-521261.html) to sign APK files using PEM/PK8.
+- [JDK 64-bit 1.7](https://www.oracle.com/technetwork/java/javase/downloads/java-archive-downloads-javase7-521261.html) to sign APK files using PEM/PK8 or KeyStore.
 
 ## Notice
 - You may not use **APK Icon Editor** for any illegal purposes;
