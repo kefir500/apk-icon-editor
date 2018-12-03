@@ -54,6 +54,8 @@ void MainWindow::checkReqs()
         cap = rx.capturedTexts();
         if (cap.size() > 1) {
             version_jre = cap[1];
+            Settings::set_java_version(version_jre);
+            toolDialog->reset();
         }
 
         rx.setPattern("javac (.+)");

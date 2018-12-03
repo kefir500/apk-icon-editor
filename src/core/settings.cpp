@@ -1,4 +1,5 @@
 #include "settings.h"
+#include "updater.h"
 #include "globals.h"
 #include "keys.h"
 #include <QDir>
@@ -83,7 +84,17 @@ QString Settings::get_apktool(bool fallback)
     return (fallback && (!QFile::exists(currentPath))) ? defaultPath : currentPath;
 }
 
-bool Settings::get_use_apksigner() { return settings->value("APK/Apksigner", false).toBool(); }
+QString Settings::get_java_version()
+{
+    return settings->value("Java").toString();
+}
+
+bool Settings::get_use_apksigner()
+{
+    const bool defaultValue = Updater::compare(get_java_version(), "1.7.999");
+    return settings->value("APK/Apksigner", defaultValue).toBool();
+}
+
 bool Settings::get_smali()         { return settings->value("APK/Smali", false).toBool(); }
 bool Settings::get_sign()          { return settings->value("APK/Sign", true).toBool(); }
 bool Settings::get_zipalign()      { return settings->value("APK/Optimize", true).toBool(); }
@@ -145,7 +156,9 @@ void Settings::set_recent(QStringList recent) { settings->setValue("Recent", rec
 void Settings::set_temp(QString path)         { settings->setValue("Temp", path); }
 
 void Settings::set_apktool(QString path)      { settings->setValue("Paths/Apktool", path); }
+void Settings::set_java_version(QString version) { settings->setValue("Java", version); }
 void Settings::set_use_apksigner(bool state)  { settings->setValue("APK/Apksigner", state); }
+
 void Settings::set_smali(bool state)          { settings->setValue("APK/Smali", state); }
 void Settings::set_sign(bool state)           { settings->setValue("APK/Sign", state); }
 void Settings::set_zipalign(bool state)       { settings->setValue("APK/Optimize", state); }

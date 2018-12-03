@@ -4,6 +4,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QDesktopServices>
+#include <QRegularExpression>
 #include <QThread>
 
 // Updater
@@ -26,6 +27,32 @@ void Updater::check() const
 void Updater::download() const
 {
     QDesktopServices::openUrl(QUrl(Url::UPDATE));
+}
+
+bool Updater::compare(QString v1, QString v2)
+{
+    // Unit test is available for this function.
+
+    QStringList segments1 = v1.split(QRegularExpression("\\D"));
+    QStringList segments2 = v2.split(QRegularExpression("\\D"));
+
+    for (short i = 0; i < segments1.size(); ++i) {
+
+        if (segments2.size() <= i) {
+            segments2.push_back("0");
+        }
+
+        const int SEGMENT1 = segments1.at(i).toInt();
+        const int SEGMENT2 = segments2.at(i).toInt();
+
+        if (SEGMENT1 == SEGMENT2) {
+            continue;
+        }
+        else {
+            return (SEGMENT1 > SEGMENT2);
+        }
+    }
+    return false;
 }
 
 // UpdateWorker
@@ -54,7 +81,7 @@ void UpdateWorker::catchReply(QNetworkReply *reply)
 
                 const QString JSON = reply->readAll().trimmed();
                 const QString VERSION = parse(JSON);
-                if (compare(VERSION, VER)) {
+                if (Updater::compare(VERSION, VER)) {
                     emit version(VERSION);
                 }
             }
@@ -63,32 +90,6 @@ void UpdateWorker::catchReply(QNetworkReply *reply)
 
     reply->deleteLater();
     emit finished();
-}
-
-bool UpdateWorker::compare(QString v1, QString v2) const
-{
-    // Unit test is available for this function.
-
-    QStringList segments1 = v1.split('.');
-    QStringList segments2 = v2.split('.');
-
-    for (short i = 0; i < segments1.size(); ++i) {
-
-        if (segments2.size() <= i) {
-            segments2.push_back("0");
-        }
-
-        const int SEGMENT1 = segments1.at(i).toInt();
-        const int SEGMENT2 = segments2.at(i).toInt();
-
-        if (SEGMENT1 == SEGMENT2) {
-            continue;
-        }
-        else {
-            return (SEGMENT1 > SEGMENT2);
-        }
-    }
-    return false;
 }
 
 QString UpdateWorker::parse(QString json) const

@@ -21,7 +21,7 @@
 
 ## Requirements
 #### Recommended:
-- [JRE 64-bit 1.8](https://www.java.com/en/download/manual.jsp) (or later)
+- [JRE 64-bit 1.8](https://www.java.com/en/download/manual.jsp) (or later).
 #### Note for macOS users:
 - [JDK 64-bit 1.8](https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) (or later) is recommended because JRE for macOS doesn't add Java to the PATH environment variable automatically.
 #### Note for older Java versions:

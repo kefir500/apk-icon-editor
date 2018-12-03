@@ -37,6 +37,7 @@ public:
     /// Returns the path to Apktool.
     /// \param fallback If \c true, the default value will be returned instead of *nonexistent* Apktool path.
     static QString get_apktool(bool fallback = true);
+    static QString get_java_version();   ///< Returns the Java version from the latest check.
     static bool get_use_apksigner();     ///< Returns \c true if the apksigner is used instead of signapk / jarsigner.
     static bool get_smali();             ///< Returns \c true if smali/baksmali tool is used.
     static bool get_sign();              ///< Returns \c true if the signing of the APK files is turned on.
@@ -75,6 +76,7 @@ public:
     static void set_temp(QString path);              ///< Saves the temporary directory \c path.
 
     static void set_apktool(QString path);           ///< Saves the \c path to Apktool.
+    static void set_java_version(QString version);   ///< Saves the Java \c version.
     static void set_use_apksigner(bool state);       ///< Saves the Apksigner on/off \c state.
     static void set_smali(bool state);               ///< Saves the smali/baksmali on/off \c state.
     static void set_sign(bool state);                ///< Saves the APK signing on/off \c state.

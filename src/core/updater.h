@@ -25,13 +25,6 @@ public slots:
     /// Checks for application updates.
     void check() const;
 
-    /// Compares the application version numbers.
-    /// \return Returns \c true if version \c v1 is newer than version \c v2.
-    /// \retval true if version \c v1 is newer than version \c v2.
-    /// \retval false if version \c v1 is the same or older than version \c v2.
-    /// \note Unit test is available for this function.
-    bool compare(QString v1, QString v2) const;
-
 signals:
     /// This signal is emitted when the application update is available.
     /// \param version Version number of the new release.
@@ -67,6 +60,13 @@ public:
 public slots:
     void check() const;    ///< Checks for application updates.
     void download() const; ///< Opens download URL in the default browser.
+
+    /// Compares the application version numbers.
+    /// \return Returns \c true if version \c v1 is newer than version \c v2.
+    /// \retval true if version \c v1 is newer than version \c v2.
+    /// \retval false if version \c v1 is the same or older than version \c v2.
+    /// \note Unit test is available for this function.
+    static bool compare(QString v1, QString v2);
 
 signals:
     /// This signal is emitted when the application update is available.
