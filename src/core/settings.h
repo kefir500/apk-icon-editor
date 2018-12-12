@@ -29,6 +29,7 @@ public:
     static QString get_language();       ///< Returns the last used application language.
     static bool get_update();            ///< Returns \c true if the automatic update check is turned on.
     static bool get_upload();            ///< Returns \c true if the cloud upload is turned on.
+    static bool get_activities();        ///< Returns \c true if the activity drawables are displayed.
     static QString get_last_path();      ///< Returns the last used directory in the open/save dialog.
     static QByteArray get_geometry();    ///< Returns the position, size and state of the main window.
     static QByteArray get_splitter();    ///< Returns the position of the main window splitter.
@@ -69,6 +70,7 @@ public:
     static void set_language(QString language);      ///< Saves the last used application \c language.
     static void set_update(bool state);              ///< Saves the automatic update check on/off \c state.
     static void set_upload(bool state);              ///< Saves the cloud upload on/off \c state.
+    static void set_activities(bool state);          ///< Saves the activities display \c state.
     static void set_path(QString directory);         ///< Saves the open/save dialog \c directory.
     static void set_geometry(QByteArray value);      ///< Saves the main window position, size and state as \c value.
     static void set_splitter(QByteArray value);      ///< Saves the main window splitter position \c value.

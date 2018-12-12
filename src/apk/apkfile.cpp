@@ -1,7 +1,6 @@
 #include "apkfile.h"
 #include <QDirIterator>
 #include <QTextStream>
-#include <QDebug>
 
 Apk::File::File(const QString &contentsPath)
 {
@@ -13,73 +12,83 @@ Apk::File::File(const QString &contentsPath)
 
     manifest = new Manifest(contentsPath + "/AndroidManifest.xml", contentsPath + "/apktool.yml");
     manifestModel.initialize(manifest);
-
-    // Parse application icon attribute (android:icon):
-
-    QString iconAttribute = manifest->getApplicationIcon();
-    QString iconCategory = iconAttribute.split('/').value(0).mid(1);
-    QString iconFilename = iconAttribute.split('/').value(1);
-
-    // Parse application banner attribute (android:banner):
-
-    QString bannerAttribute = manifest->getApplicationBanner();
-    QString bannerFilename = bannerAttribute.split('/').value(1);
-
-    // Parse application label attribute (android:label):
-
-    QString labelAttribute = manifest->getApplicationLabel();
-    QString labelKey = labelAttribute.startsWith("@string/") ? labelAttribute.mid(QString("@string/").length()) : QString();
+    const QString appIconAttribute = manifest->getApplicationIcon();
+    const QString appIconCategory = appIconAttribute.split('/').value(0).mid(1);
+    const QString appIconFilename = appIconAttribute.split('/').value(1);
+    const QString appBannerAttribute = manifest->getApplicationBanner();
+    const QString appBannerCategory = appBannerAttribute.split('/').value(0).mid(1);
+    const QString appBannerFilename = appBannerAttribute.split('/').value(1);
+    QStringList activityIcons = manifest->getActivityIcons();
+    QStringList activityBanners = manifest->getActivityBanners();
+    const QString appLabelAttribute = manifest->getApplicationLabel();
+    const QString appLabelKey = appLabelAttribute.startsWith("@string/") ? appLabelAttribute.mid(QString("@string/").length()) : QString();
 
     // Parse resource directories:
 
-    QDirIterator resourceDirectories(contentsPath + "/res/", QDir::Dirs | QDir::NoDotAndDotDot);
-    while (resourceDirectories.hasNext()) {
+    const QStringList drawableExtensions = QStringList() << "png" << "jpg" << "gif";
+    QDirIterator categories(contentsPath + "/res/", QDir::Dirs | QDir::NoDotAndDotDot);
+    while (categories.hasNext()) {
 
-        const QString resourceDirectory = QFileInfo(resourceDirectories.next()).fileName();
-        const QString categoryTitle = resourceDirectory.split('-').first(); // E.g., "drawable", "values"...
+        const QFileInfo category(categories.next());
+        const QString categoryTitle = category.fileName().split('-').first(); // E.g., "drawable", "values"...
 
-        if (categoryTitle == iconCategory) {
+        QDirIterator resources(category.filePath(), QDir::Files);
+        while (resources.hasNext()) {
 
-            // Parse resource files:
+            const QFileInfo resource(resources.next());
 
-            QDirIterator resourceFiles(contentsPath + "/res/" + resourceDirectory, QDir::Files);
-            while (resourceFiles.hasNext()) {
-
-                const QString resourceFile = QFileInfo(resourceFiles.next()).fileName();
+            if (drawableExtensions.contains(resource.suffix())) {
 
                 // Parse application icons:
 
-                if (categoryTitle == iconCategory) {
-                    const QStringList possibleIcons = QStringList() << (iconFilename + ".png") << (iconFilename + ".jpg") << (iconFilename + ".gif");
-                    if (possibleIcons.contains(resourceFile)) {
-                        const QString icon = QString("%1/res/%2/%3").arg(contentsPath, resourceDirectory, resourceFile);
+                if (categoryTitle == appIconCategory) {
+                    if (resource.baseName() == appIconFilename) {
+                        const QString icon = resource.filePath();
                         thumbnail.addFile(icon);
-                        iconsModel.add(icon);
+                        iconsModel.add(icon, Icon::Unknown, Icon::ScopeApplication);
                     }
                 }
 
-                if (categoryTitle == "drawable") {
+                // Parse application banners:
 
-                    // Parse banner icons:
+                if (!appBannerFilename.isEmpty()) {
+                    if (categoryTitle == appBannerCategory) {
+                        if (resource.baseName() == appBannerFilename) {
+                            iconsModel.add(resource.filePath(), Icon::TvBanner, Icon::ScopeApplication);
+                        }
+                    }
+                }
 
-                    if (!bannerFilename.isEmpty() && bannerFilename != iconFilename) {
-                        const QStringList possibleBanners = QStringList() << (bannerFilename + ".png") << (bannerFilename + ".jpg") << (bannerFilename + ".gif");
-                        if (possibleBanners.contains(resourceFile)) {
-                            const QString banner = QString("%1/res/%2/%3").arg(contentsPath, resourceDirectory, resourceFile);
-                            iconsModel.add(banner, Icon::TvBanner);
+                // Parse activity icons:
+
+                foreach (const QString &activityIconAttribute, activityIcons) {
+                    const QString activityIconCategory = activityIconAttribute.split('/').value(0).mid(1);
+                    if (activityIconCategory == categoryTitle) {
+                        const QString activityIconFilename = activityIconAttribute.split('/').value(1);
+                        if (resource.baseName() == activityIconFilename) {
+                            iconsModel.add(resource.filePath(), Icon::Unknown, Icon::ScopeActivity);
+                        }
+                    }
+                }
+
+                // Parse activity banners:
+
+                foreach (const QString &activityBannerAttribute, activityBanners) {
+                    const QString activityBannerCategory = activityBannerAttribute.split('/').value(0).mid(1);
+                    if (activityBannerCategory == categoryTitle) {
+                        const QString activityBannerFilename = activityBannerAttribute.split('/').value(1);
+                        if (resource.baseName() == activityBannerFilename) {
+                            iconsModel.add(resource.filePath(), Icon::TvBanner, Icon::ScopeActivity);
                         }
                     }
                 }
             }
-        } else if (categoryTitle == "values") {
 
-            // Parse titles:
+            // Parse application titles:
 
-            if (!labelKey.isEmpty()) {
-                QDirIterator resourceFiles(contentsPath + "/res/" + resourceDirectory, QDir::Files);
-                while (resourceFiles.hasNext()) {
-                    const QString resourceFile = QFileInfo(resourceFiles.next()).filePath();
-                    titlesModel.add(resourceFile, labelKey);
+            if (!appLabelKey.isEmpty()) {
+                if (categoryTitle == "values") {
+                    titlesModel.add(resource.filePath(), appLabelKey);
                 }
             }
         }

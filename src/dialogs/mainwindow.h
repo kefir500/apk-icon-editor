@@ -81,18 +81,19 @@ public slots:
 
     // Actions:
 
-    void setLanguage(QString lang);  ///< Sets the GUI language to \c lang.
-    void setCurrentIcon(int index);  ///< Displays the icon with the specified \c index in the icon preview widget.
-    bool setPreviewColor();          ///< Displays background color selection dialog.
-    void showEffectsDialog();        ///< Displays "Effects" dialog.
+    /// Displays the icon with the specified \c index in the icon preview widget.
+    void setCurrentIcon(const QModelIndex &index);
+    void setLanguage(QString lang); ///< Sets the GUI language to \c lang.
+    bool setPreviewColor();         ///< Displays background color selection dialog.
+    void showEffectsDialog();       ///< Displays "Effects" dialog.
 
-    void associate() const;          ///< Sets "APK Icon Editor" as the default application for \c apk files (Windows only).
-    void browseSite() const;         ///< Opens website URL in the default browser.
-    void browseBugs() const;         ///< Opens bugs webpage in the default browser.
-    void browseTranslate() const;    ///< Opens Crowdin URL in the default browser.
-    void browseFaq() const;          ///< Opens FAQ text document.
-    void openLogFile() const;        ///< Opens log file.
-    void openLogPath() const;        ///< Opens log directory.
+    void associate() const;         ///< Sets "APK Icon Editor" as the default application for \c apk files (Windows only).
+    void browseSite() const;        ///< Opens website URL in the default browser.
+    void browseBugs() const;        ///< Opens bugs webpage in the default browser.
+    void browseTranslate() const;   ///< Opens Crowdin URL in the default browser.
+    void browseFaq() const;         ///< Opens FAQ text document.
+    void openLogFile() const;       ///< Opens log file.
+    void openLogPath() const;       ///< Opens log directory.
 
 signals:
     /// This signal is emmitted after the Java and Apktool versions check was performed.
@@ -245,6 +246,7 @@ private:
     QMenu *menuFile;
     QMenu *menuIcon;
     QMenu *menuIconAdd;
+    QMenu *menuView;
     QMenu *menuSett;
     QMenu *menuHelp;
     QMenu *menuRecent;
@@ -278,6 +280,7 @@ private:
     QAction *actAddIconXxhdpi;
     QAction *actAddIconXxxhdpi;
     QAction *actAddIconTv;
+    QAction *actViewActivities;
     QAction *actPacking;
     QAction *actKeys;
     QAction *actTranslate;

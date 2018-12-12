@@ -4,9 +4,10 @@
 #include <QPainter>
 #include <QLabel>
 
-Icon::Icon(QString filename, Type type)
+Icon::Icon(QString filename, Type type, Scope scope)
 {
     this->type = type;
+    this->scope = scope;
     if (type == Unknown) {
         qualifiers = QFileInfo(filename).path().split('/').last().split('-').mid(1);
         foreach (const QString &qualifier, qualifiers) {
@@ -85,6 +86,11 @@ QString Icon::getFilename() const
 Icon::Type Icon::getType() const
 {
     return type;
+}
+
+Icon::Scope Icon::getScope() const
+{
+    return scope;
 }
 
 QString Icon::getTitle() const

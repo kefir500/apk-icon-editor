@@ -113,6 +113,7 @@ void MainWindow::init_gui()
     setMenuBar(menu);
     menuFile = new QMenu(this);
     menuIcon = new QMenu(this);
+    menuView = new QMenu(this);
     menuSett = new QMenu(this);
     menuHelp = new QMenu(this);
     btnDonate = new QToolButton(this);
@@ -120,6 +121,7 @@ void MainWindow::init_gui()
     btnDonate->setIcon(QPixmap(":/gfx/actions/donate.png"));
     menu->addMenu(menuFile);
     menu->addMenu(menuIcon);
+    menu->addMenu(menuView);
     menu->addMenu(menuSett);
     menu->addMenu(menuHelp);
     menu->setCornerWidget(btnDonate);
@@ -144,6 +146,8 @@ void MainWindow::init_gui()
     actIconEffect = new QAction(iconActions);
     actIconClone = new QAction(iconActions);
     actIconBackground = new QAction(this);
+    actViewActivities = new QAction(this);
+    actViewActivities->setCheckable(true);
     actPacking = new QAction(this);
     actKeys = new QAction(this);
     menuLang = new QMenu(this);
@@ -176,6 +180,7 @@ void MainWindow::init_gui()
     menuIcon->addMenu(menuIconAdd);
     menuIcon->addSeparator();
     menuIcon->addAction(actIconBackground);
+    menuView->addAction(actViewActivities);
     menuSett->addAction(actPacking);
     menuSett->addAction(actKeys);
     menuSett->addSeparator();
@@ -489,6 +494,7 @@ void MainWindow::init_slots()
     connect(actIconEffect, SIGNAL(triggered()), this, SLOT(showEffectsDialog()));
     connect(actIconClone, SIGNAL(triggered()), this, SLOT(cloneIcons()));
     connect(actIconBackground, SIGNAL(triggered()), this, SLOT(setPreviewColor()));
+    connect(actViewActivities, &QAction::toggled, iconsProxy, &IconsProxy::setShowActivities);
     connect(actPacking, SIGNAL(triggered()), toolDialog, SLOT(open()));
     connect(actKeys, SIGNAL(triggered()), keyManager, SLOT(open()));
     connect(actAssoc, SIGNAL(triggered()), this, SLOT(associate()));
@@ -515,11 +521,9 @@ void MainWindow::init_slots()
     connect(devices, devicesIndexChanged, [=](int row) {
         Device *device = static_cast<Device *>(devices->model()->index(row, 0).internalPointer());
         iconsProxy->setDevice(device);
-        setCurrentIcon(listIcons->currentIndex().row());
+        setCurrentIcon(listIcons->currentIndex());
     });
-    connect(listIcons->selectionModel(), &QItemSelectionModel::currentChanged, [=](const QModelIndex &index) {
-        setCurrentIcon(index.row());
-    });
+    connect(listIcons->selectionModel(), &QItemSelectionModel::currentChanged, this, &MainWindow::setCurrentIcon);
     connect(btnApplyAppName, SIGNAL(clicked()), this, SLOT(applyAppName()));
     connect(apkManager, SIGNAL(loading(short, QString)), loadingDialog, SLOT(setProgress(short, QString)));
     connect(apkManager, SIGNAL(error(QString, QString, QString)), this, SLOT(error(QString, QString, QString)));
@@ -559,6 +563,7 @@ void MainWindow::settings_load()
     currentPath = Settings::get_last_path();
     devices->setCurrentText(Settings::get_device());
     actAutoUpdate->setChecked(Settings::get_update());
+    actViewActivities->setChecked(Settings::get_activities());
 
     // Recent List:
 
@@ -650,6 +655,7 @@ void MainWindow::setLanguage(QString lang)
     btnPack->setText(tr("Pack APK"));
     menuFile->setTitle(tr("&File"));
     menuIcon->setTitle(tr("&Icon"));
+    menuView->setTitle(tr("&View"));
     menuSett->setTitle(tr("&Settings"));
     menuHelp->setTitle(tr("&Help"));
     actApkOpen->setText(tr("&Open APK"));
@@ -671,6 +677,7 @@ void MainWindow::setLanguage(QString lang)
     menuIconAdd->setTitle(tr("&Add Icon"));
     actAddIconTv->setText(QCoreApplication::translate("Icon", "TV Banner"));
     btnAddIcon->setToolTip(tr("&Add Icon").remove('&'));
+    actViewActivities->setText(tr("Android Activities"));
     actIconBackground->setText(tr("Preview Background &Color"));
     actPacking->setText(tr("&Repacking"));
     actKeys->setText(tr("Key Manager"));
@@ -755,13 +762,13 @@ void MainWindow::applyAppName()
     }
 }
 
-void MainWindow::setCurrentIcon(int index)
+void MainWindow::setCurrentIcon(const QModelIndex &index)
 {
-    if (!apk || index < 0) {
+    if (!apk || !index.isValid()) {
         return;
     }
 
-    Icon *icon = static_cast<Icon *>(apk->iconsModel.index(index, 0).internalPointer());
+    Icon *icon = static_cast<Icon *>(iconsProxy->mapToSource(index).internalPointer());
     const Device *device = static_cast<Device *>(devices->model()->index(devices->currentIndex(), 0).internalPointer());
     const QSize size = device->getStandardSize(icon->getType()).size;
     drawArea->setBounds(size.width(), size.height());
@@ -1353,6 +1360,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
     Settings::set_device(devices->currentText());
     Settings::set_language(currentLang);
     Settings::set_update(actAutoUpdate->isChecked());
+    Settings::set_activities(actViewActivities->isChecked());
     Settings::set_path(currentPath);
     Settings::set_geometry(saveGeometry());
     Settings::set_splitter(splitter->saveState());

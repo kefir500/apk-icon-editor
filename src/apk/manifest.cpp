@@ -11,9 +11,31 @@ Manifest::Manifest(const QString &xmlPath, const QString &ymlPath)
         QTextStream stream(xmlFile);
         stream.setCodec("UTF-8");
         xml.setContent(stream.readAll());
+
+        // Parse <application> node:
+
         applicationLabel = getXmlAttribute(QStringList() << "application" << "android:label");
         applicationIcon = getXmlAttribute(QStringList() << "application" << "android:icon");
         applicationBanner = getXmlAttribute(QStringList() << "application" << "android:banner");
+
+        // Parse <activity> nodes:
+
+        QDomNodeList nodes = xml.firstChildElement("manifest").firstChildElement("application").childNodes();
+        for (int i = 0; i < nodes.count(); ++i) {
+            QDomElement node = nodes.at(i).toElement();
+            if (node.isElement() && node.nodeName() == "activity") {
+                QDomElement activity = node.toElement();
+                QDomAttr icon = activity.attributeNode("android:icon");
+                if (!icon.isNull()) {
+                    activityIcons.append(icon);
+                }
+                QDomAttr banner = activity.attributeNode("android:banner");
+                if (!banner.isNull()) {
+                    activityBanners.append(banner);
+                }
+            }
+        }
+
 #ifdef QT_DEBUG
         qDebug() << "Parsed app label:   " << applicationLabel.value();
         qDebug() << "Parsed app icon:    " << applicationIcon.value();
@@ -81,6 +103,32 @@ QString Manifest::getApplicationBanner() const
 QString Manifest::getApplicationLabel() const
 {
     return applicationLabel.value();
+}
+
+QStringList Manifest::getActivityIcons() const
+{
+    QStringList values;
+    for (int i = 0; i < activityIcons.count(); ++i) {
+        const QString value = activityIcons.at(i).value();
+        if (value != getApplicationIcon()) {
+            values.append(value);
+        }
+    }
+    values.removeDuplicates();
+    return values;
+}
+
+QStringList Manifest::getActivityBanners() const
+{
+    QStringList values;
+    for (int i = 0; i < activityBanners.count(); ++i) {
+        const QString value = activityBanners.at(i).value();
+        if (value != getApplicationBanner()) {
+            values.append(value);
+        }
+    }
+    values.removeDuplicates();
+    return values;
 }
 
 int Manifest::getMinSdk() const

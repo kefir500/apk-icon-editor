@@ -12,7 +12,7 @@ public:
     explicit IconsModel(QObject *parent = 0) : QAbstractListModel(parent) {}
     ~IconsModel();
 
-    void add(const QString &filename, Icon::Type type = Icon::Unknown);
+    void add(const QString &filename, Icon::Type type = Icon::Unknown, Icon::Scope scope = Icon::ScopeApplication);
     bool remove(Icon *icon);
     void clone(Icon *source);
     void save();

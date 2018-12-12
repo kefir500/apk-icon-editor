@@ -6,12 +6,14 @@ IconsModel::~IconsModel()
     qDeleteAll(icons);
 }
 
-void IconsModel::add(const QString &filename, Icon::Type type)
+void IconsModel::add(const QString &filename, Icon::Type type, Icon::Scope scope)
 {
     // Add:
-    qDebug() << "Added application icon:" << filename;
+
+    const QString scopeStr = (scope == Icon::ScopeApplication ? "application" : "activity");
+    qDebug() << qPrintable(QString("Added %1 icon: %2").arg(scopeStr, filename));
     beginInsertRows(QModelIndex(), icons.count(), icons.count());
-        Icon *icon = new Icon(filename, type);
+        Icon *icon = new Icon(filename, type, scope);
         icons.append(icon);
         connect(icon, &Icon::updated, [=]() {
             QModelIndex index = this->index(icons.indexOf(icon), 0);
@@ -20,8 +22,13 @@ void IconsModel::add(const QString &filename, Icon::Type type)
     endInsertRows();
 
     // Sort:
-    std::sort(icons.begin(), icons.end(), [](const Icon *a, const Icon *b) {
-        return (a->getType() < b->getType());
+
+    std::sort(icons.begin(), icons.end(), [](const Icon *a, const Icon *b) -> bool {
+        if (a->getScope() != b->getScope()) {
+            return a->getScope() < b->getScope();
+        } else {
+            return a->getType() < b->getType();
+        }
     });
     emit dataChanged(index(0, 0), index(icons.count() - 1, 0));
 }

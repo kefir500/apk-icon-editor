@@ -65,6 +65,7 @@ QString Settings::get_device()      { return settings->value("Profile", "").toSt
 QString Settings::get_language()    { return settings->value("Language", QLocale::system().name()).toString(); }
 bool Settings::get_update()         { return settings->value("Update", true).toBool(); }
 bool Settings::get_upload()         { return settings->value("Upload", false).toBool(); }
+bool Settings::get_activities()     { return settings->value("Activities", false).toBool(); }
 QString Settings::get_last_path()   { return settings->value("Directory", "").toString(); }
 QByteArray Settings::get_geometry() { return settings->value("Geometry", 0).toByteArray(); }
 QByteArray Settings::get_splitter() { return settings->value("Splitter", 0).toByteArray(); }
@@ -149,6 +150,7 @@ void Settings::set_device(QString device)     { settings->setValue("Profile", de
 void Settings::set_language(QString language) { settings->setValue("Language", language); }
 void Settings::set_update(bool state)         { settings->setValue("Update", state); }
 void Settings::set_upload(bool state)         { settings->setValue("Upload", state); }
+void Settings::set_activities(bool state)     { settings->setValue("Activities", state); }
 void Settings::set_path(QString directory)    { settings->setValue("Directory", directory); }
 void Settings::set_geometry(QByteArray value) { settings->setValue("Geometry", value); }
 void Settings::set_splitter(QByteArray value) { settings->setValue("Splitter", value); }

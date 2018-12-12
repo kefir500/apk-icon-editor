@@ -16,6 +16,8 @@ public:
     QString getApplicationIcon() const;
     QString getApplicationBanner() const;
     QString getApplicationLabel() const;
+    QStringList getActivityIcons() const;
+    QStringList getActivityBanners() const;
     int getMinSdk() const;
     int getTargetSdk() const;
     int getVersionCode() const;
@@ -44,6 +46,8 @@ private:
     QDomAttr applicationIcon;
     QDomAttr applicationBanner;
     QDomAttr applicationLabel;
+    QList<QDomAttr> activityIcons;
+    QList<QDomAttr> activityBanners;
 
     int minSdk;
     int targetSdk;

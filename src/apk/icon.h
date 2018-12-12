@@ -16,11 +16,15 @@ public:
         Xhdpi,
         Xxhdpi,
         Xxxhdpi,
-        TvBanner,
-        TypeCount
+        TvBanner
     };
 
-    explicit Icon(QString filename, Type type = Unknown);
+    enum Scope {
+        ScopeApplication,
+        ScopeActivity
+    };
+
+    explicit Icon(QString filename, Type type = Unknown, Scope scope = ScopeApplication);
     bool load(QString filename);
     bool save(QString filename = QString());
     bool replace(QPixmap pixmap);
@@ -31,6 +35,7 @@ public:
     QPixmap getPixmap();                            ///< Returns the icon with the applied visual effects.
     QString getFilename() const;                    ///< Returns the icon filename.
     Type getType() const;
+    Scope getScope() const;
 
     bool revert();                                  ///< Reverts the original icon (loaded from the original filename).
     bool isNull() const { return pixmap.isNull(); } ///< Checks if the icon is \c NULL.
@@ -69,6 +74,7 @@ private:
     QString filePath; ///< Stores the pixmap original filename. Used to revert the original pixmap.
     QStringList qualifiers;
     Type type;
+    Scope scope;
 
     bool isColorize;  ///< Stores the "Colorize" effect state.
     bool isFlipX;     ///< Stores the horizontal flipping state.
