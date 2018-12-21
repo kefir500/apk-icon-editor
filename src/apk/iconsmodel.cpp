@@ -56,7 +56,9 @@ void IconsModel::clone(Icon *source)
     if (source) {
         foreach (Icon *icon, icons) {
             if (icon->getType() != Icon::Unknown) {
-                icon->replace(source->getPixmap());
+                if ((source->getType() == Icon::TvBanner) == (icon->getType() == Icon::TvBanner)) {
+                    icon->replace(source->getPixmap());
+                }
             }
         }
     }
