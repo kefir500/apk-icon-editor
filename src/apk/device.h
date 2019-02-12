@@ -28,8 +28,10 @@ public:
            short xxxhdpi = 192,
            QSize banner = QSize(320, 180));
 
-    QString getTitle() const;   ///< Returns the device title.
-    QIcon getThumbnail() const; ///< Returns the device thumbnail icon.
+    QString getTitle() const;                     ///< Returns the device title.
+    QIcon getThumbnail() const;                   ///< Returns the device thumbnail icon.
+    QString getIconTitle(const Icon &icon) const; ///< Returns the icon title for the device.
+
     StandardSize getStandardSize(Icon::Type type) const;
 
     void setHint(Icon::Type type, const QString &hint);

@@ -27,19 +27,10 @@ QVariant IconsProxy::data(const QModelIndex &index, int role) const
 {
     if (index.isValid() && device) {
         QModelIndex sourceIndex = mapToSource(index);
-        Icon *icon = static_cast<Icon *>(sourceIndex.internalPointer());
-        if (icon && role == Qt::DisplayRole) {
-            Icon::Type type = icon->getType();
-            QString caption = sourceModel()->data(index, role).toString();
-            Device::StandardSize icon = device->getStandardSize(type);
-            if (icon.size.isValid()) {
-                return icon.info.isEmpty()
-                    ? QString("%1 - (%2x%3)").arg(caption).arg(icon.size.width()).arg(icon.size.height())
-                    : QString("%1 - (%2x%3 - %4)").arg(caption).arg(icon.size.width()).arg(icon.size.height()).arg(icon.info);
-            } else {
-                return icon.info.isEmpty()
-                    ? QString("%1").arg(caption)
-                    : QString("%1 - %2)").arg(caption, icon.info);
+        if (role == Qt::DisplayRole) {
+            Icon *icon = static_cast<Icon *>(sourceIndex.internalPointer());
+            if (icon) {
+                return device->getIconTitle(*icon);
             }
         }
         return sourceIndex.data(role);

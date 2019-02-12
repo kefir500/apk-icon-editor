@@ -8,8 +8,26 @@ Icon::Icon(QString filename, Type type, Scope scope)
 {
     this->type = type;
     this->scope = scope;
-    if (type == Unknown) {
-        qualifiers = QFileInfo(filename).path().split('/').last().split('-').mid(1);
+
+    qualifiers = QFileInfo(filename).path().split('/').last().split('-').mid(1);
+
+    // Guess qualifier from icon type:
+    if (qualifiers.isEmpty() && type != Unknown) {
+        QString dpi;
+        switch (type) {
+            case Ldpi: dpi = "ldpi"; break;
+            case Mdpi: dpi = "mdpi"; break;
+            case Hdpi: dpi = "hdpi"; break;
+            case Xhdpi: dpi = "xhdpi"; break;
+            case Xxhdpi: dpi = "xxhdpi"; break;
+            case Xxxhdpi: dpi = "xxxhdpi"; break;
+        }
+        if (!dpi.isEmpty()) {
+            qualifiers.append(dpi);
+        }
+    }
+    // Guess icon type from qualifiers:
+    if (type == Unknown && !qualifiers.isEmpty()) {
         foreach (const QString &qualifier, qualifiers) {
             if (qualifier == "ldpi") { this->type = Ldpi; break; }
             else if (qualifier == "mdpi") { this->type = Mdpi; break; }
@@ -19,6 +37,7 @@ Icon::Icon(QString filename, Type type, Scope scope)
             else if (qualifier == "xxxhdpi") { this->type = Xxxhdpi; break; }
         }
     }
+
     load(filename);
 }
 

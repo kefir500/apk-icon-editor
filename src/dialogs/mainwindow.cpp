@@ -296,12 +296,12 @@ void MainWindow::init_gui()
     iconsProxy = new IconsProxy(this);
     listIcons->setModel(iconsProxy);
 
-    actAddIconLdpi = new QAction("LDPI", this);
-    actAddIconMdpi = new QAction("MDPI", this);
-    actAddIconHdpi = new QAction("HDPI", this);
-    actAddIconXhdpi = new QAction("XHDPI", this);
-    actAddIconXxhdpi = new QAction("XXHDPI", this);
-    actAddIconXxxhdpi = new QAction("XXXHDPI", this);
+    actAddIconLdpi = new QAction(this);
+    actAddIconMdpi = new QAction(this);
+    actAddIconHdpi = new QAction(this);
+    actAddIconXhdpi = new QAction(this);
+    actAddIconXxhdpi = new QAction(this);
+    actAddIconXxxhdpi = new QAction(this);
     actAddIconTv = new QAction(this);
     actAddIconTv->setIcon(QIcon(":/gfx/dpi/tv.png"));
     menuIconAdd->setIcon(QIcon(":/gfx/actions/add.png"));
@@ -312,6 +312,17 @@ void MainWindow::init_gui()
     menuIconAdd->addAction(actAddIconXxhdpi);
     menuIconAdd->addAction(actAddIconXxxhdpi);
     menuIconAdd->addAction(actAddIconTv);
+    connect(menuIconAdd, &QMenu::aboutToShow, [this]() {
+        const int row = devices->currentIndex();
+        Device *device = static_cast<Device *>(devices->model()->index(row, 0).internalPointer());
+        actAddIconLdpi->setText(device->getIconTitle(Icon(QString(), Icon::Ldpi)));
+        actAddIconMdpi->setText(device->getIconTitle(Icon(QString(), Icon::Mdpi)));
+        actAddIconHdpi->setText(device->getIconTitle(Icon(QString(), Icon::Hdpi)));
+        actAddIconXhdpi->setText(device->getIconTitle(Icon(QString(), Icon::Xhdpi)));
+        actAddIconXxhdpi->setText(device->getIconTitle(Icon(QString(), Icon::Xxhdpi)));
+        actAddIconXxxhdpi->setText(device->getIconTitle(Icon(QString(), Icon::Xxxhdpi)));
+        actAddIconTv->setText(device->getIconTitle(Icon(QString(), Icon::TvBanner)));
+    });
     btnAddIcon = new QToolButton(this);
     btnAddIcon->setShortcut(QKeySequence("+"));
     btnAddIcon->setIcon(QIcon(":/gfx/actions/add.png"));
@@ -675,7 +686,6 @@ void MainWindow::setLanguage(QString lang)
     actIconEffect->setText(tr("E&ffects"));
     actIconClone->setText(tr("Apply to All"));
     menuIconAdd->setTitle(tr("&Add Icon"));
-    actAddIconTv->setText(QCoreApplication::translate("Icon", "TV Banner"));
     btnAddIcon->setToolTip(tr("&Add Icon").remove('&'));
     actViewActivities->setText(tr("Android Activities"));
     actIconBackground->setText(tr("Preview Background &Color"));
