@@ -123,6 +123,9 @@ bool Apk::File::addIcon(Icon::Type type)
     // TODO Mark APK as modified
     if (!iconsModel.hasIcon(type)) {
         if (type != Icon::TvBanner) {
+            if (manifest->getApplicationIcon().isEmpty()) {
+                manifest->addApplicationIcon();
+            }
             QString filePath = getIconPath(type);
             if (!filePath.isEmpty()) {
                 filePath.append(".png");
@@ -133,7 +136,7 @@ bool Apk::File::addIcon(Icon::Type type)
                         ? icon->getPixmap()
                         : QPixmap(":/gfx/icon/256.png").scaled(
                               Device().getStandardSize(type).size,
-                              Qt::IgnoreAspectRatio,
+                              Qt::KeepAspectRatio,
                               Qt::SmoothTransformation
                         );
                 if (pixmap.save(filePath)) {

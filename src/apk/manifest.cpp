@@ -194,6 +194,17 @@ void Manifest::setVersionName(const QString &value)
     saveYml();
 }
 
+bool Manifest::addApplicationIcon()
+{
+    if (!applicationIcon.value().isEmpty()) {
+        return false;
+    }
+    QDomElement application = xml.firstChildElement("manifest").firstChildElement("application");
+    application.setAttribute("android:icon", "@drawable/icon_custom");
+    applicationIcon = application.attributeNode("android:icon");
+    return saveXml();
+}
+
 bool Manifest::addApplicationBanner()
 {
     // TODO Refactor:

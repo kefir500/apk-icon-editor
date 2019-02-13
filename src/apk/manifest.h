@@ -29,6 +29,8 @@ public:
     void setTargetSdk(int value);
     void setVersionCode(int value);
     void setVersionName(const QString &value);
+
+    bool addApplicationIcon();
     bool addApplicationBanner();
 
 private:
