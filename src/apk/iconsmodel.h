@@ -16,7 +16,7 @@ public:
     bool remove(Icon *icon);
     void clone(Icon *source);
     void save();
-    bool hasIcon(Icon::Type type) const;
+    bool hasIcon(Icon::Type type, Icon::Scope scope = Icon::ScopeApplication) const;
 
     Icon *first();
     Icon *last();

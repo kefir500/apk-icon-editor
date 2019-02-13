@@ -71,12 +71,12 @@ void IconsModel::save()
     }
 }
 
-bool IconsModel::hasIcon(Icon::Type type) const
+bool IconsModel::hasIcon(Icon::Type type, Icon::Scope scope) const
 {
     QListIterator<Icon *> it(icons);
     while (it.hasNext()) {
         Icon *icon = it.next();
-        if (icon->getType() == type) {
+        if (icon->getScope() == scope && icon->getType() == type) {
             return true;
         }
     }
@@ -97,7 +97,7 @@ Icon *IconsModel::getLargestIcon()
 {
     for (int i = icons.size() - 1; i >= 0; --i) {
         Icon *icon = icons.at(i);
-        if (icon->getType() != Icon::TvBanner) {
+        if (icon->getScope() == Icon::ScopeApplication && icon->getType() != Icon::TvBanner) {
             return icon;
         }
     }
