@@ -18,8 +18,8 @@ public:
         QString info; ///< Size additional information.
     };
 
-    Device(QString title,
-           QIcon thumbnail,
+    Device(QString title = QString(),
+           QIcon thumbnail = QIcon(),
            short ldpi = 32,
            short mdpi = 48,
            short hdpi = 72,

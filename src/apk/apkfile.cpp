@@ -129,7 +129,14 @@ bool Apk::File::addIcon(Icon::Type type)
                 QString directory = QFileInfo(filePath).path();
                 QDir().mkdir(directory);
                 Icon *icon = iconsModel.getLargestIcon();
-                if (icon && icon->getPixmap().save(filePath)) {
+                QPixmap pixmap = icon
+                        ? icon->getPixmap()
+                        : QPixmap(":/gfx/icon/256.png").scaled(
+                              Device().getStandardSize(type).size,
+                              Qt::IgnoreAspectRatio,
+                              Qt::SmoothTransformation
+                        );
+                if (pixmap.save(filePath)) {
                     iconsModel.add(filePath);
                     return true;
                 }

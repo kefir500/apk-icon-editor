@@ -45,5 +45,6 @@
         <file alias="gfx/icon/16.png">icons/linux/apk-icon-editor/16x16/apps/apk-icon-editor.png</file>
         <file alias="gfx/icon/24.png">icons/linux/apk-icon-editor/24x24/apps/apk-icon-editor.png</file>
         <file alias="gfx/icon/32.png">icons/linux/apk-icon-editor/32x32/apps/apk-icon-editor.png</file>
+        <file alias="gfx/icon/256.png">icons/linux/apk-icon-editor/256x256/apps/apk-icon-editor.png</file>
     </qresource>
 </RCC>
