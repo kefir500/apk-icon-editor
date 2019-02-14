@@ -38,7 +38,6 @@ public:
     Scope getScope() const;
 
     bool revert();                                  ///< Reverts the original icon (loaded from the original filename).
-    bool isNull() const { return pixmap.isNull(); } ///< Checks if the icon is \c NULL.
     int width() const { return pixmap.width(); }    ///< Returns the icon width.
     int height() const { return pixmap.height(); }  ///< Returns the icon height.
     const QStringList &getQualifiers() const;

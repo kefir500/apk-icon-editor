@@ -691,7 +691,7 @@ void MainWindow::setLanguage(QString lang)
     actIconClone->setText(tr("Apply to All"));
     menuIconAdd->setTitle(tr("&Add Icon"));
     btnAddIcon->setToolTip(tr("&Add Icon").remove('&'));
-    actViewActivities->setText(tr("Android Activities"));
+    actViewActivities->setText("Android Activities");
     actIconBackground->setText(tr("Preview Background &Color"));
     actPacking->setText(tr("&Repacking"));
     actKeys->setText(tr("Key Manager"));
@@ -757,7 +757,7 @@ void MainWindow::recent_clear()
 void MainWindow::cloneIcons()
 {
     Icon *newIcon = drawArea->getIcon();
-    if (!newIcon->isNull()) {
+    if (newIcon) {
         if (QMessageBox::question(this, NULL, tr("Apply the current icon to all sizes?")) == QMessageBox::Yes) {
             apk->iconsModel.clone(newIcon);
             setWindowModified(true);
@@ -908,9 +908,7 @@ void MainWindow::apk_unpacked(Apk::File *apk)
 bool MainWindow::icon_open(QString filename)
 {
     Icon *icon = drawArea->getIcon();
-
-    if (icon->isNull()) {
-        invalidDpi();
+    if (!icon) {
         return false;
     }
 
@@ -956,9 +954,7 @@ bool MainWindow::icon_open(QString filename)
 bool MainWindow::icon_save(QString filename)
 {
     Icon *icon = drawArea->getIcon();
-
-    if (icon->isNull()) {
-        invalidDpi();
+    if (!icon) {
         return false;
     }
 
@@ -989,9 +985,7 @@ bool MainWindow::icon_scale()
 bool MainWindow::icon_resize(QSize size)
 {
     Icon *icon = drawArea->getIcon();
-
-    if (icon->isNull()) {
-        invalidDpi();
+    if (!icon) {
         return false;
     }
 
@@ -1013,9 +1007,7 @@ bool MainWindow::icon_resize(QSize size)
 bool MainWindow::icon_revert()
 {
     Icon *icon = drawArea->getIcon();
-
-    if (icon->isNull()) {
-        invalidDpi();
+    if (!icon) {
         return false;
     }
 
@@ -1043,7 +1035,7 @@ bool MainWindow::setPreviewColor()
 void MainWindow::showEffectsDialog()
 {
     Icon *icon = drawArea->getIcon();
-    if (!icon->isNull()) {
+    if (icon) {
         const int TEMP_ANGLE = icon->getAngle();
         const bool TEMP_FLIP_X = icon->getFlipX();
         const bool TEMP_FLIP_Y = icon->getFlipY();
@@ -1073,9 +1065,6 @@ void MainWindow::showEffectsDialog()
             icon->setBlur(TEMP_BLUR);
             icon->setCorners(TEMP_ROUND);
         }
-    }
-    else {
-        invalidDpi();
     }
 }
 
@@ -1237,12 +1226,6 @@ void MainWindow::openLogPath() const
 void MainWindow::donate()
 {
     QDesktopServices::openUrl(Url::DONATE);
-}
-
-void MainWindow::invalidDpi()
-{
-    warning(tr("Icon Missing"),
-            tr("This APK does not support current DPI."));
 }
 
 void MainWindow::browseTranslate() const

@@ -190,7 +190,6 @@ private:
     bool resetApktool();   ///< Removes the Apktool "1.apk" framework file.
     void setInitialSize(); ///< Sets the initial sizes for the window and splitter.
     bool confirmExit();    ///< Displays the exit confirmation dialog.
-    void invalidDpi();     ///< Displays the "Invalid DPI" message.
 
     /// Uploads the specified file to a cloud service.
     /// \param uploader Cloud uploader object.
