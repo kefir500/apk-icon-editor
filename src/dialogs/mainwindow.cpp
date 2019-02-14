@@ -295,6 +295,7 @@ void MainWindow::init_gui()
     listIcons->setItemDelegate(new DecorationDelegate(QSize(32, 32), this));
     iconsProxy = new IconsProxy(this);
     listIcons->setModel(iconsProxy);
+    setCurrentIcon(QModelIndex());
 
     actAddIconLdpi = new QAction(this);
     actAddIconMdpi = new QAction(this);
@@ -534,6 +535,9 @@ void MainWindow::init_slots()
         iconsProxy->setDevice(device);
         setCurrentIcon(listIcons->currentIndex());
     });
+    connect(iconsProxy, &IconsProxy::dataChanged, [=]() { setCurrentIcon(listIcons->currentIndex()); });
+    connect(iconsProxy, &IconsProxy::rowsInserted, [=]() { setCurrentIcon(listIcons->currentIndex()); });
+    connect(iconsProxy, &IconsProxy::rowsRemoved, [=]() { setCurrentIcon(listIcons->currentIndex()); });
     connect(listIcons->selectionModel(), &QItemSelectionModel::currentChanged, this, &MainWindow::setCurrentIcon);
     connect(btnApplyAppName, SIGNAL(clicked()), this, SLOT(applyAppName()));
     connect(apkManager, SIGNAL(loading(short, QString)), loadingDialog, SLOT(setProgress(short, QString)));
@@ -774,16 +778,17 @@ void MainWindow::applyAppName()
 
 void MainWindow::setCurrentIcon(const QModelIndex &index)
 {
-    if (!apk || !index.isValid()) {
-        return;
-    }
+    Icon *icon = nullptr;
 
-    Icon *icon = static_cast<Icon *>(iconsProxy->mapToSource(index).internalPointer());
-    const Device *device = static_cast<Device *>(devices->model()->index(devices->currentIndex(), 0).internalPointer());
-    const QSize size = device->getStandardSize(icon->getType()).size;
-    drawArea->setBounds(size.width(), size.height());
+    if (apk && index.isValid()) {
 
-    if (icon) {
+        icon = static_cast<Icon *>(iconsProxy->mapToSource(index).internalPointer());
+        drawArea->setIcon(icon);
+
+        const Device *device = static_cast<Device *>(devices->model()->index(devices->currentIndex(), 0).internalPointer());
+        const QSize size = device->getIconSize(icon->getType()).size;
+        drawArea->setBounds(size.width(), size.height());
+
         disconnect(effects, 0, 0, 0);
         connect(effects, SIGNAL(colorActivated(bool)), icon,     SLOT(setColorize(bool)), Qt::DirectConnection);
         connect(effects, SIGNAL(rotate(int)),          icon,     SLOT(setAngle(int)),     Qt::DirectConnection);
@@ -802,8 +807,17 @@ void MainWindow::setCurrentIcon(const QModelIndex &index)
         connect(effects, SIGNAL(colorDepth(qreal)),    drawArea, SLOT(repaint()));
         connect(effects, SIGNAL(blur(qreal)),          drawArea, SLOT(repaint()));
         connect(effects, SIGNAL(round(qreal)),         drawArea, SLOT(repaint()));
-        drawArea->setIcon(icon);
     }
+
+    drawArea->setIcon(icon);
+    actIconRemove->setEnabled(icon);
+    actIconOpen->setEnabled(icon);
+    actIconSave->setEnabled(icon);
+    actIconScale->setEnabled(icon);
+    actIconResize->setEnabled(icon);
+    actIconRevert->setEnabled(icon);
+    actIconEffect->setEnabled(icon);
+    actIconClone->setEnabled(icon);
 }
 
 void MainWindow::setActiveApk(QString filename)
@@ -962,6 +976,11 @@ bool MainWindow::icon_save(QString filename)
 
 bool MainWindow::icon_scale()
 {
+    Icon *icon = drawArea->getIcon();
+    if (!icon) {
+        return false;
+    }
+
     const Device *device = static_cast<Device *>(devices->model()->index(devices->currentIndex(), 0).internalPointer());
     const QSize size = device->getStandardSize(drawArea->getIcon()->getType()).size;
     return icon_resize(size);
@@ -1162,6 +1181,7 @@ void MainWindow::apk_close()
 
     setWindowTitle(QString());
     setWindowModified(false);
+    setCurrentIcon(QModelIndex());
 
     iconsProxy->setSourceModel(NULL);
     tableManifest->setModel(NULL);
@@ -1176,8 +1196,6 @@ void MainWindow::apk_close()
     iconActions->setEnabled(false);
     menuIconAdd->setEnabled(false);
     btnPack->setEnabled(false);
-
-    drawArea->setIcon(NULL);
 }
 
 void MainWindow::associate() const
