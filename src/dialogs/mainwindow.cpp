@@ -926,7 +926,7 @@ bool MainWindow::icon_open(QString filename)
     if (icon->replace(QPixmap(filename))) {
         repaint();
         const Device *device = static_cast<Device *>(devices->model()->index(devices->currentIndex(), 0).internalPointer());
-        const QSize size = device->getStandardSize(icon->getType()).size;
+        const QSize size = device->getIconSize(icon->getType()).size;
 
         if (icon->width() != size.width() || icon->height() != size.height()) {
             int result = QMessageBox::warning(this, tr("Resize?"),
@@ -964,7 +964,7 @@ bool MainWindow::icon_save(QString filename)
 
     if (filename.isEmpty()) {
         const Device *device = static_cast<Device *>(devices->model()->index(devices->currentIndex(), 0).internalPointer());
-        const QSize size = device->getStandardSize(icon->getType()).size;
+        const QSize size = device->getIconSize(icon->getType()).size;
         filename = QString("%1-%2x%3").arg(QFileInfo(currentApk).completeBaseName()).arg(size.width()).arg(size.height());
         filename = QFileDialog::getSaveFileName(this, tr("Save Icon"), filename, Image::Formats::saveDialogFilter());
         if (filename.isEmpty()) {
@@ -982,7 +982,7 @@ bool MainWindow::icon_scale()
     }
 
     const Device *device = static_cast<Device *>(devices->model()->index(devices->currentIndex(), 0).internalPointer());
-    const QSize size = device->getStandardSize(drawArea->getIcon()->getType()).size;
+    const QSize size = device->getIconSize(icon->getType()).size;
     return icon_resize(size);
 }
 
@@ -1110,11 +1110,11 @@ bool MainWindow::apk_open(QString filename)
     loadingDialog->setProgress(20, QApplication::translate("Apk::Unpacker", "Unpacking APK..."));
     QApplication::processEvents();
 
-    const QString DEST = Settings::get_temp() + "/apk-icon-editor/";
-    const bool SMALI = Settings::get_smali();
-    const QString APKTOOL = Settings::get_apktool();
+    const QString destination = Settings::get_temp() + "/apk-icon-editor/";
+    const QString apktool = Settings::get_apktool();
+    const bool smali = Settings::get_smali();
     apk_close();
-    apkManager->unpack(filename, DEST, APKTOOL, SMALI);
+    apkManager->unpack(filename, destination, apktool, smali);
 
     return true;
 }

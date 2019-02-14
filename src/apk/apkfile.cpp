@@ -135,7 +135,7 @@ bool Apk::File::addIcon(Icon::Type type)
                 QPixmap pixmap = icon
                         ? icon->getPixmap()
                         : QPixmap(":/gfx/icon/256.png").scaled(
-                              Device().getStandardSize(type).size,
+                              Device().getIconSize(type).size,
                               Qt::KeepAspectRatio,
                               Qt::SmoothTransformation
                         );

@@ -32,7 +32,7 @@ public:
     QIcon getThumbnail() const;                      ///< Returns the device thumbnail icon.
 
     QString getIconTitle(const Icon &icon) const;    ///< Returns the icon title for the device.
-    StandardSize getStandardSize(Icon::Type type) const; ///< Returns the standard icon size for the device.
+    StandardSize getIconSize(Icon::Type type) const; ///< Returns the standard icon size for the device.
 
     void setHint(Icon::Type type, const QString &hint);
 

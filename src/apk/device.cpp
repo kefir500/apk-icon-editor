@@ -26,7 +26,7 @@ QIcon Device::getThumbnail() const
 QString Device::getIconTitle(const Icon &icon) const
 {
     const QString iconTitle = icon.getTitle();
-    const StandardSize iconSize = getStandardSize(icon.getType());
+    const StandardSize iconSize = getIconSize(icon.getType());
 
     if (icon.getScope() != Icon::ScopeApplication) {
         return iconTitle;
@@ -45,7 +45,7 @@ QString Device::getIconTitle(const Icon &icon) const
     return QString();
 }
 
-Device::StandardSize Device::getStandardSize(Icon::Type type) const
+Device::StandardSize Device::getIconSize(Icon::Type type) const
 {
     return sizes[type];
 }
