@@ -9,7 +9,7 @@ Chinese (China) – YFdyh000, QQ775405984
 Dutch – Heimen Stoffels, Roder van Arkel, GyllieGyllie
 French – Stold, AzRock
 German – Sebastian Herrmann, Wasilis Mandratzis-Walz
-Greek – Wasilis Mandratzis-Walz, Manos Santos
+Greek – Wasilis Mandratzis-Walz, Manos Santos, Tsiantakis
 Hungarian – Fodor Kristóf
 Italian – Luca Fioravanti
 Portuguese (Brazil) – Valnei Júnior
@@ -46,6 +46,7 @@ Christine Mbella
 Nelson Silva Fernandes
 Custom Media Installation
 Thorsten Appel
+Innovaciones Interactivas
 Marco Santiago
 Adan Ramirez
 Halton Powell
@@ -112,6 +113,7 @@ Ibuprophen
 ngasoft
 Yoav Haruvi
 Peter Pursiainen
+Siegfried Engelbrecht-Vandré
 Igor Petrunnikov
 Code War
 Apollo_IV

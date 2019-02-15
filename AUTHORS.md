@@ -9,7 +9,7 @@
 - Dutch – [Heimen Stoffels](https://www.transifex.com/user/profile/Vistaus/), [Roder van Arkel](https://www.transifex.com/user/profile/Roder/), [GyllieGyllie](https://crowdin.com/profile/GyllieGyllie)
 - French – [Stold](https://www.transifex.com/user/profile/Stold/), [AzRock](https://www.transifex.com/user/profile/AzRock/)
 - German – [Sebastian Herrmann](https://www.transifex.com/user/profile/herrherrmann/), [Wasilis Mandratzis-Walz](https://www.transifex.com/user/profile/beonex/)
-- Greek – [Wasilis Mandratzis-Walz](https://www.transifex.com/user/profile/beonex/), [Manos Santos](https://www.transifex.com/user/profile/goldensacrum/)
+- Greek – [Wasilis Mandratzis-Walz](https://www.transifex.com/user/profile/beonex/), [Manos Santos](https://www.transifex.com/user/profile/goldensacrum/), [Tsiantakis](https://crowdin.com/profile/aggellos2001)
 - Hungarian – [Fodor Kristóf](https://www.transifex.com/user/profile/MintiIceCream/)
 - Italian – [Luca Fioravanti](https://www.transifex.com/user/profile/fioravanti.luka/)
 - Portuguese (Brazil) – [Valnei Júnior](https://www.transifex.com/user/profile/valneijr/)
@@ -46,6 +46,7 @@
 - Nelson Silva Fernandes
 - Custom Media Installation
 - Thorsten Appel
+- Innovaciones Interactivas
 - Marco Santiago
 - Adan Ramirez
 - Halton Powell
