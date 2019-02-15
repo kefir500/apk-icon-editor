@@ -271,7 +271,7 @@ void MainWindow::init_gui()
     btnStudio->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
     btnStudio->hide();
     connect(btnStudio, &QPushButton::clicked, []() {
-        QDesktopServices::openUrl(QUrl("https://kefir500.github.io/apk-editor-studio"));
+        QDesktopServices::openUrl(QUrl("https://qwertycube.com/apk-editor-studio/#utm_source=apk-icon-editor"));
     });
 
     loadingDialog = new ProgressDialog(this);

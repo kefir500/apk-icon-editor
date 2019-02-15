@@ -19,7 +19,7 @@ const QString GDRIVE_FILES      = "https://www.googleapis.com/drive/v2/files";
 const QString GDRIVE_UPLOAD     = "https://www.googleapis.com/upload/drive/v2/files";
 
 // OneDrive:
-const QString ONEDRIVE_AUTH     = QString("https://login.live.com/oauth20_authorize.srf?client_id=%1&scope=wl.skydrive_update&response_type=code&redirect_uri=https://kefir500.github.io/apk-icon-editor/onedrive").arg(ONEDRIVE_ID);
+const QString ONEDRIVE_AUTH     = QString("https://login.live.com/oauth20_authorize.srf?client_id=%1&scope=wl.skydrive_update&response_type=code&redirect_uri=https://qwertycube.com/apk-icon-editor/onedrive/").arg(ONEDRIVE_ID);
 const QString ONEDRIVE_TOKEN    = "https://login.live.com/oauth20_token.srf";
 const QString ONEDRIVE_REDIRECT = Url::WEBSITE + "onedrive";
 const QString ONEDRIVE_STATUS   = "https://apis.live.net/v5.0/me";

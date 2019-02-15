@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Alexander Gorishnyak <kefir500@gmail.com>
 Build-Depends: debhelper (>=9)
 Standards-Version: 3.9.7
-Homepage: http://kefir500.github.io/apk-icon-editor
+Homepage: https://qwertycube.com/apk-icon-editor/
 Vcs-Git: git://github.com/kefir500/apk-icon-editor.git
 Vcs-Browser: https://github.com/kefir500/apk-icon-editor
 

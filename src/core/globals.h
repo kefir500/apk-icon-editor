@@ -72,14 +72,14 @@ namespace Path {
 ///
 
 namespace Url {
-    const QString WEBSITE   = "https://kefir500.github.io/apk-icon-editor/";
+    const QString WEBSITE   = "https://qwertycube.com/apk-icon-editor/";
     const QString VERSION   = WEBSITE + "VERSION-2";
     const QString UPDATE    = WEBSITE + "download/#update";
     const QString CONTACT   = WEBSITE + "#contact";
     const QString TRANSLATE = "https://crowdin.com/project/apk-icon-editor";
     const QString DONATE    = "https://paypal.me/kefir500";
     const QString JRE       = "https://www.java.com/en/download/manual.jsp";
-    const QString JDK       = "http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html";
+    const QString JDK       = "httpS://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html";
 }
 
 #endif // GLOBALS_H

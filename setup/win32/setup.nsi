@@ -8,8 +8,8 @@
 !define VERSIONMINOR 2
 !define VERSIONPATCH 0
 !define VERSION "${VERSIONMAJOR}.${VERSIONMINOR}.${VERSIONPATCH}"
-!define ABOUTURL "http://kefir500.github.io/apk-icon-editor"
-!define UPDATEURL "http://kefir500.github.io/apk-icon-editor/download/#update"
+!define ABOUTURL "https://qwertycube.com/apk-icon-editor/"
+!define UPDATEURL "https://qwertycube.com/apk-icon-editor/download/#update"
 !define EXE "$INSTDIR\apk-icon-editor.exe"
 
 Name "${APPNAME} v${VERSION}"

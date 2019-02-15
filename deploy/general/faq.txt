@@ -51,6 +51,6 @@
 ---------------
 
 [Q] I have another question or suggestion.
-[A] Feel free to contact developers: http://kefir500.github.io/apk-icon-editor/#contact
+[A] Feel free to contact developers: https://qwertycube.com/apk-icon-editor/#contact
 
 ---------------
