@@ -92,6 +92,7 @@
 - Eric Romero
 - DT
 - Joshua Bingham
+- Marcelo Ferreira
 - Emilio Vargas Tordecilla
 - Andreas Mamesa
 - Manuel Lopez
