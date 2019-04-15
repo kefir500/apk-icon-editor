@@ -1,3 +1,15 @@
+apk-icon-editor (2.2.0-1) unstable; urgency=low
+
+  * Added Android 9 Pie support.
+  * Added Android Activities support.
+  * Added auto-detection of the suitable signing tool.
+  * Majorly improved icon addition.
+  * Fixed jarsigner signing.
+  * Fixed actions related to icons and banners.
+  * Upgraded Apktool to v2.4.0.
+
+ -- Alexander Gorishnyak <kefir500@gmail.com>  Thu, 15 Apr 2019 10:14:06 +0600
+
 apk-icon-editor (2.1.0-1) unstable; urgency=low
 
   * Added ability to specify path to Apktool.

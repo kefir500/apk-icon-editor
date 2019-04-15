@@ -1,5 +1,14 @@
 # Version History
 
+## 2.2.0
+* Added *Android 9 Pie* support.
+* Added *Android Activities* support.
+* Auto-selection of the most suitable signing tool.
+* Majorly improved icon addition.
+* Fixed *jarsigner* signing.
+* Fixed actions related to icons and banners.
+* Upgraded *Apktool* to *v2.4.0*.
+
 ## 2.1.0
 * Added ability to specify path to *Apktool*.
 * Added ability to cancel repacking process.
