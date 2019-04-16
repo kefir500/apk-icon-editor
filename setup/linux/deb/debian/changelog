@@ -8,7 +8,7 @@ apk-icon-editor (2.2.0-1) unstable; urgency=low
   * Fixed actions related to icons and banners.
   * Upgraded Apktool to v2.4.0.
 
- -- Alexander Gorishnyak <kefir500@gmail.com>  Thu, 15 Apr 2019 10:14:06 +0600
+ -- Alexander Gorishnyak <kefir500@gmail.com>  Mon, 15 Apr 2019 10:14:06 +0600
 
 apk-icon-editor (2.1.0-1) unstable; urgency=low
 
