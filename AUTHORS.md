@@ -97,6 +97,7 @@
 - Juan Suarez
 - LF Hill Merchandising Service
 - Katarzyna Kluk
+- Steffen Weiß
 - Emilio Vargas Tordecilla
 - Andreas Mamesa
 - Manuel Lopez
