@@ -98,6 +98,9 @@
 - LF Hill Merchandising Service
 - Katarzyna Kluk
 - Steffen Weiß
+- Teagan Norrey
+- Flavio Engracia Rodriguez
+- Ray Ward
 - Emilio Vargas Tordecilla
 - Andreas Mamesa
 - Manuel Lopez
