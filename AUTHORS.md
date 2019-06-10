@@ -32,6 +32,7 @@
 - Adam Domanski
 - Juegos Destrem
 - Martina Laska
+- Luiz A. Nascimento
 - Harshtag
 - Spyridon Moschopoulos
 - Rebecca McFarland
@@ -101,6 +102,9 @@
 - Teagan Norrey
 - Flavio Engracia Rodriguez
 - Ray Ward
+- Ruben Egea Belmonte
+- Joel Acosta
+- Arijit Das
 - Emilio Vargas Tordecilla
 - Andreas Mamesa
 - Manuel Lopez
