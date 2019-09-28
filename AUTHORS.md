@@ -17,6 +17,7 @@
 - Russian – [Alexander Gorishnyak](https://www.transifex.com/user/profile/kefir500/)
 - Spanish – [Cristhian Garcia](https://www.transifex.com/user/profile/CristhianLP/)
 - Turkish – [Çağdaş Tatar](https://www.transifex.com/user/profile/echelon/)
+- Ukrainian - [Andrey Kuznetsov](https://crowdin.com/profile/andrey.kuznetsov.acer)
 
 ## Contributors
 - Roder van Arkel

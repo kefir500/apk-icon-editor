@@ -17,6 +17,7 @@ Romanian – Levente Bandi
 Russian – Alexander Gorishnyak
 Spanish – Cristhian Garcia
 Turkish – Çağdaş Tatar
+Ukrainian - Andrey Kuznetsov
 
 Contributors:
 Roder van Arkel
