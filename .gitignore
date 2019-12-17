@@ -1,12 +1,13 @@
 .trash/
-/bin/
+bin/
 /docs/html/
 /lang/
 !/lang/README
-/lib/bin/
 /.qmake.cache
 /.qmake.stash
 *.autosave
+*.exe
+*.jar
 *.o
 *.obj
 *.pdb
