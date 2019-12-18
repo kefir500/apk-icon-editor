@@ -6,7 +6,7 @@ compiler:
 
 install:
   - sudo apt-get install qt5-default
-  - python3 scripts/download.py
+  - python3 deploy/download.py
 
 script:
   - qmake "QMAKE_CXX=$CXX" "QMAKE_CC=$CC" "DEFINES+=CI"
