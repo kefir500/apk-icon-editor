@@ -24,8 +24,8 @@
 - [Ameen Ali](https://github.com/AmeenAli)
 
 ## Donators
-- [Julien Veuillet](http://www.wakdev.com)
-- [Cyclos](http://www.cyclos.org)
+- [Julien Veuillet](https://www.wakdev.com)
+- [Cyclos](https://www.cyclos.org)
 - Khalida Begum
 - Benjamin Hahn
 - Evolanguage
@@ -116,5 +116,5 @@
 - Gabriel Calderon
 
 ## Special Thanks
-- Andre Somers – [SimpleCrypt](http://qt-project.org/wiki/Simple_encryption)
+- Andre Somers – [SimpleCrypt](https://wiki.qt.io/Simple_encryption_with_SimpleCrypt)
 - [Mark James](http://www.famfamfam.com) – icons
