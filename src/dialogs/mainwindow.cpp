@@ -153,6 +153,7 @@ void MainWindow::init_gui()
     menuLang = new QMenu(this);
     actAutoUpdate = new QAction(this);
     actAssoc = new QAction(this);
+    actAssoc->setCheckable(true);
     actReset = new QAction(this);
     actFaq = new QAction(this);
     actWebsite = new QAction(this);
@@ -508,7 +509,7 @@ void MainWindow::init_slots()
     connect(actViewActivities, &QAction::toggled, iconsProxy, &IconsProxy::setShowActivities);
     connect(actPacking, SIGNAL(triggered()), toolDialog, SLOT(open()));
     connect(actKeys, SIGNAL(triggered()), keyManager, SLOT(open()));
-    connect(actAssoc, SIGNAL(triggered()), this, SLOT(associate()));
+    connect(actAssoc, &QAction::triggered, Settings::set_association);
     connect(actReset, SIGNAL(triggered()), this, SLOT(settings_reset()));
     connect(actWebsite, SIGNAL(triggered()), this, SLOT(browseSite()));
     connect(actReport, SIGNAL(triggered()), this, SLOT(browseBugs()));
@@ -576,6 +577,7 @@ void MainWindow::settings_load()
     setLanguage(Settings::get_language());
     currentPath = Settings::get_last_path();
     devices->setCurrentText(Settings::get_device());
+    actAssoc->setChecked(Settings::get_association());
     actAutoUpdate->setChecked(Settings::get_update());
     actViewActivities->setChecked(Settings::get_activities());
 
@@ -1184,17 +1186,6 @@ void MainWindow::apk_close()
     iconActions->setEnabled(false);
     menuIconAdd->setEnabled(false);
     btnPack->setEnabled(false);
-}
-
-void MainWindow::associate() const
-{
-#ifdef Q_OS_WIN
-    QString exe = QDir::toNativeSeparators(QApplication::applicationFilePath());
-    QSettings reg("HKEY_CURRENT_USER\\Software\\Classes", QSettings::NativeFormat);
-    reg.setValue("apk-icon-editor.apk/DefaultIcon/Default", exe + ",1");
-    reg.setValue("apk-icon-editor.apk/Shell/Open/Command/Default", exe + " \"%1\"");
-    reg.setValue(".apk/Default", "apk-icon-editor.apk");
-#endif
 }
 
 void MainWindow::browseSite() const

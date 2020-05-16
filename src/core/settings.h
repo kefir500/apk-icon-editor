@@ -27,6 +27,7 @@ public:
     static QString get_version();        ///< Returns the application version at the time of the previous launch.
     static QString get_device();         ///< Returns the last used device preset.
     static QString get_language();       ///< Returns the last used application language.
+    static bool get_association();       ///< Returns \c true if the APK files are associated with APK Icon Editor.
     static bool get_update();            ///< Returns \c true if the automatic update check is turned on.
     static bool get_upload();            ///< Returns \c true if the cloud upload is turned on.
     static bool get_activities();        ///< Returns \c true if the activity drawables are displayed.
@@ -69,6 +70,7 @@ public:
     static void set_device(QString device);          ///< Saves the last used \c device preset.
     static void set_language(QString language);      ///< Saves the last used application \c language.
     static void set_update(bool state);              ///< Saves the automatic update check on/off \c state.
+    static void set_association(bool state);         ///< Creates APK file association depending on \c state.
     static void set_upload(bool state);              ///< Saves the cloud upload on/off \c state.
     static void set_activities(bool state);          ///< Saves the activities display \c state.
     static void set_path(QString directory);         ///< Saves the open/save dialog \c directory.

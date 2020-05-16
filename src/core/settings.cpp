@@ -63,6 +63,17 @@ void Settings::reset()
 QString Settings::get_version()     { return settings->value("Version", "").toString(); }
 QString Settings::get_device()      { return settings->value("Profile", "").toString(); }
 QString Settings::get_language()    { return settings->value("Language", QLocale::system().name()).toString(); }
+
+bool Settings::get_association()
+{
+#ifdef Q_OS_WIN
+    QSettings reg("HKEY_CURRENT_USER\\Software\\Classes", QSettings::NativeFormat);
+    return
+        reg.contains("apk-icon-editor.apk/Shell/Open/Command/Default") &&
+        reg.value(".apk/Default") == "apk-icon-editor.apk";
+#endif
+}
+
 bool Settings::get_update()         { return settings->value("Update", true).toBool(); }
 bool Settings::get_upload()         { return settings->value("Upload", false).toBool(); }
 bool Settings::get_activities()     { return settings->value("Activities", false).toBool(); }
@@ -149,6 +160,25 @@ void Settings::set_version(QString version)   { settings->setValue("Version", ve
 void Settings::set_device(QString device)     { settings->setValue("Profile", device); }
 void Settings::set_language(QString language) { settings->setValue("Language", language); }
 void Settings::set_update(bool state)         { settings->setValue("Update", state); }
+
+void Settings::set_association(bool state)
+{
+#ifdef Q_OS_WIN
+    QSettings reg("HKEY_CURRENT_USER\\Software\\Classes", QSettings::NativeFormat);
+    if (state) {
+        QString exe = QDir::toNativeSeparators(QApplication::applicationFilePath());
+        reg.setValue("apk-icon-editor.apk/DefaultIcon/Default", exe + ",1");
+        reg.setValue("apk-icon-editor.apk/Shell/Open/Command/Default", exe + " \"%1\"");
+        reg.setValue(".apk/Default", "apk-icon-editor.apk");
+    } else {
+        if (reg.value(".apk/Default") == "apk-icon-editor.apk") {
+            reg.setValue(".apk/Default", QString());
+        }
+        reg.remove("apk-icon-editor.apk");
+    }
+#endif
+}
+
 void Settings::set_upload(bool state)         { settings->setValue("Upload", state); }
 void Settings::set_activities(bool state)     { settings->setValue("Activities", state); }
 void Settings::set_path(QString directory)    { settings->setValue("Directory", directory); }
